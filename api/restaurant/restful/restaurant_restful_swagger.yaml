@@ -1,0 +1,19 @@
+basePath: /api
+info:
+  contact:
+    email: blackhorseya@gmail.com
+    name: Sean Zheng
+    url: https://blog.seancheng.space
+  description: Godine Restaurant Restful API document.
+  license:
+    name: GPL-3.0
+    url: https://spdx.org/licenses/GPL-3.0-only.html
+  title: Godine Restaurant Restful API
+  version: 0.1.0
+paths: {}
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/restaurant/wirex",
+        "//api/restaurant/restful",
         "//app/infra/configx",
         "//app/infra/transports/httpx",
         "//pkg/adapterx",

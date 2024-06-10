@@ -47,6 +47,8 @@ coverage: ## generate coverage report
 
 .PHONY: gen-swagger
 gen-swagger: ## generate swagger
+	@swag init -q -g impl.go -d ./adapter/restaurant/restful,./entity,./pkg \
+  -o ./api/restaurant/restful --instanceName restaurant_restful --parseDependency
 
 ## docker
 .PHONY: docker-push

@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
+	_ "github.com/blackhorseya/godine/api/restaurant/restful" // swagger docs
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -19,6 +20,22 @@ import (
 	"go.uber.org/zap"
 )
 
+// @title Godine Restaurant Restful API
+// @version 0.1.0
+// @description Godine Restaurant Restful API document.
+//
+// @contact.name Sean Zheng
+// @contact.email blackhorseya@gmail.com
+// @contact.url https://blog.seancheng.space
+//
+// @license.name GPL-3.0
+// @license.url https://spdx.org/licenses/GPL-3.0-only.html
+//
+// @BasePath /api
+//
+// @securityDefinitions.apikey Bearer
+// @in header
+// @name Authorization
 type impl struct {
 	injector *wirex.Injector
 	server   *httpx.Server
