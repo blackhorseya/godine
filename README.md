@@ -1,7 +1,10 @@
-Based on the provided GitHub repository [GoDine](https://github.com/blackhorseya/godine), here is an updated README file
-that includes relevant information and project details:
-
 # GoDine
+
+[![Go](https://github.com/blackhorseya/godine/workflows/Go/badge.svg)](https://github.com/blackhorseya/godine/actions?query=workflow:"Go")
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=blackhorseya_godine&metric=coverage)](https://sonarcloud.io/summary/new_code?id=blackhorseya_godine)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=blackhorseya_godine&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=blackhorseya_godine)
+[![GitHub release](https://img.shields.io/github/release/blackhorseya/godine?include_prereleases=&sort=semver&color=blue)](https://github.com/blackhorseya/godine/releases/)
+![GitHub License](https://img.shields.io/github/license/blackhorseya/godine)
 
 GoDine is an online food ordering system designed using Golang and following the principles of Domain-Driven Design (
 DDD). The system includes multiple business domains such as User Management, Restaurant Management, Order Management,
@@ -42,7 +45,6 @@ graph TD
     OrderManagement[訂單管理]
     PaymentManagement[支付管理]
     NotificationManagement[通知管理]
-
     UserManagement -->|確認用戶身份| OrderManagement
     RestaurantManagement -->|確認餐廳和菜單可用性| OrderManagement
     OrderManagement -->|確認訂單和金額| PaymentManagement
