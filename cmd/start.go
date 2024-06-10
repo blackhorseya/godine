@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"github.com/blackhorseya/godine/adapter/restaurant/restful"
+	"github.com/blackhorseya/godine/pkg/cmdx"
 	"github.com/spf13/cobra"
 )
 
@@ -11,6 +13,12 @@ var startCmd = &cobra.Command{
 }
 
 func init() {
+	startCmd.AddCommand(cmdx.NewServiceCmd(
+		"restaurant-restful",
+		"Start the restaurant restful server",
+		restful.New,
+	))
+
 	rootCmd.AddCommand(startCmd)
 
 	// Here you will define your flags and configuration settings.
