@@ -6,6 +6,7 @@ require (
 	github.com/gin-contrib/zap v1.1.3
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.4.0
+	github.com/google/wire v0.6.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.19.0
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.52.0

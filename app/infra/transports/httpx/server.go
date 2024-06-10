@@ -22,19 +22,19 @@ type Server struct {
 }
 
 // NewServer is used to create a new HTTP server.
-func NewServer() (*Server, error) {
+func NewServer(app *configx.Application) (*Server, error) {
 	ctx := contextx.Background()
 
-	gin.SetMode(configx.A.HTTP.Mode)
+	gin.SetMode(app.HTTP.Mode)
 
 	router := gin.New()
 	router.Use(ginzap.GinzapWithConfig(ctx.Logger, &ginzap.Config{
 		TimeFormat: time.RFC3339,
 		UTC:        true,
-		SkipPaths:  []string{"/api/healthz"},
+		SkipPaths:  nil,
 		Context:    nil,
 	}))
-	router.Use(otelgin.Middleware(configx.A.Name))
+	router.Use(otelgin.Middleware(app.Name))
 	router.Use(contextx.AddContextxMiddleware())
 	router.Use(responsex.AddErrorHandlingMiddleware())
 	router.Use(ginzap.CustomRecoveryWithZap(ctx.Logger, true, func(c *gin.Context, err any) {
@@ -43,7 +43,7 @@ func NewServer() (*Server, error) {
 	}))
 
 	httpserver := &http.Server{
-		Addr:              configx.A.HTTP.GetAddr(),
+		Addr:              app.HTTP.GetAddr(),
 		Handler:           router,
 		ReadHeaderTimeout: time.Second,
 	}
