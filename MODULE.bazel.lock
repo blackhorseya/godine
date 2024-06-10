@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 6,
-  "moduleFileHash": "c3c62c6865302dec9aa063652a2b56c9268c214cb384981ff39c6891c2e457ae",
+  "moduleFileHash": "58cb339c52d2ff00daf5a2bd4e750c9e6359fb3708c130dcbca016a7c82830f0",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -36,7 +36,8 @@
           "imports": {
             "com_github_gin_gonic_gin": "com_github_gin_gonic_gin",
             "com_github_spf13_cobra": "com_github_spf13_cobra",
-            "com_github_spf13_viper": "com_github_spf13_viper"
+            "com_github_spf13_viper": "com_github_spf13_viper",
+            "org_uber_go_zap": "org_uber_go_zap"
           },
           "devImports": [],
           "tags": [
