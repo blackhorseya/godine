@@ -51,7 +51,7 @@ gen-swagger: ## generate swagger
 ## docker
 .PHONY: docker-push
 docker-push: ## push docker image
-	@bazel run //adapter:push --platforms=@rules_go//go/toolchain:linux_amd64 -- --tag=$(VERSION)
+	@bazel run //:push --platforms=@rules_go//go/toolchain:linux_amd64 -- --tag=$(VERSION)
 
 ## deployments
 DEPLOY_TO := prod
