@@ -1,5 +1,7 @@
 load("@gazelle//:def.bzl", "gazelle")
 load("@rules_go//go:def.bzl", "go_binary", "go_library")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_push", "oci_tarball")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 # gazelle:prefix github.com/blackhorseya/godine
 # gazelle:proto disable_global
@@ -17,4 +19,29 @@ go_binary(
     name = "godine",
     embed = [":godine_lib"],
     visibility = ["//visibility:public"],
+)
+
+pkg_tar(
+    name = "tar",
+    srcs = [":godine"],
+)
+
+oci_image(
+    name = "image",
+    base = "@alpine",
+    entrypoint = ["/godine"],
+    tars = [":tar"],
+)
+
+oci_tarball(
+    name = "tarball",
+    image = ":image",
+    repo_tags = ["ghcr.io/blackhorseya/godine:latest"],
+)
+
+oci_push(
+    name = "push",
+    image = ":image",
+    remote_tags = ["latest"],
+    repository = "ghcr.io/blackhorseya/godine",
 )
