@@ -26,6 +26,7 @@ lint: ## run golangci-lint
 	@golangci-lint run ./...
 
 clean: ## clean build directory
+	@rm -rf cover.out result.json ./deployments/charts/*.tgz
 	@rm -rf $(BUILD_DIR)
 
 .PHONY: gazelle
@@ -39,6 +40,10 @@ build: ## build go binary
 .PHONY: test
 test: ## test go binary
 	@bazel test --verbose_failures //...
+
+.PHONY: coverage
+coverage: ## generate coverage report
+	@go test -json -coverprofile=cover.out ./... >result.json
 
 .PHONY: gen-swagger
 gen-swagger: ## generate swagger
