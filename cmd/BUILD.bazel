@@ -2,7 +2,10 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "cmd",
-    srcs = ["root.go"],
+    srcs = [
+        "root.go",
+        "start.go",
+    ],
     importpath = "github.com/blackhorseya/godine/cmd",
     visibility = ["//visibility:public"],
     deps = [
