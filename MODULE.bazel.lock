@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 6,
-  "moduleFileHash": "58cb339c52d2ff00daf5a2bd4e750c9e6359fb3708c130dcbca016a7c82830f0",
+  "moduleFileHash": "7b4065c4cdc72f2b4139199fcb0653bff5e4d660edb015c05a3ad2d2409328ad",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -34,9 +34,12 @@
             "column": 24
           },
           "imports": {
+            "com_github_gin_contrib_zap": "com_github_gin_contrib_zap",
             "com_github_gin_gonic_gin": "com_github_gin_gonic_gin",
+            "com_github_google_uuid": "com_github_google_uuid",
             "com_github_spf13_cobra": "com_github_spf13_cobra",
             "com_github_spf13_viper": "com_github_spf13_viper",
+            "io_opentelemetry_go_contrib_instrumentation_github_com_gin_gonic_gin_otelgin": "io_opentelemetry_go_contrib_instrumentation_github_com_gin_gonic_gin_otelgin",
             "org_uber_go_zap": "org_uber_go_zap"
           },
           "devImports": [],
