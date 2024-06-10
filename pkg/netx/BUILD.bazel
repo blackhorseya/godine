@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "netx",
+    srcs = ["port.go"],
+    importpath = "github.com/blackhorseya/godine/pkg/netx",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "netx_test",
+    srcs = ["port_test.go"],
+    embed = [":netx"],
+)
