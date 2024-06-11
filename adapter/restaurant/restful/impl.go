@@ -104,6 +104,15 @@ func (i *impl) GetRouter() *gin.Engine {
 	return i.server.Router
 }
 
+// Healthz is used to check the health of the service.
+// @Summary Check the health of the service.
+// @Description Check the health of the service.
+// @Tags health
+// @Accept json
+// @Produce json
+// @Success 200 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /healthz [get]
 func (i *impl) Healthz(c *gin.Context) {
 	responsex.OK(c, nil)
 }

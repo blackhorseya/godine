@@ -11,8 +11,13 @@ import (
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
+	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
+)
+
+import (
+	_ "github.com/blackhorseya/godine/api/restaurant/restful"
 )
 
 // Injectors from wire.go:
@@ -36,7 +41,17 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 // wire.go:
 
 func initApplication() (*configx.Application, error) {
-	return configx.LoadApplication(&configx.C.RestaurantRestful)
+	app, err := configx.LoadApplication(&configx.C.RestaurantRestful)
+	if err != nil {
+		return nil, err
+	}
+
+	err = logging.Init(app.Log)
+	if err != nil {
+		return nil, err
+	}
+
+	return app, nil
 }
 
 var providerSet = wire.NewSet(
