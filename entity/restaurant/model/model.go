@@ -34,5 +34,5 @@ type MenuItem struct {
 	Price float64 `json:"price,omitempty" bson:"price"`
 
 	// IsAvailable indicates whether the menu item is available.
-	IsAvailable bool `json:"isAvailable,omitempty" bson:"isAvailable"`
+	IsAvailable bool `json:"is_available,omitempty" bson:"isAvailable"`
 }
