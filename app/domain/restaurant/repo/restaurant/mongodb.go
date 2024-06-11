@@ -7,7 +7,9 @@ import (
 	"github.com/blackhorseya/godine/entity/restaurant/model"
 	"github.com/blackhorseya/godine/entity/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 )
 
 const (
@@ -34,6 +36,7 @@ func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err err
 
 	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, data)
 	if err != nil {
+		ctx.Error("create restaurant to mongodb failed", zap.Error(err), zap.Any("data", &data))
 		return err
 	}
 
@@ -41,8 +44,21 @@ func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err err
 }
 
 func (i *mongodb) Update(ctx contextx.Contextx, data *model.Restaurant) (err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "restaurant.mongodb.update")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": data.ID}
+	update := bson.M{"$set": data}
+	_, err = i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	if err != nil {
+		ctx.Error("update restaurant to mongodb failed", zap.Error(err), zap.Any("data", &data))
+		return err
+	}
+
+	return nil
 }
 
 func (i *mongodb) Delete(ctx contextx.Contextx, id string) (err error) {
