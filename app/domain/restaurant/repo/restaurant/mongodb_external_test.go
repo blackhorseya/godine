@@ -65,7 +65,7 @@ func (s *suiteMongodbExternal) Test_mongodb_Create() {
 	}{
 		{
 			name:    "create success",
-			args:    args{data: &restaurant.Restaurant},
+			args:    args{data: restaurant},
 			wantErr: false,
 		},
 	}
