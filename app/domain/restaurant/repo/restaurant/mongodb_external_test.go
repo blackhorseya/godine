@@ -7,10 +7,12 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/entity/restaurant/model"
 	"github.com/blackhorseya/godine/entity/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/stretchr/testify/suite"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -46,4 +48,39 @@ func (s *suiteMongodbExternal) TearDownTest() {
 
 func TestMongodbExternal(t *testing.T) {
 	suite.Run(t, new(suiteMongodbExternal))
+}
+
+func (s *suiteMongodbExternal) Test_mongodb_Create() {
+	restaurant := model.NewRestaurant("test", model.Address{})
+
+	type args struct {
+		ctx  contextx.Contextx
+		data *model.Restaurant
+		mock func()
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    "create success",
+			args:    args{data: &restaurant.Restaurant},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		s.T().Run(tt.name, func(t *testing.T) {
+			tt.args.ctx = contextx.Background()
+			if tt.args.mock != nil {
+				tt.args.mock()
+			}
+
+			if err := s.repo.Create(tt.args.ctx, tt.args.data); (err != nil) != tt.wantErr {
+				t.Errorf("Create() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			_, _ = s.rw.Database(dbName).Collection(collName).DeleteMany(contextx.Background(), bson.M{})
+		})
+	}
 }

@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/otelx",
         "//entity/restaurant/model",
         "//entity/restaurant/repo",
         "//pkg/contextx",

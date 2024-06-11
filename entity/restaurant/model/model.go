@@ -7,7 +7,7 @@ import (
 // Restaurant represents a restaurant entity.
 type Restaurant struct {
 	// ID is the unique identifier of the restaurant.
-	ID uuid.UUID `json:"id,omitempty" bson:"_id,omitempty"`
+	ID string `json:"id,omitempty" bson:"_id,omitempty"`
 
 	// Name is the name of the restaurant.
 	Name string `json:"name,omitempty" bson:"name"`

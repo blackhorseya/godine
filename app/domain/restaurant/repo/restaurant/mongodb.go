@@ -3,6 +3,7 @@ package restaurant
 import (
 	"time"
 
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/restaurant/model"
 	"github.com/blackhorseya/godine/entity/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -25,8 +26,18 @@ func NewMongodb(rw *mongo.Client) repo.IRestaurantRepo {
 }
 
 func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "restaurant.mongodb.create")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (i *mongodb) Update(ctx contextx.Contextx, data *model.Restaurant) (err error) {

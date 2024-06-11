@@ -14,7 +14,7 @@ type RestaurantAggregate struct {
 func NewRestaurant(name string, address Address) *RestaurantAggregate {
 	return &RestaurantAggregate{
 		Restaurant: Restaurant{
-			ID:      uuid.New(),
+			ID:      uuid.New().String(),
 			Name:    name,
 			Address: address,
 			Menu:    []MenuItem{},
