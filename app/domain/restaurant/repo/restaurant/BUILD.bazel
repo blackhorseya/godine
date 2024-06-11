@@ -1,0 +1,8 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "restaurant",
+    srcs = ["mongodb.go"],
+    importpath = "github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant",
+    visibility = ["//visibility:public"],
+)
