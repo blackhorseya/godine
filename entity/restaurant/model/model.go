@@ -17,6 +17,9 @@ type Restaurant struct {
 
 	// Menu is the list of menu items available in the restaurant.
 	Menu []MenuItem `json:"menu,omitempty" bson:"menu"`
+
+	// IsOpen indicates whether the restaurant is open for business.
+	IsOpen bool `json:"is_open,omitempty" bson:"isOpen"`
 }
 
 // NewRestaurant creates a new RestaurantAggregate.
@@ -26,6 +29,7 @@ func NewRestaurant(name string, address Address) *Restaurant {
 		Name:    name,
 		Address: address,
 		Menu:    []MenuItem{},
+		IsOpen:  false,
 	}
 }
 

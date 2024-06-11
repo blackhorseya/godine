@@ -30,16 +30,13 @@ type IRestaurantBiz interface {
 	ListRestaurants(
 		ctx contextx.Contextx,
 		options ListRestaurantsOptions,
-	) (items []model.Restaurant, total int, err error)
+	) (items []*model.Restaurant, total int, err error)
 
 	// UpdateRestaurant updates the details of an existing restaurant.
 	UpdateRestaurant(ctx contextx.Contextx, id uuid.UUID, name string, address model.Address) error
 
 	// DeleteRestaurant deletes a restaurant by its ID.
 	DeleteRestaurant(ctx contextx.Contextx, id uuid.UUID) error
-
-	// SearchRestaurants searches for restaurants by name or address keywords.
-	SearchRestaurants(ctx contextx.Contextx, keyword string) (items []model.Restaurant, total int, err error)
 
 	// ChangeRestaurantStatus changes the operational status of a restaurant.
 	ChangeRestaurantStatus(ctx contextx.Contextx, restaurantID uuid.UUID, isOpen bool) error

@@ -95,10 +95,10 @@ func (mr *MockIRestaurantBizMockRecorder) GetRestaurant(ctx, id interface{}) *go
 }
 
 // ListRestaurants mocks base method.
-func (m *MockIRestaurantBiz) ListRestaurants(ctx contextx.Contextx, options ListRestaurantsOptions) ([]model.Restaurant, int, error) {
+func (m *MockIRestaurantBiz) ListRestaurants(ctx contextx.Contextx, options ListRestaurantsOptions) ([]*model.Restaurant, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRestaurants", ctx, options)
-	ret0, _ := ret[0].([]model.Restaurant)
+	ret0, _ := ret[0].([]*model.Restaurant)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -108,22 +108,6 @@ func (m *MockIRestaurantBiz) ListRestaurants(ctx contextx.Contextx, options List
 func (mr *MockIRestaurantBizMockRecorder) ListRestaurants(ctx, options interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRestaurants", reflect.TypeOf((*MockIRestaurantBiz)(nil).ListRestaurants), ctx, options)
-}
-
-// SearchRestaurants mocks base method.
-func (m *MockIRestaurantBiz) SearchRestaurants(ctx contextx.Contextx, keyword string) ([]model.Restaurant, int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchRestaurants", ctx, keyword)
-	ret0, _ := ret[0].([]model.Restaurant)
-	ret1, _ := ret[1].(int)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// SearchRestaurants indicates an expected call of SearchRestaurants.
-func (mr *MockIRestaurantBizMockRecorder) SearchRestaurants(ctx, keyword interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchRestaurants", reflect.TypeOf((*MockIRestaurantBiz)(nil).SearchRestaurants), ctx, keyword)
 }
 
 // UpdateRestaurant mocks base method.
