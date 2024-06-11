@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "biz",
+    srcs = ["order.go"],
+    importpath = "github.com/blackhorseya/godine/app/domain/order/biz",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/order/biz",
+        "//entity/order/model",
+        "//pkg/contextx",
+        "@com_github_google_uuid//:uuid",
+    ],
+)
