@@ -1,0 +1,19 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "biz",
+    srcs = [
+        "menu_service.go",
+        "mock_menu_service.go",
+        "mock_restaurant_service.go",
+        "restaurant_service.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/entity/restaurant/biz",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/restaurant/model",
+        "//pkg/contextx",
+        "@com_github_google_uuid//:uuid",
+        "@org_uber_go_mock//gomock",
+    ],
+)

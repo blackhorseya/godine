@@ -17,6 +17,7 @@ require (
 	github.com/testcontainers/testcontainers-go/modules/mongodb v0.31.0
 	go.mongodb.org/mongo-driver v1.15.0
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.52.0
+	go.uber.org/mock v0.4.0
 	go.uber.org/zap v1.27.0
 )
 
