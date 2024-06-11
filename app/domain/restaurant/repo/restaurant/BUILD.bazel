@@ -5,4 +5,10 @@ go_library(
     srcs = ["mongodb.go"],
     importpath = "github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant",
     visibility = ["//visibility:public"],
+    deps = [
+        "//entity/restaurant/model",
+        "//entity/restaurant/repo",
+        "//pkg/contextx",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
 )
