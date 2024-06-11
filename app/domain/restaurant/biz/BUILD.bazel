@@ -1,0 +1,17 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "biz",
+    srcs = [
+        "menu.go",
+        "restaurant.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/app/domain/restaurant/biz",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/restaurant/biz",
+        "//entity/restaurant/model",
+        "//pkg/contextx",
+        "@com_github_google_uuid//:uuid",
+    ],
+)
