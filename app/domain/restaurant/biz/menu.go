@@ -1,11 +1,16 @@
 package biz
 
 import (
+	"net/http"
+
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/restaurant/model"
 	"github.com/blackhorseya/godine/entity/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type menuBiz struct {
@@ -23,8 +28,36 @@ func (i *menuBiz) AddMenuItem(
 	name, description string,
 	price float64,
 ) (item *model.MenuItem, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "menu.biz.add_menu_item")
+	defer span.End()
+
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	if err != nil {
+		ctx.Error(
+			"get restaurant by id failed",
+			zap.Error(err),
+			zap.String("restaurant_id", restaurantID.String()),
+		)
+		return nil, err
+	}
+	if restaurant == nil {
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		return nil, errorx.New(http.StatusNotFound, 404, "restaurant not found")
+	}
+
+	restaurant.AddMenuItem(name, description, price)
+
+	err = i.restaurants.Update(ctx, restaurant)
+	if err != nil {
+		ctx.Error(
+			"update restaurant failed",
+			zap.Error(err),
+			zap.String("restaurant_id", restaurantID.String()),
+		)
+		return nil, err
+	}
+
+	return &restaurant.Menu[len(restaurant.Menu)-1], nil
 }
 
 func (i *menuBiz) GetMenuItems(
