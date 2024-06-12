@@ -163,6 +163,40 @@ func (i *menuBiz) UpdateMenuItem(
 }
 
 func (i *menuBiz) RemoveMenuItem(ctx contextx.Contextx, restaurantID, menuItemID uuid.UUID) error {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "menu.biz.remove_menu_item")
+	defer span.End()
+
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	if err != nil {
+		ctx.Error(
+			"get restaurant by id failed",
+			zap.Error(err),
+			zap.String("restaurant_id", restaurantID.String()),
+		)
+		return err
+	}
+	if restaurant == nil {
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		return errorx.New(http.StatusNotFound, 404, "restaurant not found")
+	}
+
+	for idx, menuItem := range restaurant.Menu {
+		if menuItem.ID == menuItemID.String() {
+			restaurant.Menu = append(restaurant.Menu[:idx], restaurant.Menu[idx+1:]...)
+
+			err = i.restaurants.Update(ctx, restaurant)
+			if err != nil {
+				ctx.Error(
+					"update restaurant failed",
+					zap.Error(err),
+					zap.String("restaurant_id", restaurantID.String()),
+				)
+				return err
+			}
+
+			return nil
+		}
+	}
+
+	return errorx.New(http.StatusNotFound, 404, "menu item not found")
 }
