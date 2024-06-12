@@ -8,7 +8,10 @@ package restful
 
 import (
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
+	"github.com/blackhorseya/godine/app/domain/restaurant/biz"
+	"github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant"
 	"github.com/blackhorseya/godine/app/infra/configx"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/logging"
@@ -27,8 +30,17 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
+	client, err := mongodbx.NewClient(application)
+	if err != nil {
+		return nil, err
+	}
+	iRestaurantRepo := restaurant.NewMongodb(client)
+	iRestaurantBiz := biz.NewRestaurantBiz(iRestaurantRepo)
+	iMenuBiz := biz.NewMenuBiz(iRestaurantRepo)
 	injector := &wirex.Injector{
-		A: application,
+		A:                 application,
+		RestaurantService: iRestaurantBiz,
+		MenuService:       iMenuBiz,
 	}
 	server, err := httpx.NewServer(application)
 	if err != nil {
@@ -55,5 +67,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz.NewRestaurantBiz, biz.NewMenuBiz, restaurant.NewMongodb, mongodbx.NewClient,
 )

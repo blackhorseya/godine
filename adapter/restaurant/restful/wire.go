@@ -6,7 +6,10 @@ package restful
 
 import (
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
+	"github.com/blackhorseya/godine/app/domain/restaurant/biz"
+	"github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant"
 	"github.com/blackhorseya/godine/app/infra/configx"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/logging"
@@ -34,6 +37,11 @@ var providerSet = wire.NewSet(
 	wire.Struct(new(wirex.Injector), "*"),
 	initApplication,
 	httpx.NewServer,
+
+	biz.NewRestaurantBiz,
+	biz.NewMenuBiz,
+	restaurant.NewMongodb,
+	mongodbx.NewClient,
 )
 
 func New(v *viper.Viper) (adapterx.Restful, error) {
