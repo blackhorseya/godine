@@ -3,16 +3,18 @@ package biz
 import (
 	"github.com/blackhorseya/godine/entity/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/restaurant/model"
+	"github.com/blackhorseya/godine/entity/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
 )
 
 type menuBiz struct {
+	restaurants repo.IRestaurantRepo
 }
 
 // NewMenuBiz create and return a new menu biz
-func NewMenuBiz() biz.IMenuBiz {
-	return &menuBiz{}
+func NewMenuBiz(restaurants repo.IRestaurantRepo) biz.IMenuBiz {
+	return &menuBiz{restaurants: restaurants}
 }
 
 func (i *menuBiz) AddMenuItem(
