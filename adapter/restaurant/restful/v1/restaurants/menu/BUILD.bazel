@@ -1,0 +1,12 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "menu",
+    srcs = ["api.go"],
+    importpath = "github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants/menu",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//adapter/restaurant/wirex",
+        "@com_github_gin_gonic_gin//:gin",
+    ],
+)
