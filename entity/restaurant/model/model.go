@@ -36,7 +36,7 @@ func NewRestaurant(name string, address Address) *Restaurant {
 // AddMenuItem adds a new menu item to the restaurant's menu.
 func (x *Restaurant) AddMenuItem(name, description string, price float64) {
 	menuItem := MenuItem{
-		ID:          uuid.New(),
+		ID:          uuid.New().String(),
 		Name:        name,
 		Description: description,
 		Price:       price,
@@ -48,7 +48,7 @@ func (x *Restaurant) AddMenuItem(name, description string, price float64) {
 // MenuItem represents an item in the restaurant's menu.
 type MenuItem struct {
 	// ID is the unique identifier of the menu item.
-	ID uuid.UUID `json:"id,omitempty" bson:"_id,omitempty"`
+	ID string `json:"id,omitempty" bson:"_id,omitempty"`
 
 	// Name is the name of the menu item.
 	Name string `json:"name,omitempty" bson:"name"`

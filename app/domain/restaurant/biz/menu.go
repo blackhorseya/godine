@@ -64,16 +64,54 @@ func (i *menuBiz) GetMenuItems(
 	ctx contextx.Contextx,
 	restaurantID uuid.UUID,
 ) (items []model.MenuItem, total int, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "menu.biz.get_menu_items")
+	defer span.End()
+
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	if err != nil {
+		ctx.Error(
+			"get restaurant by id failed",
+			zap.Error(err),
+			zap.String("restaurant_id", restaurantID.String()),
+		)
+		return nil, 0, err
+	}
+	if restaurant == nil {
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		return nil, 0, errorx.New(http.StatusNotFound, 404, "restaurant not found")
+	}
+
+	return restaurant.Menu, len(restaurant.Menu), nil
 }
 
 func (i *menuBiz) GetMenuItem(
 	ctx contextx.Contextx,
 	restaurantID, menuItemID uuid.UUID,
 ) (item *model.MenuItem, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "menu.biz.get_menu_item")
+	defer span.End()
+
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	if err != nil {
+		ctx.Error(
+			"get restaurant by id failed",
+			zap.Error(err),
+			zap.String("restaurant_id", restaurantID.String()),
+		)
+		return nil, err
+	}
+	if restaurant == nil {
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		return nil, errorx.New(http.StatusNotFound, 404, "restaurant not found")
+	}
+
+	for _, menuItem := range restaurant.Menu {
+		if menuItem.ID == menuItemID.String() {
+			return &menuItem, nil
+		}
+	}
+
+	return nil, errorx.New(http.StatusNotFound, 404, "menu item not found")
 }
 
 func (i *menuBiz) UpdateMenuItem(
