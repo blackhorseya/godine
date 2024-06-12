@@ -1,5 +1,59 @@
 basePath: /api
 definitions:
+  github_com_blackhorseya_godine_entity_restaurant_model.Address:
+    properties:
+      city:
+        description: City is the city where the restaurant is located.
+        type: string
+      state:
+        description: State is the state where the restaurant is located.
+        type: string
+      street:
+        description: Street is the street address of the restaurant.
+        type: string
+      zip_code:
+        description: ZipCode is the postal code of the restaurant's location.
+        type: string
+    type: object
+  github_com_blackhorseya_godine_entity_restaurant_model.MenuItem:
+    properties:
+      description:
+        description: Description provides details about the menu item.
+        type: string
+      id:
+        description: ID is the unique identifier of the menu item.
+        type: string
+      is_available:
+        description: IsAvailable indicates whether the menu item is available.
+        type: boolean
+      name:
+        description: Name is the name of the menu item.
+        type: string
+      price:
+        description: Price is the cost of the menu item.
+        type: number
+    type: object
+  github_com_blackhorseya_godine_entity_restaurant_model.Restaurant:
+    properties:
+      address:
+        allOf:
+        - $ref: '#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Address'
+        description: Address is the address of the restaurant.
+      id:
+        description: ID is the unique identifier of the restaurant.
+        type: string
+      is_open:
+        description: IsOpen indicates whether the restaurant is open for business.
+        type: boolean
+      menu:
+        description: Menu is the list of menu items available in the restaurant.
+        items:
+          $ref: '#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem'
+        type: array
+      name:
+        description: Name is the name of the restaurant.
+        type: string
+    type: object
   responsex.Response:
     properties:
       code:
@@ -39,6 +93,72 @@ paths:
       summary: Check the health of the service.
       tags:
       - health
+  /v1/restaurants:
+    get:
+      consumes:
+      - application/json
+      description: Get the restaurant list.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: total count
+              type: int
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      summary: Get the restaurant list.
+      tags:
+      - restaurants
+  /v1/restaurants/{restaurant_id}/menu:
+    get:
+      consumes:
+      - application/json
+      description: Get the menu list.
+      parameters:
+      - description: restaurant id
+        in: path
+        name: restaurant_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: total count
+              type: int
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      summary: Get the menu list.
+      tags:
+      - menu
 securityDefinitions:
   Bearer:
     in: header

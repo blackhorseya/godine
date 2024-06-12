@@ -7,6 +7,7 @@ import (
 	"strings"
 	"syscall"
 
+	v1 "github.com/blackhorseya/godine/adapter/restaurant/restful/v1"
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
 	_ "github.com/blackhorseya/godine/api/restaurant/restful" // swagger docs
 	"github.com/blackhorseya/godine/app/infra/configx"
@@ -95,6 +96,8 @@ func (i *impl) InitRouting() error {
 			ginSwagger.InstanceName("restaurant_restful"),
 		))
 		api.GET("/healthz", i.Healthz)
+
+		v1.Handle(api, i.injector)
 	}
 
 	return nil

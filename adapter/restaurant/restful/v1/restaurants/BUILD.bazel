@@ -6,7 +6,9 @@ go_library(
     importpath = "github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants",
     visibility = ["//visibility:public"],
     deps = [
+        "//adapter/restaurant/restful/v1/restaurants/menu",
         "//adapter/restaurant/wirex",
+        "//entity/restaurant/model",
         "@com_github_gin_gonic_gin//:gin",
     ],
 )

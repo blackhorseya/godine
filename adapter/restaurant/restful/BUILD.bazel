@@ -9,6 +9,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/adapter/restaurant/restful",
     visibility = ["//visibility:public"],
     deps = [
+        "//adapter/restaurant/restful/v1:restful",
         "//adapter/restaurant/wirex",
         "//api/restaurant/restful",
         "//app/domain/restaurant/biz",

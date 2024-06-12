@@ -51,9 +51,196 @@ const docTemplaterestaurant_restful = `{
                     }
                 }
             }
+        },
+        "/v1/restaurants": {
+            "get": {
+                "description": "Get the restaurant list.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "Get the restaurant list.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "headers": {
+                            "X-Total-Count": {
+                                "type": "int",
+                                "description": "total count"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/restaurants/{restaurant_id}/menu": {
+            "get": {
+                "description": "Get the menu list.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "menu"
+                ],
+                "summary": "Get the menu list.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "restaurant id",
+                        "name": "restaurant_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "headers": {
+                            "X-Total-Count": {
+                                "type": "int",
+                                "description": "total count"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "github_com_blackhorseya_godine_entity_restaurant_model.Address": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "description": "City is the city where the restaurant is located.",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "State is the state where the restaurant is located.",
+                    "type": "string"
+                },
+                "street": {
+                    "description": "Street is the street address of the restaurant.",
+                    "type": "string"
+                },
+                "zip_code": {
+                    "description": "ZipCode is the postal code of the restaurant's location.",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_blackhorseya_godine_entity_restaurant_model.MenuItem": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "description": "Description provides details about the menu item.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID is the unique identifier of the menu item.",
+                    "type": "string"
+                },
+                "is_available": {
+                    "description": "IsAvailable indicates whether the menu item is available.",
+                    "type": "boolean"
+                },
+                "name": {
+                    "description": "Name is the name of the menu item.",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "Price is the cost of the menu item.",
+                    "type": "number"
+                }
+            }
+        },
+        "github_com_blackhorseya_godine_entity_restaurant_model.Restaurant": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "description": "Address is the address of the restaurant.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Address"
+                        }
+                    ]
+                },
+                "id": {
+                    "description": "ID is the unique identifier of the restaurant.",
+                    "type": "string"
+                },
+                "is_open": {
+                    "description": "IsOpen indicates whether the restaurant is open for business.",
+                    "type": "boolean"
+                },
+                "menu": {
+                    "description": "Menu is the list of menu items available in the restaurant.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem"
+                    }
+                },
+                "name": {
+                    "description": "Name is the name of the restaurant.",
+                    "type": "string"
+                }
+            }
+        },
         "responsex.Response": {
             "type": "object",
             "properties": {
