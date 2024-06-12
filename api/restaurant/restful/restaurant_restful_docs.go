@@ -100,6 +100,56 @@ const docTemplaterestaurant_restful = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Create the restaurant.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "Create the restaurant.",
+                "parameters": [
+                    {
+                        "description": "restaurant payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/restaurants.PostPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
             }
         },
         "/v1/restaurants/{restaurant_id}/menu": {
@@ -249,6 +299,20 @@ const docTemplaterestaurant_restful = `{
                 },
                 "data": {},
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "restaurants.PostPayload": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 }
             }

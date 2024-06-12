@@ -62,6 +62,15 @@ definitions:
       message:
         type: string
     type: object
+  restaurants.PostPayload:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
 info:
   contact:
     email: blackhorseya@gmail.com
@@ -121,6 +130,36 @@ paths:
           schema:
             $ref: '#/definitions/responsex.Response'
       summary: Get the restaurant list.
+      tags:
+      - restaurants
+    post:
+      consumes:
+      - application/json
+      description: Create the restaurant.
+      parameters:
+      - description: restaurant payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/restaurants.PostPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      summary: Create the restaurant.
       tags:
       - restaurants
   /v1/restaurants/{restaurant_id}/menu:
