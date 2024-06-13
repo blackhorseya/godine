@@ -1,6 +1,7 @@
 package restaurant
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/blackhorseya/godine/entity/restaurant/model"
@@ -26,13 +27,11 @@ func (i *httpClient) Create(ctx contextx.Contextx, data *model.Restaurant) (err 
 }
 
 func (i *httpClient) Update(ctx contextx.Contextx, data *model.Restaurant) (err error) {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	return errors.New("do not support update")
 }
 
 func (i *httpClient) Delete(ctx contextx.Contextx, id string) (err error) {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	return errors.New("do not support delete")
 }
 
 func (i *httpClient) GetByID(ctx contextx.Contextx, id string) (item *model.Restaurant, err error) {
