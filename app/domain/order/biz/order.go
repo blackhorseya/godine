@@ -1,18 +1,26 @@
 package biz
 
 import (
-	"github.com/blackhorseya/godine/entity/order/biz"
+	orderB "github.com/blackhorseya/godine/entity/order/biz"
 	"github.com/blackhorseya/godine/entity/order/model"
+	"github.com/blackhorseya/godine/entity/order/repo"
+	restB "github.com/blackhorseya/godine/entity/restaurant/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
 )
 
 type orderBiz struct {
+	restaurantService restB.IRestaurantBiz
+
+	orders repo.IOrderRepo
 }
 
-// NewOrderBiz create and return a new order biz
-func NewOrderBiz() biz.IOrderBiz {
-	return &orderBiz{}
+// NewOrderBiz create and return a new order orderB
+func NewOrderBiz(restaurantService restB.IRestaurantBiz, orders repo.IOrderRepo) orderB.IOrderBiz {
+	return &orderBiz{
+		restaurantService: restaurantService,
+		orders:            orders,
+	}
 }
 
 func (i *orderBiz) CreateOrder(
@@ -33,7 +41,7 @@ func (i *orderBiz) GetOrder(ctx contextx.Contextx, id uuid.UUID) (order *model.O
 
 func (i *orderBiz) ListOrders(
 	ctx contextx.Contextx,
-	options biz.ListOrdersOptions,
+	options orderB.ListOrdersOptions,
 ) (orders []model.Order, total int, err error) {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
@@ -62,7 +70,7 @@ func (i *orderBiz) DeleteOrder(ctx contextx.Contextx, id uuid.UUID) error {
 func (i *orderBiz) ListOrdersByUser(
 	ctx contextx.Contextx,
 	userID uuid.UUID,
-	options biz.ListOrdersOptions,
+	options orderB.ListOrdersOptions,
 ) (orders []model.Order, total int, err error) {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
@@ -71,7 +79,7 @@ func (i *orderBiz) ListOrdersByUser(
 func (i *orderBiz) ListOrdersByRestaurant(
 	ctx contextx.Contextx,
 	restaurantID uuid.UUID,
-	options biz.ListOrdersOptions,
+	options orderB.ListOrdersOptions,
 ) (orders []model.Order, total int, err error) {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
