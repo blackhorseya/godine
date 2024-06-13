@@ -2,10 +2,7 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "restaurant",
-    srcs = [
-        "http_client.go",
-        "mongodb.go",
-    ],
+    srcs = ["mongodb.go"],
     importpath = "github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant",
     visibility = ["//visibility:public"],
     deps = [
@@ -13,7 +10,6 @@ go_library(
         "//entity/restaurant/model",
         "//entity/restaurant/repo",
         "//pkg/contextx",
-        "@io_opentelemetry_go_contrib_instrumentation_net_http_otelhttp//:otelhttp",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//mongo",
         "@org_mongodb_go_mongo_driver//mongo/options",
