@@ -12,7 +12,7 @@ type Address struct {
 	State string `json:"state,omitempty" bson:"state"`
 
 	// ZipCode is the postal code of the delivery location.
-	ZipCode string `json:"zip_code,omitempty" bson:"zipCode"`
+	ZipCode string `json:"zip_code,omitempty" bson:"zip_code"`
 }
 
 func (a Address) String() string {
