@@ -6,6 +6,7 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants/menu"
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/restaurant/biz"
 	_ "github.com/blackhorseya/godine/entity/restaurant/model" // swagger docs
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -55,6 +56,9 @@ func (i *impl) GetList(c *gin.Context) {
 		return
 	}
 
+	ctx, span := otelx.Span(ctx, "api.restaurants.get_list")
+	defer span.End()
+
 	var query GetListQuery
 	err = c.ShouldBindQuery(&query)
 	if err != nil {
@@ -97,6 +101,9 @@ func (i *impl) Post(c *gin.Context) {
 		_ = c.Error(err)
 		return
 	}
+
+	ctx, span := otelx.Span(ctx, "api.restaurants.post")
+	defer span.End()
 
 	var payload PostPayload
 	err = c.ShouldBindJSON(&payload)

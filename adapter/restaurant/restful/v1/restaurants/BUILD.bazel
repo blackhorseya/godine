@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//adapter/restaurant/restful/v1/restaurants/menu",
         "//adapter/restaurant/wirex",
+        "//app/infra/otelx",
         "//entity/restaurant/biz",
         "//entity/restaurant/model",
         "//pkg/contextx",

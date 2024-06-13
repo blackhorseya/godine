@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	_ "github.com/blackhorseya/godine/entity/restaurant/model" // swagger docs
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
@@ -53,6 +54,9 @@ func (i *impl) GetList(c *gin.Context) {
 		return
 	}
 
+	ctx, span := otelx.Span(ctx, "api.menu.get_list")
+	defer span.End()
+
 	var query GetListQuery
 	err = c.ShouldBindQuery(&query)
 	if err != nil {
@@ -100,6 +104,9 @@ func (i *impl) Post(c *gin.Context) {
 		_ = c.Error(err)
 		return
 	}
+
+	ctx, span := otelx.Span(ctx, "api.menu.post")
+	defer span.End()
 
 	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
 	if err != nil {
