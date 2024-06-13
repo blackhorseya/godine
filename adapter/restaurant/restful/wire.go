@@ -9,9 +9,11 @@ import (
 	"github.com/blackhorseya/godine/app/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant"
 	"github.com/blackhorseya/godine/app/infra/configx"
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
@@ -24,6 +26,11 @@ func initApplication() (*configx.Application, error) {
 	}
 
 	err = logging.Init(app.Log)
+	if err != nil {
+		return nil, err
+	}
+
+	err = otelx.SetupOTelSDK(contextx.Background(), app)
 	if err != nil {
 		return nil, err
 	}

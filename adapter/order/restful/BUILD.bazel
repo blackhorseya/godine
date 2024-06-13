@@ -12,6 +12,7 @@ go_library(
         "//adapter/order/wirex",
         "//api/order/restful",
         "//app/infra/configx",
+        "//app/infra/otelx",
         "//app/infra/transports/httpx",
         "//pkg/adapterx",
         "//pkg/contextx",

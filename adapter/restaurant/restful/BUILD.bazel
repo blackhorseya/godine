@@ -15,6 +15,7 @@ go_library(
         "//app/domain/restaurant/biz",
         "//app/domain/restaurant/repo/restaurant",
         "//app/infra/configx",
+        "//app/infra/otelx",
         "//app/infra/storage/mongodbx",
         "//app/infra/transports/httpx",
         "//pkg/adapterx",
