@@ -50,6 +50,9 @@ gen-swagger: ## generate swagger
 	@swag init -q -g impl.go -d ./adapter/restaurant/restful,./entity,./pkg \
   -o ./api/restaurant/restful --instanceName restaurant_restful --parseDependency
 
+	@swag init -q -g impl.go -d ./adapter/order/restful,./entity,./pkg \
+  -o ./api/order/restful --instanceName order_restful --parseDependency
+
 ## docker
 .PHONY: docker-push
 docker-push: ## push docker image

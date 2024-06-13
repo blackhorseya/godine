@@ -9,6 +9,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/cmd",
     visibility = ["//visibility:public"],
     deps = [
+        "//adapter/order/restful",
         "//adapter/restaurant/restful",
         "//app/infra/configx",
         "//pkg/cmdx",
