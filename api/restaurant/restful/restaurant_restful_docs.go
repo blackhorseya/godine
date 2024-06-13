@@ -65,6 +65,23 @@ const docTemplaterestaurant_restful = `{
                     "restaurants"
                 ],
                 "summary": "Get the restaurant list.",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -172,6 +189,21 @@ const docTemplaterestaurant_restful = `{
                         "name": "restaurant_id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "name": "size",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -200,6 +232,63 @@ const docTemplaterestaurant_restful = `{
                                 "type": "int",
                                 "description": "total count"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a menu item.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "menu"
+                ],
+                "summary": "Add a menu item.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "restaurant id",
+                        "name": "restaurant_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "menu item payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/menu.PostPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "500": {
@@ -288,6 +377,27 @@ const docTemplaterestaurant_restful = `{
                 "name": {
                     "description": "Name is the name of the restaurant.",
                     "type": "string"
+                }
+            }
+        },
+        "menu.PostPayload": {
+            "type": "object",
+            "required": [
+                "name",
+                "price"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": ""
+                },
+                "name": {
+                    "type": "string",
+                    "example": "menu item name"
+                },
+                "price": {
+                    "type": "number",
+                    "example": 10
                 }
             }
         },

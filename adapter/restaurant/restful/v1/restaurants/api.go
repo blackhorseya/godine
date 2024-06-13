@@ -31,6 +31,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 	}
 }
 
+// GetListQuery is the get list query.
 type GetListQuery struct {
 	Page int `form:"page" default:"1" minimum:"1"`
 	Size int `form:"size" default:"10" minimum:"1" maximum:"100"`
@@ -42,6 +43,7 @@ type GetListQuery struct {
 // @Tags restaurants
 // @Accept json
 // @Produce json
+// @Param query query GetListQuery false "get list query"
 // @Success 200 {object} responsex.Response{data=[]model.Restaurant}
 // @Failure 500 {object} responsex.Response
 // @Header 200 {int} X-Total-Count "total count"

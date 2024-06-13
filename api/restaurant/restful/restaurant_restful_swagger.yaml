@@ -54,6 +54,21 @@ definitions:
         description: Name is the name of the restaurant.
         type: string
     type: object
+  menu.PostPayload:
+    properties:
+      description:
+        example: ""
+        type: string
+      name:
+        example: menu item name
+        type: string
+      price:
+        example: 10
+        type: number
+    required:
+    - name
+    - price
+    type: object
   responsex.Response:
     properties:
       code:
@@ -108,6 +123,18 @@ paths:
       consumes:
       - application/json
       description: Get the restaurant list.
+      parameters:
+      - default: 1
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        in: query
+        maximum: 100
+        minimum: 1
+        name: size
+        type: integer
       produces:
       - application/json
       responses:
@@ -174,6 +201,17 @@ paths:
         name: restaurant_id
         required: true
         type: string
+      - default: 1
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        in: query
+        maximum: 100
+        minimum: 1
+        name: size
+        type: integer
       produces:
       - application/json
       responses:
@@ -197,6 +235,41 @@ paths:
           schema:
             $ref: '#/definitions/responsex.Response'
       summary: Get the menu list.
+      tags:
+      - menu
+    post:
+      consumes:
+      - application/json
+      description: Add a menu item.
+      parameters:
+      - description: restaurant id
+        in: path
+        name: restaurant_id
+        required: true
+        type: string
+      - description: menu item payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/menu.PostPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      summary: Add a menu item.
       tags:
       - menu
 securityDefinitions:
