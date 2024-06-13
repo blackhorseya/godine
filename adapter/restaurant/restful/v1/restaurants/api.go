@@ -1,9 +1,16 @@
 package restaurants
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants/menu"
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
+	"github.com/blackhorseya/godine/entity/restaurant/biz"
 	_ "github.com/blackhorseya/godine/entity/restaurant/model" // swagger docs
+	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
+	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,6 +31,11 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 	}
 }
 
+type GetListQuery struct {
+	Page int `form:"page" default:"1" minimum:"1"`
+	Size int `form:"size" default:"10" minimum:"1" maximum:"100"`
+}
+
 // GetList is used to get the restaurant list.
 // @Summary Get the restaurant list.
 // @Description Get the restaurant list.
@@ -35,13 +47,35 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 // @Header 200 {int} X-Total-Count "total count"
 // @Router /v1/restaurants [get]
 func (i *impl) GetList(c *gin.Context) {
-	// todo: 2024/6/12|sean|implement me
-	panic("implement me")
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var query GetListQuery
+	err = c.ShouldBindQuery(&query)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	items, total, err := i.injector.RestaurantService.ListRestaurants(ctx, biz.ListRestaurantsOptions{
+		Page:     query.Page,
+		PageSize: query.Size,
+	})
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	c.Header("X-Total-Count", strconv.Itoa(total))
+	responsex.OK(c, items)
 }
 
 // PostPayload is the post payload.
 type PostPayload struct {
-	Name        string `json:"name" binding:"required"`
+	Name        string `json:"name" binding:"required" example:"restaurant name"`
 	Description string `json:"description"`
 }
 
@@ -56,6 +90,24 @@ type PostPayload struct {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/restaurants [post]
 func (i *impl) Post(c *gin.Context) {
-	// todo: 2024/6/12|sean|implement me
-	panic("implement me")
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var payload PostPayload
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	item, err := i.injector.RestaurantService.CreateRestaurant(ctx, payload.Name, payload.Description)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }

@@ -8,7 +8,11 @@ go_library(
     deps = [
         "//adapter/restaurant/restful/v1/restaurants/menu",
         "//adapter/restaurant/wirex",
+        "//entity/restaurant/biz",
         "//entity/restaurant/model",
+        "//pkg/contextx",
+        "//pkg/errorx",
+        "//pkg/responsex",
         "@com_github_gin_gonic_gin//:gin",
     ],
 )

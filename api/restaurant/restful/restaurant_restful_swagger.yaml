@@ -67,6 +67,7 @@ definitions:
       description:
         type: string
       name:
+        example: restaurant name
         type: string
     required:
     - name

@@ -313,7 +313,8 @@ const docTemplaterestaurant_restful = `{
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "restaurant name"
                 }
             }
         }
