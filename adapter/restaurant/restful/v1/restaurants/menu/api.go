@@ -1,9 +1,16 @@
 package menu
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
 	_ "github.com/blackhorseya/godine/entity/restaurant/model" // swagger docs
+	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
+	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type impl struct {
@@ -40,8 +47,33 @@ type GetListQuery struct {
 // @Header 200 {int} X-Total-Count "total count"
 // @Router /v1/restaurants/{restaurant_id}/menu [get]
 func (i *impl) GetList(c *gin.Context) {
-	// todo: 2024/6/12|sean|implement me
-	panic("implement me")
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var query GetListQuery
+	err = c.ShouldBindQuery(&query)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	items, total, err := i.injector.MenuService.ListMenuItems(ctx, restaurantID)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	c.Header("X-Total-Count", strconv.Itoa(total))
+	responsex.OK(c, items)
 }
 
 // PostPayload is the post payload.
@@ -63,6 +95,30 @@ type PostPayload struct {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/restaurants/{restaurant_id}/menu [post]
 func (i *impl) Post(c *gin.Context) {
-	// todo: 2024/6/12|sean|implement me
-	panic("implement me")
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	var payload PostPayload
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	item, err := i.injector.MenuService.AddMenuItem(ctx, restaurantID, payload.Name, payload.Description, payload.Price)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }

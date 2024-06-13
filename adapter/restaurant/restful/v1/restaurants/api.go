@@ -27,7 +27,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 		group.GET("", i.GetList)
 		group.POST("", i.Post)
 
-		menu.Handle(group, injector)
+		menu.Handle(group.Group("/:restaurant_id"), injector)
 	}
 }
 

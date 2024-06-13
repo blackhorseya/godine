@@ -60,7 +60,7 @@ func (i *menuBiz) AddMenuItem(
 	return &restaurant.Menu[len(restaurant.Menu)-1], nil
 }
 
-func (i *menuBiz) GetMenuItems(
+func (i *menuBiz) ListMenuItems(
 	ctx contextx.Contextx,
 	restaurantID uuid.UUID,
 ) (items []model.MenuItem, total int, err error) {

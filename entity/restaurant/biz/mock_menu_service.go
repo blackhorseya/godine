@@ -67,9 +67,9 @@ func (mr *MockIMenuBizMockRecorder) GetMenuItem(ctx, restaurantID, menuItemID in
 }
 
 // GetMenuItems mocks base method.
-func (m *MockIMenuBiz) GetMenuItems(ctx contextx.Contextx, restaurantID uuid.UUID) ([]model.MenuItem, int, error) {
+func (m *MockIMenuBiz) ListMenuItems(ctx contextx.Contextx, restaurantID uuid.UUID) ([]model.MenuItem, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMenuItems", ctx, restaurantID)
+	ret := m.ctrl.Call(m, "ListMenuItems", ctx, restaurantID)
 	ret0, _ := ret[0].([]model.MenuItem)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
@@ -79,7 +79,7 @@ func (m *MockIMenuBiz) GetMenuItems(ctx contextx.Contextx, restaurantID uuid.UUI
 // GetMenuItems indicates an expected call of GetMenuItems.
 func (mr *MockIMenuBizMockRecorder) GetMenuItems(ctx, restaurantID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMenuItems", reflect.TypeOf((*MockIMenuBiz)(nil).GetMenuItems), ctx, restaurantID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListMenuItems", reflect.TypeOf((*MockIMenuBiz)(nil).ListMenuItems), ctx, restaurantID)
 }
 
 // RemoveMenuItem mocks base method.
