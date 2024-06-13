@@ -51,9 +51,146 @@ const docTemplateorder_restful = `{
                     }
                 }
             }
+        },
+        "/v1/orders": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create a new order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Create a new order",
+                "parameters": [
+                    {
+                        "description": "order payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/orders.PostPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.Order"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "github_com_blackhorseya_godine_entity_order_model.Order": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "CreatedAt is the timestamp when the order was created.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID is the unique identifier of the order.",
+                    "type": "string"
+                },
+                "items": {
+                    "description": "Items are the list of items in the order.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.OrderItem"
+                    }
+                },
+                "restaurant_id": {
+                    "description": "RestaurantID is the identifier of the restaurant where the order was placed.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Status is the current status of the order (e.g., pending, confirmed, delivered).",
+                    "type": "string"
+                },
+                "total_amount": {
+                    "description": "TotalAmount is the total amount of the order.",
+                    "type": "number"
+                },
+                "updated_at": {
+                    "description": "UpdatedAt is the timestamp when the order was last updated.",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "UserID is the identifier of the user who placed the order.",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_blackhorseya_godine_entity_order_model.OrderItem": {
+            "type": "object",
+            "properties": {
+                "menu_item_id": {
+                    "description": "MenuItemID is the identifier of the menu item.",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "Price is the price of a single unit of the menu item.",
+                    "type": "number"
+                },
+                "quantity": {
+                    "description": "Quantity is the quantity of the menu item ordered.",
+                    "type": "integer"
+                }
+            }
+        },
+        "orders.PostPayload": {
+            "type": "object",
+            "required": [
+                "restaurant_id",
+                "user_id"
+            ],
+            "properties": {
+                "restaurant_id": {
+                    "type": "string",
+                    "example": "a1dbb32b-05f0-4354-8253-60f4c6deae12"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "8db96c75-cb3c-4c00-8bab-fd088c986f51"
+                }
+            }
+        },
         "responsex.Response": {
             "type": "object",
             "properties": {

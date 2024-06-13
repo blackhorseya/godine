@@ -1,10 +1,20 @@
 package order
 
 import (
+	"time"
+
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/order/model"
 	"github.com/blackhorseya/godine/entity/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
+)
+
+const (
+	defaultTimeout = 5 * time.Second
+	dbName         = "godine"
+	collName       = "orders"
 )
 
 type mongodb struct {
@@ -17,8 +27,22 @@ func NewMongodb(rw *mongo.Client) repo.IOrderRepo {
 }
 
 func (i *mongodb) Create(ctx contextx.Contextx, order *model.Order) error {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "order.mongodb.create")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	if order.ID == "" {
+		order.ID = uuid.New().String()
+	}
+
+	_, err := i.rw.Database(dbName).Collection(collName).InsertOne(timeout, order)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, err error) {

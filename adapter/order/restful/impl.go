@@ -7,6 +7,7 @@ import (
 	"strings"
 	"syscall"
 
+	v1 "github.com/blackhorseya/godine/adapter/order/restful/v1"
 	"github.com/blackhorseya/godine/adapter/order/wirex"
 	_ "github.com/blackhorseya/godine/api/order/restful" // swagger docs
 	"github.com/blackhorseya/godine/app/infra/configx"
@@ -95,6 +96,8 @@ func (i *impl) InitRouting() error {
 			ginSwagger.InstanceName("order_restful"),
 		))
 		api.GET("/healthz", i.Healthz)
+
+		v1.Handle(api, i.injector)
 	}
 
 	return nil
