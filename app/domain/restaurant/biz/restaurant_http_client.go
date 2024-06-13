@@ -1,12 +1,19 @@
 package biz
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
 	"net/http"
+	"net/url"
 
+	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants"
 	"github.com/blackhorseya/godine/app/infra/configx"
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/restaurant/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/google/uuid"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
@@ -28,13 +35,85 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 	ctx contextx.Contextx,
 	name, address string,
 ) (item *model.Restaurant, err error) {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "restaurantHTTPClient.CreateRestaurant")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants")
+	if err != nil {
+		return nil, err
+	}
+
+	payload, err := json.Marshal(restaurants.PostPayload{
+		Name:        name,
+		Description: address,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+		Data               *model.Restaurant `json:"data"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return nil, err
+	}
+
+	if got.Code != http.StatusOK {
+		return nil, errors.New(got.Message)
+	}
+
+	return got.Data, nil
 }
 
 func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id uuid.UUID) (item *model.Restaurant, err error) {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "restaurantHTTPClient.GetRestaurant")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id.String())
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, ep.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+		Data               *model.Restaurant `json:"data"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return nil, err
+	}
+
+	if got.Code != http.StatusOK {
+		return nil, errors.New(got.Message)
+	}
+
+	return got.Data, nil
 }
 
 func (i *restaurantHTTPClient) ListRestaurants(
