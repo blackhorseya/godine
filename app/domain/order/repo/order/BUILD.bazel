@@ -5,5 +5,10 @@ go_library(
     srcs = ["mongodb.go"],
     importpath = "github.com/blackhorseya/godine/app/domain/order/repo/order",
     visibility = ["//visibility:public"],
-    deps = ["@org_mongodb_go_mongo_driver//mongo"],
+    deps = [
+        "//entity/order/model",
+        "//entity/order/repo",
+        "//pkg/contextx",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
 )
