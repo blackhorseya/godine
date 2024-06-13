@@ -162,6 +162,56 @@
                 }
             }
         },
+        "/v1/restaurants/{restaurant_id}": {
+            "get": {
+                "description": "Get the restaurant by id.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "Get the restaurant by id.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "restaurant id",
+                        "name": "restaurant_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/restaurants/{restaurant_id}/menu": {
             "get": {
                 "description": "Get the menu list.",

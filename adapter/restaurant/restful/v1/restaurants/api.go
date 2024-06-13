@@ -13,6 +13,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type impl struct {
@@ -27,6 +28,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 	{
 		group.GET("", i.GetList)
 		group.POST("", i.Post)
+		group.GET("/:restaurant_id", i.GetByID)
 
 		menu.Handle(group.Group("/:restaurant_id"), injector)
 	}
@@ -113,6 +115,41 @@ func (i *impl) Post(c *gin.Context) {
 	}
 
 	item, err := i.injector.RestaurantService.CreateRestaurant(ctx, payload.Name, payload.Description)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
+}
+
+// GetByID is used to get the restaurant by id.
+// @Summary Get the restaurant by id.
+// @Description Get the restaurant by id.
+// @Tags restaurants
+// @Accept json
+// @Produce json
+// @Param restaurant_id path string true "restaurant id"
+// @Success 200 {object} responsex.Response{data=model.Restaurant}
+// @Failure 500 {object} responsex.Response
+// @Router /v1/restaurants/{restaurant_id} [get]
+func (i *impl) GetByID(c *gin.Context) {
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	ctx, span := otelx.Span(ctx, "api.restaurants.get_by_id")
+	defer span.End()
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	item, err := i.injector.RestaurantService.GetRestaurant(ctx, restaurantID)
 	if err != nil {
 		responsex.Err(c, err)
 		return

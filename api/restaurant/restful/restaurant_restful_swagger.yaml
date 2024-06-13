@@ -190,6 +190,36 @@ paths:
       summary: Create the restaurant.
       tags:
       - restaurants
+  /v1/restaurants/{restaurant_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get the restaurant by id.
+      parameters:
+      - description: restaurant id
+        in: path
+        name: restaurant_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      summary: Get the restaurant by id.
+      tags:
+      - restaurants
   /v1/restaurants/{restaurant_id}/menu:
     get:
       consumes:
