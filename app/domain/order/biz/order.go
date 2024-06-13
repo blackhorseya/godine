@@ -1,12 +1,18 @@
 package biz
 
 import (
+	"errors"
+	"net/http"
+
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	orderB "github.com/blackhorseya/godine/entity/order/biz"
 	"github.com/blackhorseya/godine/entity/order/model"
 	"github.com/blackhorseya/godine/entity/order/repo"
 	restB "github.com/blackhorseya/godine/entity/restaurant/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type orderBiz struct {
@@ -30,8 +36,38 @@ func (i *orderBiz) CreateOrder(
 	address model.Address,
 	totalAmount float64,
 ) (order *model.Order, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.order.create_order")
+	defer span.End()
+
+	restaurant, err := i.restaurantService.GetRestaurant(ctx, restaurantID)
+	if err != nil {
+		ctx.Error(
+			"get restaurant from service failed",
+			zap.Error(err),
+			zap.String("restaurant_id", restaurantID.String()),
+		)
+		return nil, err
+	}
+	if restaurant == nil {
+		ctx.Error(
+			"restaurant not found",
+			zap.String("restaurant_id", restaurantID.String()),
+		)
+		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("restaurant not found"))
+	}
+
+	order = model.NewOrder(userID.String(), restaurantID.String(), items, address, totalAmount)
+	err = i.orders.Create(ctx, order)
+	if err != nil {
+		ctx.Error(
+			"create order failed",
+			zap.Error(err),
+			zap.Any("order", &order),
+		)
+		return nil, err
+	}
+
+	return order, nil
 }
 
 func (i *orderBiz) GetOrder(ctx contextx.Contextx, id uuid.UUID) (order *model.Order, err error) {

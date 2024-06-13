@@ -6,11 +6,14 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/domain/order/biz",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/otelx",
         "//entity/order/biz",
         "//entity/order/model",
         "//entity/order/repo",
         "//entity/restaurant/biz",
         "//pkg/contextx",
+        "//pkg/errorx",
         "@com_github_google_uuid//:uuid",
+        "@org_uber_go_zap//:zap",
     ],
 )
