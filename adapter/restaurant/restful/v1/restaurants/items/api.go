@@ -143,6 +143,32 @@ func (i *impl) Post(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/restaurants/{restaurant_id}/items/{item_id} [get]
 func (i *impl) GetByID(c *gin.Context) {
-	// todo: 2024/6/14|sean|implement get item by id
-	panic("implement me")
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	ctx, span := otelx.Span(ctx, "api.items.get_by_id")
+	defer span.End()
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	itemID, err := uuid.Parse(c.Param("item_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	item, err := i.injector.MenuService.GetMenuItem(ctx, restaurantID, itemID)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
