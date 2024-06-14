@@ -11,6 +11,7 @@ go_library(
     deps = [
         "//adapter/order/restful",
         "//adapter/restaurant/restful",
+        "//adapter/user/restful",
         "//app/infra/configx",
         "//pkg/cmdx",
         "@com_github_spf13_cobra//:cobra",

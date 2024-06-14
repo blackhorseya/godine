@@ -3,6 +3,7 @@ package cmd
 import (
 	order "github.com/blackhorseya/godine/adapter/order/restful"
 	restaurant "github.com/blackhorseya/godine/adapter/restaurant/restful"
+	user "github.com/blackhorseya/godine/adapter/user/restful"
 	"github.com/blackhorseya/godine/pkg/cmdx"
 	"github.com/spf13/cobra"
 )
@@ -24,6 +25,12 @@ func init() {
 		"order-restful",
 		"Start the order restful server",
 		order.New,
+	))
+
+	startCmd.AddCommand(cmdx.NewServiceCmd(
+		"user-restful",
+		"Start the user restful server",
+		user.New,
 	))
 
 	rootCmd.AddCommand(startCmd)
