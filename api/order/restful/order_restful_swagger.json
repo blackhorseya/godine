@@ -180,7 +180,7 @@
                 },
                 "user_id": {
                     "type": "string",
-                    "example": "8db96c75-cb3c-4c00-8bab-fd088c986f51"
+                    "example": "adcf23bc-cd32-4176-8d46-68f15ebdfa98"
                 }
             }
         },

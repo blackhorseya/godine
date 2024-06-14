@@ -49,7 +49,7 @@ definitions:
         example: a1dbb32b-05f0-4354-8253-60f4c6deae12
         type: string
       user_id:
-        example: 8db96c75-cb3c-4c00-8bab-fd088c986f51
+        example: adcf23bc-cd32-4176-8d46-68f15ebdfa98
         type: string
     required:
     - restaurant_id

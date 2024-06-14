@@ -211,6 +211,10 @@
                     "description": "IsActive is the status of the user.",
                     "type": "boolean"
                 },
+                "level": {
+                    "description": "Level is the level of the user.",
+                    "type": "integer"
+                },
                 "name": {
                     "description": "Name is the name of the user.",
                     "type": "string"
