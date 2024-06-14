@@ -22,6 +22,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 	group := g.Group("/users")
 	{
 		group.POST("", i.Post)
+		group.GET("/:id", i.GetByID)
 	}
 }
 
@@ -59,6 +60,36 @@ func (i *impl) Post(c *gin.Context) {
 	}
 
 	item, err := i.injector.UserService.CreateUser(ctx, payload.Name, payload.Email, payload.Password, payload.Address)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
+}
+
+// GetByID is used to get a user by id.
+// @Summary Get a user by id
+// @Description get a user by id
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "user id"
+// @Success 200 {object} responsex.Response{data=model.User}
+// @Failure 400 {object} responsex.Response
+// @Failure 404 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/users/{id} [get]
+func (i *impl) GetByID(c *gin.Context) {
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	id := c.Param("id")
+
+	item, err := i.injector.UserService.GetUser(ctx, id)
 	if err != nil {
 		responsex.Err(c, err)
 		return
