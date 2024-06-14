@@ -21,3 +21,19 @@ type User struct {
 	// Address is the address of the user.
 	Address Address `json:"address,omitempty" bson:"address"`
 }
+
+// NewUser creates and returns a new user.
+func NewUser(name, email, password string, address Address) *User {
+	return &User{
+		ID:       uuid.New(),
+		Name:     name,
+		Email:    email,
+		Password: password,
+		Address:  address,
+	}
+}
+
+// UpdateAddress updates the user's address.
+func (x *User) UpdateAddress(newAddress Address) {
+	x.Address = newAddress
+}
