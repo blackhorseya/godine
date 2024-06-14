@@ -3,15 +3,19 @@ package biz
 import (
 	"github.com/blackhorseya/godine/entity/user/biz"
 	"github.com/blackhorseya/godine/entity/user/model"
+	"github.com/blackhorseya/godine/entity/user/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
 type userBiz struct {
+	users repo.IUserRepo
 }
 
 // NewUserBiz create and return a new user biz
-func NewUserBiz() biz.IUserBiz {
-	return &userBiz{}
+func NewUserBiz(users repo.IUserRepo) biz.IUserBiz {
+	return &userBiz{
+		users: users,
+	}
 }
 
 func (i *userBiz) CreateUser(
