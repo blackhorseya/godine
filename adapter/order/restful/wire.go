@@ -9,6 +9,7 @@ import (
 	"github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/order/repo/order"
 	biz2 "github.com/blackhorseya/godine/app/domain/restaurant/biz"
+	biz3 "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
@@ -48,6 +49,7 @@ var providerSet = wire.NewSet(
 
 	biz.NewOrderBiz,
 	biz2.NewRestaurantHTTPClient,
+	biz3.NewUserHTTPClient,
 	order.NewMongodb,
 	mongodbx.NewClient,
 )

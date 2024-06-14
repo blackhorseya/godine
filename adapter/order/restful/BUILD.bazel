@@ -15,6 +15,7 @@ go_library(
         "//app/domain/order/biz",
         "//app/domain/order/repo/order",
         "//app/domain/restaurant/biz",
+        "//app/domain/user/biz",
         "//app/infra/configx",
         "//app/infra/otelx",
         "//app/infra/storage/mongodbx",

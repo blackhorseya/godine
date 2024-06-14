@@ -9,6 +9,7 @@ import (
 	"github.com/blackhorseya/godine/entity/order/model"
 	"github.com/blackhorseya/godine/entity/order/repo"
 	restB "github.com/blackhorseya/godine/entity/restaurant/biz"
+	userB "github.com/blackhorseya/godine/entity/user/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/google/uuid"
@@ -17,14 +18,20 @@ import (
 
 type orderBiz struct {
 	restaurantService restB.IRestaurantBiz
+	userService       userB.IUserBiz
 
 	orders repo.IOrderRepo
 }
 
 // NewOrderBiz create and return a new order orderB
-func NewOrderBiz(restaurantService restB.IRestaurantBiz, orders repo.IOrderRepo) orderB.IOrderBiz {
+func NewOrderBiz(
+	restaurantService restB.IRestaurantBiz,
+	userService userB.IUserBiz,
+	orders repo.IOrderRepo,
+) orderB.IOrderBiz {
 	return &orderBiz{
 		restaurantService: restaurantService,
+		userService:       userService,
 		orders:            orders,
 	}
 }

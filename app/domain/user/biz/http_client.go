@@ -21,8 +21,8 @@ type httpClient struct {
 	client *http.Client
 }
 
-// NewHTTPClient is used to create a new user biz http client
-func NewHTTPClient() biz.IUserBiz {
+// NewUserHTTPClient is used to create a new user biz http client
+func NewUserHTTPClient() biz.IUserBiz {
 	return &httpClient{
 		url:    configx.C.UserRestful.HTTP.URL,
 		client: &http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)},
