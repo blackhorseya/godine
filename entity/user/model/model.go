@@ -20,6 +20,9 @@ type User struct {
 
 	// Address is the address of the user.
 	Address Address `json:"address,omitempty" bson:"address"`
+
+	// IsActive is the status of the user.
+	IsActive bool `json:"is_active,omitempty" bson:"is_active"`
 }
 
 // NewUser creates and returns a new user.

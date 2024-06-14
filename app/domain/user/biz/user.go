@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/user/biz"
 	"github.com/blackhorseya/godine/entity/user/model"
 	"github.com/blackhorseya/godine/entity/user/repo"
@@ -23,21 +24,36 @@ func (i *userBiz) CreateUser(
 	name, email, password string,
 	address model.Address,
 ) (item *model.User, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "userBiz.CreateUser")
+	defer span.End()
+
+	user := model.NewUser(name, email, password, address)
+	err = i.users.Create(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (i *userBiz) GetUser(ctx contextx.Contextx, id string) (item *model.User, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "userBiz.GetUser")
+	defer span.End()
+
+	return i.users.GetByID(ctx, id)
 }
 
 func (i *userBiz) ListUsers(
 	ctx contextx.Contextx,
 	options biz.ListUsersOptions,
-) (items []model.User, total int, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+) (items []*model.User, total int, err error) {
+	ctx, span := otelx.Span(ctx, "userBiz.ListUsers")
+	defer span.End()
+
+	return i.users.List(ctx, repo.ListCondition{
+		Limit:  options.PageSize,
+		Offset: (options.Page - 1) * options.PageSize,
+	})
 }
 
 func (i *userBiz) UpdateUser(
@@ -46,21 +62,39 @@ func (i *userBiz) UpdateUser(
 	name, email, password string,
 	address model.Address,
 ) error {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "userBiz.UpdateUser")
+	defer span.End()
+
+	user, err := i.users.GetByID(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	user.Name = name
+	user.Email = email
+	user.Password = password
+	user.Address = address
+
+	return i.users.Update(ctx, user)
 }
 
 func (i *userBiz) DeleteUser(ctx contextx.Contextx, id string) error {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
-}
+	ctx, span := otelx.Span(ctx, "userBiz.DeleteUser")
+	defer span.End()
 
-func (i *userBiz) SearchUsers(ctx contextx.Contextx, keyword string) (items []model.User, total int, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	return i.users.Delete(ctx, id)
 }
 
 func (i *userBiz) ChangeUserStatus(ctx contextx.Contextx, userID string, isActive bool) error {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "userBiz.ChangeUserStatus")
+	defer span.End()
+
+	user, err := i.users.GetByID(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	user.IsActive = isActive
+
+	return i.users.Update(ctx, user)
 }

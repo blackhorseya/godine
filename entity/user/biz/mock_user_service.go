@@ -99,10 +99,10 @@ func (mr *MockIUserBizMockRecorder) GetUser(ctx, id any) *gomock.Call {
 }
 
 // ListUsers mocks base method.
-func (m *MockIUserBiz) ListUsers(ctx contextx.Contextx, options ListUsersOptions) ([]model.User, int, error) {
+func (m *MockIUserBiz) ListUsers(ctx contextx.Contextx, options ListUsersOptions) ([]*model.User, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUsers", ctx, options)
-	ret0, _ := ret[0].([]model.User)
+	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -112,22 +112,6 @@ func (m *MockIUserBiz) ListUsers(ctx contextx.Contextx, options ListUsersOptions
 func (mr *MockIUserBizMockRecorder) ListUsers(ctx, options any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsers", reflect.TypeOf((*MockIUserBiz)(nil).ListUsers), ctx, options)
-}
-
-// SearchUsers mocks base method.
-func (m *MockIUserBiz) SearchUsers(ctx contextx.Contextx, keyword string) ([]model.User, int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchUsers", ctx, keyword)
-	ret0, _ := ret[0].([]model.User)
-	ret1, _ := ret[1].(int)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// SearchUsers indicates an expected call of SearchUsers.
-func (mr *MockIUserBizMockRecorder) SearchUsers(ctx, keyword any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsers", reflect.TypeOf((*MockIUserBiz)(nil).SearchUsers), ctx, keyword)
 }
 
 // UpdateUser mocks base method.

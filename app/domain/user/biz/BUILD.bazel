@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/domain/user/biz",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/otelx",
         "//entity/user/biz",
         "//entity/user/model",
         "//entity/user/repo",
