@@ -2,14 +2,19 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "biz",
-    srcs = ["user.go"],
+    srcs = [
+        "http_client.go",
+        "user.go",
+    ],
     importpath = "github.com/blackhorseya/godine/app/domain/user/biz",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/configx",
         "//app/infra/otelx",
         "//entity/user/biz",
         "//entity/user/model",
         "//entity/user/repo",
         "//pkg/contextx",
+        "@io_opentelemetry_go_contrib_instrumentation_net_http_otelhttp//:otelhttp",
     ],
 )
