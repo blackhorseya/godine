@@ -44,9 +44,121 @@
                     }
                 }
             }
+        },
+        "/v1/users": {
+            "post": {
+                "description": "create a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create a user",
+                "parameters": [
+                    {
+                        "description": "user payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.PostPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "github_com_blackhorseya_godine_entity_user_model.Address": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "description": "City is the city where the user is located.",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "State is the state where the user is located.",
+                    "type": "string"
+                },
+                "street": {
+                    "description": "Street is the street address of the user.",
+                    "type": "string"
+                },
+                "zip_code": {
+                    "description": "ZipCode is the postal code of the user's location.",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_blackhorseya_godine_entity_user_model.User": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "description": "Address is the address of the user.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.Address"
+                        }
+                    ]
+                },
+                "email": {
+                    "description": "Email is the email address of the user.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID is the unique identifier of the user.",
+                    "type": "string"
+                },
+                "is_active": {
+                    "description": "IsActive is the status of the user.",
+                    "type": "boolean"
+                },
+                "name": {
+                    "description": "Name is the name of the user.",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "Password is the hashed password of the user.",
+                    "type": "string"
+                }
+            }
+        },
         "responsex.Response": {
             "type": "object",
             "properties": {
@@ -56,6 +168,31 @@
                 "data": {},
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "users.PostPayload": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.Address"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "guest@gmail.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "guest"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "guest"
                 }
             }
         }

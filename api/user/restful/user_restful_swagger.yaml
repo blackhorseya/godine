@@ -1,5 +1,42 @@
 basePath: /api
 definitions:
+  github_com_blackhorseya_godine_entity_user_model.Address:
+    properties:
+      city:
+        description: City is the city where the user is located.
+        type: string
+      state:
+        description: State is the state where the user is located.
+        type: string
+      street:
+        description: Street is the street address of the user.
+        type: string
+      zip_code:
+        description: ZipCode is the postal code of the user's location.
+        type: string
+    type: object
+  github_com_blackhorseya_godine_entity_user_model.User:
+    properties:
+      address:
+        allOf:
+        - $ref: '#/definitions/github_com_blackhorseya_godine_entity_user_model.Address'
+        description: Address is the address of the user.
+      email:
+        description: Email is the email address of the user.
+        type: string
+      id:
+        description: ID is the unique identifier of the user.
+        type: string
+      is_active:
+        description: IsActive is the status of the user.
+        type: boolean
+      name:
+        description: Name is the name of the user.
+        type: string
+      password:
+        description: Password is the hashed password of the user.
+        type: string
+    type: object
   responsex.Response:
     properties:
       code:
@@ -7,6 +44,24 @@ definitions:
       data: {}
       message:
         type: string
+    type: object
+  users.PostPayload:
+    properties:
+      address:
+        $ref: '#/definitions/github_com_blackhorseya_godine_entity_user_model.Address'
+      email:
+        example: guest@gmail.com
+        type: string
+      name:
+        example: guest
+        type: string
+      password:
+        example: guest
+        type: string
+    required:
+    - email
+    - name
+    - password
     type: object
 info:
   contact:
@@ -39,6 +94,41 @@ paths:
       summary: Check the health of the service.
       tags:
       - health
+  /v1/users:
+    post:
+      consumes:
+      - application/json
+      description: create a user
+      parameters:
+      - description: user payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/users.PostPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_user_model.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      summary: Create a user
+      tags:
+      - users
 securityDefinitions:
   Bearer:
     in: header

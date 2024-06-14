@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "users",
+    srcs = ["api.go"],
+    importpath = "github.com/blackhorseya/godine/adapter/user/restful/v1/users",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//adapter/user/wirex",
+        "//entity/user/model",
+        "@com_github_gin_gonic_gin//:gin",
+    ],
+)
