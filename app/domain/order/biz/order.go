@@ -63,7 +63,24 @@ func (i *orderBiz) CreateOrder(
 		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("restaurant not found"))
 	}
 
-	order = model.NewOrder(userID.String(), restaurantID.String(), items, address, totalAmount)
+	user, err := i.userService.GetUser(ctx, userID.String())
+	if err != nil {
+		ctx.Error(
+			"get user from service failed",
+			zap.Error(err),
+			zap.String("user_id", userID.String()),
+		)
+		return nil, err
+	}
+	if user == nil {
+		ctx.Error(
+			"user not found",
+			zap.String("user_id", userID.String()),
+		)
+		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("user not found"))
+	}
+
+	order = model.NewOrder(user.ID, restaurant.ID, items, address, totalAmount)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(
