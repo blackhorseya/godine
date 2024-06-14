@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "user",
+    srcs = ["mongodb.go"],
+    importpath = "github.com/blackhorseya/godine/app/domain/user/repo/user",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/user/model",
+        "//entity/user/repo",
+        "//pkg/contextx",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
+)
