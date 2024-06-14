@@ -23,6 +23,9 @@ type User struct {
 
 	// IsActive is the status of the user.
 	IsActive bool `json:"is_active,omitempty" bson:"is_active"`
+
+	// Level is the level of the user.
+	Level uint `json:"level" bson:"level"`
 }
 
 // NewUser creates and returns a new user.
@@ -33,6 +36,8 @@ func NewUser(name, email, password string, address Address) *User {
 		Email:    email,
 		Password: password,
 		Address:  address,
+		IsActive: true,
+		Level:    0,
 	}
 }
 
