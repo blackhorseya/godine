@@ -8,14 +8,21 @@ package restful
 
 import (
 	"github.com/blackhorseya/godine/adapter/user/wirex"
+	"github.com/blackhorseya/godine/app/domain/user/biz"
+	"github.com/blackhorseya/godine/app/domain/user/repo/user"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
+)
+
+import (
+	_ "github.com/blackhorseya/godine/api/user/restful"
 )
 
 // Injectors from wire.go:
@@ -25,8 +32,15 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
+	client, err := mongodbx.NewClient(application)
+	if err != nil {
+		return nil, err
+	}
+	iUserRepo := user.NewMongodb(client)
+	iUserBiz := biz.NewUserBiz(iUserRepo)
 	injector := &wirex.Injector{
-		A: application,
+		A:           application,
+		UserService: iUserBiz,
 	}
 	server, err := httpx.NewServer(application)
 	if err != nil {
@@ -58,5 +72,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
 )

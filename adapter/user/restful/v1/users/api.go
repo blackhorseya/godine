@@ -1,8 +1,13 @@
 package users
 
 import (
+	"net/http"
+
 	"github.com/blackhorseya/godine/adapter/user/wirex"
 	"github.com/blackhorseya/godine/entity/user/model"
+	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
+	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,6 +45,24 @@ type PostPayload struct {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/users [post]
 func (i *impl) Post(c *gin.Context) {
-	// todo: 2024/6/14|sean|implement the post user logic
-	panic("implement me")
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var payload PostPayload
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	item, err := i.injector.UserService.CreateUser(ctx, payload.Name, payload.Email, payload.Password, payload.Address)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
