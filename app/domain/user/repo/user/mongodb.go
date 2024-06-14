@@ -107,11 +107,38 @@ func (i *mongodb) List(
 }
 
 func (i *mongodb) Update(ctx contextx.Contextx, user *model.User) error {
-	// todo: 2024/6/14|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "user.mongodb.update")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": user.ID}
+	update := bson.M{"$set": user}
+
+	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	if err != nil {
+		ctx.Error("update user to mongodb failed", zap.Error(err))
+		return err
+	}
+
+	return nil
 }
 
 func (i *mongodb) Delete(ctx contextx.Contextx, id string) error {
-	// todo: 2024/6/14|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "user.mongodb.delete")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": id}
+
+	_, err := i.rw.Database(dbName).Collection(collName).DeleteOne(timeout, filter)
+	if err != nil {
+		ctx.Error("delete user from mongodb failed", zap.Error(err))
+		return err
+	}
+
+	return nil
 }
