@@ -34,7 +34,7 @@ func (i *httpClient) CreateUser(
 	name, email, password string,
 	address model.Address,
 ) (item *model.User, err error) {
-	ep, err := url.ParseRequestURI(i.url + "/v1/users")
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/users")
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (i *httpClient) CreateUser(
 }
 
 func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.User, err error) {
-	ep, err := url.ParseRequestURI(i.url + "/v1/users/" + id)
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/users/" + id)
 	if err != nil {
 		return nil, err
 	}
