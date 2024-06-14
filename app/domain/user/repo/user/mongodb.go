@@ -1,10 +1,21 @@
 package user
 
 import (
+	"time"
+
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/user/model"
 	"github.com/blackhorseya/godine/entity/user/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
+)
+
+const (
+	defaultTimeout = 5 * time.Second
+	dbName         = "godine"
+	collName       = "users"
 )
 
 type mongodb struct {
@@ -17,8 +28,23 @@ func NewMongodb(rw *mongo.Client) repo.IUserRepo {
 }
 
 func (i *mongodb) Create(ctx contextx.Contextx, user *model.User) error {
-	// todo: 2024/6/14|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "user.mongodb.create")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	if user.ID == "" {
+		user.ID = uuid.New().String()
+	}
+
+	_, err := i.rw.Database(dbName).Collection(collName).InsertOne(timeout, user)
+	if err != nil {
+		ctx.Error("insert user to mongodb failed", zap.Error(err))
+		return err
+	}
+
+	return nil
 }
 
 func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.User, err error) {

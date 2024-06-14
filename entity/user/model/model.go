@@ -7,7 +7,7 @@ import (
 // User represents a user entity.
 type User struct {
 	// ID is the unique identifier of the user.
-	ID uuid.UUID `json:"id,omitempty" bson:"_id,omitempty"`
+	ID string `json:"id,omitempty" bson:"_id,omitempty"`
 
 	// Name is the name of the user.
 	Name string `json:"name,omitempty" bson:"name"`
@@ -25,7 +25,7 @@ type User struct {
 // NewUser creates and returns a new user.
 func NewUser(name, email, password string, address Address) *User {
 	return &User{
-		ID:       uuid.New(),
+		ID:       uuid.New().String(),
 		Name:     name,
 		Email:    email,
 		Password: password,
