@@ -1,9 +1,9 @@
 load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "menu",
+    name = "items",
     srcs = ["api.go"],
-    importpath = "github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants/menu",
+    importpath = "github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants/items",
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/restaurant/wirex",

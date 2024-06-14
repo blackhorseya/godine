@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants/menu"
+	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants/items"
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/restaurant/biz"
@@ -30,7 +30,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 		group.POST("", i.Post)
 		group.GET("/:restaurant_id", i.GetByID)
 
-		menu.Handle(group.Group("/:restaurant_id"), injector)
+		items.Handle(group.Group("/:restaurant_id"), injector)
 	}
 }
 
@@ -68,7 +68,7 @@ func (i *impl) GetList(c *gin.Context) {
 		return
 	}
 
-	items, total, err := i.injector.RestaurantService.ListRestaurants(ctx, biz.ListRestaurantsOptions{
+	ret, total, err := i.injector.RestaurantService.ListRestaurants(ctx, biz.ListRestaurantsOptions{
 		Page:     query.Page,
 		PageSize: query.Size,
 	})
@@ -78,7 +78,7 @@ func (i *impl) GetList(c *gin.Context) {
 	}
 
 	c.Header("X-Total-Count", strconv.Itoa(total))
-	responsex.OK(c, items)
+	responsex.OK(c, ret)
 }
 
 // PostPayload is the post payload.

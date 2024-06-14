@@ -1,4 +1,4 @@
-package menu
+package items
 
 import (
 	"net/http"
@@ -18,14 +18,15 @@ type impl struct {
 	injector *wirex.Injector
 }
 
-// Handle is used to handle the menu restful API.
+// Handle is used to handle the items restful API.
 func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 	i := &impl{injector: injector}
 
-	group := g.Group("/menu")
+	group := g.Group("/items")
 	{
 		group.GET("", i.GetList)
 		group.POST("", i.Post)
+		group.GET("/:item_id", i.GetByID)
 	}
 }
 
@@ -35,10 +36,10 @@ type GetListQuery struct {
 	Size int `form:"size" default:"10" minimum:"1" maximum:"100"`
 }
 
-// GetList is used to get the menu list.
-// @Summary Get the menu list.
-// @Description Get the menu list.
-// @Tags menu
+// GetList is used to get the items list.
+// @Summary Get the items list.
+// @Description Get the items list.
+// @Tags items
 // @Accept json
 // @Produce json
 // @Param restaurant_id path string true "restaurant id"
@@ -46,7 +47,7 @@ type GetListQuery struct {
 // @Success 200 {object} responsex.Response{data=[]model.MenuItem}
 // @Failure 500 {object} responsex.Response
 // @Header 200 {int} X-Total-Count "total count"
-// @Router /v1/restaurants/{restaurant_id}/menu [get]
+// @Router /v1/restaurants/{restaurant_id}/items [get]
 func (i *impl) GetList(c *gin.Context) {
 	ctx, err := contextx.FromGin(c)
 	if err != nil {
@@ -54,7 +55,7 @@ func (i *impl) GetList(c *gin.Context) {
 		return
 	}
 
-	ctx, span := otelx.Span(ctx, "api.menu.get_list")
+	ctx, span := otelx.Span(ctx, "api.items.get_list")
 	defer span.End()
 
 	var query GetListQuery
@@ -82,22 +83,22 @@ func (i *impl) GetList(c *gin.Context) {
 
 // PostPayload is the post payload.
 type PostPayload struct {
-	Name        string  `json:"name" binding:"required" example:"menu item name"`
+	Name        string  `json:"name" binding:"required" example:"items item name"`
 	Description string  `json:"description" example:""`
 	Price       float64 `json:"price" binding:"required" example:"10"`
 }
 
-// Post is used to add a menu item.
-// @Summary Add a menu item.
-// @Description Add a menu item.
-// @Tags menu
+// Post is used to add a items item.
+// @Summary Add a items item.
+// @Description Add a items item.
+// @Tags items
 // @Accept json
 // @Produce json
 // @Param restaurant_id path string true "restaurant id"
-// @Param payload body PostPayload true "menu item payload"
+// @Param payload body PostPayload true "items item payload"
 // @Success 200 {object} responsex.Response{data=model.MenuItem}
 // @Failure 500 {object} responsex.Response
-// @Router /v1/restaurants/{restaurant_id}/menu [post]
+// @Router /v1/restaurants/{restaurant_id}/items [post]
 func (i *impl) Post(c *gin.Context) {
 	ctx, err := contextx.FromGin(c)
 	if err != nil {
@@ -105,7 +106,7 @@ func (i *impl) Post(c *gin.Context) {
 		return
 	}
 
-	ctx, span := otelx.Span(ctx, "api.menu.post")
+	ctx, span := otelx.Span(ctx, "api.items.post")
 	defer span.End()
 
 	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
@@ -128,4 +129,20 @@ func (i *impl) Post(c *gin.Context) {
 	}
 
 	responsex.OK(c, item)
+}
+
+// GetByID is used to get the items item by id.
+// @Summary Get the items item by id.
+// @Description Get the items item by id.
+// @Tags items
+// @Accept json
+// @Produce json
+// @Param restaurant_id path string true "restaurant id"
+// @Param item_id path string true "item id"
+// @Success 200 {object} responsex.Response{data=model.MenuItem}
+// @Failure 500 {object} responsex.Response
+// @Router /v1/restaurants/{restaurant_id}/items/{item_id} [get]
+func (i *impl) GetByID(c *gin.Context) {
+	// todo: 2024/6/14|sean|implement get item by id
+	panic("implement me")
 }
