@@ -5,7 +5,6 @@ package biz
 import (
 	"github.com/blackhorseya/godine/entity/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/google/uuid"
 )
 
 // ListUsersOptions defines the options for listing users.
@@ -23,20 +22,20 @@ type IUserBiz interface {
 	CreateUser(ctx contextx.Contextx, name, email, password string, address model.Address) (item *model.User, err error)
 
 	// GetUser retrieves the user with the specified ID.
-	GetUser(ctx contextx.Contextx, id uuid.UUID) (item *model.User, err error)
+	GetUser(ctx contextx.Contextx, id string) (item *model.User, err error)
 
 	// ListUsers retrieves a list of users based on the provided options.
 	ListUsers(ctx contextx.Contextx, options ListUsersOptions) (items []model.User, total int, err error)
 
 	// UpdateUser updates the details of an existing user.
-	UpdateUser(ctx contextx.Contextx, id uuid.UUID, name, email, password string, address model.Address) error
+	UpdateUser(ctx contextx.Contextx, id string, name, email, password string, address model.Address) error
 
 	// DeleteUser deletes a user by their ID.
-	DeleteUser(ctx contextx.Contextx, id uuid.UUID) error
+	DeleteUser(ctx contextx.Contextx, id string) error
 
 	// SearchUsers searches for users by name or email keywords.
 	SearchUsers(ctx contextx.Contextx, keyword string) (items []model.User, total int, err error)
 
 	// ChangeUserStatus changes the active status of a user.
-	ChangeUserStatus(ctx contextx.Contextx, userID uuid.UUID, isActive bool) error
+	ChangeUserStatus(ctx contextx.Contextx, userID string, isActive bool) error
 }

@@ -9,6 +9,5 @@ go_library(
         "//entity/user/biz",
         "//entity/user/model",
         "//pkg/contextx",
-        "@com_github_google_uuid//:uuid",
     ],
 )

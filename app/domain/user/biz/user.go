@@ -4,7 +4,6 @@ import (
 	"github.com/blackhorseya/godine/entity/user/biz"
 	"github.com/blackhorseya/godine/entity/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/google/uuid"
 )
 
 type userBiz struct {
@@ -24,7 +23,7 @@ func (i *userBiz) CreateUser(
 	panic("implement me")
 }
 
-func (i *userBiz) GetUser(ctx contextx.Contextx, id uuid.UUID) (item *model.User, err error) {
+func (i *userBiz) GetUser(ctx contextx.Contextx, id string) (item *model.User, err error) {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
@@ -39,7 +38,7 @@ func (i *userBiz) ListUsers(
 
 func (i *userBiz) UpdateUser(
 	ctx contextx.Contextx,
-	id uuid.UUID,
+	id string,
 	name, email, password string,
 	address model.Address,
 ) error {
@@ -47,7 +46,7 @@ func (i *userBiz) UpdateUser(
 	panic("implement me")
 }
 
-func (i *userBiz) DeleteUser(ctx contextx.Contextx, id uuid.UUID) error {
+func (i *userBiz) DeleteUser(ctx contextx.Contextx, id string) error {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
@@ -57,7 +56,7 @@ func (i *userBiz) SearchUsers(ctx contextx.Contextx, keyword string) (items []mo
 	panic("implement me")
 }
 
-func (i *userBiz) ChangeUserStatus(ctx contextx.Contextx, userID uuid.UUID, isActive bool) error {
+func (i *userBiz) ChangeUserStatus(ctx contextx.Contextx, userID string, isActive bool) error {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
