@@ -70,3 +70,12 @@ type OrderItem struct {
 	// Price is the price of a single unit of the menu item.
 	Price float64 `json:"price,omitempty" bson:"price"`
 }
+
+// NewOrderItem creates a new order item.
+func NewOrderItem(menuItemID, name string, price float64, quantity int) *OrderItem {
+	return &OrderItem{
+		MenuItemID: menuItemID,
+		Quantity:   quantity,
+		Price:      price,
+	}
+}
