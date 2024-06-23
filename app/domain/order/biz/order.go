@@ -41,7 +41,7 @@ func NewOrderBiz(
 func (i *orderBiz) CreateOrder(
 	ctx contextx.Contextx,
 	userID, restaurantID string,
-	items []model.OrderItem,
+	options []model.OrderItem,
 	address model.Address,
 	totalAmount float64,
 ) (order *model.Order, err error) {
@@ -82,7 +82,37 @@ func (i *orderBiz) CreateOrder(
 		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("user not found"))
 	}
 
-	order = model.NewOrder(user.ID, restaurant.ID, items, address, totalAmount)
+	items := make([]model.OrderItem, 0, len(options))
+	for _, option := range options {
+		menuItem, err2 := i.menuService.GetMenuItem(ctx, restaurant.ID, option.MenuItemID)
+		if err2 != nil {
+			ctx.Error(
+				"get menu item from service failed",
+				zap.Error(err2),
+				zap.String("menu_item_id", option.MenuItemID),
+			)
+			return nil, err2
+		}
+		if menuItem == nil {
+			ctx.Error(
+				"menu item not found",
+				zap.String("menu_item_id", option.MenuItemID),
+			)
+			return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("menu item not found"))
+		}
+		if !menuItem.IsAvailable {
+			ctx.Error(
+				"menu item not available",
+				zap.String("menu_item_id", option.MenuItemID),
+			)
+			return nil, errorx.Wrap(http.StatusConflict, 409, errors.New("menu item not available"))
+		}
+
+		item := model.NewOrderItem(menuItem.ID, menuItem.Name, menuItem.Price, option.Quantity)
+		items = append(items, *item)
+	}
+
+	order = model.NewOrder(user.ID, restaurant.ID, items)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(

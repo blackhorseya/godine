@@ -162,25 +162,35 @@ const docTemplateorder_restful = `{
             "properties": {
                 "menu_item_id": {
                     "description": "MenuItemID is the identifier of the menu item.",
-                    "type": "string"
+                    "type": "string",
+                    "example": "174e9519-4c47-42f2-bb1c-b0eaa8f76d05"
                 },
                 "price": {
                     "description": "Price is the price of a single unit of the menu item.",
-                    "type": "number"
+                    "type": "number",
+                    "example": 10
                 },
                 "quantity": {
                     "description": "Quantity is the quantity of the menu item ordered.",
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 2
                 }
             }
         },
         "orders.PostPayload": {
             "type": "object",
             "required": [
+                "items",
                 "restaurant_id",
                 "user_id"
             ],
             "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.OrderItem"
+                    }
+                },
                 "restaurant_id": {
                     "type": "string",
                     "example": "a1dbb32b-05f0-4354-8253-60f4c6deae12"

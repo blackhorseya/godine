@@ -27,8 +27,9 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 
 // PostPayload is the post payload
 type PostPayload struct {
-	UserID       string `json:"user_id" binding:"required" example:"adcf23bc-cd32-4176-8d46-68f15ebdfa98"`
-	RestaurantID string `json:"restaurant_id" binding:"required" example:"a1dbb32b-05f0-4354-8253-60f4c6deae12"`
+	UserID       string            `json:"user_id" binding:"required" example:"adcf23bc-cd32-4176-8d46-68f15ebdfa98"`
+	RestaurantID string            `json:"restaurant_id" binding:"required" example:"a1dbb32b-05f0-4354-8253-60f4c6deae12"`
+	Items        []model.OrderItem `json:"items" binding:"required"`
 }
 
 // Post is the post method
@@ -61,7 +62,7 @@ func (i *impl) Post(c *gin.Context) {
 		ctx,
 		payload.UserID,
 		payload.RestaurantID,
-		nil,
+		payload.Items,
 		model.Address{},
 		0,
 	)
