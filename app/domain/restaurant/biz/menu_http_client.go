@@ -18,6 +18,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const restaurantRouter = "/api/v1/restaurants/"
+
 type menuHTTPClient struct {
 	url    string
 	client *http.Client
@@ -48,7 +50,7 @@ func (i *menuHTTPClient) ListMenuItems(
 	ctx, span := otelx.Span(ctx, "restaurant.menuHTTPClient.ListMenuItems")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + restaurantID.String() + "/items")
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID.String() + "/items")
 	if err != nil {
 		ctx.Error("parse request uri failed", zap.Error(err))
 		return nil, 0, err
@@ -95,8 +97,44 @@ func (i *menuHTTPClient) GetMenuItem(
 	ctx contextx.Contextx,
 	restaurantID, menuItemID uuid.UUID,
 ) (item *model.MenuItem, err error) {
-	// todo: 2024/6/23|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "restaurant.menuHTTPClient.GetMenuItem")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID.String() + "/items/" + menuItemID.String())
+	if err != nil {
+		ctx.Error("parse request uri failed", zap.Error(err))
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, ep.String(), nil)
+	if err != nil {
+		ctx.Error("new request failed", zap.Error(err))
+		return nil, err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		ctx.Error("do request failed", zap.Error(err))
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+		Data               *model.MenuItem `json:"data"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		ctx.Error("decode response failed", zap.Error(err))
+		return nil, err
+	}
+
+	if got.Code != http.StatusOK {
+		return nil, errors.New(got.Message)
+	}
+
+	return got.Data, nil
 }
 
 func (i *menuHTTPClient) UpdateMenuItem(
