@@ -105,7 +105,7 @@ func (i *orderBiz) CreateOrder(
 		items = append(items, *item)
 	}
 
-	order = model.NewOrder(user.ID, restaurant.ID, options, address, totalAmount)
+	order = model.NewOrder(user.ID, restaurant.ID, items, address, totalAmount)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(
