@@ -33,6 +33,7 @@ func NewOrderBiz(
 ) orderB.IOrderBiz {
 	return &orderBiz{
 		restaurantService: restaurantService,
+		menuService:       menuService,
 		userService:       userService,
 		orders:            orders,
 	}
