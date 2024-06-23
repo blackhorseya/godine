@@ -62,7 +62,7 @@ func (i *impl) Post(c *gin.Context) {
 		ctx,
 		payload.UserID,
 		payload.RestaurantID,
-		nil,
+		payload.Items,
 		model.Address{},
 		0,
 	)
