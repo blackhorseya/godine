@@ -49,6 +49,7 @@ var providerSet = wire.NewSet(
 
 	biz.NewOrderBiz,
 	biz2.NewRestaurantHTTPClient,
+	biz2.NewMenuHTTPClient,
 	biz3.NewUserHTTPClient,
 	order.NewMongodb,
 	mongodbx.NewClient,
