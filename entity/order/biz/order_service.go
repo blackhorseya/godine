@@ -10,10 +10,10 @@ import (
 // ListOrdersOptions defines the options for listing orders.
 type ListOrdersOptions struct {
 	// Page is the page number.
-	Page int
+	Page int `form:"page" default:"1" minimum:"1"`
 
-	// PageSize is the number of items per page.
-	PageSize int
+	// Size is the number of items per page.
+	Size int `form:"size" default:"10" minimum:"1" maximum:"100"`
 }
 
 // IOrderBiz defines the business operations for order management.
