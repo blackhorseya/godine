@@ -9,7 +9,6 @@ import (
 	"github.com/blackhorseya/godine/entity/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
@@ -24,24 +23,24 @@ func NewMenuBiz(restaurants repo.IRestaurantRepo) biz.IMenuBiz {
 
 func (i *menuBiz) AddMenuItem(
 	ctx contextx.Contextx,
-	restaurantID uuid.UUID,
+	restaurantID string,
 	name, description string,
 	price float64,
 ) (item *model.MenuItem, err error) {
 	ctx, span := otelx.Span(ctx, "menu.biz.add_menu_item")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID)
 	if err != nil {
 		ctx.Error(
 			"get restaurant by id failed",
 			zap.Error(err),
-			zap.String("restaurant_id", restaurantID.String()),
+			zap.String("restaurant_id", restaurantID),
 		)
 		return nil, err
 	}
 	if restaurant == nil {
-		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID))
 		return nil, errorx.New(http.StatusNotFound, 404, "restaurant not found")
 	}
 
@@ -52,7 +51,7 @@ func (i *menuBiz) AddMenuItem(
 		ctx.Error(
 			"update restaurant failed",
 			zap.Error(err),
-			zap.String("restaurant_id", restaurantID.String()),
+			zap.String("restaurant_id", restaurantID),
 		)
 		return nil, err
 	}
@@ -62,22 +61,22 @@ func (i *menuBiz) AddMenuItem(
 
 func (i *menuBiz) ListMenuItems(
 	ctx contextx.Contextx,
-	restaurantID uuid.UUID,
+	restaurantID string,
 ) (items []model.MenuItem, total int, err error) {
 	ctx, span := otelx.Span(ctx, "menu.biz.get_menu_items")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID)
 	if err != nil {
 		ctx.Error(
 			"get restaurant by id failed",
 			zap.Error(err),
-			zap.String("restaurant_id", restaurantID.String()),
+			zap.String("restaurant_id", restaurantID),
 		)
 		return nil, 0, err
 	}
 	if restaurant == nil {
-		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID))
 		return nil, 0, errorx.New(http.StatusNotFound, 404, "restaurant not found")
 	}
 
@@ -86,27 +85,27 @@ func (i *menuBiz) ListMenuItems(
 
 func (i *menuBiz) GetMenuItem(
 	ctx contextx.Contextx,
-	restaurantID, menuItemID uuid.UUID,
+	restaurantID, menuItemID string,
 ) (item *model.MenuItem, err error) {
 	ctx, span := otelx.Span(ctx, "menu.biz.get_menu_item")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID)
 	if err != nil {
 		ctx.Error(
 			"get restaurant by id failed",
 			zap.Error(err),
-			zap.String("restaurant_id", restaurantID.String()),
+			zap.String("restaurant_id", restaurantID),
 		)
 		return nil, err
 	}
 	if restaurant == nil {
-		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID))
 		return nil, errorx.New(http.StatusNotFound, 404, "restaurant not found")
 	}
 
 	for _, menuItem := range restaurant.Menu {
-		if menuItem.ID == menuItemID.String() {
+		if menuItem.ID == menuItemID {
 			return &menuItem, nil
 		}
 	}
@@ -116,7 +115,7 @@ func (i *menuBiz) GetMenuItem(
 
 func (i *menuBiz) UpdateMenuItem(
 	ctx contextx.Contextx,
-	restaurantID, menuItemID uuid.UUID,
+	restaurantID, menuItemID string,
 	name, description string,
 	price float64,
 	isAvailable bool,
@@ -124,22 +123,22 @@ func (i *menuBiz) UpdateMenuItem(
 	ctx, span := otelx.Span(ctx, "menu.biz.update_menu_item")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID)
 	if err != nil {
 		ctx.Error(
 			"get restaurant by id failed",
 			zap.Error(err),
-			zap.String("restaurant_id", restaurantID.String()),
+			zap.String("restaurant_id", restaurantID),
 		)
 		return err
 	}
 	if restaurant == nil {
-		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID))
 		return errorx.New(http.StatusNotFound, 404, "restaurant not found")
 	}
 
 	for idx, menuItem := range restaurant.Menu {
-		if menuItem.ID == menuItemID.String() {
+		if menuItem.ID == menuItemID {
 			restaurant.Menu[idx].Name = name
 			restaurant.Menu[idx].Description = description
 			restaurant.Menu[idx].Price = price
@@ -150,7 +149,7 @@ func (i *menuBiz) UpdateMenuItem(
 				ctx.Error(
 					"update restaurant failed",
 					zap.Error(err),
-					zap.String("restaurant_id", restaurantID.String()),
+					zap.String("restaurant_id", restaurantID),
 				)
 				return err
 			}
@@ -162,26 +161,26 @@ func (i *menuBiz) UpdateMenuItem(
 	return errorx.New(http.StatusNotFound, 404, "menu item not found")
 }
 
-func (i *menuBiz) RemoveMenuItem(ctx contextx.Contextx, restaurantID, menuItemID uuid.UUID) error {
+func (i *menuBiz) RemoveMenuItem(ctx contextx.Contextx, restaurantID, menuItemID string) error {
 	ctx, span := otelx.Span(ctx, "menu.biz.remove_menu_item")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID)
 	if err != nil {
 		ctx.Error(
 			"get restaurant by id failed",
 			zap.Error(err),
-			zap.String("restaurant_id", restaurantID.String()),
+			zap.String("restaurant_id", restaurantID),
 		)
 		return err
 	}
 	if restaurant == nil {
-		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID.String()))
+		ctx.Error("restaurant not found", zap.String("restaurant_id", restaurantID))
 		return errorx.New(http.StatusNotFound, 404, "restaurant not found")
 	}
 
 	for idx, menuItem := range restaurant.Menu {
-		if menuItem.ID == menuItemID.String() {
+		if menuItem.ID == menuItemID {
 			restaurant.Menu = append(restaurant.Menu[:idx], restaurant.Menu[idx+1:]...)
 
 			err = i.restaurants.Update(ctx, restaurant)
@@ -189,7 +188,7 @@ func (i *menuBiz) RemoveMenuItem(ctx contextx.Contextx, restaurantID, menuItemID
 				ctx.Error(
 					"update restaurant failed",
 					zap.Error(err),
-					zap.String("restaurant_id", restaurantID.String()),
+					zap.String("restaurant_id", restaurantID),
 				)
 				return err
 			}

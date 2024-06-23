@@ -14,7 +14,6 @@ import (
 	"github.com/blackhorseya/godine/entity/restaurant/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
-	"github.com/google/uuid"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
@@ -79,11 +78,11 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 	return got.Data, nil
 }
 
-func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id uuid.UUID) (item *model.Restaurant, err error) {
+func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (item *model.Restaurant, err error) {
 	ctx, span := otelx.Span(ctx, "restaurantHTTPClient.GetRestaurant")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id.String())
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +125,7 @@ func (i *restaurantHTTPClient) ListRestaurants(
 
 func (i *restaurantHTTPClient) UpdateRestaurant(
 	ctx contextx.Contextx,
-	id uuid.UUID,
+	id string,
 	name string,
 	address model.Address,
 ) error {
@@ -134,14 +133,14 @@ func (i *restaurantHTTPClient) UpdateRestaurant(
 	panic("implement me")
 }
 
-func (i *restaurantHTTPClient) DeleteRestaurant(ctx contextx.Contextx, id uuid.UUID) error {
+func (i *restaurantHTTPClient) DeleteRestaurant(ctx contextx.Contextx, id string) error {
 	// todo: 2024/6/13|sean|implement me
 	panic("implement me")
 }
 
 func (i *restaurantHTTPClient) ChangeRestaurantStatus(
 	ctx contextx.Contextx,
-	restaurantID uuid.UUID,
+	restaurantID string,
 	isOpen bool,
 ) error {
 	// todo: 2024/6/13|sean|implement me

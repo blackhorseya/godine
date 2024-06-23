@@ -14,7 +14,6 @@ go_library(
         "//entity/user/biz",
         "//pkg/contextx",
         "//pkg/errorx",
-        "@com_github_google_uuid//:uuid",
         "@org_uber_go_zap//:zap",
     ],
 )

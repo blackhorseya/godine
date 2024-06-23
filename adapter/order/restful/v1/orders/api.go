@@ -9,7 +9,6 @@ import (
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type impl struct {
@@ -58,19 +57,14 @@ func (i *impl) Post(c *gin.Context) {
 		return
 	}
 
-	userID, err := uuid.Parse(payload.UserID)
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	restaurantID, err := uuid.Parse(payload.RestaurantID)
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	order, err := i.injector.OrderService.CreateOrder(ctx, userID, restaurantID, nil, model.Address{}, 0)
+	order, err := i.injector.OrderService.CreateOrder(
+		ctx,
+		payload.UserID,
+		payload.RestaurantID,
+		nil,
+		model.Address{},
+		0,
+	)
 	if err != nil {
 		responsex.Err(c, err)
 		return

@@ -12,7 +12,6 @@ import (
 	userB "github.com/blackhorseya/godine/entity/user/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
@@ -41,7 +40,7 @@ func NewOrderBiz(
 
 func (i *orderBiz) CreateOrder(
 	ctx contextx.Contextx,
-	userID, restaurantID uuid.UUID,
+	userID, restaurantID string,
 	items []model.OrderItem,
 	address model.Address,
 	totalAmount float64,
@@ -54,31 +53,31 @@ func (i *orderBiz) CreateOrder(
 		ctx.Error(
 			"get restaurant from service failed",
 			zap.Error(err),
-			zap.String("restaurant_id", restaurantID.String()),
+			zap.String("restaurant_id", restaurantID),
 		)
 		return nil, err
 	}
 	if restaurant == nil {
 		ctx.Error(
 			"restaurant not found",
-			zap.String("restaurant_id", restaurantID.String()),
+			zap.String("restaurant_id", restaurantID),
 		)
 		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("restaurant not found"))
 	}
 
-	user, err := i.userService.GetUser(ctx, userID.String())
+	user, err := i.userService.GetUser(ctx, userID)
 	if err != nil {
 		ctx.Error(
 			"get user from service failed",
 			zap.Error(err),
-			zap.String("user_id", userID.String()),
+			zap.String("user_id", userID),
 		)
 		return nil, err
 	}
 	if user == nil {
 		ctx.Error(
 			"user not found",
-			zap.String("user_id", userID.String()),
+			zap.String("user_id", userID),
 		)
 		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("user not found"))
 	}
@@ -97,7 +96,7 @@ func (i *orderBiz) CreateOrder(
 	return order, nil
 }
 
-func (i *orderBiz) GetOrder(ctx contextx.Contextx, id uuid.UUID) (order *model.Order, err error) {
+func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model.Order, err error) {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
@@ -110,29 +109,29 @@ func (i *orderBiz) ListOrders(
 	panic("implement me")
 }
 
-func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id uuid.UUID, status string) error {
+func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status string) error {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
 
-func (i *orderBiz) AddOrderItem(ctx contextx.Contextx, orderID uuid.UUID, item model.OrderItem) error {
+func (i *orderBiz) AddOrderItem(ctx contextx.Contextx, orderID string, item model.OrderItem) error {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
 
-func (i *orderBiz) RemoveOrderItem(ctx contextx.Contextx, orderID uuid.UUID, menuItemID uuid.UUID) error {
+func (i *orderBiz) RemoveOrderItem(ctx contextx.Contextx, orderID string, menuItemID string) error {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
 
-func (i *orderBiz) DeleteOrder(ctx contextx.Contextx, id uuid.UUID) error {
+func (i *orderBiz) DeleteOrder(ctx contextx.Contextx, id string) error {
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
 
 func (i *orderBiz) ListOrdersByUser(
 	ctx contextx.Contextx,
-	userID uuid.UUID,
+	userID string,
 	options orderB.ListOrdersOptions,
 ) (orders []model.Order, total int, err error) {
 	// todo: 2024/6/11|sean|implement me
@@ -141,7 +140,7 @@ func (i *orderBiz) ListOrdersByUser(
 
 func (i *orderBiz) ListOrdersByRestaurant(
 	ctx contextx.Contextx,
-	restaurantID uuid.UUID,
+	restaurantID string,
 	options orderB.ListOrdersOptions,
 ) (orders []model.Order, total int, err error) {
 	// todo: 2024/6/11|sean|implement me

@@ -20,7 +20,6 @@ go_library(
         "//pkg/contextx",
         "//pkg/errorx",
         "//pkg/responsex",
-        "@com_github_google_uuid//:uuid",
         "@io_opentelemetry_go_contrib_instrumentation_net_http_otelhttp//:otelhttp",
         "@org_uber_go_zap//:zap",
     ],
