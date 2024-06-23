@@ -41,7 +41,7 @@ func NewOrderBiz(
 func (i *orderBiz) CreateOrder(
 	ctx contextx.Contextx,
 	userID, restaurantID string,
-	items []model.OrderItem,
+	options []model.OrderItem,
 	address model.Address,
 	totalAmount float64,
 ) (order *model.Order, err error) {
@@ -82,7 +82,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("user not found"))
 	}
 
-	order = model.NewOrder(user.ID, restaurant.ID, items, address, totalAmount)
+	order = model.NewOrder(user.ID, restaurant.ID, options, address, totalAmount)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(
