@@ -35,16 +35,23 @@ definitions:
     properties:
       menu_item_id:
         description: MenuItemID is the identifier of the menu item.
+        example: 174e9519-4c47-42f2-bb1c-b0eaa8f76d05
         type: string
       price:
         description: Price is the price of a single unit of the menu item.
+        example: 10
         type: number
       quantity:
         description: Quantity is the quantity of the menu item ordered.
+        example: 2
         type: integer
     type: object
   orders.PostPayload:
     properties:
+      items:
+        items:
+          $ref: '#/definitions/github_com_blackhorseya_godine_entity_order_model.OrderItem'
+        type: array
       restaurant_id:
         example: a1dbb32b-05f0-4354-8253-60f4c6deae12
         type: string
@@ -52,6 +59,7 @@ definitions:
         example: adcf23bc-cd32-4176-8d46-68f15ebdfa98
         type: string
     required:
+    - items
     - restaurant_id
     - user_id
     type: object

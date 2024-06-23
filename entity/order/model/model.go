@@ -62,13 +62,13 @@ func (x *Order) AddItem(item OrderItem) {
 // OrderItem represents an item in the order.
 type OrderItem struct {
 	// MenuItemID is the identifier of the menu item.
-	MenuItemID string `json:"menu_item_id,omitempty" bson:"menu_item_id"`
+	MenuItemID string `json:"menu_item_id,omitempty" bson:"menu_item_id" example:"174e9519-4c47-42f2-bb1c-b0eaa8f76d05"`
 
 	// Quantity is the quantity of the menu item ordered.
-	Quantity int `json:"quantity,omitempty" bson:"quantity"`
+	Quantity int `json:"quantity,omitempty" bson:"quantity" example:"2"`
 
 	// Price is the price of a single unit of the menu item.
-	Price float64 `json:"price,omitempty" bson:"price"`
+	Price float64 `json:"price,omitempty" bson:"price" example:"10"`
 }
 
 // NewOrderItem creates a new order item.
