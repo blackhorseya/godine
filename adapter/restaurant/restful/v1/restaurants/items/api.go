@@ -71,7 +71,7 @@ func (i *impl) GetList(c *gin.Context) {
 		return
 	}
 
-	items, total, err := i.injector.MenuService.ListMenuItems(ctx, restaurantID)
+	items, total, err := i.injector.MenuService.ListMenuItems(ctx, restaurantID.String())
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -122,7 +122,13 @@ func (i *impl) Post(c *gin.Context) {
 		return
 	}
 
-	item, err := i.injector.MenuService.AddMenuItem(ctx, restaurantID, payload.Name, payload.Description, payload.Price)
+	item, err := i.injector.MenuService.AddMenuItem(
+		ctx,
+		restaurantID.String(),
+		payload.Name,
+		payload.Description,
+		payload.Price,
+	)
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -164,7 +170,7 @@ func (i *impl) GetByID(c *gin.Context) {
 		return
 	}
 
-	item, err := i.injector.MenuService.GetMenuItem(ctx, restaurantID, itemID)
+	item, err := i.injector.MenuService.GetMenuItem(ctx, restaurantID.String(), itemID.String())
 	if err != nil {
 		responsex.Err(c, err)
 		return

@@ -6,7 +6,6 @@ import (
 	"github.com/blackhorseya/godine/entity/restaurant/model"
 	"github.com/blackhorseya/godine/entity/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/google/uuid"
 )
 
 type restaurantBiz struct {
@@ -39,11 +38,11 @@ func (i *restaurantBiz) CreateRestaurant(
 	return restaurant, nil
 }
 
-func (i *restaurantBiz) GetRestaurant(ctx contextx.Contextx, id uuid.UUID) (item *model.Restaurant, err error) {
+func (i *restaurantBiz) GetRestaurant(ctx contextx.Contextx, id string) (item *model.Restaurant, err error) {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.get_restaurant")
 	defer span.End()
 
-	return i.restaurants.GetByID(ctx, id.String())
+	return i.restaurants.GetByID(ctx, id)
 }
 
 func (i *restaurantBiz) ListRestaurants(
@@ -61,14 +60,14 @@ func (i *restaurantBiz) ListRestaurants(
 
 func (i *restaurantBiz) UpdateRestaurant(
 	ctx contextx.Contextx,
-	id uuid.UUID,
+	id string,
 	name string,
 	address model.Address,
 ) error {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.update_restaurant")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, id.String())
+	restaurant, err := i.restaurants.GetByID(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -79,18 +78,18 @@ func (i *restaurantBiz) UpdateRestaurant(
 	return i.restaurants.Update(ctx, restaurant)
 }
 
-func (i *restaurantBiz) DeleteRestaurant(ctx contextx.Contextx, id uuid.UUID) error {
+func (i *restaurantBiz) DeleteRestaurant(ctx contextx.Contextx, id string) error {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.delete_restaurant")
 	defer span.End()
 
-	return i.restaurants.Delete(ctx, id.String())
+	return i.restaurants.Delete(ctx, id)
 }
 
-func (i *restaurantBiz) ChangeRestaurantStatus(ctx contextx.Contextx, restaurantID uuid.UUID, isOpen bool) error {
+func (i *restaurantBiz) ChangeRestaurantStatus(ctx contextx.Contextx, restaurantID string, isOpen bool) error {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.change_restaurant_status")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, restaurantID.String())
+	restaurant, err := i.restaurants.GetByID(ctx, restaurantID)
 	if err != nil {
 		return err
 	}

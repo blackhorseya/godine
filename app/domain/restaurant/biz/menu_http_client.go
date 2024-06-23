@@ -13,7 +13,6 @@ import (
 	"github.com/blackhorseya/godine/entity/restaurant/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
-	"github.com/google/uuid"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.uber.org/zap"
 )
@@ -35,7 +34,7 @@ func NewMenuHTTPClient() biz.IMenuBiz {
 
 func (i *menuHTTPClient) AddMenuItem(
 	ctx contextx.Contextx,
-	restaurantID uuid.UUID,
+	restaurantID string,
 	name, description string,
 	price float64,
 ) (item *model.MenuItem, err error) {
@@ -45,12 +44,12 @@ func (i *menuHTTPClient) AddMenuItem(
 
 func (i *menuHTTPClient) ListMenuItems(
 	ctx contextx.Contextx,
-	restaurantID uuid.UUID,
+	restaurantID string,
 ) (items []model.MenuItem, total int, err error) {
 	ctx, span := otelx.Span(ctx, "restaurant.menuHTTPClient.ListMenuItems")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID.String() + "/items")
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items")
 	if err != nil {
 		ctx.Error("parse request uri failed", zap.Error(err))
 		return nil, 0, err
@@ -95,12 +94,12 @@ func (i *menuHTTPClient) ListMenuItems(
 
 func (i *menuHTTPClient) GetMenuItem(
 	ctx contextx.Contextx,
-	restaurantID, menuItemID uuid.UUID,
+	restaurantID, menuItemID string,
 ) (item *model.MenuItem, err error) {
 	ctx, span := otelx.Span(ctx, "restaurant.menuHTTPClient.GetMenuItem")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID.String() + "/items/" + menuItemID.String())
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items/" + menuItemID)
 	if err != nil {
 		ctx.Error("parse request uri failed", zap.Error(err))
 		return nil, err
@@ -139,7 +138,7 @@ func (i *menuHTTPClient) GetMenuItem(
 
 func (i *menuHTTPClient) UpdateMenuItem(
 	ctx contextx.Contextx,
-	restaurantID, menuItemID uuid.UUID,
+	restaurantID, menuItemID string,
 	name, description string,
 	price float64,
 	isAvailable bool,
@@ -150,7 +149,7 @@ func (i *menuHTTPClient) UpdateMenuItem(
 
 func (i *menuHTTPClient) RemoveMenuItem(
 	ctx contextx.Contextx,
-	restaurantID, menuItemID uuid.UUID,
+	restaurantID, menuItemID string,
 ) error {
 	// todo: 2024/6/23|sean|implement me
 	panic("implement me")

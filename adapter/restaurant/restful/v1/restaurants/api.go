@@ -149,7 +149,7 @@ func (i *impl) GetByID(c *gin.Context) {
 		return
 	}
 
-	item, err := i.injector.RestaurantService.GetRestaurant(ctx, restaurantID)
+	item, err := i.injector.RestaurantService.GetRestaurant(ctx, restaurantID.String())
 	if err != nil {
 		responsex.Err(c, err)
 		return

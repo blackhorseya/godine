@@ -14,7 +14,6 @@ import (
 
 	model "github.com/blackhorseya/godine/entity/order/model"
 	contextx "github.com/blackhorseya/godine/pkg/contextx"
-	uuid "github.com/google/uuid"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -42,7 +41,7 @@ func (m *MockIOrderBiz) EXPECT() *MockIOrderBizMockRecorder {
 }
 
 // AddOrderItem mocks base method.
-func (m *MockIOrderBiz) AddOrderItem(ctx contextx.Contextx, orderID uuid.UUID, item model.OrderItem) error {
+func (m *MockIOrderBiz) AddOrderItem(ctx contextx.Contextx, orderID string, item model.OrderItem) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddOrderItem", ctx, orderID, item)
 	ret0, _ := ret[0].(error)
@@ -56,7 +55,7 @@ func (mr *MockIOrderBizMockRecorder) AddOrderItem(ctx, orderID, item any) *gomoc
 }
 
 // CreateOrder mocks base method.
-func (m *MockIOrderBiz) CreateOrder(ctx contextx.Contextx, userID, restaurantID uuid.UUID, items []model.OrderItem, address model.Address, totalAmount float64) (*model.Order, error) {
+func (m *MockIOrderBiz) CreateOrder(ctx contextx.Contextx, userID, restaurantID string, items []model.OrderItem, address model.Address, totalAmount float64) (*model.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrder", ctx, userID, restaurantID, items, address, totalAmount)
 	ret0, _ := ret[0].(*model.Order)
@@ -71,7 +70,7 @@ func (mr *MockIOrderBizMockRecorder) CreateOrder(ctx, userID, restaurantID, item
 }
 
 // DeleteOrder mocks base method.
-func (m *MockIOrderBiz) DeleteOrder(ctx contextx.Contextx, id uuid.UUID) error {
+func (m *MockIOrderBiz) DeleteOrder(ctx contextx.Contextx, id string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteOrder", ctx, id)
 	ret0, _ := ret[0].(error)
@@ -85,7 +84,7 @@ func (mr *MockIOrderBizMockRecorder) DeleteOrder(ctx, id any) *gomock.Call {
 }
 
 // GetOrder mocks base method.
-func (m *MockIOrderBiz) GetOrder(ctx contextx.Contextx, id uuid.UUID) (*model.Order, error) {
+func (m *MockIOrderBiz) GetOrder(ctx contextx.Contextx, id string) (*model.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrder", ctx, id)
 	ret0, _ := ret[0].(*model.Order)
@@ -116,7 +115,7 @@ func (mr *MockIOrderBizMockRecorder) ListOrders(ctx, options any) *gomock.Call {
 }
 
 // ListOrdersByRestaurant mocks base method.
-func (m *MockIOrderBiz) ListOrdersByRestaurant(ctx contextx.Contextx, restaurantID uuid.UUID, options ListOrdersOptions) ([]model.Order, int, error) {
+func (m *MockIOrderBiz) ListOrdersByRestaurant(ctx contextx.Contextx, restaurantID string, options ListOrdersOptions) ([]model.Order, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOrdersByRestaurant", ctx, restaurantID, options)
 	ret0, _ := ret[0].([]model.Order)
@@ -132,7 +131,7 @@ func (mr *MockIOrderBizMockRecorder) ListOrdersByRestaurant(ctx, restaurantID, o
 }
 
 // ListOrdersByUser mocks base method.
-func (m *MockIOrderBiz) ListOrdersByUser(ctx contextx.Contextx, userID uuid.UUID, options ListOrdersOptions) ([]model.Order, int, error) {
+func (m *MockIOrderBiz) ListOrdersByUser(ctx contextx.Contextx, userID string, options ListOrdersOptions) ([]model.Order, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOrdersByUser", ctx, userID, options)
 	ret0, _ := ret[0].([]model.Order)
@@ -148,7 +147,7 @@ func (mr *MockIOrderBizMockRecorder) ListOrdersByUser(ctx, userID, options any) 
 }
 
 // RemoveOrderItem mocks base method.
-func (m *MockIOrderBiz) RemoveOrderItem(ctx contextx.Contextx, orderID, menuItemID uuid.UUID) error {
+func (m *MockIOrderBiz) RemoveOrderItem(ctx contextx.Contextx, orderID, menuItemID string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RemoveOrderItem", ctx, orderID, menuItemID)
 	ret0, _ := ret[0].(error)
@@ -162,7 +161,7 @@ func (mr *MockIOrderBizMockRecorder) RemoveOrderItem(ctx, orderID, menuItemID an
 }
 
 // UpdateOrderStatus mocks base method.
-func (m *MockIOrderBiz) UpdateOrderStatus(ctx contextx.Contextx, id uuid.UUID, status string) error {
+func (m *MockIOrderBiz) UpdateOrderStatus(ctx contextx.Contextx, id, status string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateOrderStatus", ctx, id, status)
 	ret0, _ := ret[0].(error)
