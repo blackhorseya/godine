@@ -100,12 +100,19 @@ func (i *orderBiz) CreateOrder(
 			)
 			return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("menu item not found"))
 		}
+		if !menuItem.IsAvailable {
+			ctx.Error(
+				"menu item not available",
+				zap.String("menu_item_id", option.MenuItemID),
+			)
+			return nil, errorx.Wrap(http.StatusConflict, 409, errors.New("menu item not available"))
+		}
 
 		item := model.NewOrderItem(menuItem.ID, menuItem.Name, menuItem.Price, option.Quantity)
 		items = append(items, *item)
 	}
 
-	order = model.NewOrder(user.ID, restaurant.ID, items, address, totalAmount)
+	order = model.NewOrder(user.ID, restaurant.ID, items)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(
