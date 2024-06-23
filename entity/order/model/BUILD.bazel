@@ -4,9 +4,14 @@ go_library(
     name = "model",
     srcs = [
         "model.go",
+        "order_event.go",
+        "order_state.go",
         "vo.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/order/model",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_google_uuid//:uuid"],
+    deps = [
+        "//pkg/contextx",
+        "@com_github_google_uuid//:uuid",
+    ],
 )
