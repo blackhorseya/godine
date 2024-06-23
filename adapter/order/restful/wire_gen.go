@@ -35,13 +35,14 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		return nil, err
 	}
 	iRestaurantBiz := biz.NewRestaurantHTTPClient()
+	iMenuBiz := biz.NewMenuHTTPClient()
 	iUserBiz := biz2.NewUserHTTPClient()
 	client, err := mongodbx.NewClient(application)
 	if err != nil {
 		return nil, err
 	}
 	iOrderRepo := order.NewMongodb(client)
-	iOrderBiz := biz3.NewOrderBiz(iRestaurantBiz, iUserBiz, iOrderRepo)
+	iOrderBiz := biz3.NewOrderBiz(iRestaurantBiz, iMenuBiz, iUserBiz, iOrderRepo)
 	injector := &wirex.Injector{
 		A:            application,
 		OrderService: iOrderBiz,
@@ -76,5 +77,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz3.NewOrderBiz, biz.NewRestaurantHTTPClient, biz2.NewUserHTTPClient, order.NewMongodb, mongodbx.NewClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz3.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMongodb, mongodbx.NewClient,
 )

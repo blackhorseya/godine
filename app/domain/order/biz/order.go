@@ -18,6 +18,7 @@ import (
 
 type orderBiz struct {
 	restaurantService restB.IRestaurantBiz
+	menuService       restB.IMenuBiz
 	userService       userB.IUserBiz
 
 	orders repo.IOrderRepo
@@ -26,6 +27,7 @@ type orderBiz struct {
 // NewOrderBiz create and return a new order orderB
 func NewOrderBiz(
 	restaurantService restB.IRestaurantBiz,
+	menuService restB.IMenuBiz,
 	userService userB.IUserBiz,
 	orders repo.IOrderRepo,
 ) orderB.IOrderBiz {
@@ -78,6 +80,15 @@ func (i *orderBiz) CreateOrder(
 			zap.String("user_id", userID.String()),
 		)
 		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("user not found"))
+	}
+
+	newItems := make([]model.OrderItem, 0, len(items))
+	for _, item := range items {
+		newItems = append(newItems, model.OrderItem{
+			MenuItemID: "",
+			Quantity:   0,
+			Price:      item.Price,
+		})
 	}
 
 	order = model.NewOrder(user.ID, restaurant.ID, items, address, totalAmount)
