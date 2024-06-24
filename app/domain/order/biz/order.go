@@ -127,8 +127,10 @@ func (i *orderBiz) CreateOrder(
 }
 
 func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model.Order, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.order.get_order")
+	defer span.End()
+
+	return i.orders.GetByID(ctx, id)
 }
 
 func (i *orderBiz) ListOrders(
