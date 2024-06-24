@@ -127,5 +127,18 @@ func (i *impl) GetList(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/orders/{order_id} [get]
 func (i *impl) GetByID(c *gin.Context) {
-	// todo: 2024/6/24|sean|implement me
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	orderID := c.Param("order_id")
+	order, err := i.injector.OrderService.GetOrder(ctx, orderID)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, order)
 }
