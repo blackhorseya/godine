@@ -15,6 +15,25 @@ type OrderState interface {
 	Next(ctx contextx.Contextx, order *Order) (event *OrderEvent, err error)
 }
 
+func UnmarshalOrderState(raw string) (OrderState, error) {
+	switch raw {
+	case "pending":
+		return &PendingState{}, nil
+	case "confirmed":
+		return &ConfirmedState{}, nil
+	case "prepared":
+		return &PreparedState{}, nil
+	case "out_for_delivery":
+		return &OutForDeliveryState{}, nil
+	case "delivered":
+		return &DeliveredState{}, nil
+	case "cancelled":
+		return &CancelledState{}, nil
+	default:
+		return nil, fmt.Errorf("unknown order state: %s", raw)
+	}
+}
+
 var _ OrderState = &PendingState{}
 
 // PendingState is the pending state of the order.

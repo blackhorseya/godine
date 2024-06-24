@@ -35,6 +35,28 @@ type Order struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
 }
 
+func (x *Order) UnmarshalBSON(bytes []byte) error {
+	type Alias Order
+	alias := &struct {
+		Status string `bson:"status"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	if err := bson.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
+
+	state, err := UnmarshalOrderState(alias.Status)
+	if err != nil {
+		return err
+	}
+	x.Status = state
+
+	return nil
+}
+
 func (x *Order) MarshalBSON() ([]byte, error) {
 	type Alias Order
 	alias := &struct {
