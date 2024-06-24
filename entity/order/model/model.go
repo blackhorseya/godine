@@ -5,6 +5,7 @@ import (
 
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // Order represents an order entity.
@@ -32,6 +33,19 @@ type Order struct {
 
 	// UpdatedAt is the timestamp when the order was last updated.
 	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
+}
+
+func (x *Order) MarshalBSON() ([]byte, error) {
+	type Alias Order
+	alias := &struct {
+		*Alias `bson:",inline"`
+		Status string `bson:"status"`
+	}{
+		Alias:  (*Alias)(x),
+		Status: x.Status.String(),
+	}
+
+	return bson.Marshal(alias)
 }
 
 // NewOrder creates a new order.
