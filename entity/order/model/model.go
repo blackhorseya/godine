@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -33,6 +34,17 @@ type Order struct {
 
 	// UpdatedAt is the timestamp when the order was last updated.
 	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
+}
+
+func (x *Order) MarshalJSON() ([]byte, error) {
+	type Alias Order
+	return json.Marshal(&struct {
+		*Alias `json:",inline"`
+		Status string `json:"status,omitempty"`
+	}{
+		Alias:  (*Alias)(x),
+		Status: x.Status.String(),
+	})
 }
 
 func (x *Order) UnmarshalBSON(bytes []byte) error {
@@ -82,6 +94,7 @@ func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
 		UserID:       userID,
 		RestaurantID: restaurantID,
 		Items:        items,
+		Status:       &PendingState{},
 		TotalAmount:  totalAmount,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
