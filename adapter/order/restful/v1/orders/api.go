@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/blackhorseya/godine/adapter/order/wirex"
+	_ "github.com/blackhorseya/godine/entity/order/biz" // import biz
 	"github.com/blackhorseya/godine/entity/order/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
@@ -22,6 +23,8 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 	group := g.Group("/orders")
 	{
 		group.POST("", i.Post)
+		group.GET("", i.GetList)
+		group.GET("/:order_id", i.GetByID)
 	}
 }
 
@@ -72,4 +75,36 @@ func (i *impl) Post(c *gin.Context) {
 	}
 
 	responsex.OK(c, order)
+}
+
+// GetList is the get list method
+// @Summary Get order list
+// @Description Get order list
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param query query biz.ListOrdersOptions false "list order options"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=[]model.Order}
+// @Failure 500 {object} responsex.Response
+// @Header 200 {int} X-Total-Count "Total number of items"
+// @Router /v1/orders [get]
+func (i *impl) GetList(c *gin.Context) {
+	// todo: 2024/6/24|sean|implement me
+}
+
+// GetByID is the get by id method
+// @Summary Get order by id
+// @Description Get order by id
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param order_id path string true "order id"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=model.Order}
+// @Failure 404 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/orders/{order_id} [get]
+func (i *impl) GetByID(c *gin.Context) {
+	// todo: 2024/6/24|sean|implement me
 }

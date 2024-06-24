@@ -20,7 +20,6 @@ definitions:
       status:
         description: Status is the current status of the order (e.g., pending, confirmed,
           delivered).
-        type: string
       total_amount:
         description: TotalAmount is the total amount of the order.
         type: number
@@ -103,6 +102,70 @@ paths:
       tags:
       - health
   /v1/orders:
+    get:
+      consumes:
+      - application/json
+      description: Get order list
+      parameters:
+      - default: 1
+        description: Page is the page number.
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: RestaurantID is the ID of the restaurant that received the order.
+        in: query
+        name: restaurant_id
+        type: string
+      - default: 10
+        description: Size is the number of items per page.
+        in: query
+        maximum: 100
+        minimum: 1
+        name: size
+        type: integer
+      - description: Status is the status of the order.
+        enum:
+        - pending
+        - confirmed
+        - preparing
+        - delivering
+        - delivered
+        - canceled
+        in: query
+        name: status
+        type: string
+      - description: UserID is the ID of the user who placed the order.
+        in: query
+        name: user_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: Total number of items
+              type: int
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/github_com_blackhorseya_godine_entity_order_model.Order'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Get order list
+      tags:
+      - orders
     post:
       consumes:
       - application/json
@@ -137,6 +200,42 @@ paths:
       security:
       - Bearer: []
       summary: Create a new order
+      tags:
+      - orders
+  /v1/orders/{order_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get order by id
+      parameters:
+      - description: order id
+        in: path
+        name: order_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_order_model.Order'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Get order by id
       tags:
       - orders
 securityDefinitions:
