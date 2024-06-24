@@ -115,11 +115,55 @@ func (i *mongodb) ListByRestaurantID(
 	restaurantID string,
 	condition repo.ListCondition,
 ) (items []*model.Order, total int, err error) {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "order.mongodb.list_by_restaurant_id")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"restaurant_id": restaurantID}
+
+	opts := options.Find()
+	if condition.Limit > 0 {
+		opts.SetLimit(int64(condition.Limit))
+	}
+	if condition.Offset > 0 {
+		opts.SetSkip(int64(condition.Offset))
+	}
+
+	cursor, err := i.rw.Database(dbName).Collection(collName).Find(timeout, filter, opts)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer cursor.Close(timeout)
+
+	err = cursor.All(timeout, &items)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	count, err := i.rw.Database(dbName).Collection(collName).CountDocuments(timeout, filter)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return items, int(count), nil
 }
 
 func (i *mongodb) UpdateStatus(ctx contextx.Contextx, order *model.Order, status string) error {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "order.mongodb.update_status")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": order.ID}
+	update := bson.M{"$set": bson.M{"status": status}}
+
+	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
