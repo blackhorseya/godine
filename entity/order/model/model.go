@@ -1,9 +1,12 @@
 package model
 
 import (
+	"encoding/json"
 	"time"
 
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // Order represents an order entity.
@@ -21,7 +24,7 @@ type Order struct {
 	Items []OrderItem `json:"items,omitempty" bson:"items"`
 
 	// Status is the current status of the order (e.g., pending, confirmed, delivered).
-	Status string `json:"status,omitempty" bson:"status"`
+	Status OrderState `json:"status,omitempty" bson:"status"`
 
 	// TotalAmount is the total amount of the order.
 	TotalAmount float64 `json:"total_amount,omitempty" bson:"total_amount"`
@@ -31,6 +34,52 @@ type Order struct {
 
 	// UpdatedAt is the timestamp when the order was last updated.
 	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
+}
+
+func (x *Order) MarshalJSON() ([]byte, error) {
+	type Alias Order
+	return json.Marshal(&struct {
+		*Alias `json:",inline"`
+		Status string `json:"status,omitempty"`
+	}{
+		Alias:  (*Alias)(x),
+		Status: x.Status.String(),
+	})
+}
+
+func (x *Order) UnmarshalBSON(bytes []byte) error {
+	type Alias Order
+	alias := &struct {
+		Status string `bson:"status"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	if err := bson.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
+
+	state, err := UnmarshalOrderState(alias.Status)
+	if err != nil {
+		return err
+	}
+	x.Status = state
+
+	return nil
+}
+
+func (x *Order) MarshalBSON() ([]byte, error) {
+	type Alias Order
+	alias := &struct {
+		*Alias `bson:",inline"`
+		Status string `bson:"status"`
+	}{
+		Alias:  (*Alias)(x),
+		Status: x.Status.String(),
+	}
+
+	return bson.Marshal(alias)
 }
 
 // NewOrder creates a new order.
@@ -45,17 +94,16 @@ func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
 		UserID:       userID,
 		RestaurantID: restaurantID,
 		Items:        items,
-		Status:       "pending",
+		Status:       &PendingState{},
 		TotalAmount:  totalAmount,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
 	}
 }
 
-// UpdateStatus updates the status of the order.
-func (x *Order) UpdateStatus(newStatus string) {
-	x.Status = newStatus
-	x.UpdatedAt = time.Now()
+// Next transitions the order to the next state.
+func (x *Order) Next(ctx contextx.Contextx) (event *OrderEvent, err error) {
+	return x.Status.Next(ctx, x)
 }
 
 // AddItem adds an item to the order.
