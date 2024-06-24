@@ -14,6 +14,15 @@ type ListOrdersOptions struct {
 
 	// Size is the number of items per page.
 	Size int `form:"size" default:"10" minimum:"1" maximum:"100"`
+
+	// UserID is the ID of the user who placed the order.
+	UserID string `form:"user_id"`
+
+	// RestaurantID is the ID of the restaurant that received the order.
+	RestaurantID string `form:"restaurant_id"`
+
+	// Status is the status of the order.
+	Status string `form:"status" enums:"pending,confirmed,preparing,delivering,delivered,canceled"`
 }
 
 // IOrderBiz defines the business operations for order management.
@@ -31,7 +40,7 @@ type IOrderBiz interface {
 	GetOrder(ctx contextx.Contextx, id string) (order *model.Order, err error)
 
 	// ListOrders retrieves a list of orders.
-	ListOrders(ctx contextx.Contextx, options ListOrdersOptions) (orders []model.Order, total int, err error)
+	ListOrders(ctx contextx.Contextx, options ListOrdersOptions) (orders []*model.Order, total int, err error)
 
 	// UpdateOrderStatus updates the status of an existing order.
 	UpdateOrderStatus(ctx contextx.Contextx, id string, status string) error

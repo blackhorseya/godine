@@ -99,10 +99,10 @@ func (mr *MockIOrderBizMockRecorder) GetOrder(ctx, id any) *gomock.Call {
 }
 
 // ListOrders mocks base method.
-func (m *MockIOrderBiz) ListOrders(ctx contextx.Contextx, options ListOrdersOptions) ([]model.Order, int, error) {
+func (m *MockIOrderBiz) ListOrders(ctx contextx.Contextx, options ListOrdersOptions) ([]*model.Order, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOrders", ctx, options)
-	ret0, _ := ret[0].([]model.Order)
+	ret0, _ := ret[0].([]*model.Order)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
