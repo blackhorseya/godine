@@ -32,6 +32,4 @@ type IOrderRepo interface {
 		restaurantID string,
 		condition ListCondition,
 	) (items []*model.Order, total int, err error)
-
-	UpdateStatus(ctx contextx.Contextx, order *model.Order, status string) error
 }

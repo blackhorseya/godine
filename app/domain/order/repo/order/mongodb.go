@@ -149,21 +149,3 @@ func (i *mongodb) ListByRestaurantID(
 
 	return items, int(count), nil
 }
-
-func (i *mongodb) UpdateStatus(ctx contextx.Contextx, order *model.Order, status string) error {
-	ctx, span := otelx.Span(ctx, "order.mongodb.update_status")
-	defer span.End()
-
-	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
-	defer cancelFunc()
-
-	filter := bson.M{"_id": order.ID}
-	update := bson.M{"$set": bson.M{"status": status}}
-
-	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
