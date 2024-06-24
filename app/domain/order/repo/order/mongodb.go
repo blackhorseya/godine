@@ -70,6 +70,7 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, 
 	return item, nil
 }
 
+//nolint:dupl // it's okay
 func (i *mongodb) ListByUserID(
 	ctx contextx.Contextx,
 	userID string,
@@ -110,6 +111,7 @@ func (i *mongodb) ListByUserID(
 	return items, int(count), nil
 }
 
+//nolint:dupl // it's okay
 func (i *mongodb) ListByRestaurantID(
 	ctx contextx.Contextx,
 	restaurantID string,
