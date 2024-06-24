@@ -100,17 +100,3 @@ func (mr *MockIOrderRepoMockRecorder) ListByUserID(ctx, userID, condition any) *
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByUserID", reflect.TypeOf((*MockIOrderRepo)(nil).ListByUserID), ctx, userID, condition)
 }
-
-// UpdateStatus mocks base method.
-func (m *MockIOrderRepo) UpdateStatus(ctx contextx.Contextx, order *model.Order, status string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateStatus", ctx, order, status)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateStatus indicates an expected call of UpdateStatus.
-func (mr *MockIOrderRepoMockRecorder) UpdateStatus(ctx, order, status any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockIOrderRepo)(nil).UpdateStatus), ctx, order, status)
-}
