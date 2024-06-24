@@ -2,9 +2,10 @@ package orders
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/blackhorseya/godine/adapter/order/wirex"
-	_ "github.com/blackhorseya/godine/entity/order/biz" // import biz
+	"github.com/blackhorseya/godine/entity/order/biz"
 	"github.com/blackhorseya/godine/entity/order/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
@@ -90,7 +91,27 @@ func (i *impl) Post(c *gin.Context) {
 // @Header 200 {int} X-Total-Count "Total number of items"
 // @Router /v1/orders [get]
 func (i *impl) GetList(c *gin.Context) {
-	// todo: 2024/6/24|sean|implement me
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var query biz.ListOrdersOptions
+	err = c.ShouldBindQuery(&query)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	orders, total, err := i.injector.OrderService.ListOrders(ctx, query)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	c.Header("X-Total-Count", strconv.Itoa(total))
+	responsex.OK(c, orders)
 }
 
 // GetByID is the get by id method
