@@ -3,6 +3,7 @@ package model
 import (
 	"time"
 
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
 )
 
@@ -21,7 +22,7 @@ type Order struct {
 	Items []OrderItem `json:"items,omitempty" bson:"items"`
 
 	// Status is the current status of the order (e.g., pending, confirmed, delivered).
-	Status string `json:"status,omitempty" bson:"status"`
+	Status OrderState `json:"status,omitempty" bson:"status"`
 
 	// TotalAmount is the total amount of the order.
 	TotalAmount float64 `json:"total_amount,omitempty" bson:"total_amount"`
@@ -45,17 +46,15 @@ func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
 		UserID:       userID,
 		RestaurantID: restaurantID,
 		Items:        items,
-		Status:       "pending",
 		TotalAmount:  totalAmount,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
 	}
 }
 
-// UpdateStatus updates the status of the order.
-func (x *Order) UpdateStatus(newStatus string) {
-	x.Status = newStatus
-	x.UpdatedAt = time.Now()
+// Next transitions the order to the next state.
+func (x *Order) Next(ctx contextx.Contextx) (event *OrderEvent, err error) {
+	return x.Status.Next(ctx, x)
 }
 
 // AddItem adds an item to the order.
