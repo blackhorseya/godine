@@ -8,6 +8,7 @@ import (
 	"github.com/blackhorseya/godine/entity/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -46,8 +47,19 @@ func (i *mongodb) Create(ctx contextx.Contextx, order *model.Order) error {
 }
 
 func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, err error) {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "order.mongodb.get_by_id")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": id}
+	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(item)
+	if err != nil {
+		return nil, err
+	}
+
+	return item, nil
 }
 
 func (i *mongodb) ListByUserID(
