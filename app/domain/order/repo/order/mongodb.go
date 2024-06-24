@@ -70,60 +70,26 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, 
 	return item, nil
 }
 
-//nolint:dupl // it's okay
-func (i *mongodb) ListByUserID(
+func (i *mongodb) List(
 	ctx contextx.Contextx,
-	userID string,
 	condition repo.ListCondition,
 ) (items []*model.Order, total int, err error) {
-	ctx, span := otelx.Span(ctx, "order.mongodb.list_by_user_id")
+	ctx, span := otelx.Span(ctx, "order.mongodb.list")
 	defer span.End()
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"user_id": userID}
-
-	opts := options.Find()
-	if condition.Limit > 0 {
-		opts.SetLimit(int64(condition.Limit))
+	filter := bson.M{}
+	if condition.UserID != "" {
+		filter["user_id"] = condition.UserID
 	}
-	if condition.Offset > 0 {
-		opts.SetSkip(int64(condition.Offset))
+	if condition.RestaurantID != "" {
+		filter["restaurant_id"] = condition.RestaurantID
 	}
-
-	cursor, err := i.rw.Database(dbName).Collection(collName).Find(timeout, filter, opts)
-	if err != nil {
-		return nil, 0, err
+	if condition.Status != "" {
+		filter["status"] = condition.Status
 	}
-	defer cursor.Close(timeout)
-
-	err = cursor.All(timeout, &items)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	count, err := i.rw.Database(dbName).Collection(collName).CountDocuments(timeout, filter)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	return items, int(count), nil
-}
-
-//nolint:dupl // it's okay
-func (i *mongodb) ListByRestaurantID(
-	ctx contextx.Contextx,
-	restaurantID string,
-	condition repo.ListCondition,
-) (items []*model.Order, total int, err error) {
-	ctx, span := otelx.Span(ctx, "order.mongodb.list_by_restaurant_id")
-	defer span.End()
-
-	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
-	defer cancelFunc()
-
-	filter := bson.M{"restaurant_id": restaurantID}
 
 	opts := options.Find()
 	if condition.Limit > 0 {

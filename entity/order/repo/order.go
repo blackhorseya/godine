@@ -9,7 +9,9 @@ import (
 
 // ListCondition is a struct that defines the conditions for listing orders
 type ListCondition struct {
-	Status string
+	UserID       string
+	RestaurantID string
+	Status       string
 
 	Limit  int
 	Offset int
@@ -21,15 +23,5 @@ type IOrderRepo interface {
 
 	GetByID(ctx contextx.Contextx, id string) (item *model.Order, err error)
 
-	ListByUserID(
-		ctx contextx.Contextx,
-		userID string,
-		condition ListCondition,
-	) (items []*model.Order, total int, err error)
-
-	ListByRestaurantID(
-		ctx contextx.Contextx,
-		restaurantID string,
-		condition ListCondition,
-	) (items []*model.Order, total int, err error)
+	List(ctx contextx.Contextx, condition ListCondition) (items []*model.Order, total int, err error)
 }

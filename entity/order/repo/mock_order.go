@@ -69,34 +69,18 @@ func (mr *MockIOrderRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIOrderRepo)(nil).GetByID), ctx, id)
 }
 
-// ListByRestaurantID mocks base method.
-func (m *MockIOrderRepo) ListByRestaurantID(ctx contextx.Contextx, restaurantID string, condition ListCondition) ([]*model.Order, int, error) {
+// List mocks base method.
+func (m *MockIOrderRepo) List(ctx contextx.Contextx, condition ListCondition) ([]*model.Order, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListByRestaurantID", ctx, restaurantID, condition)
+	ret := m.ctrl.Call(m, "List", ctx, condition)
 	ret0, _ := ret[0].([]*model.Order)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
 
-// ListByRestaurantID indicates an expected call of ListByRestaurantID.
-func (mr *MockIOrderRepoMockRecorder) ListByRestaurantID(ctx, restaurantID, condition any) *gomock.Call {
+// List indicates an expected call of List.
+func (mr *MockIOrderRepoMockRecorder) List(ctx, condition any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByRestaurantID", reflect.TypeOf((*MockIOrderRepo)(nil).ListByRestaurantID), ctx, restaurantID, condition)
-}
-
-// ListByUserID mocks base method.
-func (m *MockIOrderRepo) ListByUserID(ctx contextx.Contextx, userID string, condition ListCondition) ([]*model.Order, int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListByUserID", ctx, userID, condition)
-	ret0, _ := ret[0].([]*model.Order)
-	ret1, _ := ret[1].(int)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// ListByUserID indicates an expected call of ListByUserID.
-func (mr *MockIOrderRepoMockRecorder) ListByUserID(ctx, userID, condition any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByUserID", reflect.TypeOf((*MockIOrderRepo)(nil).ListByUserID), ctx, userID, condition)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIOrderRepo)(nil).List), ctx, condition)
 }
