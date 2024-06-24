@@ -127,16 +127,26 @@ func (i *orderBiz) CreateOrder(
 }
 
 func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model.Order, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.order.get_order")
+	defer span.End()
+
+	return i.orders.GetByID(ctx, id)
 }
 
 func (i *orderBiz) ListOrders(
 	ctx contextx.Contextx,
 	options orderB.ListOrdersOptions,
-) (orders []model.Order, total int, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+) (orders []*model.Order, total int, err error) {
+	ctx, span := otelx.Span(ctx, "biz.order.list_orders")
+	defer span.End()
+
+	return i.orders.List(ctx, repo.ListCondition{
+		UserID:       options.UserID,
+		RestaurantID: options.RestaurantID,
+		Status:       options.Status,
+		Limit:        options.Size,
+		Offset:       (options.Page - 1) * options.Size,
+	})
 }
 
 func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status string) error {
