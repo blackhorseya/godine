@@ -1,0 +1,8 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "model",
+    srcs = ["model.go"],
+    importpath = "github.com/blackhorseya/godine/entity/notification/model",
+    visibility = ["//visibility:public"],
+)

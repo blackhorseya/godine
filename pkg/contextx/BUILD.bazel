@@ -1,4 +1,4 @@
-load("@rules_go//go:def.bzl", "go_library")
+load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "contextx",
@@ -12,4 +12,10 @@ go_library(
         "@com_github_gin_gonic_gin//:gin",
         "@org_uber_go_zap//:zap",
     ],
+)
+
+go_test(
+    name = "contextx_test",
+    srcs = ["contextx_test.go"],
+    embed = [":contextx"],
 )
