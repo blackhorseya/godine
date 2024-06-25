@@ -8,8 +8,11 @@ package restful
 
 import (
 	"github.com/blackhorseya/godine/adapter/logistics/wirex"
+	"github.com/blackhorseya/godine/app/domain/logistics/biz"
+	"github.com/blackhorseya/godine/app/domain/logistics/repo/delivery"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -29,8 +32,15 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
+	client, err := mongodbx.NewClient(application)
+	if err != nil {
+		return nil, err
+	}
+	iDeliveryRepo := delivery.NewMongodb(client)
+	iLogisticsBiz := biz.NewLogistics(iDeliveryRepo)
 	injector := &wirex.Injector{
-		A: application,
+		A:                application,
+		LogisticsService: iLogisticsBiz,
 	}
 	server, err := httpx.NewServer(application)
 	if err != nil {
@@ -62,5 +72,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz.ProviderLogisticsSet, mongodbx.NewClient,
 )
