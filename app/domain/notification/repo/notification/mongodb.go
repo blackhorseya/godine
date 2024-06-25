@@ -118,6 +118,25 @@ func (i *mongodb) List(
 }
 
 func (i *mongodb) UpdateStatus(ctx contextx.Contextx, id, status string) error {
-	// todo: 2024/6/26|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.notification.repo.notification.mongodb.UpdateStatus")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"status": status, "updated_at": time.Now()}}
+
+	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	if err != nil {
+		ctx.Error(
+			"update notification status in mongodb failed",
+			zap.Error(err),
+			zap.String("id", id),
+			zap.String("status", status),
+		)
+		return err
+	}
+
+	return nil
 }
