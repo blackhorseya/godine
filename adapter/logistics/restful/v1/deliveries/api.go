@@ -1,9 +1,15 @@
 package deliveries
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/blackhorseya/godine/adapter/logistics/wirex"
-	_ "github.com/blackhorseya/godine/entity/logistics/biz"   // import swagger docs
-	_ "github.com/blackhorseya/godine/entity/logistics/model" // import swagger docs
+	"github.com/blackhorseya/godine/entity/logistics/biz"
+	"github.com/blackhorseya/godine/entity/logistics/model"
+	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
+	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,7 +35,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 // @Tags deliveries
 // @Accept json
 // @Produce json
-// @Param driver_id query string false "driver id"
+// @Param driver_id query string false "driver id" example(adcf23bc-cd32-4176-8d46-68f15ebdfa98)
 // @Param params query biz.ListDeliveriesOptions false "search params"
 // @Security Bearer
 // @Success 200 {object} responsex.Response{data=[]model.Delivery}
@@ -38,7 +44,29 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 // @Header 200 {int} X-Total-Count "total count"
 // @Router /v1/deliveries [get]
 func (i *impl) GetList(c *gin.Context) {
-	// todo: 2024/6/25|sean|implement get list
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var options biz.ListDeliveriesOptions
+	err = c.ShouldBindQuery(&options)
+	if err != nil {
+		_ = c.Error(errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	driverID := c.Param("driver_id")
+
+	items, total, err := i.injector.LogisticsService.ListDeliveriesByDriver(ctx, driverID, options)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.Header("X-Total-Count", strconv.Itoa(total))
+	responsex.OK(c, items)
 }
 
 // GetByID is used to get the delivery by id
@@ -55,7 +83,20 @@ func (i *impl) GetList(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/deliveries/{id} [get]
 func (i *impl) GetByID(c *gin.Context) {
-	// todo: 2024/6/25|sean|implement get list
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	id := c.Param("id")
+	item, err := i.injector.LogisticsService.GetDelivery(ctx, id)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
 
 // Post is used to create a new delivery
@@ -71,5 +112,24 @@ func (i *impl) GetByID(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/deliveries [post]
 func (i *impl) Post(c *gin.Context) {
-	// todo: 2024/6/25|sean|implement get list
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var payload *model.Delivery
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		_ = c.Error(errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.LogisticsService.CreateDelivery(ctx, payload)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	responsex.OK(c, payload)
 }

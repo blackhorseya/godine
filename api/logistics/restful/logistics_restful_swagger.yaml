@@ -74,6 +74,7 @@ paths:
       description: Get the list of deliveries
       parameters:
       - description: driver id
+        example: adcf23bc-cd32-4176-8d46-68f15ebdfa98
         in: query
         name: driver_id
         type: string

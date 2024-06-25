@@ -9,6 +9,9 @@ go_library(
         "//adapter/logistics/wirex",
         "//entity/logistics/biz",
         "//entity/logistics/model",
+        "//pkg/contextx",
+        "//pkg/errorx",
+        "//pkg/responsex",
         "@com_github_gin_gonic_gin//:gin",
     ],
 )
