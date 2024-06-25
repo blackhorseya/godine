@@ -5,8 +5,5 @@ go_library(
     srcs = ["injector.go"],
     importpath = "github.com/blackhorseya/godine/adapter/notify/wirex",
     visibility = ["//visibility:public"],
-    deps = [
-        "//app/infra/configx",
-        "//entity/notification/biz",
-    ],
+    deps = ["//app/infra/configx"],
 )
