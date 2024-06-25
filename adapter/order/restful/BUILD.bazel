@@ -13,6 +13,7 @@ go_library(
         "//adapter/order/wirex",
         "//api/order/restful",
         "//app/domain/logistics/biz",
+        "//app/domain/notification/biz",
         "//app/domain/order/biz",
         "//app/domain/order/repo/order",
         "//app/domain/restaurant/biz",
