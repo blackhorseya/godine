@@ -8,7 +8,8 @@ package restful
 
 import (
 	"github.com/blackhorseya/godine/adapter/order/wirex"
-	biz3 "github.com/blackhorseya/godine/app/domain/order/biz"
+	biz3 "github.com/blackhorseya/godine/app/domain/logistics/biz"
+	biz4 "github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/order/repo/order"
 	"github.com/blackhorseya/godine/app/domain/restaurant/biz"
 	biz2 "github.com/blackhorseya/godine/app/domain/user/biz"
@@ -37,12 +38,13 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	iRestaurantBiz := biz.NewRestaurantHTTPClient()
 	iMenuBiz := biz.NewMenuHTTPClient()
 	iUserBiz := biz2.NewUserHTTPClient()
+	iLogisticsBiz := biz3.NewLogisticsHTTPClient()
 	client, err := mongodbx.NewClient(application)
 	if err != nil {
 		return nil, err
 	}
 	iOrderRepo := order.NewMongodb(client)
-	iOrderBiz := biz3.NewOrderBiz(iRestaurantBiz, iMenuBiz, iUserBiz, iOrderRepo)
+	iOrderBiz := biz4.NewOrderBiz(iRestaurantBiz, iMenuBiz, iUserBiz, iLogisticsBiz, iOrderRepo)
 	injector := &wirex.Injector{
 		A:            application,
 		OrderService: iOrderBiz,
@@ -77,5 +79,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz3.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMongodb, mongodbx.NewClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz4.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMongodb, mongodbx.NewClient, biz3.NewLogisticsHTTPClient,
 )
