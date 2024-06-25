@@ -7,6 +7,7 @@ package restful
 import (
 	"github.com/blackhorseya/godine/adapter/logistics/wirex"
 	"github.com/blackhorseya/godine/app/domain/logistics/biz"
+	biz2 "github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
@@ -46,6 +47,8 @@ var providerSet = wire.NewSet(
 
 	biz.ProviderLogisticsSet,
 	mongodbx.NewClient,
+
+	biz2.NewNotificationHTTPClient,
 )
 
 func New(v *viper.Viper) (adapterx.Restful, error) {
