@@ -1,3 +1,42 @@
+## 0.2.1 (2024-06-26)
+
+### Feat
+
+- refactor notification creation in order process
+- refactor notification HTTP client functionality in Go codebase (#33)
+- improve error handling and response parsing
+- improve notification handling and error checking
+- update notification API functionality (#32)
+- update notification API functionality
+- refactor notification HTTP client functionality in Go codebase
+- implement RESTful API routing for notifications (#31)
+- introduce new RESTful notifications API framework
+- implement RESTful API routing for notifications
+- implement error handling and result count logic across files
+- refactor dependency management and notifications in MongoDB integration
+- integrate new notification features across files
+- introduce notifications functionality into the repo package (#28)
+- implement MongoDB notification repository functionality
+- introduce notifications functionality into the repo package
+- create new notification adapter for wirex integration (#27)
+- integrate new `notify_restful` service into compose configuration
+- implement real-time notification feature with `notify` module
+- integrate new NotifyRestful application configuration
+- create new notification adapter for wirex integration
+- consolidate notification business logic into separate package
+
+### Fix
+
+- improve error handling in GetByID function
+
+### Refactor
+
+- update naming convention for notification services
+- refactor notification handling to use model.Notification struct
+- refactor imports for notification module
+- refactor UpdateStatus function and improve error handling
+- remove references to notification biz from order adapter
+
 ## 0.2.0 (2024-06-25)
 
 ### Feat
