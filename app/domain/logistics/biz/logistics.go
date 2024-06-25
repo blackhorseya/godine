@@ -52,6 +52,12 @@ func (i *logistics) ListDeliveriesByDriver(
 	driverID string,
 	options biz.ListDeliveriesOptions,
 ) (items []*model.Delivery, total int, err error) {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.ListDeliveriesByDriver")
+	defer span.End()
+
+	return i.deliveries.List(ctx, repo.ListCondition{
+		Limit:    options.Size,
+		Offset:   (options.Page - 1) * options.Size,
+		DriverID: driverID,
+	})
 }
