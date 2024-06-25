@@ -26,6 +26,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 		deliveries.GET("", instance.GetList)
 		deliveries.GET("/:id", instance.GetByID)
 		deliveries.POST("", instance.Post)
+		deliveries.PATCH("/:id/status", instance.PatchWithStatus)
 	}
 }
 
@@ -132,4 +133,27 @@ func (i *impl) Post(c *gin.Context) {
 	}
 
 	responsex.OK(c, payload)
+}
+
+// PatchWithStatusPayload defines the payload for patch with status
+type PatchWithStatusPayload struct {
+	Status string `json:"status" binding:"required" example:"delivered"`
+}
+
+// PatchWithStatus is used to update the delivery status
+// @Summary Update the delivery status
+// @Description Update the delivery status
+// @Tags deliveries
+// @Accept json
+// @Produce json
+// @Param id path string true "delivery id"
+// @Param request body PatchWithStatusPayload true "delivery status request"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=model.Delivery}
+// @Failure 400 {object} responsex.Response
+// @Failure 404 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/deliveries/{id}/status [patch]
+func (i *impl) PatchWithStatus(c *gin.Context) {
+	// todo: 2024/6/26|sean|implement patch with status
 }
