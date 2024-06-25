@@ -4,6 +4,7 @@ go_library(
     name = "biz",
     srcs = [
         "notification.go",
+        "notification_http_client.go",
         "wire.go",
     ],
     importpath = "github.com/blackhorseya/godine/app/domain/notification/biz",

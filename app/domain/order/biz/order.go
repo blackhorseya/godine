@@ -7,6 +7,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	logisticsB "github.com/blackhorseya/godine/entity/logistics/biz"
 	model2 "github.com/blackhorseya/godine/entity/logistics/model"
+	notifyB "github.com/blackhorseya/godine/entity/notification/biz"
 	orderB "github.com/blackhorseya/godine/entity/order/biz"
 	"github.com/blackhorseya/godine/entity/order/model"
 	"github.com/blackhorseya/godine/entity/order/repo"
@@ -18,10 +19,11 @@ import (
 )
 
 type orderBiz struct {
-	restaurantService restB.IRestaurantBiz
-	menuService       restB.IMenuBiz
-	userService       userB.IUserBiz
-	logisticsService  logisticsB.ILogisticsBiz
+	restaurantService   restB.IRestaurantBiz
+	menuService         restB.IMenuBiz
+	userService         userB.IUserBiz
+	logisticsService    logisticsB.ILogisticsBiz
+	notificationService notifyB.INotificationBiz
 
 	orders repo.IOrderRepo
 }
@@ -32,14 +34,16 @@ func NewOrderBiz(
 	menuService restB.IMenuBiz,
 	userService userB.IUserBiz,
 	logisticsService logisticsB.ILogisticsBiz,
+	notificationService notifyB.INotificationBiz,
 	orders repo.IOrderRepo,
 ) orderB.IOrderBiz {
 	return &orderBiz{
-		restaurantService: restaurantService,
-		menuService:       menuService,
-		userService:       userService,
-		logisticsService:  logisticsService,
-		orders:            orders,
+		restaurantService:   restaurantService,
+		menuService:         menuService,
+		userService:         userService,
+		logisticsService:    logisticsService,
+		notificationService: notificationService,
+		orders:              orders,
 	}
 }
 
