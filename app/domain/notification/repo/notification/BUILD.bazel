@@ -6,9 +6,14 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/domain/notification/repo/notification",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/otelx",
         "//entity/notification/model",
         "//entity/notification/repo",
         "//pkg/contextx",
+        "@com_github_google_uuid//:uuid",
+        "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//mongo",
+        "@org_mongodb_go_mongo_driver//mongo/options",
+        "@org_uber_go_zap//:zap",
     ],
 )
