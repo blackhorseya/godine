@@ -79,8 +79,40 @@ func (i *logisticsHTTPClient) UpdateDeliveryStatus(ctx contextx.Contextx, delive
 }
 
 func (i *logisticsHTTPClient) GetDelivery(ctx contextx.Contextx, deliveryID string) (item *model.Delivery, err error) {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.http_client.GetDelivery")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/deliveries/" + deliveryID)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, ep.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+		Data               *model.Delivery `json:"data"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return nil, err
+	}
+
+	if got.Code != http.StatusOK {
+		return nil, errors.New(got.Message)
+	}
+
+	return got.Data, nil
 }
 
 func (i *logisticsHTTPClient) ListDeliveriesByDriver(
