@@ -1,9 +1,11 @@
 package model
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // Delivery represents a delivery entity.
@@ -44,4 +46,50 @@ func NewDelivery(orderID string) *Delivery {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
+}
+
+func (x *Delivery) MarshalJSON() ([]byte, error) {
+	type Alias Delivery
+	return json.Marshal(&struct {
+		*Alias `json:",inline"`
+		Status string `json:"status,omitempty"`
+	}{
+		Alias:  (*Alias)(x),
+		Status: x.Status.String(),
+	})
+}
+
+func (x *Delivery) UnmarshalBSON(bytes []byte) error {
+	type Alias Delivery
+	alias := &struct {
+		Status string `bson:"status"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	if err := bson.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
+
+	state, err := UnmarshalDeliveryState(alias.Status)
+	if err != nil {
+		return err
+	}
+	x.Status = state
+
+	return nil
+}
+
+func (x *Delivery) MarshalBSON() ([]byte, error) {
+	type Alias Delivery
+	alias := &struct {
+		*Alias `bson:",inline"`
+		Status string `bson:"status"`
+	}{
+		Alias:  (*Alias)(x),
+		Status: x.Status.String(),
+	}
+
+	return bson.Marshal(alias)
 }
