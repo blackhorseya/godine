@@ -68,6 +68,8 @@ func (i *logisticsHTTPClient) CreateDelivery(ctx contextx.Contextx, delivery *mo
 		return errors.New(got.Message)
 	}
 
+	delivery.ID = got.Data.ID
+
 	return nil
 }
 

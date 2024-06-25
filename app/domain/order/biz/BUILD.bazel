@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//app/infra/otelx",
         "//entity/logistics/biz",
+        "//entity/logistics/model",
         "//entity/order/biz",
         "//entity/order/model",
         "//entity/order/repo",

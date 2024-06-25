@@ -6,6 +6,7 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	logisticsB "github.com/blackhorseya/godine/entity/logistics/biz"
+	model2 "github.com/blackhorseya/godine/entity/logistics/model"
 	orderB "github.com/blackhorseya/godine/entity/order/biz"
 	"github.com/blackhorseya/godine/entity/order/model"
 	"github.com/blackhorseya/godine/entity/order/repo"
@@ -114,6 +115,17 @@ func (i *orderBiz) CreateOrder(
 
 		item := model.NewOrderItem(menuItem.ID, menuItem.Name, menuItem.Price, option.Quantity)
 		items = append(items, *item)
+	}
+
+	delivery := model2.NewDelivery(order.ID)
+	err = i.logisticsService.CreateDelivery(ctx, delivery)
+	if err != nil {
+		ctx.Error(
+			"create delivery failed",
+			zap.Error(err),
+			zap.Any("order", &order),
+		)
+		return nil, err
 	}
 
 	order = model.NewOrder(user.ID, restaurant.ID, items)

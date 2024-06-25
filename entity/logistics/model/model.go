@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // Delivery represents a delivery entity.
@@ -29,6 +31,18 @@ type Delivery struct {
 
 	// UpdatedAt is the timestamp when the delivery was last updated.
 	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
+}
+
+// NewDelivery creates a new delivery entity.
+func NewDelivery(orderID string) *Delivery {
+	return &Delivery{
+		ID:        uuid.New().String(),
+		OrderID:   orderID,
+		DriverID:  uuid.New().String(),
+		Status:    "pending",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
 }
 
 // DeliveryStatus represents the status of a delivery.
