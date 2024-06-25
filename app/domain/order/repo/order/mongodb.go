@@ -117,3 +117,21 @@ func (i *mongodb) List(
 
 	return items, int(count), nil
 }
+
+func (i *mongodb) Update(ctx contextx.Contextx, order *model.Order) error {
+	ctx, span := otelx.Span(ctx, "order.mongodb.update")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": order.ID}
+	update := bson.M{"$set": order}
+
+	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

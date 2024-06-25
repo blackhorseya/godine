@@ -86,7 +86,7 @@ func (x *Order) MarshalBSON() ([]byte, error) {
 }
 
 // NewOrder creates a new order.
-func NewOrder(userID, restaurantID string, items []OrderItem, deliveryID string) *Order {
+func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
 	totalAmount := 0.0
 	for _, item := range items {
 		totalAmount += item.Price * float64(item.Quantity)
@@ -101,7 +101,7 @@ func NewOrder(userID, restaurantID string, items []OrderItem, deliveryID string)
 		TotalAmount:  totalAmount,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
-		DeliveryID:   deliveryID,
+		DeliveryID:   "",
 	}
 }
 

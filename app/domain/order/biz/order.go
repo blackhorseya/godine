@@ -117,6 +117,17 @@ func (i *orderBiz) CreateOrder(
 		items = append(items, *item)
 	}
 
+	order = model.NewOrder(user.ID, restaurant.ID, items)
+	err = i.orders.Create(ctx, order)
+	if err != nil {
+		ctx.Error(
+			"create order failed",
+			zap.Error(err),
+			zap.Any("order", &order),
+		)
+		return nil, err
+	}
+
 	delivery := model2.NewDelivery(order.ID)
 	err = i.logisticsService.CreateDelivery(ctx, delivery)
 	if err != nil {
@@ -128,11 +139,11 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	order = model.NewOrder(user.ID, restaurant.ID, items, delivery.ID)
-	err = i.orders.Create(ctx, order)
+	order.DeliveryID = delivery.ID
+	err = i.orders.Update(ctx, order)
 	if err != nil {
 		ctx.Error(
-			"create order failed",
+			"update order failed",
 			zap.Error(err),
 			zap.Any("order", &order),
 		)
