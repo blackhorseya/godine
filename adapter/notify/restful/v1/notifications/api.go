@@ -1,9 +1,15 @@
 package notifications
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/blackhorseya/godine/adapter/notify/wirex"
-	_ "github.com/blackhorseya/godine/entity/notification/biz"   // import biz
-	_ "github.com/blackhorseya/godine/entity/notification/model" // import model
+	"github.com/blackhorseya/godine/entity/notification/biz"
+	"github.com/blackhorseya/godine/entity/notification/model"
+	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
+	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,6 +31,9 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 
 // PostPayload defines the request payload for creating a new notification.
 type PostPayload struct {
+	To      string `json:"to" binding:"required"`
+	OrderID string `json:"order_id" binding:"required"`
+	Message string `json:"message" binding:"required"`
 }
 
 // Post creates a new notification.
@@ -40,7 +49,27 @@ type PostPayload struct {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/notifications [post]
 func (i *impl) Post(c *gin.Context) {
-	// todo: 2024/6/26|sean|implement the post notification handler
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var payload PostPayload
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		_ = c.Error(errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	notify := model.NewNotify("", payload.To, payload.OrderID, payload.Message)
+	err = i.injector.NotifyService.CreateNotification(ctx, notify)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	responsex.OK(c, notify)
 }
 
 // GetList retrieves a list of notifications.
@@ -57,7 +86,27 @@ func (i *impl) Post(c *gin.Context) {
 // @Header 200 {int} X-Total-Count "Total number of items"
 // @Router /v1/notifications [get]
 func (i *impl) GetList(c *gin.Context) {
-	// todo: 2024/6/26|sean|implement the get list notification handler
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var options biz.ListNotificationsOptions
+	err = c.ShouldBindQuery(&options)
+	if err != nil {
+		_ = c.Error(errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	items, total, err := i.injector.NotifyService.ListNotificationsByUser(ctx, "", options)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.Header("X-Total-Count", strconv.Itoa(total))
+	responsex.OK(c, items)
 }
 
 // GetByID retrieves a notification by its ID.
@@ -74,5 +123,18 @@ func (i *impl) GetList(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/notifications/{id} [get]
 func (i *impl) GetByID(c *gin.Context) {
-	// todo: 2024/6/26|sean|implement the get by id notification handler
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	id := c.Param("id")
+	item, err := i.injector.NotifyService.GetNotification(ctx, id)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	responsex.OK(c, item)
 }

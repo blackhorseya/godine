@@ -9,6 +9,9 @@ go_library(
         "//adapter/notify/wirex",
         "//entity/notification/biz",
         "//entity/notification/model",
+        "//pkg/contextx",
+        "//pkg/errorx",
+        "//pkg/responsex",
         "@com_github_gin_gonic_gin//:gin",
     ],
 )

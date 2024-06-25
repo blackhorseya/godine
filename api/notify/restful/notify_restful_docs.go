@@ -281,6 +281,10 @@ const docTemplatenotify_restful = `{
                     "description": "OrderID is the identifier of the order associated with the notification.",
                     "type": "string"
                 },
+                "sender_id": {
+                    "description": "SenderID is the identifier of the user who sent the notification.",
+                    "type": "string"
+                },
                 "status": {
                     "description": "Status is the current status of the notification (e.g., pending, sent).",
                     "type": "string"
@@ -300,7 +304,23 @@ const docTemplatenotify_restful = `{
             }
         },
         "notifications.PostPayload": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "message",
+                "order_id",
+                "to"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "order_id": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                }
+            }
         },
         "responsex.Response": {
             "type": "object",
