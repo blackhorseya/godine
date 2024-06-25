@@ -185,5 +185,11 @@ func (i *impl) PatchWithStatus(c *gin.Context) {
 		return
 	}
 
-	responsex.OK(c, nil)
+	order, err := i.injector.OrderService.GetOrder(ctx, orderID)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, order)
 }

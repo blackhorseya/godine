@@ -193,8 +193,49 @@ func (i *orderBiz) ListOrders(
 }
 
 func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status string) error {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.order.update_order_status")
+	defer span.End()
+
+	order, err := i.orders.GetByID(ctx, id)
+	if err != nil {
+		ctx.Error(
+			"get order failed",
+			zap.Error(err),
+			zap.String("order_id", id),
+		)
+		return err
+	}
+	if order == nil {
+		ctx.Error(
+			"order not found",
+			zap.String("order_id", id),
+		)
+		return errorx.Wrap(http.StatusNotFound, 404, errors.New("order not found"))
+	}
+
+	event, err := order.Next(ctx)
+	if err != nil {
+		ctx.Error(
+			"next order failed",
+			zap.Error(err),
+			zap.String("order_id", id),
+		)
+		return err
+	}
+
+	ctx.Debug("order executed event", zap.Any("event", &event))
+
+	err = i.orders.Update(ctx, order)
+	if err != nil {
+		ctx.Error(
+			"update order failed",
+			zap.Error(err),
+			zap.Any("order", &order),
+		)
+		return err
+	}
+
+	return nil
 }
 
 func (i *orderBiz) AddOrderItem(ctx contextx.Contextx, orderID string, item model.OrderItem) error {
