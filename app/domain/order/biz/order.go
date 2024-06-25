@@ -225,6 +225,17 @@ func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status st
 
 	ctx.Debug("order executed event", zap.Any("event", &event))
 
+	notify := model3.NewNotify(order.UserID, order.UserID, order.ID, "order status to "+event.Name)
+	err = i.notifyService.CreateNotification(ctx, notify)
+	if err != nil {
+		ctx.Error(
+			"create notification failed",
+			zap.Error(err),
+			zap.Any("order", &order),
+		)
+		return err
+	}
+
 	err = i.orders.Update(ctx, order)
 	if err != nil {
 		ctx.Error(
