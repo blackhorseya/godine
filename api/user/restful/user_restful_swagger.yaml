@@ -98,6 +98,50 @@ paths:
       tags:
       - health
   /v1/users:
+    get:
+      consumes:
+      - application/json
+      description: get a list of users
+      parameters:
+      - description: Page is the page number.
+        in: query
+        name: page
+        type: integer
+      - description: PageSize is the number of items per page.
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: Total number of items
+              type: int
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/github_com_blackhorseya_godine_entity_user_model.User'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Get a list of users
+      tags:
+      - users
     post:
       consumes:
       - application/json
@@ -129,6 +173,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
       summary: Create a user
       tags:
       - users
@@ -167,6 +213,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
       summary: Get a user by id
       tags:
       - users

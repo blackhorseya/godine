@@ -2,8 +2,10 @@ package users
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/blackhorseya/godine/adapter/user/wirex"
+	"github.com/blackhorseya/godine/entity/user/biz"
 	"github.com/blackhorseya/godine/entity/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
@@ -22,6 +24,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 	group := g.Group("/users")
 	{
 		group.POST("", i.Post)
+		group.GET("", i.GetList)
 		group.GET("/:id", i.GetByID)
 	}
 }
@@ -41,6 +44,7 @@ type PostPayload struct {
 // @Accept json
 // @Produce json
 // @Param payload body PostPayload true "user payload"
+// @Security Bearer
 // @Success 200 {object} responsex.Response{data=model.User}
 // @Failure 400 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
@@ -75,6 +79,7 @@ func (i *impl) Post(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "user id"
+// @Security Bearer
 // @Success 200 {object} responsex.Response{data=model.User}
 // @Failure 400 {object} responsex.Response
 // @Failure 404 {object} responsex.Response
@@ -96,4 +101,41 @@ func (i *impl) GetByID(c *gin.Context) {
 	}
 
 	responsex.OK(c, item)
+}
+
+// GetList is used to get a list of users.
+// @Summary Get a list of users
+// @Description get a list of users
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param params query biz.ListUsersOptions false "list users options"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=[]model.User}
+// @Failure 400 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Header 200 {int} X-Total-Count "Total number of items"
+// @Router /v1/users [get]
+func (i *impl) GetList(c *gin.Context) {
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var options biz.ListUsersOptions
+	err = c.BindQuery(&options)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	items, total, err := i.injector.UserService.ListUsers(ctx, options)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.Header("X-Total-Count", strconv.Itoa(total))
+	responsex.OK(c, items)
 }
