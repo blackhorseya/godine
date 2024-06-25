@@ -6,9 +6,7 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/logistics/wirex"
 	"github.com/blackhorseya/godine/entity/logistics/biz"
-	_ "github.com/blackhorseya/godine/entity/logistics/biz" // import swagger docs
 	"github.com/blackhorseya/godine/entity/logistics/model"
-	_ "github.com/blackhorseya/godine/entity/logistics/model" // import swagger docs
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
