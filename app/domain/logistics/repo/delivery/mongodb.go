@@ -86,6 +86,10 @@ func (i *mongodb) List(
 	defer cancelFunc()
 
 	filter := bson.M{}
+	if condition.DriverID != "" {
+		filter["driver_id"] = condition.DriverID
+	}
+
 	opts := options.Find()
 	if condition.Limit > 0 {
 		opts.SetLimit(int64(condition.Limit))
