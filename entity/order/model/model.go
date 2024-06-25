@@ -34,6 +34,9 @@ type Order struct {
 
 	// UpdatedAt is the timestamp when the order was last updated.
 	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
+
+	// DeliveryID is the identifier of the delivery associated with the order.
+	DeliveryID string `json:"delivery_id,omitempty" bson:"delivery_id"`
 }
 
 func (x *Order) MarshalJSON() ([]byte, error) {
@@ -83,7 +86,7 @@ func (x *Order) MarshalBSON() ([]byte, error) {
 }
 
 // NewOrder creates a new order.
-func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
+func NewOrder(userID, restaurantID string, items []OrderItem, deliveryID string) *Order {
 	totalAmount := 0.0
 	for _, item := range items {
 		totalAmount += item.Price * float64(item.Quantity)
@@ -98,6 +101,7 @@ func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
 		TotalAmount:  totalAmount,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
+		DeliveryID:   deliveryID,
 	}
 }
 
