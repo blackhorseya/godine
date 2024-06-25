@@ -38,11 +38,10 @@ type Delivery struct {
 // NewDelivery creates a new delivery entity.
 func NewDelivery(orderID string) *Delivery {
 	return &Delivery{
-		ID:       uuid.New().String(),
-		OrderID:  orderID,
-		DriverID: uuid.New().String(),
-		// todo: 2024/6/26|sean|set default status
-		Status:    nil,
+		ID:        uuid.New().String(),
+		OrderID:   orderID,
+		DriverID:  uuid.New().String(),
+		Status:    &PendingState{},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
