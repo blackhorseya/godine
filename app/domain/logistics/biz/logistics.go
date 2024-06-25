@@ -8,6 +8,7 @@ import (
 	notifyB "github.com/blackhorseya/godine/entity/notification/biz"
 	model2 "github.com/blackhorseya/godine/entity/notification/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"go.uber.org/zap"
 )
 
 type logistics struct {
@@ -40,7 +41,13 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 		return err
 	}
 
-	delivery.Status = status
+	event, err := delivery.Next(ctx)
+	if err != nil {
+		return err
+	}
+
+	ctx.Debug("delivery next event", zap.Any("event", &event))
+
 	err = i.deliveries.Update(ctx, delivery)
 	if err != nil {
 		return err

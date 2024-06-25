@@ -1,9 +1,12 @@
 package model
 
 import (
+	"encoding/json"
 	"time"
 
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // Delivery represents a delivery entity.
@@ -14,11 +17,14 @@ type Delivery struct {
 	// OrderID is the identifier of the order associated with the delivery.
 	OrderID string `json:"order_id,omitempty" bson:"order_id"`
 
+	// UserID is the identifier of the user who placed the order.
+	UserID string `json:"user_id,omitempty" bson:"user_id"`
+
 	// DriverID is the identifier of the driver assigned to the delivery.
 	DriverID string `json:"driver_id,omitempty" bson:"driver_id"`
 
 	// Status is the current status of the delivery (e.g., pending, in transit, delivered).
-	Status string `json:"status,omitempty" bson:"status"`
+	Status DeliveryState `json:"status,omitempty" bson:"status"`
 
 	// PickupTime is the timestamp when the delivery was picked up.
 	PickupTime *time.Time `json:"pickup_time,omitempty" bson:"pickup_time"`
@@ -34,28 +40,67 @@ type Delivery struct {
 }
 
 // NewDelivery creates a new delivery entity.
-func NewDelivery(orderID string) *Delivery {
+func NewDelivery(orderID string, userID string) *Delivery {
 	return &Delivery{
-		ID:        uuid.New().String(),
-		OrderID:   orderID,
-		DriverID:  uuid.New().String(),
-		Status:    "pending",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		ID:           uuid.New().String(),
+		OrderID:      orderID,
+		UserID:       userID,
+		DriverID:     uuid.New().String(),
+		Status:       &PendingState{},
+		PickupTime:   nil,
+		DeliveryTime: nil,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 }
 
-// DeliveryStatus represents the status of a delivery.
-type DeliveryStatus struct {
-	// ID is the unique identifier of the delivery status.
-	ID string `json:"id,omitempty" bson:"_id,omitempty"`
+func (x *Delivery) MarshalJSON() ([]byte, error) {
+	type Alias Delivery
+	return json.Marshal(&struct {
+		*Alias `json:",inline"`
+		Status string `json:"status,omitempty"`
+	}{
+		Alias:  (*Alias)(x),
+		Status: x.Status.String(),
+	})
+}
 
-	// DeliveryID is the identifier of the delivery associated with the status.
-	DeliveryID string `json:"delivery_id,omitempty" bson:"delivery_id"`
+func (x *Delivery) UnmarshalBSON(bytes []byte) error {
+	type Alias Delivery
+	alias := &struct {
+		Status string `bson:"status"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
 
-	// Status is the status of the delivery (e.g., pending, in transit, delivered).
-	Status string `json:"status,omitempty" bson:"status"`
+	if err := bson.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
 
-	// UpdatedAt is the timestamp when the status was last updated.
-	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
+	state, err := UnmarshalDeliveryState(alias.Status)
+	if err != nil {
+		return err
+	}
+	x.Status = state
+
+	return nil
+}
+
+func (x *Delivery) MarshalBSON() ([]byte, error) {
+	type Alias Delivery
+	alias := &struct {
+		*Alias `bson:",inline"`
+		Status string `bson:"status"`
+	}{
+		Alias:  (*Alias)(x),
+		Status: x.Status.String(),
+	}
+
+	return bson.Marshal(alias)
+}
+
+// Next will transition the delivery to the next state.
+func (x *Delivery) Next(ctx contextx.Contextx) (event *DeliveryEvent, err error) {
+	return x.Status.Next(ctx, x)
 }
