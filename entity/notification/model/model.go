@@ -2,12 +2,17 @@ package model
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // Notification represents a notification entity.
 type Notification struct {
 	// ID is the unique identifier of the notification.
 	ID string `json:"id,omitempty" bson:"_id,omitempty"`
+
+	// SenderID is the identifier of the user who sent the notification.
+	SenderID string `json:"sender_id,omitempty" bson:"sender_id"`
 
 	// UserID is the identifier of the user to whom the notification is sent.
 	UserID string `json:"user_id,omitempty" bson:"user_id"`
@@ -29,4 +34,19 @@ type Notification struct {
 
 	// UpdatedAt is the timestamp when the notification was last updated.
 	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
+}
+
+// NewNotify creates a new notification entity.
+func NewNotify(from, to string, orderID string, message string) *Notification {
+	return &Notification{
+		ID:        uuid.New().String(),
+		SenderID:  from,
+		UserID:    to,
+		OrderID:   orderID,
+		Type:      "order_status",
+		Message:   message,
+		Status:    "pending",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
 }
