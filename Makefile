@@ -22,6 +22,10 @@ help: ## show help
 version: ## show version
 	@echo $(VERSION)
 
+.PHONY: dev
+dev: ## run dev server
+	docker compose up --build
+
 lint: ## run golangci-lint
 	@golangci-lint run ./...
 
