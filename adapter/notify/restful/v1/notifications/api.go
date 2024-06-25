@@ -6,9 +6,7 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/notify/wirex"
 	"github.com/blackhorseya/godine/entity/notification/biz"
-	_ "github.com/blackhorseya/godine/entity/notification/biz" // import biz
 	"github.com/blackhorseya/godine/entity/notification/model"
-	_ "github.com/blackhorseya/godine/entity/notification/model" // import model
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
