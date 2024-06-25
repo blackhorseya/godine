@@ -45,11 +45,16 @@ graph TD
     OrderManagement[訂單管理]
     PaymentManagement[支付管理]
     NotificationManagement[通知管理]
+    LogisticsManagement[物流管理]
+
     UserManagement -->|確認用戶身份| OrderManagement
     RestaurantManagement -->|確認餐廳和菜單可用性| OrderManagement
     OrderManagement -->|確認訂單和金額| PaymentManagement
     PaymentManagement -->|通知支付結果| OrderManagement
     OrderManagement -->|通知訂單狀態變更| NotificationManagement
+    OrderManagement -->|安排配送| LogisticsManagement
+    LogisticsManagement -->|更新配送狀態| OrderManagement
+    LogisticsManagement -->|通知配送狀態變更| NotificationManagement
 
     subgraph UserManagement[用戶管理]
         UM[User Service]
@@ -78,6 +83,14 @@ graph TD
         NM[Notification Service]
         NM --> N[Notification]
     end
+
+    subgraph LogisticsManagement[物流管理]
+
+
+        LM[Logistics Service]
+        LM --> D[Delivery]
+        D --> DS[DeliveryStatus]
+    end
 ```
 
 ## Installation
@@ -99,7 +112,7 @@ graph TD
 
 1. **Run the service**:
     ```bash
-    go run main.go
+    go run .
     ```
 2. **Access the service**:
     - API documentation is available at `http://localhost:8080/swagger/index.html`.
