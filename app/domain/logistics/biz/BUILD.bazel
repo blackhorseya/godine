@@ -1,0 +1,19 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "biz",
+    srcs = [
+        "logistics.go",
+        "wire.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/app/domain/logistics/biz",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//app/domain/logistics/repo/delivery",
+        "//entity/logistics/biz",
+        "//entity/logistics/model",
+        "//entity/logistics/repo",
+        "//pkg/contextx",
+        "@com_github_google_wire//:wire",
+    ],
+)
