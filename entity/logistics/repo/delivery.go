@@ -11,6 +11,8 @@ import (
 type ListCondition struct {
 	Limit  int
 	Offset int
+
+	DriverID string
 }
 
 // IDeliveryRepo represents a repository interface for managing delivery entities.

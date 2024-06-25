@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/domain/logistics/repo/delivery",
+        "//app/infra/otelx",
         "//entity/logistics/biz",
         "//entity/logistics/model",
         "//entity/logistics/repo",
