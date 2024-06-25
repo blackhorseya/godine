@@ -58,7 +58,7 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, 
 	defer cancelFunc()
 
 	filter := bson.M{"_id": id}
-	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(item)
+	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, errorx.Wrap(http.StatusNotFound, 404, err)

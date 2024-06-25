@@ -6,7 +6,7 @@ restaurantRestful:
     format: console
 
   http:
-    url: http://localhost:1992
+    url: http://restaurant_restful:1992
     port: 1992
     mode: debug
 
@@ -25,7 +25,7 @@ orderRestful:
     format: console
 
   http:
-    url: http://localhost:1993
+    url: http://order_restful:1993
     port: 1993
     mode: debug
 
@@ -44,7 +44,7 @@ userRestful:
     format: console
 
   http:
-    url: http://localhost:1994
+    url: http://user_restful:1994
     port: 1994
     mode: debug
 
@@ -63,7 +63,7 @@ logisticsRestful:
     format: console
 
   http:
-    url: http://localhost:1995
+    url: http://logistics_restful:1995
     port: 1995
     mode: debug
 
