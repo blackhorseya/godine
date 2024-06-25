@@ -27,8 +27,17 @@ func (i *logistics) CreateDelivery(ctx contextx.Contextx, delivery *model.Delive
 }
 
 func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID string, status string) error {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.UpdateDeliveryStatus")
+	defer span.End()
+
+	delivery, err := i.deliveries.GetByID(ctx, deliveryID)
+	if err != nil {
+		return err
+	}
+
+	delivery.Status = status
+
+	return i.deliveries.Update(ctx, delivery)
 }
 
 func (i *logistics) GetDelivery(ctx contextx.Contextx, deliveryID string) (item *model.Delivery, err error) {
