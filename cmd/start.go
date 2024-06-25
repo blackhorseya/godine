@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	logistics "github.com/blackhorseya/godine/adapter/logistics/restful"
 	order "github.com/blackhorseya/godine/adapter/order/restful"
 	restaurant "github.com/blackhorseya/godine/adapter/restaurant/restful"
 	user "github.com/blackhorseya/godine/adapter/user/restful"
@@ -31,6 +32,12 @@ func init() {
 		"user-restful",
 		"Start the user restful server",
 		user.New,
+	))
+
+	startCmd.AddCommand(cmdx.NewServiceCmd(
+		"logistics-restful",
+		"Start the logistics restful server",
+		logistics.New,
 	))
 
 	rootCmd.AddCommand(startCmd)
