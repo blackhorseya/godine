@@ -6,9 +6,12 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/domain/logistics/repo/delivery",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/otelx",
         "//entity/logistics/model",
         "//entity/logistics/repo",
         "//pkg/contextx",
+        "@com_github_google_uuid//:uuid",
         "@org_mongodb_go_mongo_driver//mongo",
+        "@org_uber_go_zap//:zap",
     ],
 )
