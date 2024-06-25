@@ -1,9 +1,15 @@
 package deliveries
 
 import (
+	"net/http"
+
 	"github.com/blackhorseya/godine/adapter/logistics/wirex"
-	_ "github.com/blackhorseya/godine/entity/logistics/biz"   // import swagger docs
+	_ "github.com/blackhorseya/godine/entity/logistics/biz" // import swagger docs
+	"github.com/blackhorseya/godine/entity/logistics/model"
 	_ "github.com/blackhorseya/godine/entity/logistics/model" // import swagger docs
+	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
+	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
 )
 
@@ -71,5 +77,24 @@ func (i *impl) GetByID(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/deliveries [post]
 func (i *impl) Post(c *gin.Context) {
-	// todo: 2024/6/25|sean|implement get list
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var payload *model.Delivery
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		_ = c.Error(errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.LogisticsService.CreateDelivery(ctx, payload)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	responsex.OK(c, payload)
 }
