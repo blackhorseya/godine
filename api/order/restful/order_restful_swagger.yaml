@@ -49,6 +49,14 @@ definitions:
         example: 2
         type: integer
     type: object
+  orders.PatchWithStatusPayload:
+    properties:
+      status:
+        example: confirmed
+        type: string
+    required:
+    - status
+    type: object
   orders.PostPayload:
     properties:
       items:
@@ -240,6 +248,52 @@ paths:
       security:
       - Bearer: []
       summary: Get order by id
+      tags:
+      - orders
+  /v1/orders/{order_id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Update order status
+      parameters:
+      - description: order id
+        in: path
+        name: order_id
+        required: true
+        type: string
+      - description: order status payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/orders.PatchWithStatusPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_order_model.Order'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Update order status
       tags:
       - orders
 securityDefinitions:

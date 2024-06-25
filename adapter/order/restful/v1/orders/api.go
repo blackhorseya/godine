@@ -26,6 +26,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 		group.POST("", i.Post)
 		group.GET("", i.GetList)
 		group.GET("/:order_id", i.GetByID)
+		group.PATCH("/:order_id/status", i.PatchWithStatus)
 	}
 }
 
@@ -141,4 +142,27 @@ func (i *impl) GetByID(c *gin.Context) {
 	}
 
 	responsex.OK(c, order)
+}
+
+// PatchWithStatusPayload is the patch with status payload
+type PatchWithStatusPayload struct {
+	Status model.OrderState `json:"status" binding:"required" swaggertype:"string" example:"confirmed"`
+}
+
+// PatchWithStatus is the patch with status method
+// @Summary Update order status
+// @Description Update order status
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param order_id path string true "order id"
+// @Param payload body PatchWithStatusPayload true "order status payload"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=model.Order}
+// @Failure 400 {object} responsex.Response
+// @Failure 404 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/orders/{order_id}/status [patch]
+func (i *impl) PatchWithStatus(c *gin.Context) {
+	// todo: 2024/6/26|sean|implement patch with status
 }
