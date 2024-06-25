@@ -1,0 +1,16 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "repo",
+    srcs = [
+        "mock_notification.go",
+        "notification.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/entity/notification/repo",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/notification/model",
+        "//pkg/contextx",
+        "@org_uber_go_mock//gomock",
+    ],
+)
