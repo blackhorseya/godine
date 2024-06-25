@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "delivery",
+    srcs = ["mongodb.go"],
+    importpath = "github.com/blackhorseya/godine/app/domain/logistics/repo/delivery",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/logistics/model",
+        "//entity/logistics/repo",
+        "//pkg/contextx",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
+)
