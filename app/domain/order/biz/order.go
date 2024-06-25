@@ -8,6 +8,7 @@ import (
 	logisticsB "github.com/blackhorseya/godine/entity/logistics/biz"
 	model2 "github.com/blackhorseya/godine/entity/logistics/model"
 	notifyB "github.com/blackhorseya/godine/entity/notification/biz"
+	model3 "github.com/blackhorseya/godine/entity/notification/model"
 	orderB "github.com/blackhorseya/godine/entity/order/biz"
 	"github.com/blackhorseya/godine/entity/order/model"
 	"github.com/blackhorseya/godine/entity/order/repo"
@@ -127,6 +128,16 @@ func (i *orderBiz) CreateOrder(
 	if err != nil {
 		ctx.Error(
 			"create order failed",
+			zap.Error(err),
+			zap.Any("order", &order),
+		)
+		return nil, err
+	}
+
+	err = i.notifyService.CreateNotification(ctx, model3.NewNotify(user.ID, user.ID, order.ID, "order created"))
+	if err != nil {
+		ctx.Error(
+			"create notification failed",
 			zap.Error(err),
 			zap.Any("order", &order),
 		)

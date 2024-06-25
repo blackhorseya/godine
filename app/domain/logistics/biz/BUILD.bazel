@@ -16,6 +16,8 @@ go_library(
         "//entity/logistics/biz",
         "//entity/logistics/model",
         "//entity/logistics/repo",
+        "//entity/notification/biz",
+        "//entity/notification/model",
         "//pkg/contextx",
         "//pkg/responsex",
         "@com_github_google_wire//:wire",

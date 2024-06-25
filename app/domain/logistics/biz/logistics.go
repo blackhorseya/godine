@@ -5,17 +5,22 @@ import (
 	"github.com/blackhorseya/godine/entity/logistics/biz"
 	"github.com/blackhorseya/godine/entity/logistics/model"
 	"github.com/blackhorseya/godine/entity/logistics/repo"
+	notifyB "github.com/blackhorseya/godine/entity/notification/biz"
+	model2 "github.com/blackhorseya/godine/entity/notification/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
 type logistics struct {
+	notifyService notifyB.INotificationBiz
+
 	deliveries repo.IDeliveryRepo
 }
 
 // NewLogistics will create a new logistics biz
-func NewLogistics(deliveries repo.IDeliveryRepo) biz.ILogisticsBiz {
+func NewLogistics(notifyService notifyB.INotificationBiz, deliveries repo.IDeliveryRepo) biz.ILogisticsBiz {
 	return &logistics{
-		deliveries: deliveries,
+		notifyService: notifyService,
+		deliveries:    deliveries,
 	}
 }
 
@@ -36,8 +41,22 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 	}
 
 	delivery.Status = status
+	err = i.deliveries.Update(ctx, delivery)
+	if err != nil {
+		return err
+	}
 
-	return i.deliveries.Update(ctx, delivery)
+	err = i.notifyService.CreateNotification(ctx, model2.NewNotify(
+		delivery.DriverID,
+		delivery.ID,
+		delivery.OrderID,
+		"delivery status changed",
+	))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (i *logistics) GetDelivery(ctx contextx.Contextx, deliveryID string) (item *model.Delivery, err error) {

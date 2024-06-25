@@ -10,6 +10,7 @@ go_library(
         "//entity/logistics/biz",
         "//entity/logistics/model",
         "//entity/notification/biz",
+        "//entity/notification/model",
         "//entity/order/biz",
         "//entity/order/model",
         "//entity/order/repo",
