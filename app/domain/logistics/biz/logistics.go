@@ -40,7 +40,8 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 		return err
 	}
 
-	delivery.Status = status
+	// todo: 2024/6/26|sean|set status
+	delivery.Status = nil
 	err = i.deliveries.Update(ctx, delivery)
 	if err != nil {
 		return err
