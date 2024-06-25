@@ -1,3 +1,23 @@
+## 0.2.2 (2024-06-26)
+
+### Feat
+
+- refactor delivery status handling in logistics service
+- update PATCH route and Swagger documentation in logistics API
+- improve state transition handling in delivery process (#35)
+- improve state transition handling in delivery process
+- refactor default status handling in deliveries
+- refactor model package and update dependencies
+- improve error handling and notifications
+- improve error handling and order retrieval in API functions
+- refactor API handling for PatchWithStatus functionality
+- update order status endpoint and documentation
+
+### Refactor
+
+- refactor delivery status handling in `delivery_state.go` files
+- refactor delivery status handling in model logic
+
 ## 0.2.1 (2024-06-26)
 
 ### Feat
