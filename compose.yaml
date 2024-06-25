@@ -76,8 +76,24 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: changeme
     volumes:
       - mongo-data:/data/db
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./configs/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
     ports:
-      - "27017:27017"
+      - 26686:16686
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 29090:9090
 
 volumes:
   mongo-data:
