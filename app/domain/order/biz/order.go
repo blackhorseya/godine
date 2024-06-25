@@ -144,7 +144,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	delivery := model2.NewDelivery(order.ID)
+	delivery := model2.NewDelivery(order.ID, user.ID)
 	err = i.logisticsService.CreateDelivery(ctx, delivery)
 	if err != nil {
 		ctx.Error(

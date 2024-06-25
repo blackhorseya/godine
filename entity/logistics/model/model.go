@@ -17,6 +17,9 @@ type Delivery struct {
 	// OrderID is the identifier of the order associated with the delivery.
 	OrderID string `json:"order_id,omitempty" bson:"order_id"`
 
+	// UserID is the identifier of the user who placed the order.
+	UserID string `json:"user_id,omitempty" bson:"user_id"`
+
 	// DriverID is the identifier of the driver assigned to the delivery.
 	DriverID string `json:"driver_id,omitempty" bson:"driver_id"`
 
@@ -37,14 +40,17 @@ type Delivery struct {
 }
 
 // NewDelivery creates a new delivery entity.
-func NewDelivery(orderID string) *Delivery {
+func NewDelivery(orderID string, userID string) *Delivery {
 	return &Delivery{
-		ID:        uuid.New().String(),
-		OrderID:   orderID,
-		DriverID:  uuid.New().String(),
-		Status:    &PendingState{},
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		ID:           uuid.New().String(),
+		OrderID:      orderID,
+		UserID:       userID,
+		DriverID:     uuid.New().String(),
+		Status:       &PendingState{},
+		PickupTime:   nil,
+		DeliveryTime: nil,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 }
 
