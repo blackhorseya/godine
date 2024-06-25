@@ -112,10 +112,10 @@ graph TD
 
 1. **Run the service**:
     ```bash
-    go run .
+   make dev
     ```
 2. **Access the service**:
-    - API documentation is available at `http://localhost:8080/swagger/index.html`.
+    - API documentation is available at `http://localhost:1992/api/docs/index.html`.
 
 ## Contribution
 
