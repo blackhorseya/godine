@@ -155,5 +155,32 @@ type PatchWithStatusPayload struct {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/deliveries/{id}/status [patch]
 func (i *impl) PatchWithStatus(c *gin.Context) {
-	// todo: 2024/6/26|sean|implement patch with status
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	id := c.Param("id")
+
+	var payload PatchWithStatusPayload
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		_ = c.Error(errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.LogisticsService.UpdateDeliveryStatus(ctx, id, payload.Status)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	item, err := i.injector.LogisticsService.GetDelivery(ctx, id)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
