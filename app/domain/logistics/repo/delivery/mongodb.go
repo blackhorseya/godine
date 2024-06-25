@@ -118,8 +118,23 @@ func (i *mongodb) List(
 }
 
 func (i *mongodb) Update(ctx contextx.Contextx, item *model.Delivery) error {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.repo.delivery.mongodb.Update")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	item.UpdatedAt = time.Now()
+
+	filter := bson.M{"_id": item.ID}
+	update := bson.M{"$set": item}
+	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	if err != nil {
+		ctx.Error("update one delivery to mongodb failed", zap.Error(err), zap.Any("delivery", &item))
+		return err
+	}
+
+	return nil
 }
 
 func (i *mongodb) Delete(ctx contextx.Contextx, id string) error {
