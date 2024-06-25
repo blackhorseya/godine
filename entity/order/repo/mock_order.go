@@ -84,3 +84,17 @@ func (mr *MockIOrderRepoMockRecorder) List(ctx, condition any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIOrderRepo)(nil).List), ctx, condition)
 }
+
+// Update mocks base method.
+func (m *MockIOrderRepo) Update(ctx contextx.Contextx, order *model.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", ctx, order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockIOrderRepoMockRecorder) Update(ctx, order any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIOrderRepo)(nil).Update), ctx, order)
+}
