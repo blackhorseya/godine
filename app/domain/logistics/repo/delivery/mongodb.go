@@ -138,6 +138,18 @@ func (i *mongodb) Update(ctx contextx.Contextx, item *model.Delivery) error {
 }
 
 func (i *mongodb) Delete(ctx contextx.Contextx, id string) error {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.repo.delivery.mongodb.Delete")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": id}
+	_, err := i.rw.Database(dbName).Collection(collName).DeleteOne(timeout, filter)
+	if err != nil {
+		ctx.Error("delete one delivery from mongodb failed", zap.Error(err), zap.String("id", id))
+		return err
+	}
+
+	return nil
 }
