@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
 )
 
@@ -78,8 +79,42 @@ func (i *mongodb) List(
 	ctx contextx.Contextx,
 	condition repo.ListCondition,
 ) (items []*model.Delivery, total int, err error) {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.repo.delivery.mongodb.List")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{}
+	opts := options.Find()
+	if condition.Limit > 0 {
+		opts.SetLimit(int64(condition.Limit))
+	}
+	if condition.Offset > 0 {
+		opts.SetSkip(int64(condition.Offset))
+	}
+	opts.SetSort(bson.M{"updated_at": -1})
+
+	cursor, err := i.rw.Database(dbName).Collection(collName).Find(timeout, filter, opts)
+	if err != nil {
+		ctx.Error("find deliveries from mongodb failed", zap.Error(err))
+		return nil, 0, err
+	}
+	defer cursor.Close(timeout)
+
+	err = cursor.All(timeout, &items)
+	if err != nil {
+		ctx.Error("decode deliveries from mongodb failed", zap.Error(err))
+		return nil, 0, err
+	}
+
+	count, err := i.rw.Database(dbName).Collection(collName).CountDocuments(timeout, filter)
+	if err != nil {
+		ctx.Error("count deliveries from mongodb failed", zap.Error(err))
+		return nil, 0, err
+	}
+
+	return items, int(count), nil
 }
 
 func (i *mongodb) Update(ctx contextx.Contextx, item *model.Delivery) error {
