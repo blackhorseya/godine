@@ -34,14 +34,16 @@ func NewOrderBiz(
 	menuService restB.IMenuBiz,
 	userService userB.IUserBiz,
 	logisticsService logisticsB.ILogisticsBiz,
+	notifyService notifyB.INotificationBiz,
 	orders repo.IOrderRepo,
 ) orderB.IOrderBiz {
 	return &orderBiz{
-		restaurantService: restaurantService,
-		menuService:       menuService,
-		userService:       userService,
-		logisticsService:  logisticsService,
-		orders:            orders,
+		restaurantService:   restaurantService,
+		menuService:         menuService,
+		userService:         userService,
+		logisticsService:    logisticsService,
+		notificationService: notifyService,
+		orders:              orders,
 	}
 }
 
