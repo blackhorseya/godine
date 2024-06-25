@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "notification",
+    srcs = ["mongodb.go"],
+    importpath = "github.com/blackhorseya/godine/app/domain/notification/repo/notification",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/notification/model",
+        "//entity/notification/repo",
+        "//pkg/contextx",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
+)
