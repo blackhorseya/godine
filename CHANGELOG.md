@@ -1,3 +1,24 @@
+## 0.1.3 (2024-06-25)
+
+### Feat
+
+- consolidate new files for logistics/restful and wirex (#15)
+- consolidate new files for logistics/restful and wirex
+- integrate new LogisticsRestful application into Configuration struct
+- consolidate Bazel build configuration for wirex module
+- consolidate logistics domain files into biz directory (#14)
+- integrate dependency injection with Wire framework
+- consolidate logistics domain files into biz directory
+- consolidate logistics business entity files
+- consolidate delivery module files into separate directory
+- create new structs for delivery entities and addresses (#11)
+- create new structs for delivery entities and addresses
+
+### Refactor
+
+- refactor delivery methods in `ILogisticsBiz` interface (#13)
+- refactor delivery methods in `ILogisticsBiz` interface
+
 ## 0.1.2 (2024-06-25)
 
 ### Feat
