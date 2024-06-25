@@ -1,0 +1,75 @@
+restaurantRestful:
+  name: godine-restaurant-restful
+
+  log:
+    level: debug
+    format: console
+
+  http:
+    url: http://localhost:1992
+    port: 1992
+    mode: debug
+
+  storage:
+    mongodb:
+      dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+  otel:
+    target: jaeger:4317
+
+orderRestful:
+  name: godine-order-restful
+
+  log:
+    level: debug
+    format: console
+
+  http:
+    url: http://localhost:1993
+    port: 1993
+    mode: debug
+
+  storage:
+    mongodb:
+      dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+  otel:
+    target: jaeger:4317
+
+userRestful:
+  name: godine-user-restful
+
+  log:
+    level: debug
+    format: console
+
+  http:
+    url: http://localhost:1994
+    port: 1994
+    mode: debug
+
+  storage:
+    mongodb:
+      dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+  otel:
+    target: jaeger:4317
+
+logisticsRestful:
+  name: godine-logistics-restful
+
+  log:
+    level: debug
+    format: console
+
+  http:
+    url: http://localhost:1995
+    port: 1995
+    mode: debug
+
+  storage:
+    mongodb:
+      dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+  otel:
+    target: jaeger:4317
