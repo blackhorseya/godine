@@ -41,8 +41,10 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 }
 
 func (i *logistics) GetDelivery(ctx contextx.Contextx, deliveryID string) (item *model.Delivery, err error) {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.GetDelivery")
+	defer span.End()
+
+	return i.deliveries.GetByID(ctx, deliveryID)
 }
 
 func (i *logistics) ListDeliveriesByDriver(
