@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/logistics/biz"
 	"github.com/blackhorseya/godine/entity/logistics/model"
 	"github.com/blackhorseya/godine/entity/logistics/repo"
@@ -19,8 +20,10 @@ func NewLogistics(deliveries repo.IDeliveryRepo) biz.ILogisticsBiz {
 }
 
 func (i *logistics) CreateDelivery(ctx contextx.Contextx, delivery *model.Delivery) error {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.CreateDelivery")
+	defer span.End()
+
+	return i.deliveries.Create(ctx, delivery)
 }
 
 func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID string, status string) error {
