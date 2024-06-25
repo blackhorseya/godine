@@ -51,9 +51,126 @@ const docTemplatelogistics_restful = `{
                     }
                 }
             }
+        },
+        "/v1/deliveries": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get the list of deliveries",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deliveries"
+                ],
+                "summary": "Get the list of deliveries",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page specifies the page number for pagination.",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Size specifies the number of items per page.",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "headers": {
+                            "X-Total-Count": {
+                                "type": "int",
+                                "description": "total count"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "github_com_blackhorseya_godine_entity_logistics_model.Delivery": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "CreatedAt is the timestamp when the delivery was created.",
+                    "type": "string"
+                },
+                "delivery_time": {
+                    "description": "DeliveryTime is the timestamp when the delivery was completed.",
+                    "type": "string"
+                },
+                "driver_id": {
+                    "description": "DriverID is the identifier of the driver assigned to the delivery.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID is the unique identifier of the delivery.",
+                    "type": "string"
+                },
+                "order_id": {
+                    "description": "OrderID is the identifier of the order associated with the delivery.",
+                    "type": "string"
+                },
+                "pickup_time": {
+                    "description": "PickupTime is the timestamp when the delivery was picked up.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Status is the current status of the delivery (e.g., pending, in transit, delivered).",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "UpdatedAt is the timestamp when the delivery was last updated.",
+                    "type": "string"
+                }
+            }
+        },
         "responsex.Response": {
             "type": "object",
             "properties": {
