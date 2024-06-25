@@ -18,7 +18,7 @@ type Delivery struct {
 	DriverID string `json:"driver_id,omitempty" bson:"driver_id"`
 
 	// Status is the current status of the delivery (e.g., pending, in transit, delivered).
-	Status string `json:"status,omitempty" bson:"status"`
+	Status DeliveryState `json:"status,omitempty" bson:"status"`
 
 	// PickupTime is the timestamp when the delivery was picked up.
 	PickupTime *time.Time `json:"pickup_time,omitempty" bson:"pickup_time"`
@@ -36,10 +36,11 @@ type Delivery struct {
 // NewDelivery creates a new delivery entity.
 func NewDelivery(orderID string) *Delivery {
 	return &Delivery{
-		ID:        uuid.New().String(),
-		OrderID:   orderID,
-		DriverID:  uuid.New().String(),
-		Status:    "pending",
+		ID:       uuid.New().String(),
+		OrderID:  orderID,
+		DriverID: uuid.New().String(),
+		// todo: 2024/6/26|sean|set default status
+		Status:    nil,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
