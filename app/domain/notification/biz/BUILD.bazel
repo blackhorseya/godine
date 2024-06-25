@@ -11,11 +11,13 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/domain/notification/repo/notification",
+        "//app/infra/configx",
         "//app/infra/otelx",
         "//entity/notification/biz",
         "//entity/notification/model",
         "//entity/notification/repo",
         "//pkg/contextx",
         "@com_github_google_wire//:wire",
+        "@io_opentelemetry_go_contrib_instrumentation_net_http_otelhttp//:otelhttp",
     ],
 )
