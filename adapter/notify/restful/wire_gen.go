@@ -8,6 +8,7 @@ package restful
 
 import (
 	"github.com/blackhorseya/godine/adapter/notify/wirex"
+	"github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
@@ -29,8 +30,10 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
+	iNotificationBiz := biz.NewNotification()
 	injector := &wirex.Injector{
-		A: application,
+		A:             application,
+		NotifyService: iNotificationBiz,
 	}
 	server, err := httpx.NewServer(application)
 	if err != nil {
@@ -62,5 +65,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz.ProviderNotificationSet,
 )

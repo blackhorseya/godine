@@ -6,6 +6,7 @@ package restful
 
 import (
 	"github.com/blackhorseya/godine/adapter/notify/wirex"
+	"github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
@@ -41,6 +42,8 @@ var providerSet = wire.NewSet(
 	wire.Struct(new(wirex.Injector), "*"),
 	initApplication,
 	httpx.NewServer,
+
+	biz.ProviderNotificationSet,
 )
 
 func New(v *viper.Viper) (adapterx.Restful, error) {

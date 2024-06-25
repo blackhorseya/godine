@@ -11,6 +11,7 @@ go_library(
     deps = [
         "//adapter/notify/wirex",
         "//api/notify/restful",
+        "//app/domain/notification/biz",
         "//app/infra/configx",
         "//app/infra/otelx",
         "//app/infra/transports/httpx",
