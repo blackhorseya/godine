@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "restful",
+    srcs = ["api.go"],
+    importpath = "github.com/blackhorseya/godine/adapter/notify/restful/v1",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//adapter/notify/restful/v1/notifications",
+        "//adapter/notify/wirex",
+        "@com_github_gin_gonic_gin//:gin",
+    ],
+)

@@ -51,9 +51,257 @@ const docTemplatenotify_restful = `{
                     }
                 }
             }
+        },
+        "/v1/notifications": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Retrieve a list of notifications.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Retrieve a list of notifications",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page specifies the page number for pagination.",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Size specifies the number of items per page.",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "headers": {
+                            "X-Total-Count": {
+                                "type": "int",
+                                "description": "Total number of items"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create a new notification.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Create a new notification",
+                "parameters": [
+                    {
+                        "description": "The request payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/notifications.PostPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/notifications/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Retrieve a notification by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Retrieve a notification by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The notification ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "github_com_blackhorseya_godine_entity_notification_model.Notification": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "CreatedAt is the timestamp when the notification was created.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID is the unique identifier of the notification.",
+                    "type": "string"
+                },
+                "message": {
+                    "description": "Message is the content of the notification.",
+                    "type": "string"
+                },
+                "order_id": {
+                    "description": "OrderID is the identifier of the order associated with the notification.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Status is the current status of the notification (e.g., pending, sent).",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type represents the type of notification (e.g., order_status, delivery_status).",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "UpdatedAt is the timestamp when the notification was last updated.",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "UserID is the identifier of the user to whom the notification is sent.",
+                    "type": "string"
+                }
+            }
+        },
+        "notifications.PostPayload": {
+            "type": "object"
+        },
         "responsex.Response": {
             "type": "object",
             "properties": {
