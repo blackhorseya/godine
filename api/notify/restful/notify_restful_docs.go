@@ -155,7 +155,7 @@ const docTemplatenotify_restful = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/notifications.PostPayload"
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification"
                         }
                     }
                 ],
@@ -299,25 +299,6 @@ const docTemplatenotify_restful = `{
                 },
                 "user_id": {
                     "description": "UserID is the identifier of the user to whom the notification is sent.",
-                    "type": "string"
-                }
-            }
-        },
-        "notifications.PostPayload": {
-            "type": "object",
-            "required": [
-                "message",
-                "order_id",
-                "to"
-            ],
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "order_id": {
-                    "type": "string"
-                },
-                "to": {
                     "type": "string"
                 }
             }
