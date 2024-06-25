@@ -9,6 +9,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/adapter/logistics/restful",
     visibility = ["//visibility:public"],
     deps = [
+        "//adapter/logistics/restful/v1:restful",
         "//adapter/logistics/wirex",
         "//api/logistics/restful",
         "//app/domain/logistics/biz",

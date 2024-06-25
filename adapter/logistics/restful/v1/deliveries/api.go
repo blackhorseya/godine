@@ -1,0 +1,75 @@
+package deliveries
+
+import (
+	"github.com/blackhorseya/godine/adapter/logistics/wirex"
+	_ "github.com/blackhorseya/godine/entity/logistics/biz"   // import swagger docs
+	_ "github.com/blackhorseya/godine/entity/logistics/model" // import swagger docs
+	"github.com/gin-gonic/gin"
+)
+
+type impl struct {
+	injector *wirex.Injector
+}
+
+// Handle is used to handle the deliveries restful api
+func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
+	instance := &impl{injector: injector}
+
+	deliveries := g.Group("/deliveries")
+	{
+		deliveries.GET("", instance.GetList)
+		deliveries.GET("/:id", instance.GetByID)
+		deliveries.POST("", instance.Post)
+	}
+}
+
+// GetList is used to get the list of deliveries
+// @Summary Get the list of deliveries
+// @Description Get the list of deliveries
+// @Tags deliveries
+// @Accept json
+// @Produce json
+// @Param driver_id query string false "driver id"
+// @Param params query biz.ListDeliveriesOptions false "search params"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=[]model.Delivery}
+// @Failure 400 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Header 200 {int} X-Total-Count "total count"
+// @Router /v1/deliveries [get]
+func (i *impl) GetList(c *gin.Context) {
+	// todo: 2024/6/25|sean|implement get list
+}
+
+// GetByID is used to get the delivery by id
+// @Summary Get the delivery by id
+// @Description Get the delivery by id
+// @Tags deliveries
+// @Accept json
+// @Produce json
+// @Param id path string true "delivery id"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=model.Delivery}
+// @Failure 400 {object} responsex.Response
+// @Failure 404 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/deliveries/{id} [get]
+func (i *impl) GetByID(c *gin.Context) {
+	// todo: 2024/6/25|sean|implement get list
+}
+
+// Post is used to create a new delivery
+// @Summary Create a new delivery
+// @Description Create a new delivery
+// @Tags deliveries
+// @Accept json
+// @Produce json
+// @Param request body model.Delivery true "delivery request"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=model.Delivery}
+// @Failure 400 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/deliveries [post]
+func (i *impl) Post(c *gin.Context) {
+	// todo: 2024/6/25|sean|implement get list
+}

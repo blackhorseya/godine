@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "deliveries",
+    srcs = ["api.go"],
+    importpath = "github.com/blackhorseya/godine/adapter/logistics/restful/v1/deliveries",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//adapter/logistics/wirex",
+        "//entity/logistics/biz",
+        "//entity/logistics/model",
+        "@com_github_gin_gonic_gin//:gin",
+    ],
+)
