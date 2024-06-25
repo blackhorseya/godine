@@ -41,7 +41,7 @@ func (m *MockILogisticsBiz) EXPECT() *MockILogisticsBizMockRecorder {
 }
 
 // CreateDelivery mocks base method.
-func (m *MockILogisticsBiz) CreateDelivery(ctx contextx.Contextx, delivery model.Delivery) error {
+func (m *MockILogisticsBiz) CreateDelivery(ctx contextx.Contextx, delivery *model.Delivery) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDelivery", ctx, delivery)
 	ret0, _ := ret[0].(error)
@@ -55,10 +55,10 @@ func (mr *MockILogisticsBizMockRecorder) CreateDelivery(ctx, delivery any) *gomo
 }
 
 // GetDelivery mocks base method.
-func (m *MockILogisticsBiz) GetDelivery(ctx contextx.Contextx, deliveryID string) (model.Delivery, error) {
+func (m *MockILogisticsBiz) GetDelivery(ctx contextx.Contextx, deliveryID string) (*model.Delivery, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDelivery", ctx, deliveryID)
-	ret0, _ := ret[0].(model.Delivery)
+	ret0, _ := ret[0].(*model.Delivery)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -70,10 +70,10 @@ func (mr *MockILogisticsBizMockRecorder) GetDelivery(ctx, deliveryID any) *gomoc
 }
 
 // ListDeliveriesByDriver mocks base method.
-func (m *MockILogisticsBiz) ListDeliveriesByDriver(ctx contextx.Contextx, driverID string, options ListDeliveriesOptions) ([]model.Delivery, int, error) {
+func (m *MockILogisticsBiz) ListDeliveriesByDriver(ctx contextx.Contextx, driverID string, options ListDeliveriesOptions) ([]*model.Delivery, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListDeliveriesByDriver", ctx, driverID, options)
-	ret0, _ := ret[0].([]model.Delivery)
+	ret0, _ := ret[0].([]*model.Delivery)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
