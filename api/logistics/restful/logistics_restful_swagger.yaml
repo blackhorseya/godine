@@ -73,6 +73,10 @@ paths:
       - application/json
       description: Get the list of deliveries
       parameters:
+      - description: driver id
+        in: query
+        name: driver_id
+        type: string
       - default: 1
         description: Page specifies the page number for pagination.
         in: query
@@ -115,6 +119,82 @@ paths:
       security:
       - Bearer: []
       summary: Get the list of deliveries
+      tags:
+      - deliveries
+    post:
+      consumes:
+      - application/json
+      description: Create a new delivery
+      parameters:
+      - description: delivery request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Create a new delivery
+      tags:
+      - deliveries
+  /v1/deliveries/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get the delivery by id
+      parameters:
+      - description: delivery id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Get the delivery by id
       tags:
       - deliveries
 securityDefinitions:
