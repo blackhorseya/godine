@@ -283,6 +283,10 @@ const docTemplateorder_restful = `{
                     "description": "CreatedAt is the timestamp when the order was created.",
                     "type": "string"
                 },
+                "delivery_id": {
+                    "description": "DeliveryID is the identifier of the delivery associated with the order.",
+                    "type": "string"
+                },
                 "id": {
                     "description": "ID is the unique identifier of the order.",
                     "type": "string"

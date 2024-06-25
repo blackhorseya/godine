@@ -73,3 +73,22 @@ logisticsRestful:
 
   otel:
     target: otel-collector:4317
+
+notifyRestful:
+  name: godine-notify-restful
+
+  log:
+    level: debug
+    format: console
+
+  http:
+    url: http://notify_restful:1996
+    port: 1996
+    mode: debug
+
+  storage:
+    mongodb:
+      dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+  otel:
+    target: otel-collector:4317

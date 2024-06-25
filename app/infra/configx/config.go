@@ -6,4 +6,5 @@ type Configuration struct {
 	OrderRestful      Application `json:"order_restful" yaml:"orderRestful"`
 	UserRestful       Application `json:"user_restful" yaml:"userRestful"`
 	LogisticsRestful  Application `json:"logistics_restful" yaml:"logisticsRestful"`
+	NotifyRestful     Application `json:"notify_restful" yaml:"notifyRestful"`
 }
