@@ -73,6 +73,7 @@ const docTemplatelogistics_restful = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "adcf23bc-cd32-4176-8d46-68f15ebdfa98",
                         "description": "driver id",
                         "name": "driver_id",
                         "in": "query"
