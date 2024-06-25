@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -91,4 +92,9 @@ func (x *Delivery) MarshalBSON() ([]byte, error) {
 	}
 
 	return bson.Marshal(alias)
+}
+
+// Next will transition the delivery to the next state.
+func (x *Delivery) Next(ctx contextx.Contextx) (event *DeliveryEvent, err error) {
+	return x.Status.Next(ctx, x)
 }
