@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -29,8 +30,45 @@ func NewNotificationHTTPClient() biz.INotificationBiz {
 }
 
 func (i *notificationHTTPClient) CreateNotification(ctx contextx.Contextx, notification *model.Notification) error {
-	// todo: 2024/6/26|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.notification.http_client.CreateNotification")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/notifications")
+	if err != nil {
+		return err
+	}
+
+	payload, err := json.Marshal(notification)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+		Data               *model.Notification `json:"data"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errors.New(got.Message)
+	}
+
+	return nil
 }
 
 func (i *notificationHTTPClient) UpdateNotificationStatus(
