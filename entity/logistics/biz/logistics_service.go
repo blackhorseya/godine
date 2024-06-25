@@ -16,9 +16,11 @@ type ListDeliveriesOptions struct {
 	Size int `form:"size" default:"10" minimum:"1" maximum:"100"`
 }
 
-// ILogisticsBiz defines the interface for logistics management operations.
-// This interface abstracts the logistics management functionality, making it easier to manage deliveries and their statuses.
-// The design allows for flexibility, scalability, and maintainability of the logistics operations in the GoDine system.
+// ILogisticsBiz defines the interface for logistics management operations. This
+// interface abstracts the logistics management functionality, making it easier
+// to manage deliveries and their statuses. The design allows for flexibility,
+// scalability, and maintainability of the logistics operations in the GoDine
+// system.
 type ILogisticsBiz interface {
 	// CreateDelivery creates a new delivery. This method is responsible for
 	// initializing a new delivery entity with provided details such as OrderID,
