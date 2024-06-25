@@ -11,8 +11,11 @@ go_library(
     deps = [
         "//adapter/logistics/wirex",
         "//api/logistics/restful",
+        "//app/domain/logistics/biz",
+        "//app/domain/logistics/repo/delivery",
         "//app/infra/configx",
         "//app/infra/otelx",
+        "//app/infra/storage/mongodbx",
         "//app/infra/transports/httpx",
         "//pkg/adapterx",
         "//pkg/contextx",
