@@ -44,18 +44,3 @@ func NewDelivery(orderID string) *Delivery {
 		UpdatedAt: time.Now(),
 	}
 }
-
-// DeliveryStatus represents the status of a delivery.
-type DeliveryStatus struct {
-	// ID is the unique identifier of the delivery status.
-	ID string `json:"id,omitempty" bson:"_id,omitempty"`
-
-	// DeliveryID is the identifier of the delivery associated with the status.
-	DeliveryID string `json:"delivery_id,omitempty" bson:"delivery_id"`
-
-	// Status is the status of the delivery (e.g., pending, in transit, delivered).
-	Status string `json:"status,omitempty" bson:"status"`
-
-	// UpdatedAt is the timestamp when the status was last updated.
-	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
-}
