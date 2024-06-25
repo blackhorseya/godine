@@ -8,6 +8,7 @@ import (
 	"github.com/blackhorseya/godine/entity/notification/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 )
@@ -54,8 +55,20 @@ func (i *mongodb) Create(ctx contextx.Contextx, notify *model.Notification) erro
 }
 
 func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Notification, err error) {
-	// todo: 2024/6/26|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.notification.repo.notification.mongodb.GetByID")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": id}
+	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
+	if err != nil {
+		ctx.Error("find one notification from mongodb failed", zap.Error(err), zap.String("id", id))
+		return nil, err
+	}
+
+	return item, nil
 }
 
 func (i *mongodb) List(
