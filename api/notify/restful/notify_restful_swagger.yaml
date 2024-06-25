@@ -33,19 +33,6 @@ definitions:
           is sent.
         type: string
     type: object
-  notifications.PostPayload:
-    properties:
-      message:
-        type: string
-      order_id:
-        type: string
-      to:
-        type: string
-    required:
-    - message
-    - order_id
-    - to
-    type: object
   responsex.Response:
     properties:
       code:
@@ -145,7 +132,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/notifications.PostPayload'
+          $ref: '#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification'
       produces:
       - application/json
       responses:

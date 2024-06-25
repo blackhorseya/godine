@@ -29,13 +29,6 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 	}
 }
 
-// PostPayload defines the request payload for creating a new notification.
-type PostPayload struct {
-	To      string `json:"to" binding:"required"`
-	OrderID string `json:"order_id" binding:"required"`
-	Message string `json:"message" binding:"required"`
-}
-
 // Post creates a new notification.
 // @Summary Create a new notification
 // @Description Create a new notification.
@@ -43,7 +36,7 @@ type PostPayload struct {
 // @Accept json
 // @Produce json
 // @Security Bearer
-// @Param payload body PostPayload true "The request payload"
+// @Param payload body model.Notification true "The request payload"
 // @Success 201 {object} responsex.Response{data=model.Notification}
 // @Failure 400 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
@@ -55,21 +48,20 @@ func (i *impl) Post(c *gin.Context) {
 		return
 	}
 
-	var payload PostPayload
+	var payload *model.Notification
 	err = c.ShouldBindJSON(&payload)
 	if err != nil {
 		_ = c.Error(errorx.Wrap(http.StatusBadRequest, 400, err))
 		return
 	}
 
-	notify := model.NewNotify("", payload.To, payload.OrderID, payload.Message)
-	err = i.injector.NotifyService.CreateNotification(ctx, notify)
+	err = i.injector.NotifyService.CreateNotification(ctx, payload)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	responsex.OK(c, notify)
+	responsex.OK(c, payload)
 }
 
 // GetList retrieves a list of notifications.
