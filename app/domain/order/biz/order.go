@@ -19,11 +19,11 @@ import (
 )
 
 type orderBiz struct {
-	restaurantService   restB.IRestaurantBiz
-	menuService         restB.IMenuBiz
-	userService         userB.IUserBiz
-	logisticsService    logisticsB.ILogisticsBiz
-	notificationService notifyB.INotificationBiz
+	restaurantService restB.IRestaurantBiz
+	menuService       restB.IMenuBiz
+	userService       userB.IUserBiz
+	logisticsService  logisticsB.ILogisticsBiz
+	notifyService     notifyB.INotificationBiz
 
 	orders repo.IOrderRepo
 }
@@ -38,12 +38,12 @@ func NewOrderBiz(
 	orders repo.IOrderRepo,
 ) orderB.IOrderBiz {
 	return &orderBiz{
-		restaurantService:   restaurantService,
-		menuService:         menuService,
-		userService:         userService,
-		logisticsService:    logisticsService,
-		notificationService: notifyService,
-		orders:              orders,
+		restaurantService: restaurantService,
+		menuService:       menuService,
+		userService:       userService,
+		logisticsService:  logisticsService,
+		notifyService:     notifyService,
+		orders:            orders,
 	}
 }
 
