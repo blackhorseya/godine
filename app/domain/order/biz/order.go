@@ -43,6 +43,7 @@ func NewOrderBiz(
 	}
 }
 
+//nolint:funlen // it's okay
 func (i *orderBiz) CreateOrder(
 	ctx contextx.Contextx,
 	userID, restaurantID string,
