@@ -9,6 +9,7 @@ import (
 	"github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -44,6 +45,7 @@ var providerSet = wire.NewSet(
 	httpx.NewServer,
 
 	biz.ProviderNotificationSet,
+	mongodbx.NewClient,
 )
 
 func New(v *viper.Viper) (adapterx.Restful, error) {

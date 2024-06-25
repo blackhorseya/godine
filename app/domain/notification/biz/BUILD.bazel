@@ -10,6 +10,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/domain/notification/biz",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/domain/notification/repo/notification",
         "//app/infra/otelx",
         "//entity/notification/biz",
         "//entity/notification/model",

@@ -13,10 +13,9 @@ type notification struct {
 }
 
 // NewNotification creates a new notification service.
-func NewNotification() biz.INotificationBiz {
+func NewNotification(notifications repo.INotificationRepo) biz.INotificationBiz {
 	return &notification{
-		// todo: 2024/6/26|sean|you should inject the notification repository here
-		notifications: nil,
+		notifications: notifications,
 	}
 }
 
