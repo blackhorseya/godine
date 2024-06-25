@@ -125,5 +125,18 @@ func (i *impl) GetList(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/notifications/{id} [get]
 func (i *impl) GetByID(c *gin.Context) {
-	// todo: 2024/6/26|sean|implement the get by id notification handler
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	id := c.Param("id")
+	item, err := i.injector.NotifyService.GetNotification(ctx, id)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
