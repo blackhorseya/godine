@@ -1,0 +1,17 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "biz",
+    srcs = [
+        "notification.go",
+        "wire.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/app/domain/notification/biz",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/notification/biz",
+        "//entity/notification/model",
+        "//pkg/contextx",
+        "@com_github_google_wire//:wire",
+    ],
+)
