@@ -139,7 +139,3 @@ We welcome contributions to this project. Please follow these steps:
 ## License
 
 This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for details.
-
-```
-
-This README file provides a comprehensive overview of the GoDine project, including its name explanation, features, technical details, system architecture diagram, installation instructions, usage guidelines, contribution steps, and licensing information.
