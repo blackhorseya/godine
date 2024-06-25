@@ -1,3 +1,46 @@
+## 0.2.0 (2024-06-25)
+
+### Feat
+
+- integrate OTel collector, Jaeger, and Prometheus services (#24)
+- integrate OTel collector, Jaeger, and Prometheus services
+- implement NewDelivery method and dependencies (#22)
+- improve order creation and update functionality
+- refactor order model to include delivery ID
+- implement NewDelivery method and dependencies
+- integrate logistics business logic into order module (#21)
+- refactor error handling and response parsing in GetDelivery method
+- consolidate dependencies and implement new method
+- integrate logistics business logic into order module
+- improve error handling and imports across files (#20)
+- improve error handling and context in GetByID function
+- improve error handling and documentation in Handle function
+- improve error handling and imports across files
+- introduce new deliveries API handlers and documentation (#19)
+- improve delivery management API endpoints
+- introduce new deliveries API handlers and documentation
+- refactor filter conditions for driver_id in List function
+- improve delivery service functionality (#18)
+- improve delivery tracking functionality
+- improve delivery service functionality
+- implement distributed tracing with otelx package
+- add dependencies and implement Create method in mongodb.go (#17)
+- refactor MongoDB deliveries Delete method
+- implement timeout and filter options in MongoDB list function
+- add dependencies and implement Create method in mongodb.go
+- introduce RESTful API for logistics service
+
+### Fix
+
+- improve database update operations and error handling
+- refactor error handling in MongoDB operations
+
+### Refactor
+
+- improve code quality and readability in order creation process
+- refactor code for improved efficiency
+- refactor UpdateDeliveryStatus function
+
 ## 0.1.3 (2024-06-25)
 
 ### Feat
