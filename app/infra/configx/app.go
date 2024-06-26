@@ -23,6 +23,12 @@ type Application struct {
 		} `json:"mongodb" yaml:"mongodb"`
 	} `json:"storage" yaml:"storage"`
 
+	Kafka struct {
+		Username string   `json:"username" yaml:"username"`
+		Password string   `json:"password" yaml:"password"`
+		Brokers  []string `json:"brokers" yaml:"brokers"`
+	} `json:"kafka" yaml:"kafka"`
+
 	OTel struct {
 		Target string `json:"target" yaml:"target"`
 	} `json:"otel" yaml:"otel"`

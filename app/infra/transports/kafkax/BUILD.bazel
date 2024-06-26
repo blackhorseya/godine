@@ -1,0 +1,16 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "kafkax",
+    srcs = [
+        "reader.go",
+        "writer.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/app/infra/transports/kafkax",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//app/infra/configx",
+        "@com_github_segmentio_kafka_go//:kafka-go",
+        "@com_github_segmentio_kafka_go//sasl/plain",
+    ],
+)
