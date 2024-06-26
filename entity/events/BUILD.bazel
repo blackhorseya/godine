@@ -2,7 +2,10 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "events",
-    srcs = ["event.go"],
+    srcs = [
+        "event.go",
+        "handler.go",
+    ],
     importpath = "github.com/blackhorseya/godine/entity/events",
     visibility = ["//visibility:public"],
     deps = ["//pkg/contextx"],
