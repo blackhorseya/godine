@@ -14,5 +14,6 @@ go_library(
         "//entity/events",
         "//pkg/contextx",
         "@com_github_segmentio_kafka_go//:kafka-go",
+        "@org_uber_go_zap//:zap",
     ],
 )

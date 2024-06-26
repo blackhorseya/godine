@@ -10,6 +10,7 @@ import (
 	"github.com/blackhorseya/godine/entity/events"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/segmentio/kafka-go"
+	"go.uber.org/zap"
 )
 
 type KafkaEventBus struct {
@@ -99,15 +100,16 @@ func (bus *KafkaEventBus) Unregister(eventType string, id HandlerID) {
 func (bus *KafkaEventBus) Publish(ctx contextx.Contextx, event events.DomainEvent) {
 	data, err := json.Marshal(event)
 	if err != nil {
-		log.Println("Error marshalling event:", err)
+		ctx.Error("Error marshalling event", zap.Error(err), zap.Any("event", event))
 		return
 	}
 
 	msg := kafka.Message{
+		Key:   []byte(event.EventType()),
 		Value: data,
 	}
 
 	if err = bus.writer.WriteMessages(ctx, msg); err != nil {
-		log.Println("Error writing message:", err)
+		ctx.Error("Error writing message", zap.Error(err))
 	}
 }
