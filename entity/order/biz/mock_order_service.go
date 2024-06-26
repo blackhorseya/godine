@@ -146,6 +146,20 @@ func (mr *MockIOrderBizMockRecorder) ListOrdersByUser(ctx, userID, options any) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrdersByUser", reflect.TypeOf((*MockIOrderBiz)(nil).ListOrdersByUser), ctx, userID, options)
 }
 
+// OnDeliveryStatusChanged mocks base method.
+func (m *MockIOrderBiz) OnDeliveryStatusChanged(ctx contextx.Contextx, orderID, status string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OnDeliveryStatusChanged", ctx, orderID, status)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// OnDeliveryStatusChanged indicates an expected call of OnDeliveryStatusChanged.
+func (mr *MockIOrderBizMockRecorder) OnDeliveryStatusChanged(ctx, orderID, status any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnDeliveryStatusChanged", reflect.TypeOf((*MockIOrderBiz)(nil).OnDeliveryStatusChanged), ctx, orderID, status)
+}
+
 // RemoveOrderItem mocks base method.
 func (m *MockIOrderBiz) RemoveOrderItem(ctx contextx.Contextx, orderID, menuItemID string) error {
 	m.ctrl.T.Helper()

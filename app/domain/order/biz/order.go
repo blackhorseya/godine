@@ -281,3 +281,8 @@ func (i *orderBiz) ListOrdersByRestaurant(
 	// todo: 2024/6/11|sean|implement me
 	panic("implement me")
 }
+
+func (i *orderBiz) OnDeliveryStatusChanged(ctx contextx.Contextx, orderID string, status string) error {
+	// todo: 2024/6/26|sean|implement me
+	panic("implement me")
+}
