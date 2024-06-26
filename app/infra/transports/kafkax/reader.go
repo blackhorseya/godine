@@ -9,12 +9,12 @@ import (
 	"github.com/segmentio/kafka-go/sasl/plain"
 )
 
-// NewReader returns a new Reader instance.
-func NewReader() (*kafka.Reader, error) {
+// NewReaderWithTopic returns a new Reader instance with the specified topic.
+func NewReaderWithTopic(topic string) (*kafka.Reader, error) {
 	return kafka.NewReader(kafka.ReaderConfig{
 		Brokers: configx.A.Kafka.Brokers,
 		GroupID: configx.A.GetID(),
-		Topic:   configx.A.Kafka.Topic,
+		Topic:   topic,
 		Dialer: &kafka.Dialer{
 			Timeout:   10 * time.Second,
 			DualStack: true,

@@ -26,7 +26,6 @@ type Application struct {
 	Kafka struct {
 		Username string   `json:"username" yaml:"username"`
 		Password string   `json:"password" yaml:"password"`
-		Topic    string   `json:"topic" yaml:"topic"`
 		Brokers  []string `json:"brokers" yaml:"brokers"`
 	} `json:"kafka" yaml:"kafka"`
 
