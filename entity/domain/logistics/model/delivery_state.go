@@ -17,7 +17,7 @@ func (x *DeliveryEvent) OccurredOn(ctx contextx.Contextx) time.Time {
 	return time.Now()
 }
 
-func (x *DeliveryEvent) EventType() string {
+func (x *DeliveryEvent) Topic() string {
 	return "delivery_event"
 }
 

@@ -61,7 +61,7 @@ func (bus *KafkaEventBus) startConsuming() {
 		}
 
 		bus.mu.RLock()
-		handlers, found := bus.handlers[event.EventType()]
+		handlers, found := bus.handlers[event.Topic()]
 		bus.mu.RUnlock()
 
 		if found {
@@ -107,7 +107,7 @@ func (bus *KafkaEventBus) Publish(ctx contextx.Contextx, event events.DomainEven
 
 	msg := kafka.Message{
 		Topic: topic,
-		Key:   []byte(event.EventType()),
+		Key:   []byte(event.Topic()),
 		Value: data,
 	}
 

@@ -9,5 +9,5 @@ import (
 // DomainEvent is the interface for domain events.
 type DomainEvent interface {
 	OccurredOn(ctx contextx.Contextx) time.Time
-	EventType() string
+	Topic() string
 }

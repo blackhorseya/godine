@@ -50,7 +50,7 @@ func (bus *MemoryEventBus) Unregister(eventType string, id HandlerID) {
 func (bus *MemoryEventBus) Publish(ctx contextx.Contextx, event events.DomainEvent) {
 	bus.mu.RLock()
 	defer bus.mu.RUnlock()
-	if handlers, found := bus.handlers[event.EventType()]; found {
+	if handlers, found := bus.handlers[event.Topic()]; found {
 		for _, handler := range handlers {
 			handler(event)
 		}
