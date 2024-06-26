@@ -1,6 +1,9 @@
 package biz
 
 import (
+	"encoding/json"
+	"time"
+
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/logistics/biz"
 	"github.com/blackhorseya/godine/entity/logistics/model"
@@ -11,6 +14,8 @@ import (
 	"github.com/segmentio/kafka-go"
 	"go.uber.org/zap"
 )
+
+const topic = "delivery_status_updated"
 
 type logistics struct {
 	notifyService notifyB.INotificationBiz
@@ -66,6 +71,21 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 		delivery.OrderID,
 		"delivery status changed",
 	))
+	if err != nil {
+		return err
+	}
+
+	value, err := json.Marshal(delivery)
+	if err != nil {
+		return err
+	}
+
+	err = i.writer.WriteMessages(ctx, kafka.Message{
+		Topic: topic,
+		Key:   []byte(delivery.ID),
+		Value: value,
+		Time:  time.Now(),
+	})
 	if err != nil {
 		return err
 	}
