@@ -13,6 +13,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const topic = "new_events"
+
 type KafkaEventBus struct {
 	reader   *kafka.Reader
 	writer   *kafka.Writer
@@ -23,7 +25,7 @@ type KafkaEventBus struct {
 
 // NewKafkaEventBus creates a new Kafka event bus
 func NewKafkaEventBus() (EventBus, error) {
-	reader, err := kafkax.NewReaderWithTopic("new_events")
+	reader, err := kafkax.NewReaderWithTopic(topic)
 	if err != nil {
 		return nil, err
 	}
@@ -105,6 +107,7 @@ func (bus *KafkaEventBus) Publish(ctx contextx.Contextx, event events.DomainEven
 	}
 
 	msg := kafka.Message{
+		Topic: topic,
 		Key:   []byte(event.EventType()),
 		Value: data,
 	}
