@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/blackhorseya/godine/entity/events"
+	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
 type MemoryEventBus struct {
@@ -46,7 +47,7 @@ func (bus *MemoryEventBus) Unregister(eventType string, id HandlerID) {
 }
 
 // Publish 發布事件
-func (bus *MemoryEventBus) Publish(event events.DomainEvent) {
+func (bus *MemoryEventBus) Publish(ctx contextx.Contextx, event events.DomainEvent) {
 	bus.mu.RLock()
 	defer bus.mu.RUnlock()
 	if handlers, found := bus.handlers[event.EventType()]; found {

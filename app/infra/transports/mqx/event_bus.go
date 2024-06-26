@@ -2,6 +2,7 @@ package mqx
 
 import (
 	"github.com/blackhorseya/godine/entity/events"
+	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
 // HandlerID defines the type for handler ID.
@@ -11,5 +12,5 @@ type HandlerID int
 type EventBus interface {
 	Register(eventType string, handler func(events.DomainEvent)) HandlerID
 	Unregister(eventType string, id HandlerID)
-	Publish(event events.DomainEvent)
+	Publish(ctx contextx.Contextx, event events.DomainEvent)
 }
