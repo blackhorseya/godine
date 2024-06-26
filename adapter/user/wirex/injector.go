@@ -2,7 +2,7 @@ package wirex
 
 import (
 	"github.com/blackhorseya/godine/app/infra/configx"
-	"github.com/blackhorseya/godine/entity/user/biz"
+	"github.com/blackhorseya/godine/entity/domain/user/biz"
 )
 
 // Injector defines the injector struct.

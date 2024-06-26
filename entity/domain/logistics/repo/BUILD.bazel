@@ -1,0 +1,16 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "repo",
+    srcs = [
+        "delivery.go",
+        "mock_delivery.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/entity/domain/logistics/repo",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/logistics/model",
+        "//pkg/contextx",
+        "@org_uber_go_mock//gomock",
+    ],
+)

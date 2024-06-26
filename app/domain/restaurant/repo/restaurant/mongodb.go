@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/entity/restaurant/model"
-	"github.com/blackhorseya/godine/entity/restaurant/repo"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

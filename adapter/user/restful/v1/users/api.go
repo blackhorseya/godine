@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/blackhorseya/godine/adapter/user/wirex"
-	"github.com/blackhorseya/godine/entity/user/biz"
-	"github.com/blackhorseya/godine/entity/user/model"
+	"github.com/blackhorseya/godine/entity/domain/user/biz"
+	"github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"

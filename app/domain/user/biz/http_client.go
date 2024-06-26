@@ -9,8 +9,8 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/user/restful/v1/users"
 	"github.com/blackhorseya/godine/app/infra/configx"
-	"github.com/blackhorseya/godine/entity/user/biz"
-	"github.com/blackhorseya/godine/entity/user/model"
+	"github.com/blackhorseya/godine/entity/domain/user/biz"
+	model2 "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
@@ -32,8 +32,8 @@ func NewUserHTTPClient() biz.IUserBiz {
 func (i *httpClient) CreateUser(
 	ctx contextx.Contextx,
 	name, email, password string,
-	address model.Address,
-) (item *model.User, err error) {
+	address model2.Address,
+) (item *model2.User, err error) {
 	ep, err := url.ParseRequestURI(i.url + "/api/v1/users")
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (i *httpClient) CreateUser(
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model.User `json:"data"`
+		Data               *model2.User `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -77,7 +77,7 @@ func (i *httpClient) CreateUser(
 	return got.Data, nil
 }
 
-func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.User, err error) {
+func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model2.User, err error) {
 	ep, err := url.ParseRequestURI(i.url + "/api/v1/users/" + id)
 	if err != nil {
 		return nil, err
@@ -96,7 +96,7 @@ func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.User
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model.User `json:"data"`
+		Data               *model2.User `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -114,7 +114,7 @@ func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.User
 func (i *httpClient) ListUsers(
 	ctx contextx.Contextx,
 	options biz.ListUsersOptions,
-) (items []*model.User, total int, err error) {
+) (items []*model2.User, total int, err error) {
 	// todo: 2024/6/14|sean|implement me
 	panic("implement me")
 }
@@ -123,7 +123,7 @@ func (i *httpClient) UpdateUser(
 	ctx contextx.Contextx,
 	id string,
 	name, email, password string,
-	address model.Address,
+	address model2.Address,
 ) error {
 	// todo: 2024/6/14|sean|implement me
 	panic("implement me")

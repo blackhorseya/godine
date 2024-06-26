@@ -1,0 +1,12 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "model",
+    srcs = [
+        "model.go",
+        "vo.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/entity/domain/user/model",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_google_uuid//:uuid"],
+)

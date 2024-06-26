@@ -9,8 +9,8 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/entity/logistics/biz"
-	"github.com/blackhorseya/godine/entity/logistics/model"
+	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
+	"github.com/blackhorseya/godine/entity/domain/logistics/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"

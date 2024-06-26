@@ -10,8 +10,8 @@ import (
 	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/entity/restaurant/biz"
-	"github.com/blackhorseya/godine/entity/restaurant/model"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	model2 "github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
@@ -33,7 +33,7 @@ func NewRestaurantHTTPClient() biz.IRestaurantBiz {
 func (i *restaurantHTTPClient) CreateRestaurant(
 	ctx contextx.Contextx,
 	name, address string,
-) (item *model.Restaurant, err error) {
+) (item *model2.Restaurant, err error) {
 	ctx, span := otelx.Span(ctx, "restaurantHTTPClient.CreateRestaurant")
 	defer span.End()
 
@@ -63,7 +63,7 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model.Restaurant `json:"data"`
+		Data               *model2.Restaurant `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -78,7 +78,7 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 	return got.Data, nil
 }
 
-func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (item *model.Restaurant, err error) {
+func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (item *model2.Restaurant, err error) {
 	ctx, span := otelx.Span(ctx, "restaurantHTTPClient.GetRestaurant")
 	defer span.End()
 
@@ -100,7 +100,7 @@ func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model.Restaurant `json:"data"`
+		Data               *model2.Restaurant `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -118,7 +118,7 @@ func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (
 func (i *restaurantHTTPClient) ListRestaurants(
 	ctx contextx.Contextx,
 	options biz.ListRestaurantsOptions,
-) (items []*model.Restaurant, total int, err error) {
+) (items []*model2.Restaurant, total int, err error) {
 	// todo: 2024/6/13|sean|implement me
 	panic("implement me")
 }
@@ -127,7 +127,7 @@ func (i *restaurantHTTPClient) UpdateRestaurant(
 	ctx contextx.Contextx,
 	id string,
 	name string,
-	address model.Address,
+	address model2.Address,
 ) error {
 	// todo: 2024/6/13|sean|implement me
 	panic("implement me")

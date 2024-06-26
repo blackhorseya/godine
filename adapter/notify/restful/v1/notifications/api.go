@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/blackhorseya/godine/adapter/notify/wirex"
-	"github.com/blackhorseya/godine/entity/notification/biz"
-	"github.com/blackhorseya/godine/entity/notification/model"
+	"github.com/blackhorseya/godine/entity/domain/notification/biz"
+	"github.com/blackhorseya/godine/entity/domain/notification/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"

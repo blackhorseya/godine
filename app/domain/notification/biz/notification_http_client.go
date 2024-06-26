@@ -10,8 +10,8 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/entity/notification/biz"
-	"github.com/blackhorseya/godine/entity/notification/model"
+	"github.com/blackhorseya/godine/entity/domain/notification/biz"
+	"github.com/blackhorseya/godine/entity/domain/notification/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"

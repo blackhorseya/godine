@@ -5,23 +5,23 @@ import (
 	"net/http"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	logisticsB "github.com/blackhorseya/godine/entity/logistics/biz"
-	model2 "github.com/blackhorseya/godine/entity/logistics/model"
-	notifyB "github.com/blackhorseya/godine/entity/notification/biz"
-	model3 "github.com/blackhorseya/godine/entity/notification/model"
-	orderB "github.com/blackhorseya/godine/entity/order/biz"
-	"github.com/blackhorseya/godine/entity/order/model"
-	"github.com/blackhorseya/godine/entity/order/repo"
-	restB "github.com/blackhorseya/godine/entity/restaurant/biz"
-	userB "github.com/blackhorseya/godine/entity/user/biz"
+	logisticsB "github.com/blackhorseya/godine/entity/domain/logistics/biz"
+	model2 "github.com/blackhorseya/godine/entity/domain/logistics/model"
+	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
+	model3 "github.com/blackhorseya/godine/entity/domain/notification/model"
+	orderB "github.com/blackhorseya/godine/entity/domain/order/biz"
+	model4 "github.com/blackhorseya/godine/entity/domain/order/model"
+	"github.com/blackhorseya/godine/entity/domain/order/repo"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"go.uber.org/zap"
 )
 
 type orderBiz struct {
-	restaurantService restB.IRestaurantBiz
-	menuService       restB.IMenuBiz
+	restaurantService biz.IRestaurantBiz
+	menuService       biz.IMenuBiz
 	userService       userB.IUserBiz
 	logisticsService  logisticsB.ILogisticsBiz
 	notifyService     notifyB.INotificationBiz
@@ -31,8 +31,8 @@ type orderBiz struct {
 
 // NewOrderBiz create and return a new order orderB
 func NewOrderBiz(
-	restaurantService restB.IRestaurantBiz,
-	menuService restB.IMenuBiz,
+	restaurantService biz.IRestaurantBiz,
+	menuService biz.IMenuBiz,
 	userService userB.IUserBiz,
 	logisticsService logisticsB.ILogisticsBiz,
 	notifyService notifyB.INotificationBiz,
@@ -52,10 +52,10 @@ func NewOrderBiz(
 func (i *orderBiz) CreateOrder(
 	ctx contextx.Contextx,
 	userID, restaurantID string,
-	options []model.OrderItem,
-	address model.Address,
+	options []model4.OrderItem,
+	address model4.Address,
 	totalAmount float64,
-) (order *model.Order, err error) {
+) (order *model4.Order, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.create_order")
 	defer span.End()
 
@@ -93,7 +93,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("user not found"))
 	}
 
-	items := make([]model.OrderItem, 0, len(options))
+	items := make([]model4.OrderItem, 0, len(options))
 	for _, option := range options {
 		menuItem, err2 := i.menuService.GetMenuItem(ctx, restaurant.ID, option.MenuItemID)
 		if err2 != nil {
@@ -119,11 +119,11 @@ func (i *orderBiz) CreateOrder(
 			return nil, errorx.Wrap(http.StatusConflict, 409, errors.New("menu item not available"))
 		}
 
-		item := model.NewOrderItem(menuItem.ID, menuItem.Name, menuItem.Price, option.Quantity)
+		item := model4.NewOrderItem(menuItem.ID, menuItem.Name, menuItem.Price, option.Quantity)
 		items = append(items, *item)
 	}
 
-	order = model.NewOrder(user.ID, restaurant.ID, items)
+	order = model4.NewOrder(user.ID, restaurant.ID, items)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(
@@ -169,7 +169,7 @@ func (i *orderBiz) CreateOrder(
 	return order, nil
 }
 
-func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model.Order, err error) {
+func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model4.Order, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.get_order")
 	defer span.End()
 
@@ -179,7 +179,7 @@ func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model.Orde
 func (i *orderBiz) ListOrders(
 	ctx contextx.Contextx,
 	options orderB.ListOrdersOptions,
-) (orders []*model.Order, total int, err error) {
+) (orders []*model4.Order, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.list_orders")
 	defer span.End()
 
@@ -253,7 +253,7 @@ func (i *orderBiz) ListOrdersByUser(
 	ctx contextx.Contextx,
 	userID string,
 	options orderB.ListOrdersOptions,
-) (orders []*model.Order, total int, err error) {
+) (orders []*model4.Order, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.list_orders_by_user")
 	defer span.End()
 
@@ -270,7 +270,7 @@ func (i *orderBiz) ListOrdersByRestaurant(
 	ctx contextx.Contextx,
 	restaurantID string,
 	options orderB.ListOrdersOptions,
-) (orders []*model.Order, total int, err error) {
+) (orders []*model4.Order, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.list_orders_by_restaurant")
 	defer span.End()
 

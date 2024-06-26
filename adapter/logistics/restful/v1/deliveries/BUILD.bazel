@@ -7,8 +7,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/logistics/wirex",
-        "//entity/logistics/biz",
-        "//entity/logistics/model",
+        "//entity/domain/logistics/biz",
+        "//entity/domain/logistics/model",
         "//pkg/contextx",
         "//pkg/errorx",
         "//pkg/responsex",

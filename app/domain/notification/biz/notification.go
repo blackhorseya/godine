@@ -2,9 +2,9 @@ package biz
 
 import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/entity/notification/biz"
-	"github.com/blackhorseya/godine/entity/notification/model"
-	"github.com/blackhorseya/godine/entity/notification/repo"
+	"github.com/blackhorseya/godine/entity/domain/notification/biz"
+	"github.com/blackhorseya/godine/entity/domain/notification/model"
+	"github.com/blackhorseya/godine/entity/domain/notification/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
 

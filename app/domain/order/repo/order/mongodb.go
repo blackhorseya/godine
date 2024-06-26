@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/entity/order/model"
-	"github.com/blackhorseya/godine/entity/order/repo"
+	"github.com/blackhorseya/godine/entity/domain/order/model"
+	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/google/uuid"

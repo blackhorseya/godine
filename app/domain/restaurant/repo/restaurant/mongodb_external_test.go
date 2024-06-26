@@ -7,8 +7,8 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
-	"github.com/blackhorseya/godine/entity/restaurant/model"
-	"github.com/blackhorseya/godine/entity/restaurant/repo"
+	model2 "github.com/blackhorseya/godine/entity/domain/restaurant/model"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/stretchr/testify/suite"
@@ -51,11 +51,11 @@ func TestMongodbExternal(t *testing.T) {
 }
 
 func (s *suiteMongodbExternal) Test_mongodb_Create() {
-	restaurant := model.NewRestaurant("test", model.Address{})
+	restaurant := model2.NewRestaurant("test", model2.Address{})
 
 	type args struct {
 		ctx  contextx.Contextx
-		data *model.Restaurant
+		data *model2.Restaurant
 		mock func()
 	}
 	tests := []struct {

@@ -1,0 +1,16 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "biz",
+    srcs = [
+        "logistics_service.go",
+        "mock_logistics_service.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/entity/domain/logistics/biz",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/logistics/model",
+        "//pkg/contextx",
+        "@org_uber_go_mock//gomock",
+    ],
+)

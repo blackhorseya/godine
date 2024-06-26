@@ -7,6 +7,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/configx",
-        "//entity/notification/biz",
+        "//entity/domain/notification/biz",
     ],
 )

@@ -2,9 +2,9 @@ package biz
 
 import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/entity/user/biz"
-	"github.com/blackhorseya/godine/entity/user/model"
-	"github.com/blackhorseya/godine/entity/user/repo"
+	"github.com/blackhorseya/godine/entity/domain/user/biz"
+	model2 "github.com/blackhorseya/godine/entity/domain/user/model"
+	"github.com/blackhorseya/godine/entity/domain/user/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
@@ -22,12 +22,12 @@ func NewUserBiz(users repo.IUserRepo) biz.IUserBiz {
 func (i *userBiz) CreateUser(
 	ctx contextx.Contextx,
 	name, email, password string,
-	address model.Address,
-) (item *model.User, err error) {
+	address model2.Address,
+) (item *model2.User, err error) {
 	ctx, span := otelx.Span(ctx, "userBiz.CreateUser")
 	defer span.End()
 
-	user := model.NewUser(name, email, password, address)
+	user := model2.NewUser(name, email, password, address)
 	err = i.users.Create(ctx, user)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (i *userBiz) CreateUser(
 	return user, nil
 }
 
-func (i *userBiz) GetUser(ctx contextx.Contextx, id string) (item *model.User, err error) {
+func (i *userBiz) GetUser(ctx contextx.Contextx, id string) (item *model2.User, err error) {
 	ctx, span := otelx.Span(ctx, "userBiz.GetUser")
 	defer span.End()
 
@@ -46,7 +46,7 @@ func (i *userBiz) GetUser(ctx contextx.Contextx, id string) (item *model.User, e
 func (i *userBiz) ListUsers(
 	ctx contextx.Contextx,
 	options biz.ListUsersOptions,
-) (items []*model.User, total int, err error) {
+) (items []*model2.User, total int, err error) {
 	ctx, span := otelx.Span(ctx, "userBiz.ListUsers")
 	defer span.End()
 
@@ -60,7 +60,7 @@ func (i *userBiz) UpdateUser(
 	ctx contextx.Contextx,
 	id string,
 	name, email, password string,
-	address model.Address,
+	address model2.Address,
 ) error {
 	ctx, span := otelx.Span(ctx, "userBiz.UpdateUser")
 	defer span.End()

@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/blackhorseya/godine/adapter/order/wirex"
-	"github.com/blackhorseya/godine/entity/order/biz"
-	"github.com/blackhorseya/godine/entity/order/model"
+	"github.com/blackhorseya/godine/entity/domain/order/biz"
+	model2 "github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
@@ -32,9 +32,9 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 
 // PostPayload is the post payload
 type PostPayload struct {
-	UserID       string            `json:"user_id" binding:"required" example:"adcf23bc-cd32-4176-8d46-68f15ebdfa98"`
-	RestaurantID string            `json:"restaurant_id" binding:"required" example:"a1dbb32b-05f0-4354-8253-60f4c6deae12"`
-	Items        []model.OrderItem `json:"items" binding:"required"`
+	UserID       string             `json:"user_id" binding:"required" example:"adcf23bc-cd32-4176-8d46-68f15ebdfa98"`
+	RestaurantID string             `json:"restaurant_id" binding:"required" example:"a1dbb32b-05f0-4354-8253-60f4c6deae12"`
+	Items        []model2.OrderItem `json:"items" binding:"required"`
 }
 
 // Post is the post method
@@ -68,7 +68,7 @@ func (i *impl) Post(c *gin.Context) {
 		payload.UserID,
 		payload.RestaurantID,
 		payload.Items,
-		model.Address{},
+		model2.Address{},
 		0,
 	)
 	if err != nil {

@@ -7,8 +7,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/otelx",
-        "//entity/user/model",
-        "//entity/user/repo",
+        "//entity/domain/user/model",
+        "//entity/domain/user/repo",
         "//pkg/contextx",
         "@com_github_google_uuid//:uuid",
         "@org_mongodb_go_mongo_driver//bson",
