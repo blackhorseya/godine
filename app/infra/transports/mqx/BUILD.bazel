@@ -1,0 +1,18 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mqx",
+    srcs = [
+        "event_bus.go",
+        "event_bus_kafka.go",
+        "event_bus_memory.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/app/infra/transports/mqx",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//app/infra/transports/kafkax",
+        "//entity/events",
+        "//pkg/contextx",
+        "@com_github_segmentio_kafka_go//:kafka-go",
+    ],
+)
