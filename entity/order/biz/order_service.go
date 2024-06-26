@@ -45,28 +45,19 @@ type IOrderBiz interface {
 	// UpdateOrderStatus updates the status of an existing order.
 	UpdateOrderStatus(ctx contextx.Contextx, id string, status string) error
 
-	// AddOrderItem adds an item to an existing order.
-	AddOrderItem(ctx contextx.Contextx, orderID string, item model.OrderItem) error
-
-	// RemoveOrderItem removes an item from an existing order.
-	RemoveOrderItem(ctx contextx.Contextx, orderID string, menuItemID string) error
-
-	// DeleteOrder deletes an order by its ID.
-	DeleteOrder(ctx contextx.Contextx, id string) error
-
 	// ListOrdersByUser retrieves a list of orders placed by a specific user.
 	ListOrdersByUser(
 		ctx contextx.Contextx,
 		userID string,
 		options ListOrdersOptions,
-	) (orders []model.Order, total int, err error)
+	) (orders []*model.Order, total int, err error)
 
 	// ListOrdersByRestaurant retrieves a list of orders for a specific restaurant.
 	ListOrdersByRestaurant(
 		ctx contextx.Contextx,
 		restaurantID string,
 		options ListOrdersOptions,
-	) (orders []model.Order, total int, err error)
+	) (orders []*model.Order, total int, err error)
 
 	// OnDeliveryStatusChanged updates the order status when the delivery status changes.
 	// This method is called when the delivery status changes, such as from delivering to delivered.

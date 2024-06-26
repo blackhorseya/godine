@@ -40,20 +40,6 @@ func (m *MockIOrderBiz) EXPECT() *MockIOrderBizMockRecorder {
 	return m.recorder
 }
 
-// AddOrderItem mocks base method.
-func (m *MockIOrderBiz) AddOrderItem(ctx contextx.Contextx, orderID string, item model.OrderItem) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddOrderItem", ctx, orderID, item)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// AddOrderItem indicates an expected call of AddOrderItem.
-func (mr *MockIOrderBizMockRecorder) AddOrderItem(ctx, orderID, item any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddOrderItem", reflect.TypeOf((*MockIOrderBiz)(nil).AddOrderItem), ctx, orderID, item)
-}
-
 // CreateOrder mocks base method.
 func (m *MockIOrderBiz) CreateOrder(ctx contextx.Contextx, userID, restaurantID string, items []model.OrderItem, address model.Address, totalAmount float64) (*model.Order, error) {
 	m.ctrl.T.Helper()
@@ -67,20 +53,6 @@ func (m *MockIOrderBiz) CreateOrder(ctx contextx.Contextx, userID, restaurantID 
 func (mr *MockIOrderBizMockRecorder) CreateOrder(ctx, userID, restaurantID, items, address, totalAmount any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockIOrderBiz)(nil).CreateOrder), ctx, userID, restaurantID, items, address, totalAmount)
-}
-
-// DeleteOrder mocks base method.
-func (m *MockIOrderBiz) DeleteOrder(ctx contextx.Contextx, id string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteOrder", ctx, id)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// DeleteOrder indicates an expected call of DeleteOrder.
-func (mr *MockIOrderBizMockRecorder) DeleteOrder(ctx, id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrder", reflect.TypeOf((*MockIOrderBiz)(nil).DeleteOrder), ctx, id)
 }
 
 // GetOrder mocks base method.
@@ -115,10 +87,10 @@ func (mr *MockIOrderBizMockRecorder) ListOrders(ctx, options any) *gomock.Call {
 }
 
 // ListOrdersByRestaurant mocks base method.
-func (m *MockIOrderBiz) ListOrdersByRestaurant(ctx contextx.Contextx, restaurantID string, options ListOrdersOptions) ([]model.Order, int, error) {
+func (m *MockIOrderBiz) ListOrdersByRestaurant(ctx contextx.Contextx, restaurantID string, options ListOrdersOptions) ([]*model.Order, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOrdersByRestaurant", ctx, restaurantID, options)
-	ret0, _ := ret[0].([]model.Order)
+	ret0, _ := ret[0].([]*model.Order)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -131,10 +103,10 @@ func (mr *MockIOrderBizMockRecorder) ListOrdersByRestaurant(ctx, restaurantID, o
 }
 
 // ListOrdersByUser mocks base method.
-func (m *MockIOrderBiz) ListOrdersByUser(ctx contextx.Contextx, userID string, options ListOrdersOptions) ([]model.Order, int, error) {
+func (m *MockIOrderBiz) ListOrdersByUser(ctx contextx.Contextx, userID string, options ListOrdersOptions) ([]*model.Order, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListOrdersByUser", ctx, userID, options)
-	ret0, _ := ret[0].([]model.Order)
+	ret0, _ := ret[0].([]*model.Order)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -158,20 +130,6 @@ func (m *MockIOrderBiz) OnDeliveryStatusChanged(ctx contextx.Contextx, orderID, 
 func (mr *MockIOrderBizMockRecorder) OnDeliveryStatusChanged(ctx, orderID, status any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnDeliveryStatusChanged", reflect.TypeOf((*MockIOrderBiz)(nil).OnDeliveryStatusChanged), ctx, orderID, status)
-}
-
-// RemoveOrderItem mocks base method.
-func (m *MockIOrderBiz) RemoveOrderItem(ctx contextx.Contextx, orderID, menuItemID string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RemoveOrderItem", ctx, orderID, menuItemID)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// RemoveOrderItem indicates an expected call of RemoveOrderItem.
-func (mr *MockIOrderBizMockRecorder) RemoveOrderItem(ctx, orderID, menuItemID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveOrderItem", reflect.TypeOf((*MockIOrderBiz)(nil).RemoveOrderItem), ctx, orderID, menuItemID)
 }
 
 // UpdateOrderStatus mocks base method.

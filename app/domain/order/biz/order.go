@@ -249,37 +249,38 @@ func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status st
 	return nil
 }
 
-func (i *orderBiz) AddOrderItem(ctx contextx.Contextx, orderID string, item model.OrderItem) error {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
-}
-
-func (i *orderBiz) RemoveOrderItem(ctx contextx.Contextx, orderID string, menuItemID string) error {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
-}
-
-func (i *orderBiz) DeleteOrder(ctx contextx.Contextx, id string) error {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
-}
-
 func (i *orderBiz) ListOrdersByUser(
 	ctx contextx.Contextx,
 	userID string,
 	options orderB.ListOrdersOptions,
-) (orders []model.Order, total int, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+) (orders []*model.Order, total int, err error) {
+	ctx, span := otelx.Span(ctx, "biz.order.list_orders_by_user")
+	defer span.End()
+
+	return i.orders.List(ctx, repo.ListCondition{
+		UserID:       userID,
+		RestaurantID: "",
+		Status:       options.Status,
+		Limit:        options.Size,
+		Offset:       (options.Page - 1) * options.Size,
+	})
 }
 
 func (i *orderBiz) ListOrdersByRestaurant(
 	ctx contextx.Contextx,
 	restaurantID string,
 	options orderB.ListOrdersOptions,
-) (orders []model.Order, total int, err error) {
-	// todo: 2024/6/11|sean|implement me
-	panic("implement me")
+) (orders []*model.Order, total int, err error) {
+	ctx, span := otelx.Span(ctx, "biz.order.list_orders_by_restaurant")
+	defer span.End()
+
+	return i.orders.List(ctx, repo.ListCondition{
+		UserID:       "",
+		RestaurantID: restaurantID,
+		Status:       options.Status,
+		Limit:        options.Size,
+		Offset:       (options.Page - 1) * options.Size,
+	})
 }
 
 func (i *orderBiz) OnDeliveryStatusChanged(ctx contextx.Contextx, orderID string, status string) error {
