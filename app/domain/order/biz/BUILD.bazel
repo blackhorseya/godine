@@ -2,7 +2,10 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "biz",
-    srcs = ["order.go"],
+    srcs = [
+        "handler.go",
+        "order.go",
+    ],
     importpath = "github.com/blackhorseya/godine/app/domain/order/biz",
     visibility = ["//visibility:public"],
     deps = [
@@ -16,6 +19,7 @@ go_library(
         "//entity/domain/order/repo",
         "//entity/domain/restaurant/biz",
         "//entity/domain/user/biz",
+        "//entity/events",
         "//pkg/contextx",
         "//pkg/errorx",
         "@org_uber_go_zap//:zap",
