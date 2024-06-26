@@ -13,6 +13,14 @@ type DeliveryEvent struct {
 	Handler string `json:"handler,omitempty"`
 }
 
+func (x *DeliveryEvent) OccurredOn(ctx contextx.Contextx) time.Time {
+	return time.Now()
+}
+
+func (x *DeliveryEvent) EventType() string {
+	return "delivery_event"
+}
+
 // DeliveryState interface defines the behavior of different delivery states.
 type DeliveryState interface {
 	fmt.Stringer

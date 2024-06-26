@@ -1,9 +1,6 @@
 package biz
 
 import (
-	"encoding/json"
-	"time"
-
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/mqx"
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
@@ -63,6 +60,7 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 	}
 
 	ctx.Debug("delivery next event", zap.Any("event", &event))
+	i.mq.Publish(ctx, event)
 
 	err = i.deliveries.Update(ctx, delivery)
 	if err != nil {
@@ -75,21 +73,6 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 		delivery.OrderID,
 		"delivery status changed",
 	))
-	if err != nil {
-		return err
-	}
-
-	value, err := json.Marshal(delivery)
-	if err != nil {
-		return err
-	}
-
-	err = i.writer.WriteMessages(ctx, kafka.Message{
-		Topic: topic,
-		Key:   []byte(delivery.ID),
-		Value: value,
-		Time:  time.Now(),
-	})
 	if err != nil {
 		return err
 	}

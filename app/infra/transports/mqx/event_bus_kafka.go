@@ -1,9 +1,7 @@
 package mqx
 
 import (
-	"context"
 	"encoding/json"
-	"log"
 	"sync"
 
 	"github.com/blackhorseya/godine/app/infra/transports/kafkax"
@@ -49,15 +47,16 @@ func NewKafkaEventBus() (EventBus, error) {
 
 func (bus *KafkaEventBus) startConsuming() {
 	for {
-		m, err := bus.reader.ReadMessage(context.Background())
+		ctx := contextx.Background()
+		m, err := bus.reader.ReadMessage(ctx)
 		if err != nil {
-			log.Println("Error reading message:", err)
+			ctx.Error("Error reading message", zap.Error(err))
 			continue
 		}
 
 		var event events.DomainEvent
 		if err = json.Unmarshal(m.Value, &event); err != nil {
-			log.Println("Error unmarshalling event:", err)
+			ctx.Error("Error unmarshalling event", zap.Error(err))
 			continue
 		}
 
