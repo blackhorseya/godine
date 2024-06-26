@@ -8,6 +8,7 @@ import (
 	notifyB "github.com/blackhorseya/godine/entity/notification/biz"
 	model2 "github.com/blackhorseya/godine/entity/notification/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/segmentio/kafka-go"
 	"go.uber.org/zap"
 )
 
@@ -15,13 +16,19 @@ type logistics struct {
 	notifyService notifyB.INotificationBiz
 
 	deliveries repo.IDeliveryRepo
+	writer     *kafka.Writer
 }
 
 // NewLogistics will create a new logistics biz
-func NewLogistics(notifyService notifyB.INotificationBiz, deliveries repo.IDeliveryRepo) biz.ILogisticsBiz {
+func NewLogistics(
+	notifyService notifyB.INotificationBiz,
+	deliveries repo.IDeliveryRepo,
+	writer *kafka.Writer,
+) biz.ILogisticsBiz {
 	return &logistics{
 		notifyService: notifyService,
 		deliveries:    deliveries,
+		writer:        writer,
 	}
 }
 

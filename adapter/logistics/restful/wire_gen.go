@@ -15,6 +15,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
+	"github.com/blackhorseya/godine/app/infra/transports/kafkax"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
@@ -39,7 +40,11 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		return nil, err
 	}
 	iDeliveryRepo := delivery.NewMongodb(client)
-	iLogisticsBiz := biz2.NewLogistics(iNotificationBiz, iDeliveryRepo)
+	writer, err := kafkax.NewWriter()
+	if err != nil {
+		return nil, err
+	}
+	iLogisticsBiz := biz2.NewLogistics(iNotificationBiz, iDeliveryRepo, writer)
 	injector := &wirex.Injector{
 		A:                application,
 		LogisticsService: iLogisticsBiz,
@@ -74,5 +79,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz2.ProviderLogisticsSet, mongodbx.NewClient, biz.NewNotificationHTTPClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz2.ProviderLogisticsSet, mongodbx.NewClient, kafkax.NewWriter, biz.NewNotificationHTTPClient,
 )

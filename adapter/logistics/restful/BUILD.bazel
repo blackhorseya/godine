@@ -19,6 +19,7 @@ go_library(
         "//app/infra/otelx",
         "//app/infra/storage/mongodbx",
         "//app/infra/transports/httpx",
+        "//app/infra/transports/kafkax",
         "//pkg/adapterx",
         "//pkg/contextx",
         "//pkg/logging",

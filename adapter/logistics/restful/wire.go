@@ -12,6 +12,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
+	"github.com/blackhorseya/godine/app/infra/transports/kafkax"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
@@ -47,6 +48,7 @@ var providerSet = wire.NewSet(
 
 	biz.ProviderLogisticsSet,
 	mongodbx.NewClient,
+	kafkax.NewWriter,
 
 	biz2.NewNotificationHTTPClient,
 )

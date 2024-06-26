@@ -71,6 +71,12 @@ logisticsRestful:
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
 
+  kafka:
+    brokers:
+      - broker:9092
+    username:
+    password:
+
   otel:
     target: otel-collector:4317
 
