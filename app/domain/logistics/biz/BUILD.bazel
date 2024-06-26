@@ -13,6 +13,7 @@ go_library(
         "//app/domain/logistics/repo/delivery",
         "//app/infra/configx",
         "//app/infra/otelx",
+        "//app/infra/transports/mqx",
         "//entity/domain/logistics/biz",
         "//entity/domain/logistics/model",
         "//entity/domain/logistics/repo",

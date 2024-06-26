@@ -20,6 +20,7 @@ go_library(
         "//app/infra/storage/mongodbx",
         "//app/infra/transports/httpx",
         "//app/infra/transports/kafkax",
+        "//app/infra/transports/mqx",
         "//pkg/adapterx",
         "//pkg/contextx",
         "//pkg/logging",

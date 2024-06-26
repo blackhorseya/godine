@@ -22,8 +22,8 @@ type KafkaEventBus struct {
 }
 
 // NewKafkaEventBus creates a new Kafka event bus
-func NewKafkaEventBus(topic string) (EventBus, error) {
-	reader, err := kafkax.NewReaderWithTopic(topic)
+func NewKafkaEventBus() (EventBus, error) {
+	reader, err := kafkax.NewReaderWithTopic("new_events")
 	if err != nil {
 		return nil, err
 	}

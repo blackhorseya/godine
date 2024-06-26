@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/transports/mqx"
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	"github.com/blackhorseya/godine/entity/domain/logistics/model"
 	"github.com/blackhorseya/godine/entity/domain/logistics/repo"
@@ -22,6 +23,7 @@ type logistics struct {
 
 	deliveries repo.IDeliveryRepo
 	writer     *kafka.Writer
+	mq         mqx.EventBus
 }
 
 // NewLogistics will create a new logistics biz
@@ -29,11 +31,13 @@ func NewLogistics(
 	notifyService notifyB.INotificationBiz,
 	deliveries repo.IDeliveryRepo,
 	writer *kafka.Writer,
+	mq mqx.EventBus,
 ) biz.ILogisticsBiz {
 	return &logistics{
 		notifyService: notifyService,
 		deliveries:    deliveries,
 		writer:        writer,
+		mq:            mq,
 	}
 }
 
