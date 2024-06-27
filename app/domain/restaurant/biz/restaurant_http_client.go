@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants"
 	"github.com/blackhorseya/godine/app/infra/configx"
@@ -17,6 +18,8 @@ import (
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
+
+const restaurantRouter = "/api/v1/restaurants/"
 
 type restaurantHTTPClient struct {
 	url    string
@@ -38,7 +41,7 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.CreateRestaurant")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants")
+	ep, err := url.ParseRequestURI(i.url + strings.TrimRight(restaurantRouter, "/"))
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +86,7 @@ func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.GetRestaurant")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id)
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + id)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +126,7 @@ func (i *restaurantHTTPClient) ListRestaurants(
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.ListRestaurants")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants")
+	ep, err := url.ParseRequestURI(i.url + strings.TrimRight(restaurantRouter, "/"))
 	if err != nil {
 		return nil, 0, err
 	}
@@ -175,7 +178,7 @@ func (i *restaurantHTTPClient) UpdateRestaurant(
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.UpdateRestaurant")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id)
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + id)
 	if err != nil {
 		return err
 	}
@@ -219,7 +222,7 @@ func (i *restaurantHTTPClient) DeleteRestaurant(ctx contextx.Contextx, id string
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.DeleteRestaurant")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id)
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + id)
 	if err != nil {
 		return err
 	}
@@ -259,7 +262,7 @@ func (i *restaurantHTTPClient) ChangeRestaurantStatus(
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.ChangeRestaurantStatus")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + restaurantID + "/status")
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/status")
 	if err != nil {
 		return err
 	}
