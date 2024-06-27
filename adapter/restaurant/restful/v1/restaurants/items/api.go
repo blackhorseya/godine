@@ -6,7 +6,7 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	_ "github.com/blackhorseya/godine/entity/domain/restaurant/model" // swagger docs
+	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
@@ -194,7 +194,55 @@ func (i *impl) GetByID(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/restaurants/{restaurant_id}/items/{item_id} [put]
 func (i *impl) PutByID(c *gin.Context) {
-	// todo: 2024/6/27|sean|implement update item by id
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	ctx, span := otelx.Span(ctx, "api.items.put_by_id")
+	defer span.End()
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	itemID, err := uuid.Parse(c.Param("item_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	var payload model.MenuItem
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.MenuService.UpdateMenuItem(
+		ctx,
+		restaurantID.String(),
+		itemID.String(),
+		payload.Name,
+		payload.Description,
+		payload.Price,
+		payload.IsAvailable,
+	)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	item, err := i.injector.MenuService.GetMenuItem(ctx, restaurantID.String(), itemID.String())
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
 
 // DeleteByID is used to delete the items item by id.
@@ -209,5 +257,32 @@ func (i *impl) PutByID(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/restaurants/{restaurant_id}/items/{item_id} [delete]
 func (i *impl) DeleteByID(c *gin.Context) {
-	// todo: 2024/6/27|sean|implement delete item by id
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	ctx, span := otelx.Span(ctx, "api.items.delete_by_id")
+	defer span.End()
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	itemID, err := uuid.Parse(c.Param("item_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.MenuService.RemoveMenuItem(ctx, restaurantID.String(), itemID.String())
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, nil)
 }
