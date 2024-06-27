@@ -3,7 +3,6 @@ package biz
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/url"
 
@@ -12,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	"github.com/blackhorseya/godine/entity/domain/logistics/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
@@ -65,7 +65,7 @@ func (i *logisticsHTTPClient) CreateDelivery(ctx contextx.Contextx, delivery *mo
 	}
 
 	if got.Code != http.StatusOK {
-		return errors.New(got.Message)
+		return errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	delivery.ID = got.Data.ID
@@ -109,7 +109,7 @@ func (i *logisticsHTTPClient) GetDelivery(ctx contextx.Contextx, deliveryID stri
 	}
 
 	if got.Code != http.StatusOK {
-		return nil, errors.New(got.Message)
+		return nil, errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return got.Data, nil

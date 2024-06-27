@@ -21,6 +21,7 @@ go_library(
         "//entity/domain/notification/biz",
         "//entity/domain/notification/model",
         "//pkg/contextx",
+        "//pkg/errorx",
         "//pkg/responsex",
         "@com_github_google_wire//:wire",
         "@io_opentelemetry_go_contrib_instrumentation_net_http_otelhttp//:otelhttp",
