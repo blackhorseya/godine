@@ -208,7 +208,34 @@ type PatchWithStatusPayload struct {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/users/{id}/status [patch]
 func (i *impl) PatchWithStatus(c *gin.Context) {
-	// todo: 2024/6/27|sean|implement patch user status
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	id := c.Param("id")
+
+	var payload PatchWithStatusPayload
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.UserService.ChangeUserStatus(ctx, id, payload.IsActive)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	item, err := i.injector.UserService.GetUser(ctx, id)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
 
 // Delete is used to delete a user.
