@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "logistics_handler.go",
         "logistics_service.go",
-        "mock_logistics_handler.go",
         "mock_logistics_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/logistics/biz",
