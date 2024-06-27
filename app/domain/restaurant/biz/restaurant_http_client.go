@@ -216,8 +216,39 @@ func (i *restaurantHTTPClient) UpdateRestaurant(
 }
 
 func (i *restaurantHTTPClient) DeleteRestaurant(ctx contextx.Contextx, id string) error {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.DeleteRestaurant")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, ep.String(), nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errors.New(got.Message)
+	}
+
+	return nil
 }
 
 func (i *restaurantHTTPClient) ChangeRestaurantStatus(
