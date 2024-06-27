@@ -1,3 +1,69 @@
+## 0.2.3 (2024-06-27)
+
+### Feat
+
+- implement new CRUD endpoints and Swagger definitions (#46)
+- refactor URL path concatenation using constant variable
+- improve error handling and user status functionality
+- update user information with error handling and return updated info
+- implement new CRUD endpoints and Swagger definitions
+- improve error handling and logging in UpdateMenuItem function (#45)
+- improve error handling and logging in UpdateMenuItem function
+- improve error handling and HTTP request in UpdateRestaurant function (#44)
+- refactor restaurant HTTP client for error handling
+- implement error handling and HTTP logic for DeleteRestaurant method
+- improve error handling and HTTP request in UpdateRestaurant function
+- refactor update and delete operations for restaurant model (#43)
+- refactor update and delete operations for restaurant model
+- improve restaurant entity management and error handling (#42)
+- refactor restaurant API delete functionality
+- improve restaurant entity management and error handling
+- implement PUT and DELETE functionality for items API (#41)
+- implement PUT and DELETE functionality for items API
+- add restaurant api router
+- improve error handling and logging in menu HTTP client (#40)
+- improve error handling and logging in menu HTTP client
+- implement new delivery status changed handler in biz directory
+- consolidate logistics handling functionality (#39)
+- refactor delivery status handling in logistics module
+- consolidate logistics handling functionality
+- implement dependency injection using Wire in handler package (#38)
+- implement dependency injection using Wire in handler package
+- improve logging in KafkaEventBus
+- introduce a new function for creating writers with specified topics
+- consolidate topic name usage in Kafka event bus
+- integrate MQX event bus into logistics module
+- introduce new event handling functionality (#37)
+- integrate Kafka event bus into transport and update methods
+- implement in-memory event bus with registration and publishing capabilities
+- implement MQX transport for event bus integration
+- introduce new event handling functionality
+- consolidate event handling functionality
+- refactor delivery status change methods across services
+- implement Kafka message delivery for status updates
+- update Kafka configuration and dependencies across files
+- integrate Kafka configurations for new broker service
+
+### Refactor
+
+- improve context handling in user deletion process
+- refactor user model references in http_client.go
+- refactor order service methods and interfaces
+- standardize error handling with `errorx` package
+- standardize span naming conventions across files
+- refactor restaurant API URL construction in http client
+- standardize field name for page size across restaurant domain
+- optimize imports across the codebase
+- update `IsOpen` field in restaurant structs
+- refactor event bus handling and logging in Kafka integration
+- refactor event handling in logistics domain
+- refactor event handling in delivery system
+- refactor event handling to use topic instead of event type
+- refactor error handling and logging in logistics and event bus modules
+- refactor restaurant ID field in PostPayload struct
+- refactor order handling interfaces
+- refactor Kafka topic handling throughout the codebase
+
 ## 0.2.2 (2024-06-26)
 
 ### Feat
