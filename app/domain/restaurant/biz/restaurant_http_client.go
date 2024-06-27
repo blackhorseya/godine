@@ -6,12 +6,13 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
-	model2 "github.com/blackhorseya/godine/entity/domain/restaurant/model"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
@@ -33,8 +34,8 @@ func NewRestaurantHTTPClient() biz.IRestaurantBiz {
 func (i *restaurantHTTPClient) CreateRestaurant(
 	ctx contextx.Contextx,
 	name, address string,
-) (item *model2.Restaurant, err error) {
-	ctx, span := otelx.Span(ctx, "restaurantHTTPClient.CreateRestaurant")
+) (item *model.Restaurant, err error) {
+	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.CreateRestaurant")
 	defer span.End()
 
 	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants")
@@ -63,7 +64,7 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model2.Restaurant `json:"data"`
+		Data               *model.Restaurant `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -78,8 +79,8 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 	return got.Data, nil
 }
 
-func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (item *model2.Restaurant, err error) {
-	ctx, span := otelx.Span(ctx, "restaurantHTTPClient.GetRestaurant")
+func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (item *model.Restaurant, err error) {
+	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.GetRestaurant")
 	defer span.End()
 
 	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id)
@@ -100,7 +101,7 @@ func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model2.Restaurant `json:"data"`
+		Data               *model.Restaurant `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -118,16 +119,58 @@ func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (
 func (i *restaurantHTTPClient) ListRestaurants(
 	ctx contextx.Contextx,
 	options biz.ListRestaurantsOptions,
-) (items []*model2.Restaurant, total int, err error) {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+) (items []*model.Restaurant, total int, err error) {
+	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.ListRestaurants")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants")
+	if err != nil {
+		return nil, 0, err
+	}
+
+	q := ep.Query()
+	q.Set("page", strconv.Itoa(options.Page))
+	q.Set("limit", strconv.Itoa(options.Size))
+	ep.RawQuery = q.Encode()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, ep.String(), nil)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+		Data               []*model.Restaurant `json:"data"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	if got.Code != http.StatusOK {
+		return nil, 0, errors.New(got.Message)
+	}
+
+	count, err := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return got.Data, count, nil
 }
 
 func (i *restaurantHTTPClient) UpdateRestaurant(
 	ctx contextx.Contextx,
 	id string,
 	name string,
-	address model2.Address,
+	address model.Address,
 ) error {
 	// todo: 2024/6/13|sean|implement me
 	panic("implement me")

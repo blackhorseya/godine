@@ -72,8 +72,8 @@ func (i *impl) GetList(c *gin.Context) {
 	}
 
 	ret, total, err := i.injector.RestaurantService.ListRestaurants(ctx, biz.ListRestaurantsOptions{
-		Page:     query.Page,
-		PageSize: query.Size,
+		Page: query.Page,
+		Size: query.Size,
 	})
 	if err != nil {
 		responsex.Err(c, err)

@@ -79,7 +79,7 @@ const docTemplateuser_restful = `{
                     },
                     {
                         "type": "integer",
-                        "description": "PageSize is the number of items per page.",
+                        "description": "Size is the number of items per page.",
                         "name": "pageSize",
                         "in": "query"
                     }

@@ -12,8 +12,8 @@ type ListRestaurantsOptions struct {
 	// Page is the page number.
 	Page int
 
-	// PageSize is the number of items per page.
-	PageSize int
+	// Size is the number of items per page.
+	Size int
 }
 
 // IRestaurantBiz defines the business operations for restaurant management.

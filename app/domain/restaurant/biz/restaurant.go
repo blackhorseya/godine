@@ -53,8 +53,8 @@ func (i *restaurantBiz) ListRestaurants(
 	defer span.End()
 
 	return i.restaurants.List(ctx, repo.ListCondition{
-		Limit:  options.PageSize,
-		Offset: (options.Page - 1) * options.PageSize,
+		Limit:  options.Size,
+		Offset: (options.Page - 1) * options.Size,
 	})
 }
 
