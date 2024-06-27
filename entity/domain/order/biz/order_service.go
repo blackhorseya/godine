@@ -58,11 +58,4 @@ type IOrderBiz interface {
 		restaurantID string,
 		options ListOrdersOptions,
 	) (orders []*model2.Order, total int, err error)
-
-	// OnDeliveryStatusChanged updates the order status when the delivery status changes.
-	// This method is called when the delivery status changes, such as from delivering to delivered.
-	// It updates the order status based on the delivery status change.
-	// Usage: When the delivery status changes and the order status needs to be updated accordingly.
-	// Function: Updates the order status based on the delivery status change.
-	OnDeliveryStatusChanged(ctx contextx.Contextx, orderID string, status string) error
 }

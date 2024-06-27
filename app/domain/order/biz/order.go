@@ -282,8 +282,3 @@ func (i *orderBiz) ListOrdersByRestaurant(
 		Offset:       (options.Page - 1) * options.Size,
 	})
 }
-
-func (i *orderBiz) OnDeliveryStatusChanged(ctx contextx.Contextx, orderID string, status string) error {
-	// todo: 2024/6/26|sean|implement me
-	panic("implement me")
-}
