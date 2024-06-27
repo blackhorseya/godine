@@ -3,7 +3,6 @@ package biz
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -13,6 +12,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.uber.org/zap"
@@ -81,7 +81,7 @@ func (i *menuHTTPClient) AddMenuItem(
 	}
 
 	if got.Code != http.StatusOK {
-		return nil, errors.New(got.Message)
+		return nil, errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return got.Data, nil
@@ -125,7 +125,7 @@ func (i *menuHTTPClient) ListMenuItems(
 	}
 
 	if got.Code != http.StatusOK {
-		return nil, 0, errors.New(got.Message)
+		return nil, 0, errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	total, err = strconv.Atoi(resp.Header.Get("X-Total-Count"))
@@ -175,7 +175,7 @@ func (i *menuHTTPClient) GetMenuItem(
 	}
 
 	if got.Code != http.StatusOK {
-		return nil, errors.New(got.Message)
+		return nil, errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return got.Data, nil
@@ -232,7 +232,7 @@ func (i *menuHTTPClient) UpdateMenuItem(
 	}
 
 	if got.Code != http.StatusOK {
-		return errors.New(got.Message)
+		return errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return nil
@@ -242,6 +242,41 @@ func (i *menuHTTPClient) RemoveMenuItem(
 	ctx contextx.Contextx,
 	restaurantID, menuItemID string,
 ) error {
-	// todo: 2024/6/23|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.menu.http_client.RemoveMenuItem")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items/" + menuItemID)
+	if err != nil {
+		ctx.Error("parse request uri failed", zap.Error(err))
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, ep.String(), nil)
+	if err != nil {
+		ctx.Error("new request failed", zap.Error(err))
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		ctx.Error("do request failed", zap.Error(err))
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		ctx.Error("decode response failed", zap.Error(err))
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errorx.New(got.Code, got.Code, got.Message)
+	}
+
+	return nil
 }
