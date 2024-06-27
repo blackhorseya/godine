@@ -10,28 +10,46 @@
 package biz
 
 import (
+	reflect "reflect"
+
+	events "github.com/blackhorseya/godine/entity/events"
+	contextx "github.com/blackhorseya/godine/pkg/contextx"
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockILogisticsHandler is a mock of ILogisticsHandler interface.
-type MockILogisticsHandler struct {
+// MockDeliveryStatusChangedHandler is a mock of DeliveryStatusChangedHandler interface.
+type MockDeliveryStatusChangedHandler struct {
 	ctrl     *gomock.Controller
-	recorder *MockILogisticsHandlerMockRecorder
+	recorder *MockDeliveryStatusChangedHandlerMockRecorder
 }
 
-// MockILogisticsHandlerMockRecorder is the mock recorder for MockILogisticsHandler.
-type MockILogisticsHandlerMockRecorder struct {
-	mock *MockILogisticsHandler
+// MockDeliveryStatusChangedHandlerMockRecorder is the mock recorder for MockDeliveryStatusChangedHandler.
+type MockDeliveryStatusChangedHandlerMockRecorder struct {
+	mock *MockDeliveryStatusChangedHandler
 }
 
-// NewMockILogisticsHandler creates a new mock instance.
-func NewMockILogisticsHandler(ctrl *gomock.Controller) *MockILogisticsHandler {
-	mock := &MockILogisticsHandler{ctrl: ctrl}
-	mock.recorder = &MockILogisticsHandlerMockRecorder{mock}
+// NewMockDeliveryStatusChangedHandler creates a new mock instance.
+func NewMockDeliveryStatusChangedHandler(ctrl *gomock.Controller) *MockDeliveryStatusChangedHandler {
+	mock := &MockDeliveryStatusChangedHandler{ctrl: ctrl}
+	mock.recorder = &MockDeliveryStatusChangedHandlerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockILogisticsHandler) EXPECT() *MockILogisticsHandlerMockRecorder {
+func (m *MockDeliveryStatusChangedHandler) EXPECT() *MockDeliveryStatusChangedHandlerMockRecorder {
 	return m.recorder
+}
+
+// Handle mocks base method.
+func (m *MockDeliveryStatusChangedHandler) Handle(ctx contextx.Contextx, event *events.DomainEvent) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Handle", ctx, event)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Handle indicates an expected call of Handle.
+func (mr *MockDeliveryStatusChangedHandlerMockRecorder) Handle(ctx, event any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDeliveryStatusChangedHandler)(nil).Handle), ctx, event)
 }
