@@ -73,7 +73,7 @@ logisticsRestful:
 
   kafka:
     brokers:
-      - broker:9092
+      - kafka:9092
     username:
     password:
 
