@@ -781,9 +781,6 @@ const docTemplaterestaurant_restful = `{
         },
         "restaurants.PatchWithStatusPayload": {
             "type": "object",
-            "required": [
-                "is_open"
-            ],
             "properties": {
                 "is_open": {
                     "type": "boolean",

@@ -210,7 +210,7 @@ func (i *impl) PutByID(c *gin.Context) {
 
 // PatchWithStatusPayload is the patch with status payload.
 type PatchWithStatusPayload struct {
-	IsOpen bool `json:"is_open" binding:"required" example:"true"`
+	IsOpen bool `json:"is_open" example:"true"`
 }
 
 // PatchWithStatus is used to update the restaurant status by id.
@@ -225,7 +225,38 @@ type PatchWithStatusPayload struct {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/restaurants/{restaurant_id}/status [patch]
 func (i *impl) PatchWithStatus(c *gin.Context) {
-	// todo: 2024/6/27|sean|implement this method
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var payload PatchWithStatusPayload
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.RestaurantService.ChangeRestaurantStatus(ctx, restaurantID.String(), payload.IsOpen)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	item, err := i.injector.RestaurantService.GetRestaurant(ctx, restaurantID.String())
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
 
 // DeleteByID is used to delete the restaurant by id.
