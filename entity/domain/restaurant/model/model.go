@@ -19,7 +19,7 @@ type Restaurant struct {
 	Menu []MenuItem `json:"menu,omitempty" bson:"menu"`
 
 	// IsOpen indicates whether the restaurant is open for business.
-	IsOpen bool `json:"is_open,omitempty" bson:"isOpen"`
+	IsOpen bool `json:"is_open" bson:"isOpen"`
 }
 
 // NewRestaurant creates a new RestaurantAggregate.
