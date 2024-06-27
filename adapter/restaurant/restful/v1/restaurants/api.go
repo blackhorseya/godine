@@ -239,5 +239,23 @@ func (i *impl) PatchWithStatus(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/restaurants/{restaurant_id} [delete]
 func (i *impl) DeleteByID(c *gin.Context) {
-	// todo: 2024/6/27|sean|implement this method
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.RestaurantService.DeleteRestaurant(ctx, restaurantID.String())
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, nil)
 }
