@@ -8,6 +8,7 @@ import (
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	_ "github.com/blackhorseya/godine/entity/domain/restaurant/model" // swagger docs
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
@@ -173,7 +174,38 @@ func (i *impl) GetByID(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/restaurants/{restaurant_id} [put]
 func (i *impl) PutByID(c *gin.Context) {
-	// todo: 2024/6/27|sean|implement this method
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	var payload model.Restaurant
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.RestaurantService.UpdateRestaurant(ctx, restaurantID.String(), payload.Name, payload.Address)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	item, err := i.injector.RestaurantService.GetRestaurant(ctx, restaurantID.String())
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
 
 // PatchWithStatusPayload is the patch with status payload.
