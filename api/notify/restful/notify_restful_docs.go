@@ -103,7 +103,7 @@ const docTemplatenotify_restful = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification"
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_notification_model.Notification"
                                             }
                                         }
                                     }
@@ -155,7 +155,7 @@ const docTemplatenotify_restful = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification"
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_notification_model.Notification"
                         }
                     }
                 ],
@@ -171,7 +171,7 @@ const docTemplatenotify_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_notification_model.Notification"
                                         }
                                     }
                                 }
@@ -232,7 +232,7 @@ const docTemplatenotify_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_notification_model.Notification"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_notification_model.Notification"
                                         }
                                     }
                                 }
@@ -262,7 +262,7 @@ const docTemplatenotify_restful = `{
         }
     },
     "definitions": {
-        "github_com_blackhorseya_godine_entity_notification_model.Notification": {
+        "github_com_blackhorseya_godine_entity_domain_notification_model.Notification": {
             "type": "object",
             "properties": {
                 "created_at": {

@@ -27,6 +27,8 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 		group.GET("", i.GetList)
 		group.POST("", i.Post)
 		group.GET("/:item_id", i.GetByID)
+		group.PUT("/:item_id", i.PutByID)
+		group.DELETE("/:item_id", i.DeleteByID)
 	}
 }
 
@@ -177,4 +179,35 @@ func (i *impl) GetByID(c *gin.Context) {
 	}
 
 	responsex.OK(c, item)
+}
+
+// PutByID is used to update the items item by id.
+// @Summary Update the items item by id.
+// @Description Update the items item by id.
+// @Tags items
+// @Accept json
+// @Produce json
+// @Param restaurant_id path string true "restaurant id"
+// @Param item_id path string true "item id"
+// @Param payload body model.MenuItem true "items item payload"
+// @Success 200 {object} responsex.Response{data=model.MenuItem}
+// @Failure 500 {object} responsex.Response
+// @Router /v1/restaurants/{restaurant_id}/items/{item_id} [put]
+func (i *impl) PutByID(c *gin.Context) {
+	// todo: 2024/6/27|sean|implement update item by id
+}
+
+// DeleteByID is used to delete the items item by id.
+// @Summary Delete the items item by id.
+// @Description Delete the items item by id.
+// @Tags items
+// @Accept json
+// @Produce json
+// @Param restaurant_id path string true "restaurant id"
+// @Param item_id path string true "item id"
+// @Success 204 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/restaurants/{restaurant_id}/items/{item_id} [delete]
+func (i *impl) DeleteByID(c *gin.Context) {
+	// todo: 2024/6/27|sean|implement delete item by id
 }

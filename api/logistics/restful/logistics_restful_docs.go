@@ -110,7 +110,7 @@ const docTemplatelogistics_restful = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery"
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_logistics_model.Delivery"
                                             }
                                         }
                                     }
@@ -162,7 +162,7 @@ const docTemplatelogistics_restful = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery"
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_logistics_model.Delivery"
                         }
                     }
                 ],
@@ -178,7 +178,7 @@ const docTemplatelogistics_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_logistics_model.Delivery"
                                         }
                                     }
                                 }
@@ -239,7 +239,7 @@ const docTemplatelogistics_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_logistics_model.Delivery"
                                         }
                                     }
                                 }
@@ -315,7 +315,7 @@ const docTemplatelogistics_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_logistics_model.Delivery"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_logistics_model.Delivery"
                                         }
                                     }
                                 }
@@ -357,7 +357,7 @@ const docTemplatelogistics_restful = `{
                 }
             }
         },
-        "github_com_blackhorseya_godine_entity_logistics_model.Delivery": {
+        "github_com_blackhorseya_godine_entity_domain_logistics_model.Delivery": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -385,11 +385,14 @@ const docTemplatelogistics_restful = `{
                     "type": "string"
                 },
                 "status": {
-                    "description": "Status is the current status of the delivery (e.g., pending, in transit, delivered).",
-                    "type": "string"
+                    "description": "Status is the current status of the delivery (e.g., pending, in transit, delivered)."
                 },
                 "updated_at": {
                     "description": "UpdatedAt is the timestamp when the delivery was last updated.",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "UserID is the identifier of the user who placed the order.",
                     "type": "string"
                 }
             }

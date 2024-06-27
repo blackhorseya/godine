@@ -98,7 +98,7 @@ const docTemplateuser_restful = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.User"
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User"
                                             }
                                         }
                                     }
@@ -166,7 +166,7 @@ const docTemplateuser_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.User"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User"
                                         }
                                     }
                                 }
@@ -227,7 +227,7 @@ const docTemplateuser_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.User"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User"
                                         }
                                     }
                                 }
@@ -257,7 +257,7 @@ const docTemplateuser_restful = `{
         }
     },
     "definitions": {
-        "github_com_blackhorseya_godine_entity_user_model.Address": {
+        "github_com_blackhorseya_godine_entity_domain_user_model.Address": {
             "type": "object",
             "properties": {
                 "city": {
@@ -278,14 +278,14 @@ const docTemplateuser_restful = `{
                 }
             }
         },
-        "github_com_blackhorseya_godine_entity_user_model.User": {
+        "github_com_blackhorseya_godine_entity_domain_user_model.User": {
             "type": "object",
             "properties": {
                 "address": {
                     "description": "Address is the address of the user.",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.Address"
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.Address"
                         }
                     ]
                 },
@@ -336,7 +336,7 @@ const docTemplateuser_restful = `{
             ],
             "properties": {
                 "address": {
-                    "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.Address"
+                    "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.Address"
                 },
                 "email": {
                     "type": "string",
