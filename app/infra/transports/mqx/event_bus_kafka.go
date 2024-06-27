@@ -99,15 +99,17 @@ func (bus *KafkaEventBus) Unregister(eventType string, id HandlerID) {
 
 // Publish publishes an event to all registered handlers
 func (bus *KafkaEventBus) Publish(ctx contextx.Contextx, event events.DomainEvent) {
-	data, err := json.Marshal(event)
+	value, err := event.Value()
 	if err != nil {
-		ctx.Error("Error marshalling event", zap.Error(err), zap.Any("event", event))
+		ctx.Error("Error marshalling event", zap.Error(err))
 		return
 	}
 
 	msg := kafka.Message{
 		Topic: event.Topic(),
-		Value: data,
+		Key:   event.Key(),
+		Value: value,
+		Time:  event.OccurredOn(ctx),
 	}
 
 	if err = bus.writer.WriteMessages(ctx, msg); err != nil {

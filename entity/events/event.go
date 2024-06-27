@@ -10,4 +10,7 @@ import (
 type DomainEvent interface {
 	OccurredOn(ctx contextx.Contextx) time.Time
 	Topic() string
+
+	Key() []byte
+	Value() ([]byte, error)
 }

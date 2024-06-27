@@ -4,14 +4,25 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/blackhorseya/godine/entity/events"
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
+
+var _ events.DomainEvent = (*DeliveryEvent)(nil)
 
 // DeliveryEvent represents an event during the delivery state transition.
 type DeliveryEvent struct {
 	Name    string    `json:"name,omitempty"`
 	Handler string    `json:"handler,omitempty"`
 	Data    *Delivery `json:"data,omitempty"`
+}
+
+func (x *DeliveryEvent) Key() []byte {
+	return []byte(x.Data.ID)
+}
+
+func (x *DeliveryEvent) Value() ([]byte, error) {
+	return x.Data.MarshalJSON()
 }
 
 func (x *DeliveryEvent) OccurredOn(ctx contextx.Contextx) time.Time {
