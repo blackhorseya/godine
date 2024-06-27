@@ -10,6 +10,7 @@ go_library(
         "//entity/domain/restaurant/model",
         "//entity/domain/restaurant/repo",
         "//pkg/contextx",
+        "//pkg/errorx",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//mongo",
         "@org_mongodb_go_mongo_driver//mongo/options",

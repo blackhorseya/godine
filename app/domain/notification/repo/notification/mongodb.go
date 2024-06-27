@@ -1,12 +1,15 @@
 package notification
 
 import (
+	"errors"
+	"net/http"
 	"time"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/notification/model"
 	"github.com/blackhorseya/godine/entity/domain/notification/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -65,6 +68,11 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Notific
 	filter := bson.M{"_id": id}
 	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			ctx.Error("notification not found", zap.String("id", id))
+			return nil, errorx.Wrap(http.StatusNotFound, 404, err)
+		}
+
 		ctx.Error("find one notification from mongodb failed", zap.Error(err), zap.String("id", id))
 		return nil, err
 	}

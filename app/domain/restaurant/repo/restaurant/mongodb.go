@@ -1,12 +1,15 @@
 package restaurant
 
 import (
+	"errors"
+	"net/http"
 	"time"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -89,6 +92,11 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Restaur
 	filter := bson.M{"_id": id}
 	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			ctx.Error("restaurant not found", zap.String("id", id))
+			return nil, errorx.Wrap(http.StatusNotFound, 404, err)
+		}
+
 		ctx.Error("get restaurant by id from mongodb failed", zap.Error(err), zap.String("id", id))
 		return nil, err
 	}
