@@ -72,15 +72,6 @@ func (i *notificationHTTPClient) CreateNotification(ctx contextx.Contextx, notif
 	return nil
 }
 
-func (i *notificationHTTPClient) UpdateNotificationStatus(
-	ctx contextx.Contextx,
-	notificationID string,
-	status string,
-) error {
-	// todo: 2024/6/26|sean|implement me
-	panic("implement me")
-}
-
 func (i *notificationHTTPClient) GetNotification(
 	ctx contextx.Contextx,
 	notificationID string,

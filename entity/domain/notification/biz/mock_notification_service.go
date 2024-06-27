@@ -10,11 +10,11 @@
 package biz
 
 import (
-	"reflect"
+	reflect "reflect"
 
-	"github.com/blackhorseya/godine/entity/domain/notification/model"
-	"github.com/blackhorseya/godine/pkg/contextx"
-	"go.uber.org/mock/gomock"
+	model "github.com/blackhorseya/godine/entity/domain/notification/model"
+	contextx "github.com/blackhorseya/godine/pkg/contextx"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockINotificationBiz is a mock of INotificationBiz interface.
@@ -83,18 +83,4 @@ func (m *MockINotificationBiz) ListNotificationsByUser(ctx contextx.Contextx, us
 func (mr *MockINotificationBizMockRecorder) ListNotificationsByUser(ctx, userID, options any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListNotificationsByUser", reflect.TypeOf((*MockINotificationBiz)(nil).ListNotificationsByUser), ctx, userID, options)
-}
-
-// UpdateNotificationStatus mocks base method.
-func (m *MockINotificationBiz) UpdateNotificationStatus(ctx contextx.Contextx, notificationID, status string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateNotificationStatus", ctx, notificationID, status)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateNotificationStatus indicates an expected call of UpdateNotificationStatus.
-func (mr *MockINotificationBizMockRecorder) UpdateNotificationStatus(ctx, notificationID, status any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateNotificationStatus", reflect.TypeOf((*MockINotificationBiz)(nil).UpdateNotificationStatus), ctx, notificationID, status)
 }

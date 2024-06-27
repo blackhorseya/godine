@@ -29,14 +29,6 @@ type INotificationBiz interface {
 	// Function: Creates a new notification record and initializes its status.
 	CreateNotification(ctx contextx.Contextx, notification *model.Notification) error
 
-	// UpdateNotificationStatus updates the status of an existing notification. This method
-	// changes the current status of the notification (e.g., from pending to sent)
-	// and updates the timestamp to reflect the change. It ensures that the notification
-	// status is accurately tracked and updated in real-time.
-	// Usage: When the notification status changes, such as from pending to sent.
-	// Function: Updates the current status of the notification record and logs the timestamp.
-	UpdateNotificationStatus(ctx contextx.Contextx, notificationID string, status string) error
-
 	// GetNotification retrieves a notification by its ID. This method fetches the details
 	// of a specific notification based on the unique identifier provided. It returns
 	// the Notification entity containing all relevant information.

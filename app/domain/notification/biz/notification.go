@@ -26,13 +26,6 @@ func (i *notification) CreateNotification(ctx contextx.Contextx, notification *m
 	return i.notifications.Create(ctx, notification)
 }
 
-func (i *notification) UpdateNotificationStatus(ctx contextx.Contextx, notificationID string, status string) error {
-	ctx, span := otelx.Span(ctx, "biz.notification.UpdateNotificationStatus")
-	defer span.End()
-
-	return i.notifications.UpdateStatus(ctx, notificationID, status)
-}
-
 func (i *notification) GetNotification(
 	ctx contextx.Contextx,
 	notificationID string,
