@@ -118,7 +118,6 @@ func (bus *KafkaEventBus) Publish(ctx contextx.Contextx, event events.DomainEven
 	}
 
 	msg := kafka.Message{
-		Topic: event.Topic(),
 		Key:   event.Key(),
 		Value: value,
 		Time:  event.OccurredOn(ctx),
@@ -126,5 +125,11 @@ func (bus *KafkaEventBus) Publish(ctx contextx.Contextx, event events.DomainEven
 
 	if err = bus.writer.WriteMessages(ctx, msg); err != nil {
 		ctx.Error("Error writing message", zap.Error(err))
+	} else {
+		ctx.Info(
+			"published event",
+			zap.String("topic", event.Topic()),
+			zap.String("key", string(event.Key())),
+		)
 	}
 }
