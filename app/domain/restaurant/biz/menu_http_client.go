@@ -188,8 +188,54 @@ func (i *menuHTTPClient) UpdateMenuItem(
 	price float64,
 	isAvailable bool,
 ) error {
-	// todo: 2024/6/23|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.menu.http_client.UpdateMenuItem")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items/" + menuItemID)
+	if err != nil {
+		ctx.Error("parse request uri failed", zap.Error(err))
+		return err
+	}
+
+	payload, err := json.Marshal(model.MenuItem{
+		Name:        name,
+		Description: description,
+		Price:       price,
+		IsAvailable: isAvailable,
+	})
+	if err != nil {
+		ctx.Error("marshal payload failed", zap.Error(err))
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		ctx.Error("new request failed", zap.Error(err))
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		ctx.Error("do request failed", zap.Error(err))
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		ctx.Error("decode response failed", zap.Error(err))
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errors.New(got.Message)
+	}
+
+	return nil
 }
 
 func (i *menuHTTPClient) RemoveMenuItem(
