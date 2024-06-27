@@ -3,7 +3,6 @@ package biz
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -15,6 +14,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
@@ -76,7 +76,7 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 	}
 
 	if got.Code != http.StatusOK {
-		return nil, errors.New(got.Message)
+		return nil, errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return got.Data, nil
@@ -113,7 +113,7 @@ func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (
 	}
 
 	if got.Code != http.StatusOK {
-		return nil, errors.New(got.Message)
+		return nil, errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return got.Data, nil
@@ -158,7 +158,7 @@ func (i *restaurantHTTPClient) ListRestaurants(
 	}
 
 	if got.Code != http.StatusOK {
-		return nil, 0, errors.New(got.Message)
+		return nil, 0, errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	count, err := strconv.Atoi(resp.Header.Get("X-Total-Count"))
@@ -212,7 +212,7 @@ func (i *restaurantHTTPClient) UpdateRestaurant(
 	}
 
 	if got.Code != http.StatusOK {
-		return errors.New(got.Message)
+		return errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return nil
@@ -248,7 +248,7 @@ func (i *restaurantHTTPClient) DeleteRestaurant(ctx contextx.Contextx, id string
 	}
 
 	if got.Code != http.StatusOK {
-		return errors.New(got.Message)
+		return errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return nil
@@ -293,7 +293,7 @@ func (i *restaurantHTTPClient) ChangeRestaurantStatus(
 	}
 
 	if got.Code != http.StatusOK {
-		return errors.New(got.Message)
+		return errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return nil
