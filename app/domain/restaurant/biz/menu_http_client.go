@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -38,8 +39,54 @@ func (i *menuHTTPClient) AddMenuItem(
 	name, description string,
 	price float64,
 ) (item *model.MenuItem, err error) {
-	// todo: 2024/6/23|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "restaurant.menuHTTPClient.AddMenuItem")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items")
+	if err != nil {
+		ctx.Error("parse request uri failed", zap.Error(err))
+		return nil, err
+	}
+
+	payload, err := json.Marshal(model.MenuItem{
+		Name:        name,
+		Description: description,
+		Price:       price,
+	})
+	if err != nil {
+		ctx.Error("marshal payload failed", zap.Error(err))
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		ctx.Error("new request failed", zap.Error(err))
+		return nil, err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		ctx.Error("do request failed", zap.Error(err))
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+		Data               *model.MenuItem `json:"data"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		ctx.Error("decode response failed", zap.Error(err))
+		return nil, err
+	}
+
+	if got.Code != http.StatusOK {
+		return nil, errors.New(got.Message)
+	}
+
+	return got.Data, nil
 }
 
 func (i *menuHTTPClient) ListMenuItems(
