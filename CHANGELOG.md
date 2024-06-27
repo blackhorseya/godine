@@ -1,3 +1,24 @@
+## 0.3.0 (2024-06-27)
+
+### Feat
+
+- improve error handling and data parsing in API requests
+- refactor error handling and implement user list functionality in HTTP client (#47)
+- refactor error handling and status code checks
+- improve error handling and response parsing in DeleteUser method
+- improve user update functionality with tracing and error handling
+- refactor error handling and implement user list functionality in HTTP client
+
+### Fix
+
+- improve error handling in logistics HTTP client (#48)
+- improve error handling in logistics HTTP client
+
+### Refactor
+
+- refactor notification service methods
+- update error handling in logistics HTTP client files
+
 ## 0.2.3 (2024-06-27)
 
 ### Feat
