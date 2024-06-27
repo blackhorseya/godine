@@ -8,11 +8,7 @@ import (
 	"github.com/segmentio/kafka-go/sasl/plain"
 )
 
-// NewWriter returns a new Writer instance.
-func NewWriter() (*kafka.Writer, error) {
-	return NewWriterWithTopic("")
-}
-
+// NewWriterWithTopic will create a new kafka writer with topic
 func NewWriterWithTopic(topic string) (*kafka.Writer, error) {
 	return &kafka.Writer{
 		Addr:     kafka.TCP(configx.A.Kafka.Brokers...),

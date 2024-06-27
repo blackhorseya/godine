@@ -1,6 +1,8 @@
 package biz
 
 import (
+	"fmt"
+
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/mqx"
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
@@ -13,29 +15,31 @@ import (
 	"go.uber.org/zap"
 )
 
-const topic = "delivery_status_updated"
+const topic = "delivery_event"
 
 type logistics struct {
 	notifyService notifyB.INotificationBiz
 
 	deliveries repo.IDeliveryRepo
 	writer     *kafka.Writer
-	mq         mqx.EventBus
+	bus        mqx.EventBus
 }
 
 // NewLogistics will create a new logistics biz
 func NewLogistics(
 	notifyService notifyB.INotificationBiz,
 	deliveries repo.IDeliveryRepo,
-	writer *kafka.Writer,
-	mq mqx.EventBus,
-) biz.ILogisticsBiz {
+) (biz.ILogisticsBiz, error) {
+	bus, err := mqx.NewKafkaEventBus(topic)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create kafka event with topic: %v, bus: %w", topic, err)
+	}
+
 	return &logistics{
 		notifyService: notifyService,
 		deliveries:    deliveries,
-		writer:        writer,
-		mq:            mq,
-	}
+		bus:           bus,
+	}, nil
 }
 
 func (i *logistics) CreateDelivery(ctx contextx.Contextx, delivery *model.Delivery) error {
@@ -60,7 +64,7 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 	}
 
 	ctx.Debug("delivery next event", zap.Any("event", &event))
-	i.mq.Publish(ctx, event)
+	i.bus.Publish(ctx, event)
 
 	err = i.deliveries.Update(ctx, delivery)
 	if err != nil {

@@ -11,8 +11,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const topic = "new_events"
-
 type KafkaEventBus struct {
 	reader   *kafka.Reader
 	writer   *kafka.Writer
@@ -22,13 +20,13 @@ type KafkaEventBus struct {
 }
 
 // NewKafkaEventBus creates a new Kafka event bus
-func NewKafkaEventBus() (EventBus, error) {
+func NewKafkaEventBus(topic string) (EventBus, error) {
 	reader, err := kafkax.NewReaderWithTopic(topic)
 	if err != nil {
 		return nil, err
 	}
 
-	writer, err := kafkax.NewWriter()
+	writer, err := kafkax.NewWriterWithTopic(topic)
 	if err != nil {
 		return nil, err
 	}
@@ -40,6 +38,7 @@ func NewKafkaEventBus() (EventBus, error) {
 		nextID:   0,
 	}
 
+	contextx.Background().Info("starting to consume messages", zap.String("topic", topic))
 	go bus.startConsuming()
 
 	return bus, nil
@@ -54,11 +53,24 @@ func (bus *KafkaEventBus) startConsuming() {
 			continue
 		}
 
+		var raw json.RawMessage
+		if err = json.Unmarshal(m.Value, &raw); err != nil {
+			ctx.Error("Error unmarshalling raw message", zap.Error(err))
+			continue
+		}
+		ctx.Debug(
+			"received message",
+			zap.String("topic", m.Topic),
+			zap.String("key", string(m.Key)),
+			zap.Any("value", raw),
+		)
+
 		var event events.DomainEvent
 		if err = json.Unmarshal(m.Value, &event); err != nil {
 			ctx.Error("Error unmarshalling event", zap.Error(err))
 			continue
 		}
+		ctx.Debug("received event", zap.Any("event", &event))
 
 		bus.mu.RLock()
 		handlers, found := bus.handlers[event.Topic()]
