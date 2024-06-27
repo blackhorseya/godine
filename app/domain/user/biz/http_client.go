@@ -9,12 +9,15 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/user/restful/v1/users"
 	"github.com/blackhorseya/godine/app/infra/configx"
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/user/biz"
-	model2 "github.com/blackhorseya/godine/entity/domain/user/model"
+	"github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
+
+const userRouter = "/api/v1/users"
 
 type httpClient struct {
 	url    string
@@ -32,9 +35,12 @@ func NewUserHTTPClient() biz.IUserBiz {
 func (i *httpClient) CreateUser(
 	ctx contextx.Contextx,
 	name, email, password string,
-	address model2.Address,
-) (item *model2.User, err error) {
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/users")
+	address model.Address,
+) (item *model.User, err error) {
+	ctx, span := otelx.Span(ctx, "biz.user.http_client.create_user")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + userRouter)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +68,7 @@ func (i *httpClient) CreateUser(
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model2.User `json:"data"`
+		Data               *model.User `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -77,8 +83,11 @@ func (i *httpClient) CreateUser(
 	return got.Data, nil
 }
 
-func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model2.User, err error) {
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/users/" + id)
+func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.User, err error) {
+	ctx, span := otelx.Span(ctx, "biz.user.http_client.get_user")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + userRouter + "/" + id)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +105,7 @@ func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model2.Use
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model2.User `json:"data"`
+		Data               *model.User `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -114,7 +123,7 @@ func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model2.Use
 func (i *httpClient) ListUsers(
 	ctx contextx.Contextx,
 	options biz.ListUsersOptions,
-) (items []*model2.User, total int, err error) {
+) (items []*model.User, total int, err error) {
 	// todo: 2024/6/14|sean|implement me
 	panic("implement me")
 }
@@ -123,7 +132,7 @@ func (i *httpClient) UpdateUser(
 	ctx contextx.Contextx,
 	id string,
 	name, email, password string,
-	address model2.Address,
+	address model.Address,
 ) error {
 	// todo: 2024/6/14|sean|implement me
 	panic("implement me")
