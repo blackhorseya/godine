@@ -51,8 +51,8 @@ func (i *userBiz) ListUsers(
 	defer span.End()
 
 	return i.users.List(ctx, repo.ListCondition{
-		Limit:  options.PageSize,
-		Offset: (options.Page - 1) * options.PageSize,
+		Limit:  options.Size,
+		Offset: (options.Page - 1) * options.Size,
 	})
 }
 

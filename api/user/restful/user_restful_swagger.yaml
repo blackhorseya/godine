@@ -48,6 +48,12 @@ definitions:
       message:
         type: string
     type: object
+  users.PatchWithStatusPayload:
+    properties:
+      is_active:
+        example: true
+        type: boolean
+    type: object
   users.PostPayload:
     properties:
       address:
@@ -103,13 +109,18 @@ paths:
       - application/json
       description: get a list of users
       parameters:
-      - description: Page is the page number.
+      - default: 1
+        description: Page is the page number.
         in: query
+        minimum: 1
         name: page
         type: integer
-      - description: PageSize is the number of items per page.
+      - default: 10
+        description: Size is the number of items per page.
         in: query
-        name: pageSize
+        maximum: 100
+        minimum: 1
+        name: size
         type: integer
       produces:
       - application/json
@@ -179,6 +190,40 @@ paths:
       tags:
       - users
   /v1/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a user
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Delete a user
+      tags:
+      - users
     get:
       consumes:
       - application/json
@@ -216,6 +261,97 @@ paths:
       security:
       - Bearer: []
       summary: Get a user by id
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: update a user
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: user payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Update a user
+      tags:
+      - users
+  /v1/users/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: patch a user status
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: user status payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/users.PatchWithStatusPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responsex.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responsex.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responsex.Response'
+      security:
+      - Bearer: []
+      summary: Patch a user status
       tags:
       - users
 securityDefinitions:

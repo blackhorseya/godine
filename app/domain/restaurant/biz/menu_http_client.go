@@ -18,6 +18,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const itemRouter = "/items/"
+
 type menuHTTPClient struct {
 	url    string
 	client *http.Client
@@ -144,7 +146,7 @@ func (i *menuHTTPClient) GetMenuItem(
 	ctx, span := otelx.Span(ctx, "biz.menu.http_client.GetMenuItem")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items/" + menuItemID)
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + itemRouter + menuItemID)
 	if err != nil {
 		ctx.Error("parse request uri failed", zap.Error(err))
 		return nil, err
@@ -191,7 +193,7 @@ func (i *menuHTTPClient) UpdateMenuItem(
 	ctx, span := otelx.Span(ctx, "biz.menu.http_client.UpdateMenuItem")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items/" + menuItemID)
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + itemRouter + menuItemID)
 	if err != nil {
 		ctx.Error("parse request uri failed", zap.Error(err))
 		return err
@@ -245,7 +247,7 @@ func (i *menuHTTPClient) RemoveMenuItem(
 	ctx, span := otelx.Span(ctx, "biz.menu.http_client.RemoveMenuItem")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items/" + menuItemID)
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + itemRouter + menuItemID)
 	if err != nil {
 		ctx.Error("parse request uri failed", zap.Error(err))
 		return err
