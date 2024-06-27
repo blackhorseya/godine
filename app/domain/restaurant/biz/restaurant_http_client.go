@@ -256,6 +256,42 @@ func (i *restaurantHTTPClient) ChangeRestaurantStatus(
 	restaurantID string,
 	isOpen bool,
 ) error {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.ChangeRestaurantStatus")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + restaurantID + "/status")
+	if err != nil {
+		return err
+	}
+
+	payload, err := json.Marshal(map[string]bool{"is_open": isOpen})
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errors.New(got.Message)
+	}
+
+	return nil
 }
