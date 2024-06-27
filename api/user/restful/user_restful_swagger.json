@@ -91,7 +91,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.User"
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User"
                                             }
                                         }
                                     }
@@ -159,7 +159,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.User"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User"
                                         }
                                     }
                                 }
@@ -220,7 +220,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.User"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User"
                                         }
                                     }
                                 }
@@ -250,7 +250,7 @@
         }
     },
     "definitions": {
-        "github_com_blackhorseya_godine_entity_user_model.Address": {
+        "github_com_blackhorseya_godine_entity_domain_user_model.Address": {
             "type": "object",
             "properties": {
                 "city": {
@@ -271,14 +271,14 @@
                 }
             }
         },
-        "github_com_blackhorseya_godine_entity_user_model.User": {
+        "github_com_blackhorseya_godine_entity_domain_user_model.User": {
             "type": "object",
             "properties": {
                 "address": {
                     "description": "Address is the address of the user.",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.Address"
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.Address"
                         }
                     ]
                 },
@@ -329,7 +329,7 @@
             ],
             "properties": {
                 "address": {
-                    "$ref": "#/definitions/github_com_blackhorseya_godine_entity_user_model.Address"
+                    "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.Address"
                 },
                 "email": {
                     "type": "string",

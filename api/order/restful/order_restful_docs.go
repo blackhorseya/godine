@@ -129,7 +129,7 @@ const docTemplateorder_restful = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.Order"
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_order_model.Order"
                                             }
                                         }
                                     }
@@ -191,7 +191,7 @@ const docTemplateorder_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.Order"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_order_model.Order"
                                         }
                                     }
                                 }
@@ -252,7 +252,7 @@ const docTemplateorder_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.Order"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_order_model.Order"
                                         }
                                     }
                                 }
@@ -322,7 +322,7 @@ const docTemplateorder_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.Order"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_order_model.Order"
                                         }
                                     }
                                 }
@@ -352,7 +352,7 @@ const docTemplateorder_restful = `{
         }
     },
     "definitions": {
-        "github_com_blackhorseya_godine_entity_order_model.Order": {
+        "github_com_blackhorseya_godine_entity_domain_order_model.Order": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -371,7 +371,7 @@ const docTemplateorder_restful = `{
                     "description": "Items are the list of items in the order.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.OrderItem"
+                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_order_model.OrderItem"
                     }
                 },
                 "restaurant_id": {
@@ -395,7 +395,7 @@ const docTemplateorder_restful = `{
                 }
             }
         },
-        "github_com_blackhorseya_godine_entity_order_model.OrderItem": {
+        "github_com_blackhorseya_godine_entity_domain_order_model.OrderItem": {
             "type": "object",
             "properties": {
                 "menu_item_id": {
@@ -438,12 +438,11 @@ const docTemplateorder_restful = `{
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_order_model.OrderItem"
+                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_order_model.OrderItem"
                     }
                 },
                 "restaurant_id": {
-                    "type": "string",
-                    "example": "a1dbb32b-05f0-4354-8253-60f4c6deae12"
+                    "type": "string"
                 },
                 "user_id": {
                     "type": "string",

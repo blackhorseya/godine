@@ -96,7 +96,7 @@ const docTemplaterestaurant_restful = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant"
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.Restaurant"
                                             }
                                         }
                                     }
@@ -153,7 +153,7 @@ const docTemplaterestaurant_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.Restaurant"
                                         }
                                     }
                                 }
@@ -203,11 +203,104 @@ const docTemplaterestaurant_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Restaurant"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.Restaurant"
                                         }
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update the restaurant by id.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "Update the restaurant by id.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "restaurant id",
+                        "name": "restaurant_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "restaurant payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.Restaurant"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.Restaurant"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete the restaurant by id.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "Delete the restaurant by id.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "restaurant id",
+                        "name": "restaurant_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
                         }
                     },
                     "500": {
@@ -270,7 +363,7 @@ const docTemplaterestaurant_restful = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem"
+                                                "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.MenuItem"
                                             }
                                         }
                                     }
@@ -334,7 +427,7 @@ const docTemplaterestaurant_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.MenuItem"
                                         }
                                     }
                                 }
@@ -391,7 +484,66 @@ const docTemplaterestaurant_restful = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem"
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.MenuItem"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/restaurants/{restaurant_id}/status": {
+            "patch": {
+                "description": "Update the restaurant status by id.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "Update the restaurant status by id.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "restaurant id",
+                        "name": "restaurant_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "restaurant status payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/restaurants.PatchWithStatusPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.Restaurant"
                                         }
                                     }
                                 }
@@ -409,7 +561,7 @@ const docTemplaterestaurant_restful = `{
         }
     },
     "definitions": {
-        "github_com_blackhorseya_godine_entity_restaurant_model.Address": {
+        "github_com_blackhorseya_godine_entity_domain_restaurant_model.Address": {
             "type": "object",
             "properties": {
                 "city": {
@@ -430,7 +582,7 @@ const docTemplaterestaurant_restful = `{
                 }
             }
         },
-        "github_com_blackhorseya_godine_entity_restaurant_model.MenuItem": {
+        "github_com_blackhorseya_godine_entity_domain_restaurant_model.MenuItem": {
             "type": "object",
             "properties": {
                 "description": {
@@ -455,14 +607,14 @@ const docTemplaterestaurant_restful = `{
                 }
             }
         },
-        "github_com_blackhorseya_godine_entity_restaurant_model.Restaurant": {
+        "github_com_blackhorseya_godine_entity_domain_restaurant_model.Restaurant": {
             "type": "object",
             "properties": {
                 "address": {
                     "description": "Address is the address of the restaurant.",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.Address"
+                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.Address"
                         }
                     ]
                 },
@@ -478,7 +630,7 @@ const docTemplaterestaurant_restful = `{
                     "description": "Menu is the list of menu items available in the restaurant.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_restaurant_model.MenuItem"
+                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_restaurant_model.MenuItem"
                     }
                 },
                 "name": {
@@ -517,6 +669,18 @@ const docTemplaterestaurant_restful = `{
                 "data": {},
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "restaurants.PatchWithStatusPayload": {
+            "type": "object",
+            "required": [
+                "is_open"
+            ],
+            "properties": {
+                "is_open": {
+                    "type": "boolean",
+                    "example": true
                 }
             }
         },

@@ -29,6 +29,9 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 		group.GET("", i.GetList)
 		group.POST("", i.Post)
 		group.GET("/:restaurant_id", i.GetByID)
+		group.PUT("/:restaurant_id", i.PutByID)
+		group.PATCH("/:restaurant_id/status", i.PatchWithStatus)
+		group.DELETE("/:restaurant_id", i.DeleteByID)
 
 		items.Handle(group.Group("/:restaurant_id"), injector)
 	}
@@ -156,4 +159,53 @@ func (i *impl) GetByID(c *gin.Context) {
 	}
 
 	responsex.OK(c, item)
+}
+
+// PutByID is used to update the restaurant by id.
+// @Summary Update the restaurant by id.
+// @Description Update the restaurant by id.
+// @Tags restaurants
+// @Accept json
+// @Produce json
+// @Param restaurant_id path string true "restaurant id"
+// @Param payload body model.Restaurant true "restaurant payload"
+// @Success 200 {object} responsex.Response{data=model.Restaurant}
+// @Failure 500 {object} responsex.Response
+// @Router /v1/restaurants/{restaurant_id} [put]
+func (i *impl) PutByID(c *gin.Context) {
+	// todo: 2024/6/27|sean|implement this method
+}
+
+// PatchWithStatusPayload is the patch with status payload.
+type PatchWithStatusPayload struct {
+	IsOpen bool `json:"is_open" binding:"required" example:"true"`
+}
+
+// PatchWithStatus is used to update the restaurant status by id.
+// @Summary Update the restaurant status by id.
+// @Description Update the restaurant status by id.
+// @Tags restaurants
+// @Accept json
+// @Produce json
+// @Param restaurant_id path string true "restaurant id"
+// @Param payload body PatchWithStatusPayload true "restaurant status payload"
+// @Success 200 {object} responsex.Response{data=model.Restaurant}
+// @Failure 500 {object} responsex.Response
+// @Router /v1/restaurants/{restaurant_id}/status [patch]
+func (i *impl) PatchWithStatus(c *gin.Context) {
+	// todo: 2024/6/27|sean|implement this method
+}
+
+// DeleteByID is used to delete the restaurant by id.
+// @Summary Delete the restaurant by id.
+// @Description Delete the restaurant by id.
+// @Tags restaurants
+// @Accept json
+// @Produce json
+// @Param restaurant_id path string true "restaurant id"
+// @Success 204 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/restaurants/{restaurant_id} [delete]
+func (i *impl) DeleteByID(c *gin.Context) {
+	// todo: 2024/6/27|sean|implement this method
 }
