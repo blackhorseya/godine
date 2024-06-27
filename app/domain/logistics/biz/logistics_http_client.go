@@ -3,7 +3,6 @@ package biz
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/url"
 
@@ -12,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	"github.com/blackhorseya/godine/entity/domain/logistics/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
@@ -65,7 +65,7 @@ func (i *logisticsHTTPClient) CreateDelivery(ctx contextx.Contextx, delivery *mo
 	}
 
 	if got.Code != http.StatusOK {
-		return errors.New(got.Message)
+		return errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	delivery.ID = got.Data.ID
@@ -74,8 +74,45 @@ func (i *logisticsHTTPClient) CreateDelivery(ctx contextx.Contextx, delivery *mo
 }
 
 func (i *logisticsHTTPClient) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID string, status string) error {
-	// todo: 2024/6/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.logistics.http_client.UpdateDeliveryStatus")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + "/api/v1/deliveries/" + deliveryID + "/status")
+	if err != nil {
+		return err
+	}
+
+	payload, err := json.Marshal(map[string]string{"status": status})
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+		Data               *model.Delivery `json:"data"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errorx.New(got.Code, got.Code, got.Message)
+	}
+
+	return nil
 }
 
 func (i *logisticsHTTPClient) GetDelivery(ctx contextx.Contextx, deliveryID string) (item *model.Delivery, err error) {
@@ -109,7 +146,7 @@ func (i *logisticsHTTPClient) GetDelivery(ctx contextx.Contextx, deliveryID stri
 	}
 
 	if got.Code != http.StatusOK {
-		return nil, errors.New(got.Message)
+		return nil, errorx.New(got.Code, got.Code, got.Message)
 	}
 
 	return got.Data, nil
