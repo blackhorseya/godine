@@ -37,7 +37,7 @@ func (i *menuHTTPClient) AddMenuItem(
 	name, description string,
 	price float64,
 ) (item *model.MenuItem, err error) {
-	ctx, span := otelx.Span(ctx, "restaurant.menuHTTPClient.AddMenuItem")
+	ctx, span := otelx.Span(ctx, "biz.menu.http_client.AddMenuItem")
 	defer span.End()
 
 	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items")
@@ -91,7 +91,7 @@ func (i *menuHTTPClient) ListMenuItems(
 	ctx contextx.Contextx,
 	restaurantID string,
 ) (items []model.MenuItem, total int, err error) {
-	ctx, span := otelx.Span(ctx, "restaurant.menuHTTPClient.ListMenuItems")
+	ctx, span := otelx.Span(ctx, "biz.menu.http_client.ListMenuItems")
 	defer span.End()
 
 	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items")
@@ -141,7 +141,7 @@ func (i *menuHTTPClient) GetMenuItem(
 	ctx contextx.Contextx,
 	restaurantID, menuItemID string,
 ) (item *model.MenuItem, err error) {
-	ctx, span := otelx.Span(ctx, "restaurant.menuHTTPClient.GetMenuItem")
+	ctx, span := otelx.Span(ctx, "biz.menu.http_client.GetMenuItem")
 	defer span.End()
 
 	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/items/" + menuItemID)
