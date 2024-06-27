@@ -10,10 +10,6 @@
 package biz
 
 import (
-	reflect "reflect"
-
-	events "github.com/blackhorseya/godine/entity/events"
-	contextx "github.com/blackhorseya/godine/pkg/contextx"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -38,18 +34,4 @@ func NewMockDeliveryStatusChangedHandler(ctrl *gomock.Controller) *MockDeliveryS
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDeliveryStatusChangedHandler) EXPECT() *MockDeliveryStatusChangedHandlerMockRecorder {
 	return m.recorder
-}
-
-// Handle mocks base method.
-func (m *MockDeliveryStatusChangedHandler) Handle(ctx contextx.Contextx, event *events.DomainEvent) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle", ctx, event)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Handle indicates an expected call of Handle.
-func (mr *MockDeliveryStatusChangedHandlerMockRecorder) Handle(ctx, event any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockDeliveryStatusChangedHandler)(nil).Handle), ctx, event)
 }
