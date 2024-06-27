@@ -225,5 +225,19 @@ func (i *impl) PatchWithStatus(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/users/{id} [delete]
 func (i *impl) Delete(c *gin.Context) {
-	// todo: 2024/6/27|sean|implement delete user
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	id := c.Param("id")
+
+	err = i.injector.UserService.DeleteUser(ctx, id)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, nil)
 }
