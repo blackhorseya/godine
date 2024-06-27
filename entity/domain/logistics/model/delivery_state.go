@@ -9,8 +9,9 @@ import (
 
 // DeliveryEvent represents an event during the delivery state transition.
 type DeliveryEvent struct {
-	Name    string `json:"name,omitempty"`
-	Handler string `json:"handler,omitempty"`
+	Name    string    `json:"name,omitempty"`
+	Handler string    `json:"handler,omitempty"`
+	Data    *Delivery `json:"data,omitempty"`
 }
 
 func (x *DeliveryEvent) OccurredOn(ctx contextx.Contextx) time.Time {
@@ -60,6 +61,7 @@ func (s *PendingState) Next(ctx contextx.Contextx, delivery *Delivery) (event *D
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
 		Handler: "delivery_handler",
+		Data:    delivery,
 	}, nil
 }
 
@@ -77,6 +79,7 @@ func (s *PickedUpState) Next(ctx contextx.Contextx, delivery *Delivery) (event *
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
 		Handler: "delivery_handler",
+		Data:    delivery,
 	}, nil
 }
 
@@ -94,6 +97,7 @@ func (s *InTransitState) Next(ctx contextx.Contextx, delivery *Delivery) (event 
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
 		Handler: "delivery_handler",
+		Data:    delivery,
 	}, nil
 }
 
@@ -111,6 +115,7 @@ func (s *CompletedState) Next(ctx contextx.Contextx, delivery *Delivery) (event 
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
 		Handler: "delivery_handler",
+		Data:    delivery,
 	}, nil
 }
 
@@ -128,5 +133,6 @@ func (s *CancelledState) Next(ctx contextx.Contextx, delivery *Delivery) (event 
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
 		Handler: "delivery_handler",
+		Data:    delivery,
 	}, nil
 }

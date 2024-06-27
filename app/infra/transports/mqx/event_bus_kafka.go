@@ -106,8 +106,7 @@ func (bus *KafkaEventBus) Publish(ctx contextx.Contextx, event events.DomainEven
 	}
 
 	msg := kafka.Message{
-		Topic: topic,
-		Key:   []byte(event.Topic()),
+		Topic: event.Topic(),
 		Value: data,
 	}
 
