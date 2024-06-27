@@ -158,7 +158,34 @@ func (i *impl) GetList(c *gin.Context) {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/users/{id} [put]
 func (i *impl) Put(c *gin.Context) {
-	// todo: 2024/6/27|sean|implement put user
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	id := c.Param("id")
+
+	var payload model.User
+	err = c.ShouldBindJSON(&payload)
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
+		return
+	}
+
+	err = i.injector.UserService.UpdateUser(ctx, id, payload.Name, payload.Email, payload.Password, payload.Address)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	item, err := i.injector.UserService.GetUser(ctx, id)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	responsex.OK(c, item)
 }
 
 // PatchWithStatusPayload represents the patch user status payload.
