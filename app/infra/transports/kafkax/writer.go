@@ -10,8 +10,13 @@ import (
 
 // NewWriter returns a new Writer instance.
 func NewWriter() (*kafka.Writer, error) {
+	return NewWriterWithTopic("")
+}
+
+func NewWriterWithTopic(topic string) (*kafka.Writer, error) {
 	return &kafka.Writer{
 		Addr:     kafka.TCP(configx.A.Kafka.Brokers...),
+		Topic:    topic,
 		Balancer: &kafka.Hash{},
 		Transport: &kafka.Transport{
 			TLS: &tls.Config{
