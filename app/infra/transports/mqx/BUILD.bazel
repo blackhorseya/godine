@@ -11,6 +11,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/transports/kafkax",
+        "//entity/domain/logistics/model",
         "//entity/events",
         "//pkg/contextx",
         "@com_github_segmentio_kafka_go//:kafka-go",

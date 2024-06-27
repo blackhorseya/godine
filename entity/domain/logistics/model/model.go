@@ -54,6 +54,28 @@ func NewDelivery(orderID string, userID string) *Delivery {
 	}
 }
 
+func (x *Delivery) UnmarshalJSON(bytes []byte) error {
+	type Alias Delivery
+	alias := &struct {
+		Status string `json:"status"`
+		*Alias
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	if err := json.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
+
+	state, err := UnmarshalDeliveryState(alias.Status)
+	if err != nil {
+		return err
+	}
+	x.Status = state
+
+	return nil
+}
+
 func (x *Delivery) MarshalJSON() ([]byte, error) {
 	type Alias Delivery
 	return json.Marshal(&struct {

@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/blackhorseya/godine/app/infra/transports/kafkax"
+	"github.com/blackhorseya/godine/entity/domain/logistics/model"
 	"github.com/blackhorseya/godine/entity/events"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/segmentio/kafka-go"
@@ -66,11 +67,19 @@ func (bus *KafkaEventBus) startConsuming() {
 		)
 
 		var event events.DomainEvent
-		if err = json.Unmarshal(m.Value, &event); err != nil {
-			ctx.Error("Error unmarshalling event", zap.Error(err))
-			continue
+		if m.Topic == "delivery_event" {
+			var delivery *model.Delivery
+			if err = json.Unmarshal(m.Value, &delivery); err != nil {
+				ctx.Error("Error unmarshalling delivery event", zap.Error(err))
+				continue
+			}
+			event = &model.DeliveryEvent{
+				Name:    delivery.Status.String(),
+				Handler: "delivery_handler",
+				Data:    delivery,
+			}
 		}
-		ctx.Debug("received event", zap.Any("event", &event))
+		ctx.Info("unmarshalled event", zap.Any("event", &event))
 
 		bus.mu.RLock()
 		handlers, found := bus.handlers[event.Topic()]
