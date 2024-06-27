@@ -11,7 +11,6 @@ import (
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	model2 "github.com/blackhorseya/godine/entity/domain/notification/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/segmentio/kafka-go"
 	"go.uber.org/zap"
 )
 
@@ -21,7 +20,6 @@ type logistics struct {
 	notifyService notifyB.INotificationBiz
 
 	deliveries repo.IDeliveryRepo
-	writer     *kafka.Writer
 	bus        mqx.EventBus
 }
 
