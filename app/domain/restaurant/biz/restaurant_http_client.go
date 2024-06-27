@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/blackhorseya/godine/adapter/restaurant/restful/v1/restaurants"
 	"github.com/blackhorseya/godine/app/infra/configx"
@@ -17,6 +18,8 @@ import (
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
+
+const restaurantRouter = "/api/v1/restaurants/"
 
 type restaurantHTTPClient struct {
 	url    string
@@ -38,7 +41,7 @@ func (i *restaurantHTTPClient) CreateRestaurant(
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.CreateRestaurant")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants")
+	ep, err := url.ParseRequestURI(i.url + strings.TrimRight(restaurantRouter, "/"))
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +86,7 @@ func (i *restaurantHTTPClient) GetRestaurant(ctx contextx.Contextx, id string) (
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.GetRestaurant")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants/" + id)
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + id)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +126,7 @@ func (i *restaurantHTTPClient) ListRestaurants(
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.ListRestaurants")
 	defer span.End()
 
-	ep, err := url.ParseRequestURI(i.url + "/api/v1/restaurants")
+	ep, err := url.ParseRequestURI(i.url + strings.TrimRight(restaurantRouter, "/"))
 	if err != nil {
 		return nil, 0, err
 	}
@@ -172,13 +175,83 @@ func (i *restaurantHTTPClient) UpdateRestaurant(
 	name string,
 	address model.Address,
 ) error {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.UpdateRestaurant")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + id)
+	if err != nil {
+		return err
+	}
+
+	payload, err := json.Marshal(model.Restaurant{
+		Name:    name,
+		Address: address,
+	})
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errors.New(got.Message)
+	}
+
+	return nil
 }
 
 func (i *restaurantHTTPClient) DeleteRestaurant(ctx contextx.Contextx, id string) error {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.DeleteRestaurant")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + id)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, ep.String(), nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errors.New(got.Message)
+	}
+
+	return nil
 }
 
 func (i *restaurantHTTPClient) ChangeRestaurantStatus(
@@ -186,6 +259,42 @@ func (i *restaurantHTTPClient) ChangeRestaurantStatus(
 	restaurantID string,
 	isOpen bool,
 ) error {
-	// todo: 2024/6/13|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.ChangeRestaurantStatus")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + restaurantRouter + restaurantID + "/status")
+	if err != nil {
+		return err
+	}
+
+	payload, err := json.Marshal(map[string]bool{"is_open": isOpen})
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errors.New(got.Message)
+	}
+
+	return nil
 }

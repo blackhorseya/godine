@@ -18,8 +18,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const restaurantRouter = "/api/v1/restaurants/"
-
 type menuHTTPClient struct {
 	url    string
 	client *http.Client
