@@ -9,7 +9,6 @@ import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
-	_ "github.com/blackhorseya/godine/entity/domain/restaurant/model" // swagger docs
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
