@@ -177,8 +177,49 @@ func (i *httpClient) UpdateUser(
 	name, email, password string,
 	address model.Address,
 ) error {
-	// todo: 2024/6/14|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.user.http_client.update_user")
+	defer span.End()
+
+	ep, err := url.ParseRequestURI(i.url + userRouter + "/" + id)
+	if err != nil {
+		return err
+	}
+
+	payload, err := json.Marshal(model.User{
+		Name:     name,
+		Email:    email,
+		Password: password,
+		Address:  address,
+	})
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, ep.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	resp, err := i.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	type response struct {
+		responsex.Response `json:",inline"`
+	}
+	var got response
+	err = json.NewDecoder(resp.Body).Decode(&got)
+	if err != nil {
+		return err
+	}
+
+	if got.Code != http.StatusOK {
+		return errorx.New(got.Code, got.Code, got.Message)
+	}
+
+	return nil
 }
 
 func (i *httpClient) DeleteUser(ctx contextx.Contextx, id string) error {
