@@ -26,6 +26,9 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 		group.POST("", i.Post)
 		group.GET("", i.GetList)
 		group.GET("/:id", i.GetByID)
+		group.PUT("/:id", i.Put)
+		group.PATCH("/:id/status", i.PatchWithStatus)
+		group.DELETE("/:id", i.Delete)
 	}
 }
 
@@ -138,4 +141,62 @@ func (i *impl) GetList(c *gin.Context) {
 
 	c.Header("X-Total-Count", strconv.Itoa(total))
 	responsex.OK(c, items)
+}
+
+// Put is used to update a user.
+// @Summary Update a user
+// @Description update a user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "user id"
+// @Param payload body model.User true "user payload"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=model.User}
+// @Failure 400 {object} responsex.Response
+// @Failure 404 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/users/{id} [put]
+func (i *impl) Put(c *gin.Context) {
+	// todo: 2024/6/27|sean|implement put user
+}
+
+// PatchWithStatusPayload represents the patch user status payload.
+type PatchWithStatusPayload struct {
+	IsActive bool `json:"is_active" example:"true"`
+}
+
+// PatchWithStatus is used to patch a user status.
+// @Summary Patch a user status
+// @Description patch a user status
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "user id"
+// @Param payload body PatchWithStatusPayload true "user status payload"
+// @Security Bearer
+// @Success 200 {object} responsex.Response{data=model.User}
+// @Failure 400 {object} responsex.Response
+// @Failure 404 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/users/{id}/status [patch]
+func (i *impl) PatchWithStatus(c *gin.Context) {
+	// todo: 2024/6/27|sean|implement patch user status
+}
+
+// Delete is used to delete a user.
+// @Summary Delete a user
+// @Description delete a user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "user id"
+// @Security Bearer
+// @Success 204 {object} responsex.Response
+// @Failure 400 {object} responsex.Response
+// @Failure 404 {object} responsex.Response
+// @Failure 500 {object} responsex.Response
+// @Router /v1/users/{id} [delete]
+func (i *impl) Delete(c *gin.Context) {
+	// todo: 2024/6/27|sean|implement delete user
 }
