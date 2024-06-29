@@ -67,7 +67,6 @@ services:
       - ./configs/example.yaml:/app/configs/example.yaml
     depends_on:
       - mongodb
-      - kafka
 
   notify_restful:
     build:
