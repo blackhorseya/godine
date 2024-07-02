@@ -66,6 +66,15 @@ gen-swagger: ## generate swagger
 	@swag init -q -g impl.go -d ./adapter/notify/restful,./entity,./pkg \
   -o ./api/notify/restful --instanceName notify_restful --parseDependency
 
+### testing
+.PHONY: test-api
+test-api: ## test api
+	@k6 run --vus=1 --iterations=1 ./tests/k6/order.api.test.js
+
+.PHONY: test-load
+test-load: ## test load
+	@k6 run ./tests/k6/order.api.test.js --out=cloud
+
 ## docker
 .PHONY: docker-push
 docker-push: ## push docker image
