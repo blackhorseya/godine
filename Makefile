@@ -76,40 +76,40 @@ DEPLOY_TO := prod
 HELM_REPO_NAME := blackhorseya
 
 .PHONY: deploy
-deploy: deploy-restaurant-rest deploy-order-rest deploy-user-rest deploy-logistics-rest deploy-notify-rest ## deploy all
+deploy: deploy-restaurant-restful deploy-order-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful ## deploy all
 
-.PHONY: deploy-restaurant-rest
-deploy-restaurant-rest: ## deploy restaurant
-	@helm upgrade $(DEPLOY_TO)-godine-restaurant-rest $(HELM_REPO_NAME)/godine \
+.PHONY: deploy-restaurant-restful
+deploy-restaurant-restful: ## deploy restaurant
+	@helm upgrade $(DEPLOY_TO)-godine-restaurant-restful $(HELM_REPO_NAME)/godine \
   --install --namespace $(PROJECT_NAME) \
   --history-max 3 \
-  --values ./deployments/$(DEPLOY_TO)/godine-restaurant-rest.yaml
+  --values ./deployments/$(DEPLOY_TO)/godine-restaurant-restful.yaml
 
-.PHONY: deploy-order-rest
-deploy-order-rest: ## deploy order
-	@helm upgrade $(DEPLOY_TO)-godine-order-rest $(HELM_REPO_NAME)/godine \
+.PHONY: deploy-order-restful
+deploy-order-restful: ## deploy order
+	@helm upgrade $(DEPLOY_TO)-godine-order-restful $(HELM_REPO_NAME)/godine \
   --install --namespace $(PROJECT_NAME) \
   --history-max 3 \
-  --values ./deployments/$(DEPLOY_TO)/godine-order-rest.yaml
+  --values ./deployments/$(DEPLOY_TO)/godine-order-restful.yaml
 
-.PHONY: deploy-user-rest
-deploy-user-rest: ## deploy user
-	@helm upgrade $(DEPLOY_TO)-godine-user-rest $(HELM_REPO_NAME)/godine \
+.PHONY: deploy-user-restful
+deploy-user-restful: ## deploy user
+	@helm upgrade $(DEPLOY_TO)-godine-user-restful $(HELM_REPO_NAME)/godine \
   --install --namespace $(PROJECT_NAME) \
   --history-max 3 \
-  --values ./deployments/$(DEPLOY_TO)/godine-user-rest.yaml
+  --values ./deployments/$(DEPLOY_TO)/godine-user-restful.yaml
 
-.PHONY: deploy-logistics-rest
-deploy-logistics-rest: ## deploy logistics
-	@helm upgrade $(DEPLOY_TO)-godine-logistics-rest $(HELM_REPO_NAME)/godine \
+.PHONY: deploy-logistics-restful
+deploy-logistics-restful: ## deploy logistics
+	@helm upgrade $(DEPLOY_TO)-godine-logistics-restful $(HELM_REPO_NAME)/godine \
   --install --namespace $(PROJECT_NAME) \
   --history-max 3 \
-  --values ./deployments/$(DEPLOY_TO)/godine-logistics-rest.yaml
+  --values ./deployments/$(DEPLOY_TO)/godine-logistics-restful.yaml
 
-.PHONY: deploy-notify-rest
-deploy-notify-rest: ## deploy notify
-	@helm upgrade $(DEPLOY_TO)-godine-notify-rest $(HELM_REPO_NAME)/godine \
+.PHONY: deploy-notify-restful
+deploy-notify-restful: ## deploy notify
+	@helm upgrade $(DEPLOY_TO)-godine-notify-restful $(HELM_REPO_NAME)/godine \
   --install --namespace $(PROJECT_NAME) \
   --history-max 3 \
-  --values ./deployments/$(DEPLOY_TO)/godine-notify-rest.yaml
+  --values ./deployments/$(DEPLOY_TO)/godine-notify-restful.yaml
 
