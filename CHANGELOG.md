@@ -1,3 +1,9 @@
+## 0.3.3 (2024-07-02)
+
+### Feat
+
+- optimize connection pool configuration in NewClientWithDSN function
+
 ## 0.3.2 (2024-07-02)
 
 ### Refactor
