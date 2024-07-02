@@ -1,3 +1,11 @@
+## 0.3.4 (2024-07-02)
+
+### Feat
+
+- improve network performance and reliability
+- optimize connection pool configuration in NewClientWithDSN function
+- improve API test suite and assertions
+
 ## 0.3.3 (2024-07-02)
 
 ### Feat
