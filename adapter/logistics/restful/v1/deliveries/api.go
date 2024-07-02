@@ -36,7 +36,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 // @Tags deliveries
 // @Accept json
 // @Produce json
-// @Param driver_id query string false "driver id" example(adcf23bc-cd32-4176-8d46-68f15ebdfa98)
+// @Param driver_id query string false "driver id: adcf23bc-cd32-4176-8d46-68f15ebdfa98"
 // @Param params query biz.ListDeliveriesOptions false "search params"
 // @Security Bearer
 // @Success 200 {object} responsex.Response{data=[]model.Delivery}
