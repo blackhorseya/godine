@@ -54,7 +54,7 @@ const SLEEP_DURATION = 0.1;
 
 export default function() {
   group('/v1/orders/{order_id}', () => {
-    let orderId = '10c41c08-103b-481f-bfe0-241de68aa29f'; // specify value as there is no example value for this parameter in OpenAPI spec
+    let orderId = '92d36b22-595e-4b48-9264-1aa63a1b9278'; // specify value as there is no example value for this parameter in OpenAPI spec
 
     // Request No. 1:
     {
@@ -68,7 +68,7 @@ export default function() {
   });
 
   group('/v1/orders/{order_id}/status', () => {
-    let orderId = '10c41c08-103b-481f-bfe0-241de68aa29f'; // specify value as there is no example value for this parameter in OpenAPI spec
+    let orderId = '92d36b22-595e-4b48-9264-1aa63a1b9278'; // specify value as there is no example value for this parameter in OpenAPI spec
 
     // Request No. 1:
     {
@@ -128,16 +128,16 @@ export default function() {
           let body = {
             'items': [
               {
-                'menu_item_id': 'ea6e7260-24c1-4e2b-ba60-66e4e22a8466',
+                'menu_item_id': '75f7ffb3-c304-40d8-b0fd-39fd750ca49e',
                 'quantity': 5,
               },
               {
-                'menu_item_id': 'c2664879-8aa9-40a1-9d8f-c3f84ab438db',
+                'menu_item_id': '57301492-fb31-4f6d-80d0-3a85ffc7ecd6',
                 'quantity': 3,
               },
             ],
-            'restaurant_id': '471e0637-016a-4727-aefe-1a791ed68041',
-            'user_id': 'adcf23bc-cd32-4176-8d46-68f15ebdfa98',
+            'restaurant_id': '1e37ee95-b2c9-4074-a61a-f1b14fc84519',
+            'user_id': '1d3207f7-26e2-4084-8bff-24d50321f161',
           };
           let params = {
             headers: {
