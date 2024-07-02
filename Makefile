@@ -76,9 +76,40 @@ DEPLOY_TO := prod
 HELM_REPO_NAME := blackhorseya
 
 .PHONY: deploy
-deploy: ## deploy all
-	@helm upgrade $(DEPLOY_TO)-$(PROJECT_NAME) $(HELM_REPO_NAME)/$(PROJECT_NAME) \
-	  --install --namespace $(PROJECT_NAME) \
-	  --history-max 3 \
-	  --values ./deployments/$(DEPLOY_TO)/values.yaml
+deploy: deploy-restaurant-rest deploy-order-rest deploy-user-rest deploy-logistics-rest deploy-notify-rest ## deploy all
+
+.PHONY: deploy-restaurant-rest
+deploy-restaurant-rest: ## deploy restaurant
+	@helm upgrade $(DEPLOY_TO)-godine-restaurant-rest $(HELM_REPO_NAME)/godine \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-restaurant-rest.yaml
+
+.PHONY: deploy-order-rest
+deploy-order-rest: ## deploy order
+	@helm upgrade $(DEPLOY_TO)-godine-order-rest $(HELM_REPO_NAME)/godine \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-order-rest.yaml
+
+.PHONY: deploy-user-rest
+deploy-user-rest: ## deploy user
+	@helm upgrade $(DEPLOY_TO)-godine-user-rest $(HELM_REPO_NAME)/godine \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-user-rest.yaml
+
+.PHONY: deploy-logistics-rest
+deploy-logistics-rest: ## deploy logistics
+	@helm upgrade $(DEPLOY_TO)-godine-logistics-rest $(HELM_REPO_NAME)/godine \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-logistics-rest.yaml
+
+.PHONY: deploy-notify-rest
+deploy-notify-rest: ## deploy notify
+	@helm upgrade $(DEPLOY_TO)-godine-notify-rest $(HELM_REPO_NAME)/godine \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-notify-rest.yaml
 
