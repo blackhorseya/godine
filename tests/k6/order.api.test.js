@@ -85,7 +85,7 @@ export default function() {
           let request = http.get(url);
 
           check(request, {
-            'OK': (r) => r.status === 200,
+            'List orders ok': (r) => r.status === 200,
           });
 
           sleep(SLEEP_DURATION);
@@ -105,8 +105,8 @@ export default function() {
                 'quantity': 3,
               },
             ],
-            'restaurantId': '471e0637-016a-4727-aefe-1a791ed68041',
-            'userId': 'adcf23bc-cd32-4176-8d46-68f15ebdfa98',
+            'restaurant_id': '471e0637-016a-4727-aefe-1a791ed68041',
+            'user_id': 'adcf23bc-cd32-4176-8d46-68f15ebdfa98',
           };
           let params = {
             headers: {
@@ -117,7 +117,7 @@ export default function() {
           let request = http.post(url, JSON.stringify(body), params);
 
           check(request, {
-            'OK': (r) => r.status === 200,
+            'Create order ok': (r) => r.status === 200,
           });
         }
       });
