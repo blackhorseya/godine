@@ -1,3 +1,9 @@
+## 0.3.2 (2024-07-02)
+
+### Refactor
+
+- update data type of X-Total-Count header in API endpoints
+
 ## 0.3.1 (2024-06-29)
 
 ## 0.3.0 (2024-06-27)
