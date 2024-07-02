@@ -85,7 +85,7 @@ DEPLOY_TO := prod
 HELM_REPO_NAME := blackhorseya
 
 .PHONY: deploy
-deploy: deploy-restaurant-restful deploy-order-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful ## deploy all
+deploy: deploy-restaurant-restful deploy-order-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful deploy-mongodb ## deploy all
 
 .PHONY: deploy-restaurant-restful
 deploy-restaurant-restful: ## deploy restaurant
@@ -122,3 +122,9 @@ deploy-notify-restful: ## deploy notify
   --history-max 3 \
   --values ./deployments/$(DEPLOY_TO)/godine-notify-restful.yaml
 
+.PHONY: deploy-mongodb
+deploy-mongodb: ## deploy mongodb
+	@helm upgrade $(DEPLOY_TO)-godine-mongodb bitnami/mongodb \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-mongodb.yaml
