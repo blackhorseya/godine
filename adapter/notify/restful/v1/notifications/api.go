@@ -75,7 +75,7 @@ func (i *impl) Post(c *gin.Context) {
 // @Success 200 {object} responsex.Response{data=[]model.Notification}
 // @Failure 400 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
-// @Header 200 {int} X-Total-Count "Total number of items"
+// @Header 200 {number} X-Total-Count "Total number of items"
 // @Router /v1/notifications [get]
 func (i *impl) GetList(c *gin.Context) {
 	ctx, err := contextx.FromGin(c)

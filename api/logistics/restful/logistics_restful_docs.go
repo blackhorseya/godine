@@ -119,7 +119,7 @@ const docTemplatelogistics_restful = `{
                         },
                         "headers": {
                             "X-Total-Count": {
-                                "type": "int",
+                                "type": "number",
                                 "description": "total count"
                             }
                         }

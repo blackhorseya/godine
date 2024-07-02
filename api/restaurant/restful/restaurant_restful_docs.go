@@ -105,7 +105,7 @@ const docTemplaterestaurant_restful = `{
                         },
                         "headers": {
                             "X-Total-Count": {
-                                "type": "int",
+                                "type": "number",
                                 "description": "total count"
                             }
                         }
@@ -372,7 +372,7 @@ const docTemplaterestaurant_restful = `{
                         },
                         "headers": {
                             "X-Total-Count": {
-                                "type": "int",
+                                "type": "number",
                                 "description": "total count"
                             }
                         }

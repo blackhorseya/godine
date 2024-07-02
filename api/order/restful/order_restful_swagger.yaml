@@ -158,7 +158,7 @@ paths:
           headers:
             X-Total-Count:
               description: Total number of items
-              type: int
+              type: number
           schema:
             allOf:
             - $ref: '#/definitions/responsex.Response'

@@ -112,7 +112,7 @@ const docTemplateuser_restful = `{
                         },
                         "headers": {
                             "X-Total-Count": {
-                                "type": "int",
+                                "type": "number",
                                 "description": "Total number of items"
                             }
                         }

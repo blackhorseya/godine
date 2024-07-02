@@ -89,7 +89,7 @@ func (i *impl) Post(c *gin.Context) {
 // @Security Bearer
 // @Success 200 {object} responsex.Response{data=[]model.Order}
 // @Failure 500 {object} responsex.Response
-// @Header 200 {int} X-Total-Count "Total number of items"
+// @Header 200 {number} X-Total-Count "Total number of items"
 // @Router /v1/orders [get]
 func (i *impl) GetList(c *gin.Context) {
 	ctx, err := contextx.FromGin(c)

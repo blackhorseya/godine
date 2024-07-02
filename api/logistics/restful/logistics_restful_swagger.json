@@ -112,7 +112,7 @@
                         },
                         "headers": {
                             "X-Total-Count": {
-                                "type": "int",
+                                "type": "number",
                                 "description": "total count"
                             }
                         }

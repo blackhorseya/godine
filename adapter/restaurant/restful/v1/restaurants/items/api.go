@@ -48,7 +48,7 @@ type GetListQuery struct {
 // @Param query query GetListQuery false "get list query"
 // @Success 200 {object} responsex.Response{data=[]model.MenuItem}
 // @Failure 500 {object} responsex.Response
-// @Header 200 {int} X-Total-Count "total count"
+// @Header 200 {number} X-Total-Count "total count"
 // @Router /v1/restaurants/{restaurant_id}/items [get]
 func (i *impl) GetList(c *gin.Context) {
 	ctx, err := contextx.FromGin(c)

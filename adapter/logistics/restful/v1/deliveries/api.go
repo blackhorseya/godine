@@ -42,7 +42,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 // @Success 200 {object} responsex.Response{data=[]model.Delivery}
 // @Failure 400 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
-// @Header 200 {int} X-Total-Count "total count"
+// @Header 200 {number} X-Total-Count "total count"
 // @Router /v1/deliveries [get]
 func (i *impl) GetList(c *gin.Context) {
 	ctx, err := contextx.FromGin(c)

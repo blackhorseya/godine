@@ -98,7 +98,7 @@
                         },
                         "headers": {
                             "X-Total-Count": {
-                                "type": "int",
+                                "type": "number",
                                 "description": "total count"
                             }
                         }
@@ -365,7 +365,7 @@
                         },
                         "headers": {
                             "X-Total-Count": {
-                                "type": "int",
+                                "type": "number",
                                 "description": "total count"
                             }
                         }

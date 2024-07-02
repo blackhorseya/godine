@@ -109,7 +109,7 @@ paths:
           headers:
             X-Total-Count:
               description: total count
-              type: int
+              type: number
           schema:
             allOf:
             - $ref: '#/definitions/responsex.Response'

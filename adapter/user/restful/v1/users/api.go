@@ -117,7 +117,7 @@ func (i *impl) GetByID(c *gin.Context) {
 // @Success 200 {object} responsex.Response{data=[]model.User}
 // @Failure 400 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
-// @Header 200 {int} X-Total-Count "Total number of items"
+// @Header 200 {number} X-Total-Count "Total number of items"
 // @Router /v1/users [get]
 func (i *impl) GetList(c *gin.Context) {
 	ctx, err := contextx.FromGin(c)
