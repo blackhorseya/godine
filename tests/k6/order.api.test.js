@@ -14,6 +14,30 @@
 import http from 'k6/http';
 import {check, group, sleep} from 'k6';
 
+export const options = {
+  // define thresholds
+  thresholds: {
+    http_req_failed: ['rate<0.01'], // http errors should be less than 1%
+    http_req_duration: ['p(99)<1000'], // 99% of requests should be below 1s
+  },
+
+  // define scenarios
+  scenarios: {
+    // arbitrary name of scenario
+    average_load: {
+      executor: 'ramping-vus',
+      stages: [
+        {duration: '20s', target: 10}, // Ramp-up to 10 users over 20 seconds
+        {duration: '40s', target: 10},  // Stay at 10 users for 40 seconds
+        {duration: '20s', target: 50}, // Ramp-up to 50 users over 20 seconds
+        {duration: '40s', target: 50},  // Stay at 50 users for 40 seconds
+        {duration: '20s', target: 100}, // Ramp-up to 100 users over 20 seconds
+        {duration: '40s', target: 100}, // Stay at 100 users for 40 seconds
+      ],
+    },
+  },
+};
+
 const BASE_URL = 'http://localhost:1993/api';
 
 // Sleep duration between successive requests.

@@ -71,6 +71,10 @@ gen-swagger: ## generate swagger
 test-api: ## test api
 	@k6 run --vus=1 --iterations=1 ./tests/k6/order.api.test.js
 
+.PHONY: test-load
+test-load: ## test load
+	@k6 run ./tests/k6/order.api.test.js --out json=./out/results.json
+
 ## docker
 .PHONY: docker-push
 docker-push: ## push docker image
