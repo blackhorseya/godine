@@ -17,7 +17,10 @@ func NewClientWithDSN(dsn string) (*mongo.Client, error) {
 	opts := options.Client().ApplyURI(dsn).
 		SetMaxPoolSize(500).
 		SetMinPoolSize(10).
-		SetMaxConnIdleTime(10 * time.Minute)
+		SetMaxConnIdleTime(10 * time.Minute).
+		SetConnectTimeout(10 * time.Second).
+		SetRetryWrites(true).
+		SetServerSelectionTimeout(5 * time.Second)
 
 	client, err := mongo.Connect(contextx.Background(), opts)
 	if err != nil {
