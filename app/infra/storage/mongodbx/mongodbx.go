@@ -1,6 +1,8 @@
 package mongodbx
 
 import (
+	"time"
+
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/pkg/errors"
@@ -12,7 +14,10 @@ import (
 
 // NewClientWithDSN returns a new mongo client with dsn.
 func NewClientWithDSN(dsn string) (*mongo.Client, error) {
-	opts := options.Client().ApplyURI(dsn)
+	opts := options.Client().ApplyURI(dsn).
+		SetMaxPoolSize(500).
+		SetMinPoolSize(10).
+		SetMaxConnIdleTime(10 * time.Minute)
 
 	client, err := mongo.Connect(contextx.Background(), opts)
 	if err != nil {
