@@ -13,6 +13,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/redis/go-redis/v9"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -43,6 +44,10 @@ func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err err
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
+
+	if data.ID == "" {
+		data.ID = primitive.NewObjectID().Hex()
+	}
 
 	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, data)
 	if err != nil {
