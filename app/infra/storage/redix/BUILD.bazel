@@ -5,5 +5,8 @@ go_library(
     srcs = ["reidx.go"],
     importpath = "github.com/blackhorseya/godine/app/infra/storage/redix",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_redis_go_redis_v9//:go-redis"],
+    deps = [
+        "//app/infra/configx",
+        "@com_github_redis_go_redis_v9//:go-redis",
+    ],
 )

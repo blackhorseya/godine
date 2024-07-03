@@ -21,6 +21,10 @@ type Application struct {
 		Mongodb struct {
 			DSN string `json:"dsn" yaml:"dsn"`
 		} `json:"mongodb" yaml:"mongodb"`
+
+		Redis struct {
+			Addr string `json:"addr" yaml:"addr"`
+		} `json:"redis" yaml:"redis"`
 	} `json:"storage" yaml:"storage"`
 
 	Kafka struct {
