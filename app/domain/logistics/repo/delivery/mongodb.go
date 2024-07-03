@@ -10,8 +10,8 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/logistics/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -40,7 +40,7 @@ func (i *mongodb) Create(ctx contextx.Contextx, item *model.Delivery) error {
 	defer cancelFunc()
 
 	if item.ID == "" {
-		item.ID = uuid.New().String()
+		item.ID = primitive.NewObjectID().Hex()
 	}
 	item.CreatedAt = time.Now()
 	item.UpdatedAt = time.Now()
