@@ -1,6 +1,7 @@
 package restaurant
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"time"
@@ -94,16 +95,34 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Restaur
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": id}
-	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
-	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			ctx.Error("restaurant not found", zap.String("id", id))
-			return nil, errorx.Wrap(http.StatusNotFound, 404, err)
-		}
+	// get from redis
+	val, err := i.rdb.Get(ctx, id).Result()
+	switch {
+	case errors.Is(err, redis.Nil):
+		filter := bson.M{"_id": id}
+		err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
+		if err != nil {
+			if errors.Is(err, mongo.ErrNoDocuments) {
+				ctx.Error("restaurant not found", zap.String("id", id))
+				return nil, errorx.Wrap(http.StatusNotFound, 404, err)
+			}
 
-		ctx.Error("get restaurant by id from mongodb failed", zap.Error(err), zap.String("id", id))
+			ctx.Error("get restaurant by id from mongodb failed", zap.Error(err), zap.String("id", id))
+			return nil, err
+		}
+		err = cacheRestaurant(ctx, i.rdb, id, item)
+		if err != nil {
+			ctx.Error("cache restaurant to redis failed", zap.Error(err), zap.String("id", id))
+		}
+	case err != nil:
+		ctx.Error("get restaurant by id from redis failed", zap.Error(err), zap.String("id", id))
 		return nil, err
+	default:
+		err = json.Unmarshal([]byte(val), &item)
+		if err != nil {
+			ctx.Error("decode restaurant from redis failed", zap.Error(err), zap.String("id", id))
+			return nil, err
+		}
 	}
 
 	return item, nil
@@ -147,4 +166,13 @@ func (i *mongodb) List(
 	}
 
 	return items, int(count), nil
+}
+
+func cacheRestaurant(ctx contextx.Contextx, rdb *redis.Client, id string, restaurant *model.Restaurant) error {
+	data, err := json.Marshal(restaurant)
+	if err != nil {
+		return err
+	}
+
+	return rdb.Set(ctx, id, data, 10*time.Minute).Err()
 }
