@@ -7,6 +7,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Order represents an order entity.
@@ -53,7 +54,8 @@ func (x *Order) MarshalJSON() ([]byte, error) {
 func (x *Order) UnmarshalBSON(bytes []byte) error {
 	type Alias Order
 	alias := &struct {
-		Status string `bson:"status"`
+		ID     primitive.ObjectID `bson:"_id"`
+		Status string             `bson:"status"`
 		*Alias `bson:",inline"`
 	}{
 		Alias: (*Alias)(x),
@@ -76,11 +78,18 @@ func (x *Order) MarshalBSON() ([]byte, error) {
 	type Alias Order
 	alias := &struct {
 		*Alias `bson:",inline"`
-		Status string `bson:"status"`
+		Status string             `bson:"status"`
+		ID     primitive.ObjectID `bson:"_id"`
 	}{
 		Alias:  (*Alias)(x),
 		Status: x.Status.String(),
 	}
+
+	id, err := primitive.ObjectIDFromHex(x.ID)
+	if err != nil {
+		return nil, err
+	}
+	alias.ID = id
 
 	return bson.Marshal(alias)
 }
