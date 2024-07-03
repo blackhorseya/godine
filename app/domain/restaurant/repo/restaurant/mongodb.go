@@ -10,6 +10,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
+	"github.com/redis/go-redis/v9"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -23,12 +24,16 @@ const (
 )
 
 type mongodb struct {
-	rw *mongo.Client
+	rw  *mongo.Client
+	rdb *redis.Client
 }
 
 // NewMongodb is a function that returns a new mongodb instance that implements the IRestaurantRepo interface
-func NewMongodb(rw *mongo.Client) repo.IRestaurantRepo {
-	return &mongodb{rw: rw}
+func NewMongodb(rw *mongo.Client, rdb *redis.Client) repo.IRestaurantRepo {
+	return &mongodb{
+		rw:  rw,
+		rdb: rdb,
+	}
 }
 
 func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err error) {

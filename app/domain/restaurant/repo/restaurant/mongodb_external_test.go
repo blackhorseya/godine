@@ -7,10 +7,12 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	model2 "github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,6 +22,7 @@ type suiteMongodbExternal struct {
 	suite.Suite
 
 	rw   *mongo.Client
+	rdb  *redis.Client
 	repo repo.IRestaurantRepo
 }
 
@@ -37,12 +40,20 @@ func (s *suiteMongodbExternal) SetupTest() {
 	s.Require().NoError(err)
 	s.rw = rw
 
-	s.repo = NewMongodb(s.rw)
+	rdb, err := redix.NewRedis(app)
+	s.Require().NoError(err)
+	s.rdb = rdb
+
+	s.repo = NewMongodb(s.rw, s.rdb)
 }
 
 func (s *suiteMongodbExternal) TearDownTest() {
 	if s.rw != nil {
 		_ = s.rw.Disconnect(contextx.Background())
+	}
+
+	if s.rdb != nil {
+		_ = s.rdb.Close()
 	}
 }
 
