@@ -73,7 +73,7 @@ func (x *Restaurant) MarshalBSON() ([]byte, error) {
 // AddMenuItem adds a new menu item to the restaurant's menu.
 func (x *Restaurant) AddMenuItem(name, description string, price float64) {
 	menuItem := MenuItem{
-		ID:          "",
+		ID:          primitive.NewObjectID().Hex(),
 		Name:        name,
 		Description: description,
 		Price:       price,

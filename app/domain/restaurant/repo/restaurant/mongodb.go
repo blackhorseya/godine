@@ -65,12 +65,23 @@ func (i *mongodb) Update(ctx contextx.Contextx, data *model.Restaurant) (err err
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": data.ID}
+	id, err := primitive.ObjectIDFromHex(data.ID)
+	if err != nil {
+		ctx.Error("parse restaurant id failed", zap.Error(err), zap.String("id", data.ID))
+		return err
+	}
+
+	filter := bson.M{"_id": id}
 	update := bson.M{"$set": data}
 	_, err = i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
 	if err != nil {
 		ctx.Error("update restaurant to mongodb failed", zap.Error(err), zap.Any("data", &data))
 		return err
+	}
+
+	err = cacheRestaurant(ctx, i.rdb, data.ID, data)
+	if err != nil {
+		ctx.Error("cache restaurant to redis failed", zap.Error(err), zap.String("id", data.ID))
 	}
 
 	return nil
@@ -104,7 +115,14 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Restaur
 	val, err := i.rdb.Get(ctx, id).Result()
 	switch {
 	case errors.Is(err, redis.Nil):
-		filter := bson.M{"_id": id}
+		var hex primitive.ObjectID
+		hex, err = primitive.ObjectIDFromHex(id)
+		if err != nil {
+			ctx.Error("parse restaurant id failed", zap.Error(err), zap.String("id", id))
+			return nil, err
+		}
+
+		filter := bson.M{"_id": hex}
 		err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 		if err != nil {
 			if errors.Is(err, mongo.ErrNoDocuments) {
