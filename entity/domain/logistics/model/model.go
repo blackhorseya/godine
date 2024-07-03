@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -46,7 +45,7 @@ func NewDelivery(orderID string, userID string) *Delivery {
 		ID:           "",
 		OrderID:      orderID,
 		UserID:       userID,
-		DriverID:     uuid.New().String(),
+		DriverID:     userID,
 		Status:       &PendingState{},
 		PickupTime:   nil,
 		DeliveryTime: nil,

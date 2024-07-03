@@ -10,8 +10,8 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/user/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -40,7 +40,7 @@ func (i *mongodb) Create(ctx contextx.Contextx, user *model.User) error {
 	defer cancelFunc()
 
 	if user.ID == "" {
-		user.ID = uuid.New().String()
+		user.ID = primitive.NewObjectID().Hex()
 	}
 
 	_, err := i.rw.Database(dbName).Collection(collName).InsertOne(timeout, user)
@@ -59,7 +59,13 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.User, e
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": id}
+	hex, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		ctx.Error("convert user id to object id failed", zap.Error(err))
+		return nil, errorx.Wrap(http.StatusBadRequest, 400, err)
+	}
+
+	filter := bson.M{"_id": hex}
 	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
