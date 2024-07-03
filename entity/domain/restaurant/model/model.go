@@ -1,9 +1,5 @@
 package model
 
-import (
-	"github.com/google/uuid"
-)
-
 // Restaurant represents a restaurant entity.
 type Restaurant struct {
 	// ID is the unique identifier of the restaurant.
@@ -25,7 +21,7 @@ type Restaurant struct {
 // NewRestaurant creates a new RestaurantAggregate.
 func NewRestaurant(name string, address Address) *Restaurant {
 	return &Restaurant{
-		ID:      uuid.New().String(),
+		ID:      "",
 		Name:    name,
 		Address: address,
 		Menu:    []MenuItem{},
@@ -36,7 +32,7 @@ func NewRestaurant(name string, address Address) *Restaurant {
 // AddMenuItem adds a new menu item to the restaurant's menu.
 func (x *Restaurant) AddMenuItem(name, description string, price float64) {
 	menuItem := MenuItem{
-		ID:          uuid.New().String(),
+		ID:          "",
 		Name:        name,
 		Description: description,
 		Price:       price,

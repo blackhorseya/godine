@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -102,7 +101,7 @@ func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
 	}
 
 	return &Order{
-		ID:           uuid.New().String(),
+		ID:           "",
 		UserID:       userID,
 		RestaurantID: restaurantID,
 		Items:        items,

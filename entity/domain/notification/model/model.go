@@ -2,6 +2,9 @@ package model
 
 import (
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Notification represents a notification entity.
@@ -47,4 +50,38 @@ func NewNotify(from, to string, orderID string, message string) *Notification {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
+}
+
+func (x *Notification) UnmarshalBSON(bytes []byte) error {
+	type Alias Notification
+	alias := &struct {
+		ID     primitive.ObjectID `bson:"_id"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	if err := bson.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (x *Notification) MarshalBSON() ([]byte, error) {
+	type Alias Notification
+	alias := &struct {
+		ID     primitive.ObjectID `bson:"_id"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	id, err := primitive.ObjectIDFromHex(x.ID)
+	if err != nil {
+		return nil, err
+	}
+	alias.ID = id
+
+	return bson.Marshal(alias)
 }
