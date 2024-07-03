@@ -1,3 +1,19 @@
+## 0.3.5 (2024-07-03)
+
+### Feat
+
+- implement caching functionality for restaurant data in Redis (#55)
+- implement caching functionality for restaurant data in Redis
+- integrate Redis service and configurations across services (#54)
+- integrate Redis service and configurations across services
+- refactor Redis configuration and dependencies (#52)
+- refactor Redis configuration and dependencies
+
+### Refactor
+
+- refactor error handling and logging logic across multiple files
+- update IDs in test and request files
+
 ## 0.3.4 (2024-07-02)
 
 ### Feat
