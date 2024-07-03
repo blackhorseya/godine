@@ -97,7 +97,8 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Restaur
 
 	// get from redis
 	val, err := i.rdb.Get(ctx, id).Result()
-	if errors.Is(err, redis.Nil) {
+	switch {
+	case errors.Is(err, redis.Nil):
 		filter := bson.M{"_id": id}
 		err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 		if err != nil {
@@ -109,16 +110,14 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Restaur
 			ctx.Error("get restaurant by id from mongodb failed", zap.Error(err), zap.String("id", id))
 			return nil, err
 		}
-
-		// set to redis
 		err = cacheRestaurant(ctx, i.rdb, id, item)
 		if err != nil {
 			ctx.Error("cache restaurant to redis failed", zap.Error(err), zap.String("id", id))
 		}
-	} else if err != nil {
+	case err != nil:
 		ctx.Error("get restaurant by id from redis failed", zap.Error(err), zap.String("id", id))
 		return nil, err
-	} else {
+	default:
 		err = json.Unmarshal([]byte(val), &item)
 		if err != nil {
 			ctx.Error("decode restaurant from redis failed", zap.Error(err), zap.String("id", id))
