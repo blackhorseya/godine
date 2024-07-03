@@ -1,3 +1,17 @@
+## 0.3.6 (2024-07-03)
+
+### Feat
+
+- improve restaurant data handling and caching
+
+### Refactor
+
+- convert string IDs to ObjectIDs for MongoDB queries (#56)
+- refactor code to use ObjectID for filter operations
+- refactor UnmarshalBSON functions in multiple models
+- convert string IDs to ObjectIDs for MongoDB queries
+- refactor ID generation and imports in MongoDB model files
+
 ## 0.3.5 (2024-07-03)
 
 ### Feat
