@@ -10,8 +10,8 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/notification/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -40,7 +40,7 @@ func (i *mongodb) Create(ctx contextx.Contextx, notify *model.Notification) erro
 	defer cancelFunc()
 
 	if notify.ID == "" {
-		notify.ID = uuid.New().String()
+		notify.ID = primitive.NewObjectID().Hex()
 	}
 	notify.CreatedAt = time.Now()
 	notify.UpdatedAt = time.Now()

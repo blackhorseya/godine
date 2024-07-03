@@ -2,8 +2,6 @@ package model
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // Notification represents a notification entity.
@@ -39,7 +37,7 @@ type Notification struct {
 // NewNotify creates a new notification entity.
 func NewNotify(from, to string, orderID string, message string) *Notification {
 	return &Notification{
-		ID:        uuid.New().String(),
+		ID:        "",
 		SenderID:  from,
 		UserID:    to,
 		OrderID:   orderID,
