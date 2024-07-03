@@ -1,0 +1,12 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "redix",
+    srcs = ["reidx.go"],
+    importpath = "github.com/blackhorseya/godine/app/infra/storage/redix",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//app/infra/configx",
+        "@com_github_redis_go_redis_v9//:go-redis",
+    ],
+)
