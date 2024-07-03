@@ -7,6 +7,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Delivery represents a delivery entity.
@@ -90,7 +91,8 @@ func (x *Delivery) MarshalJSON() ([]byte, error) {
 func (x *Delivery) UnmarshalBSON(bytes []byte) error {
 	type Alias Delivery
 	alias := &struct {
-		Status string `bson:"status"`
+		ID     primitive.ObjectID `bson:"_id"`
+		Status string             `bson:"status"`
 		*Alias `bson:",inline"`
 	}{
 		Alias: (*Alias)(x),
@@ -113,11 +115,18 @@ func (x *Delivery) MarshalBSON() ([]byte, error) {
 	type Alias Delivery
 	alias := &struct {
 		*Alias `bson:",inline"`
-		Status string `bson:"status"`
+		ID     primitive.ObjectID `bson:"_id"`
+		Status string             `bson:"status"`
 	}{
 		Alias:  (*Alias)(x),
 		Status: x.Status.String(),
 	}
+
+	id, err := primitive.ObjectIDFromHex(x.ID)
+	if err != nil {
+		return nil, err
+	}
+	alias.ID = id
 
 	return bson.Marshal(alias)
 }

@@ -5,5 +5,4 @@ go_library(
     srcs = ["model.go"],
     importpath = "github.com/blackhorseya/godine/entity/domain/notification/model",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_google_uuid//:uuid"],
 )

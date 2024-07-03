@@ -61,7 +61,13 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Deliver
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": id}
+	hex, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		ctx.Error("convert id to object id failed", zap.Error(err), zap.String("id", id))
+		return nil, err
+	}
+
+	filter := bson.M{"_id": hex}
 	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
