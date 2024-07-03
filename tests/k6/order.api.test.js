@@ -45,7 +45,7 @@ export const options = {
   },
 };
 
-const BASE_URL = 'http://localhost:1993/api';
+const BASE_URL = 'http://prod-godine.seancheng.space/api';
 
 // Sleep duration between successive requests.
 // You might want to edit the value of this variable or remove calls to the sleep function on the script.
