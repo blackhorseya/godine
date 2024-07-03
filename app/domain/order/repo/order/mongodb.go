@@ -130,10 +130,15 @@ func (i *mongodb) Update(ctx contextx.Contextx, order *model.Order) error {
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": order.ID}
+	id, err := primitive.ObjectIDFromHex(order.ID)
+	if err != nil {
+		return errorx.Wrap(http.StatusBadRequest, 400, err)
+	}
+
+	filter := bson.M{"_id": id}
 	update := bson.M{"$set": order}
 
-	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	_, err = i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
 	if err != nil {
 		return err
 	}
