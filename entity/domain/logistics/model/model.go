@@ -101,6 +101,8 @@ func (x *Delivery) UnmarshalBSON(bytes []byte) error {
 		return err
 	}
 
+	x.ID = alias.ID.Hex()
+
 	state, err := UnmarshalDeliveryState(alias.Status)
 	if err != nil {
 		return err

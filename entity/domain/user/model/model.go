@@ -60,6 +60,8 @@ func (x *User) UnmarshalBSON(bytes []byte) error {
 		return err
 	}
 
+	x.ID = alias.ID.Hex()
+
 	return nil
 }
 

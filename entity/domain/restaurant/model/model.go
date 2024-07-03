@@ -47,6 +47,8 @@ func (x *Restaurant) UnmarshalBSON(bytes []byte) error {
 		return err
 	}
 
+	x.ID = alias.ID.Hex()
+
 	return nil
 }
 
@@ -110,6 +112,8 @@ func (x *MenuItem) UnmarshalBSON(bytes []byte) error {
 	if err := bson.Unmarshal(bytes, alias); err != nil {
 		return err
 	}
+
+	x.ID = alias.ID.Hex()
 
 	return nil
 }

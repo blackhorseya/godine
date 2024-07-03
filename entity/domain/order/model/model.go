@@ -64,6 +64,8 @@ func (x *Order) UnmarshalBSON(bytes []byte) error {
 		return err
 	}
 
+	x.ID = alias.ID.Hex()
+
 	state, err := UnmarshalOrderState(alias.Status)
 	if err != nil {
 		return err
