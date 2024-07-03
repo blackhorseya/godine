@@ -128,3 +128,10 @@ deploy-mongodb: ## deploy mongodb
   --install --namespace $(PROJECT_NAME) \
   --history-max 3 \
   --values ./deployments/$(DEPLOY_TO)/godine-mongodb.yaml
+
+.PHONY: deploy-redis
+deploy-redis: ## deploy redis
+	@helm upgrade $(DEPLOY_TO)-godine-redis bitnami/redis \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-redis.yaml
