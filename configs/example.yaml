@@ -14,6 +14,9 @@ restaurantRestful:
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
 
+    redis:
+      addr: redis:6379
+
   otel:
     target: otel-collector:4317
 
@@ -32,6 +35,9 @@ orderRestful:
   storage:
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+    redis:
+      addr: redis:6379
 
   otel:
     target: otel-collector:4317
@@ -52,6 +58,9 @@ userRestful:
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
 
+    redis:
+      addr: redis:6379
+
   otel:
     target: otel-collector:4317
 
@@ -70,6 +79,9 @@ logisticsRestful:
   storage:
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+    redis:
+      addr: redis:6379
 
   kafka:
     brokers:
@@ -95,6 +107,9 @@ notifyRestful:
   storage:
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+    redis:
+      addr: redis:6379
 
   otel:
     target: otel-collector:4317
