@@ -1,7 +1,8 @@
 package model
 
 import (
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // User represents a user entity.
@@ -31,7 +32,7 @@ type User struct {
 // NewUser creates and returns a new user.
 func NewUser(name, email, password string, address Address) *User {
 	return &User{
-		ID:       uuid.New().String(),
+		ID:       "",
 		Name:     name,
 		Email:    email,
 		Password: password,
@@ -44,4 +45,40 @@ func NewUser(name, email, password string, address Address) *User {
 // UpdateAddress updates the user's address.
 func (x *User) UpdateAddress(newAddress Address) {
 	x.Address = newAddress
+}
+
+func (x *User) UnmarshalBSON(bytes []byte) error {
+	type Alias User
+	alias := &struct {
+		ID     primitive.ObjectID `bson:"_id"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	if err := bson.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
+
+	x.ID = alias.ID.Hex()
+
+	return nil
+}
+
+func (x *User) MarshalBSON() ([]byte, error) {
+	type Alias User
+	alias := &struct {
+		ID     primitive.ObjectID `bson:"_id"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	id, err := primitive.ObjectIDFromHex(x.ID)
+	if err != nil {
+		return nil, err
+	}
+	alias.ID = id
+
+	return bson.Marshal(alias)
 }

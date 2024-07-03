@@ -11,7 +11,6 @@ import (
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type impl struct {
@@ -67,13 +66,7 @@ func (i *impl) GetList(c *gin.Context) {
 		return
 	}
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	items, total, err := i.injector.MenuService.ListMenuItems(ctx, restaurantID.String())
+	items, total, err := i.injector.MenuService.ListMenuItems(ctx, c.Param("restaurant_id"))
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -111,12 +104,6 @@ func (i *impl) Post(c *gin.Context) {
 	ctx, span := otelx.Span(ctx, "api.items.post")
 	defer span.End()
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
 	var payload PostPayload
 	err = c.ShouldBindJSON(&payload)
 	if err != nil {
@@ -126,7 +113,7 @@ func (i *impl) Post(c *gin.Context) {
 
 	item, err := i.injector.MenuService.AddMenuItem(
 		ctx,
-		restaurantID.String(),
+		c.Param("restaurant_id"),
 		payload.Name,
 		payload.Description,
 		payload.Price,
@@ -160,19 +147,7 @@ func (i *impl) GetByID(c *gin.Context) {
 	ctx, span := otelx.Span(ctx, "api.items.get_by_id")
 	defer span.End()
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	itemID, err := uuid.Parse(c.Param("item_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	item, err := i.injector.MenuService.GetMenuItem(ctx, restaurantID.String(), itemID.String())
+	item, err := i.injector.MenuService.GetMenuItem(ctx, c.Param("restaurant_id"), c.Param("item_id"))
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -203,18 +178,6 @@ func (i *impl) PutByID(c *gin.Context) {
 	ctx, span := otelx.Span(ctx, "api.items.put_by_id")
 	defer span.End()
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	itemID, err := uuid.Parse(c.Param("item_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
 	var payload model.MenuItem
 	err = c.ShouldBindJSON(&payload)
 	if err != nil {
@@ -224,8 +187,8 @@ func (i *impl) PutByID(c *gin.Context) {
 
 	err = i.injector.MenuService.UpdateMenuItem(
 		ctx,
-		restaurantID.String(),
-		itemID.String(),
+		c.Param("restaurant_id"),
+		c.Param("item_id"),
 		payload.Name,
 		payload.Description,
 		payload.Price,
@@ -236,7 +199,7 @@ func (i *impl) PutByID(c *gin.Context) {
 		return
 	}
 
-	item, err := i.injector.MenuService.GetMenuItem(ctx, restaurantID.String(), itemID.String())
+	item, err := i.injector.MenuService.GetMenuItem(ctx, c.Param("restaurant_id"), c.Param("item_id"))
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -266,19 +229,7 @@ func (i *impl) DeleteByID(c *gin.Context) {
 	ctx, span := otelx.Span(ctx, "api.items.delete_by_id")
 	defer span.End()
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	itemID, err := uuid.Parse(c.Param("item_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	err = i.injector.MenuService.RemoveMenuItem(ctx, restaurantID.String(), itemID.String())
+	err = i.injector.MenuService.RemoveMenuItem(ctx, c.Param("restaurant_id"), c.Param("item_id"))
 	if err != nil {
 		responsex.Err(c, err)
 		return

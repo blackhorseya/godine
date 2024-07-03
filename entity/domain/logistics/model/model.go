@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Delivery represents a delivery entity.
@@ -42,10 +42,10 @@ type Delivery struct {
 // NewDelivery creates a new delivery entity.
 func NewDelivery(orderID string, userID string) *Delivery {
 	return &Delivery{
-		ID:           uuid.New().String(),
+		ID:           "",
 		OrderID:      orderID,
 		UserID:       userID,
-		DriverID:     uuid.New().String(),
+		DriverID:     userID,
 		Status:       &PendingState{},
 		PickupTime:   nil,
 		DeliveryTime: nil,
@@ -90,7 +90,8 @@ func (x *Delivery) MarshalJSON() ([]byte, error) {
 func (x *Delivery) UnmarshalBSON(bytes []byte) error {
 	type Alias Delivery
 	alias := &struct {
-		Status string `bson:"status"`
+		ID     primitive.ObjectID `bson:"_id"`
+		Status string             `bson:"status"`
 		*Alias `bson:",inline"`
 	}{
 		Alias: (*Alias)(x),
@@ -99,6 +100,8 @@ func (x *Delivery) UnmarshalBSON(bytes []byte) error {
 	if err := bson.Unmarshal(bytes, alias); err != nil {
 		return err
 	}
+
+	x.ID = alias.ID.Hex()
 
 	state, err := UnmarshalDeliveryState(alias.Status)
 	if err != nil {
@@ -113,11 +116,18 @@ func (x *Delivery) MarshalBSON() ([]byte, error) {
 	type Alias Delivery
 	alias := &struct {
 		*Alias `bson:",inline"`
-		Status string `bson:"status"`
+		ID     primitive.ObjectID `bson:"_id"`
+		Status string             `bson:"status"`
 	}{
 		Alias:  (*Alias)(x),
 		Status: x.Status.String(),
 	}
+
+	id, err := primitive.ObjectIDFromHex(x.ID)
+	if err != nil {
+		return nil, err
+	}
+	alias.ID = id
 
 	return bson.Marshal(alias)
 }

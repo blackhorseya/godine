@@ -10,8 +10,8 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/notification/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -40,7 +40,7 @@ func (i *mongodb) Create(ctx contextx.Contextx, notify *model.Notification) erro
 	defer cancelFunc()
 
 	if notify.ID == "" {
-		notify.ID = uuid.New().String()
+		notify.ID = primitive.NewObjectID().Hex()
 	}
 	notify.CreatedAt = time.Now()
 	notify.UpdatedAt = time.Now()
@@ -65,7 +65,13 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Notific
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": id}
+	hex, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		ctx.Error("convert id to object id failed", zap.Error(err), zap.String("id", id))
+		return nil, errorx.Wrap(http.StatusBadRequest, 400, err)
+	}
+
+	filter := bson.M{"_id": hex}
 	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {

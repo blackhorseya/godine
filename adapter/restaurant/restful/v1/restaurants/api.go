@@ -13,7 +13,6 @@ import (
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type impl struct {
@@ -146,13 +145,7 @@ func (i *impl) GetByID(c *gin.Context) {
 	ctx, span := otelx.Span(ctx, "api.restaurants.get_by_id")
 	defer span.End()
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	item, err := i.injector.RestaurantService.GetRestaurant(ctx, restaurantID.String())
+	item, err := i.injector.RestaurantService.GetRestaurant(ctx, c.Param("restaurant_id"))
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -186,19 +179,13 @@ func (i *impl) PutByID(c *gin.Context) {
 		return
 	}
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	err = i.injector.RestaurantService.UpdateRestaurant(ctx, restaurantID.String(), payload.Name, payload.Address)
+	err = i.injector.RestaurantService.UpdateRestaurant(ctx, c.Param("restaurant_id"), payload.Name, payload.Address)
 	if err != nil {
 		responsex.Err(c, err)
 		return
 	}
 
-	item, err := i.injector.RestaurantService.GetRestaurant(ctx, restaurantID.String())
+	item, err := i.injector.RestaurantService.GetRestaurant(ctx, c.Param("restaurant_id"))
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -237,19 +224,13 @@ func (i *impl) PatchWithStatus(c *gin.Context) {
 		return
 	}
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	err = i.injector.RestaurantService.ChangeRestaurantStatus(ctx, restaurantID.String(), payload.IsOpen)
+	err = i.injector.RestaurantService.ChangeRestaurantStatus(ctx, c.Param("restaurant_id"), payload.IsOpen)
 	if err != nil {
 		responsex.Err(c, err)
 		return
 	}
 
-	item, err := i.injector.RestaurantService.GetRestaurant(ctx, restaurantID.String())
+	item, err := i.injector.RestaurantService.GetRestaurant(ctx, c.Param("restaurant_id"))
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -275,13 +256,7 @@ func (i *impl) DeleteByID(c *gin.Context) {
 		return
 	}
 
-	restaurantID, err := uuid.Parse(c.Param("restaurant_id"))
-	if err != nil {
-		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
-		return
-	}
-
-	err = i.injector.RestaurantService.DeleteRestaurant(ctx, restaurantID.String())
+	err = i.injector.RestaurantService.DeleteRestaurant(ctx, c.Param("restaurant_id"))
 	if err != nil {
 		responsex.Err(c, err)
 		return

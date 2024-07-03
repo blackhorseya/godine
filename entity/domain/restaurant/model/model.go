@@ -1,7 +1,8 @@
 package model
 
 import (
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Restaurant represents a restaurant entity.
@@ -25,7 +26,7 @@ type Restaurant struct {
 // NewRestaurant creates a new RestaurantAggregate.
 func NewRestaurant(name string, address Address) *Restaurant {
 	return &Restaurant{
-		ID:      uuid.New().String(),
+		ID:      "",
 		Name:    name,
 		Address: address,
 		Menu:    []MenuItem{},
@@ -33,10 +34,46 @@ func NewRestaurant(name string, address Address) *Restaurant {
 	}
 }
 
+func (x *Restaurant) UnmarshalBSON(bytes []byte) error {
+	type Alias Restaurant
+	alias := &struct {
+		ID     primitive.ObjectID `bson:"_id"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	if err := bson.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
+
+	x.ID = alias.ID.Hex()
+
+	return nil
+}
+
+func (x *Restaurant) MarshalBSON() ([]byte, error) {
+	type Alias Restaurant
+	alias := &struct {
+		ID     primitive.ObjectID `bson:"_id"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	id, err := primitive.ObjectIDFromHex(x.ID)
+	if err != nil {
+		return nil, err
+	}
+	alias.ID = id
+
+	return bson.Marshal(alias)
+}
+
 // AddMenuItem adds a new menu item to the restaurant's menu.
 func (x *Restaurant) AddMenuItem(name, description string, price float64) {
 	menuItem := MenuItem{
-		ID:          uuid.New().String(),
+		ID:          primitive.NewObjectID().Hex(),
 		Name:        name,
 		Description: description,
 		Price:       price,
@@ -61,4 +98,40 @@ type MenuItem struct {
 
 	// IsAvailable indicates whether the menu item is available.
 	IsAvailable bool `json:"is_available,omitempty" bson:"isAvailable"`
+}
+
+func (x *MenuItem) UnmarshalBSON(bytes []byte) error {
+	type Alias MenuItem
+	alias := &struct {
+		ID     primitive.ObjectID `bson:"_id"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	if err := bson.Unmarshal(bytes, alias); err != nil {
+		return err
+	}
+
+	x.ID = alias.ID.Hex()
+
+	return nil
+}
+
+func (x *MenuItem) MarshalBSON() ([]byte, error) {
+	type Alias MenuItem
+	alias := &struct {
+		ID     primitive.ObjectID `bson:"_id"`
+		*Alias `bson:",inline"`
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	id, err := primitive.ObjectIDFromHex(x.ID)
+	if err != nil {
+		return nil, err
+	}
+	alias.ID = id
+
+	return bson.Marshal(alias)
 }

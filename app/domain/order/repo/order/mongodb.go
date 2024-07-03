@@ -10,8 +10,8 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -39,7 +39,7 @@ func (i *mongodb) Create(ctx contextx.Contextx, order *model.Order) error {
 	defer cancelFunc()
 
 	if order.ID == "" {
-		order.ID = uuid.New().String()
+		order.ID = primitive.NewObjectID().Hex()
 	}
 
 	_, err := i.rw.Database(dbName).Collection(collName).InsertOne(timeout, order)
@@ -57,7 +57,12 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": id}
+	hex, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, errorx.Wrap(http.StatusBadRequest, 400, err)
+	}
+
+	filter := bson.M{"_id": hex}
 	err = i.rw.Database(dbName).Collection(collName).FindOne(timeout, filter).Decode(&item)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
@@ -125,10 +130,15 @@ func (i *mongodb) Update(ctx contextx.Contextx, order *model.Order) error {
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": order.ID}
+	id, err := primitive.ObjectIDFromHex(order.ID)
+	if err != nil {
+		return errorx.Wrap(http.StatusBadRequest, 400, err)
+	}
+
+	filter := bson.M{"_id": id}
 	update := bson.M{"$set": order}
 
-	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	_, err = i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
 	if err != nil {
 		return err
 	}
