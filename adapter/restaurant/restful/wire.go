@@ -11,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -49,6 +50,7 @@ var providerSet = wire.NewSet(
 	biz.NewMenuBiz,
 	restaurant.NewMongodb,
 	mongodbx.NewClient,
+	redix.NewRedis,
 )
 
 func New(v *viper.Viper) (adapterx.Restful, error) {

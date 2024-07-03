@@ -17,6 +17,7 @@ go_library(
         "//app/infra/configx",
         "//app/infra/otelx",
         "//app/infra/storage/mongodbx",
+        "//app/infra/storage/redix",
         "//app/infra/transports/httpx",
         "//pkg/adapterx",
         "//pkg/contextx",
