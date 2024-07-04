@@ -96,7 +96,7 @@ func (i *mongodb) List(
 		filter["status"] = condition.Status
 	}
 
-	opts := options.Find()
+	opts := options.Find().SetBatchSize(100)
 	if condition.Limit > 0 {
 		opts.SetLimit(int64(condition.Limit))
 	}
