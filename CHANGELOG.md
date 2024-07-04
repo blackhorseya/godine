@@ -1,3 +1,13 @@
+## 0.3.7 (2024-07-04)
+
+### Feat
+
+- update order and user information in API endpoints
+
+### Perf
+
+- optimize MongoDB query performance
+
 ## 0.3.6 (2024-07-03)
 
 ### Feat
