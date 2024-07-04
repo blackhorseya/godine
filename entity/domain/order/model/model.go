@@ -103,7 +103,6 @@ func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
 	}
 
 	return &Order{
-		ID:           "",
 		UserID:       userID,
 		RestaurantID: restaurantID,
 		Items:        items,
