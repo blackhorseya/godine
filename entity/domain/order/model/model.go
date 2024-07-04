@@ -103,7 +103,6 @@ func NewOrder(userID, restaurantID string, items []OrderItem) *Order {
 	}
 
 	return &Order{
-		ID:           "",
 		UserID:       userID,
 		RestaurantID: restaurantID,
 		Items:        items,
@@ -129,7 +128,7 @@ func (x *Order) AddItem(item OrderItem) {
 // OrderItem represents an item in the order.
 type OrderItem struct {
 	// MenuItemID is the identifier of the menu item.
-	MenuItemID string `json:"menu_item_id,omitempty" bson:"menu_item_id" example:"174e9519-4c47-42f2-bb1c-b0eaa8f76d05"`
+	MenuItemID string `json:"menu_item_id,omitempty" bson:"menu_item_id"`
 
 	// Quantity is the quantity of the menu item ordered.
 	Quantity int `json:"quantity,omitempty" bson:"quantity" example:"2"`
