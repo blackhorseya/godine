@@ -3,7 +3,7 @@
 -- Create orders table
 CREATE TABLE orders
 (
-    id            VARCHAR(255) PRIMARY KEY,
+    id            BIGINT PRIMARY KEY,
     user_id       VARCHAR(255)   NOT NULL,
     restaurant_id VARCHAR(255)   NOT NULL,
     status        VARCHAR(20)    NOT NULL,
@@ -18,8 +18,8 @@ CREATE TABLE orders
 -- Create order_items table
 CREATE TABLE order_items
 (
-    order_id VARCHAR(255),
-    item_id  VARCHAR(255),
+    order_id BIGINT,
+    item_id  BIGINT,
     quantity INT            NOT NULL,
     price    DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY (order_id, item_id),
