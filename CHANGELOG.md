@@ -1,3 +1,13 @@
+## 0.4.0 (2024-07-04)
+
+### Feat
+
+- refactor database schema and model initialization
+
+### Refactor
+
+- update database column types to BIGINT
+
 ## 0.3.7 (2024-07-04)
 
 ### Feat
