@@ -145,6 +145,18 @@ func (i *mariadb) List(
 }
 
 func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) error {
-	// todo: 2024/7/5|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.Update")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	// 更新订单
+	err := i.rw.WithContext(timeout).Save(order).Error
+	if err != nil {
+		ctx.Error("update order in mariadb failed", zap.Error(err), zap.Any("order", order))
+		return err
+	}
+
+	return nil
 }
