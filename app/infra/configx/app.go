@@ -18,6 +18,10 @@ type Application struct {
 	HTTP HTTP            `json:"http" yaml:"http"`
 
 	Storage struct {
+		Mysql struct {
+			DSN string `json:"dsn" yaml:"dsn"`
+		} `json:"mysql" yaml:"mysql"`
+
 		Mongodb struct {
 			DSN string `json:"dsn" yaml:"dsn"`
 		} `json:"mongodb" yaml:"mongodb"`
