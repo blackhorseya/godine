@@ -1,3 +1,40 @@
+## 0.4.1 (2024-07-05)
+
+### Feat
+
+- update GORM implementation in Order struct (#63)
+- update GORM implementation in Order struct
+- implement database integration with MariaDB
+- improve error handling and tracing throughout codebase
+- consolidate default limit and offset handling
+- improve error handling and testing for order functions
+- improve logging functionality across the codebase
+- improve transaction handling for order creation
+- update order creation process in domain package
+- refactor mariadb module for dependency injection (#60)
+- implement logging and tracing in `mariadb.go`
+- refactor test setup and configuration handling
+- refactor MariaDB external tester configuration
+- refactor mariadb module for dependency injection
+- optimize MySQL client connection settings
+- add support for MariaDB integration
+- configure `mariadb` service and volume (#58)
+- configure `mariadb` service and volume
+- consolidate MySQL configurations in app.go
+
+### Fix
+
+- refactor return statements in BeforeSave and AfterFind
+- improve error handling and import statements in Mariadb files
+
+### Refactor
+
+- optimize database queries in mariadb.go
+- refactor struct tags for Order and OrderItem models (#62)
+- improve error handling and context in List function
+- refactor struct tags for Order and OrderItem models
+- refactor order repository to use gorm instead of sqlx
+
 ## 0.4.0 (2024-07-04)
 
 ### Feat
