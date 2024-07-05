@@ -17,35 +17,37 @@ var startCmd = &cobra.Command{
 }
 
 func init() {
-	startCmd.AddCommand(cmdx.NewServiceCmd(
+	restaurantRestfulCmd := cmdx.NewServiceCmd(
 		"restaurant-restful",
 		"Start the restaurant restful server",
 		restaurant.New,
-	))
+	)
 
-	startCmd.AddCommand(cmdx.NewServiceCmd(
+	orderRestfulCmd := cmdx.NewServiceCmd(
 		"order-restful",
 		"Start the order restful server",
 		order.New,
-	))
+	)
 
-	startCmd.AddCommand(cmdx.NewServiceCmd(
+	userRestfulCmd := cmdx.NewServiceCmd(
 		"user-restful",
 		"Start the user restful server",
 		user.New,
-	))
+	)
 
-	startCmd.AddCommand(cmdx.NewServiceCmd(
+	logisticsRestfulCmd := cmdx.NewServiceCmd(
 		"logistics-restful",
 		"Start the logistics restful server",
 		logistics.New,
-	))
+	)
 
-	startCmd.AddCommand(cmdx.NewServiceCmd(
+	notifyRestfulCmd := cmdx.NewServiceCmd(
 		"notify-restful",
 		"Start the notify restful server",
 		notify.New,
-	))
+	)
+
+	startCmd.AddCommand(restaurantRestfulCmd, orderRestfulCmd, userRestfulCmd, logisticsRestfulCmd, notifyRestfulCmd)
 
 	rootCmd.AddCommand(startCmd)
 

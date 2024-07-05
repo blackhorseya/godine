@@ -37,33 +37,3 @@ func (c *ServiceCmd) NewCmd() *cobra.Command {
 		},
 	}
 }
-
-// ServiceListCmd represents the service list command.
-type ServiceListCmd struct {
-	Use   string
-	Short string
-	Cmds  []*ServiceCmd
-}
-
-// NewServiceListCmd creates a new service list command.
-func NewServiceListCmd(use string, short string, cmds ...*ServiceCmd) *cobra.Command {
-	return (&ServiceListCmd{Use: use, Short: short, Cmds: cmds}).NewCmd()
-}
-
-// NewCmd creates a new service list command.
-func (c *ServiceListCmd) NewCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   c.Use,
-		Short: c.Short,
-		Run: func(cmd *cobra.Command, args []string) {
-			for _, serviceCmd := range c.Cmds {
-				serviceCmd := serviceCmd // capture range variable
-				subCmd := serviceCmd.NewCmd()
-
-				subCmd.SetArgs(args) // Pass the same args to sub-command
-				err := subCmd.Execute()
-				cobra.CheckErr(err)
-			}
-		},
-	}
-}
