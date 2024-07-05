@@ -6,9 +6,9 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	_ "github.com/go-sql-driver/mysql" // import MySQL driver
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/mysql"
 	"github.com/jmoiron/sqlx"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 const (
@@ -30,17 +30,21 @@ func NewClient(app *configx.Application) (*sqlx.DB, error) {
 	return db, nil
 }
 
-// AutoMigrate auto migrate the database.
-func AutoMigrate(db *sqlx.DB, source string, dbName string) error {
-	driver, err := mysql.WithInstance(db.DB, &mysql.Config{DatabaseName: dbName})
+// NewClientV2 init mysql client.
+func NewClientV2(app *configx.Application) (*gorm.DB, error) {
+	db, err := gorm.Open(mysql.Open(app.Storage.Mysql.DSN), &gorm.Config{})
 	if err != nil {
-		return fmt.Errorf("create mysql driver error: %w", err)
+		return nil, fmt.Errorf("open mysql client error: %w", err)
 	}
 
-	m, err := migrate.NewWithDatabaseInstance(source, "mysql", driver)
+	sqlDB, err := db.DB()
 	if err != nil {
-		return fmt.Errorf("create migration instance error: %w", err)
+		return nil, fmt.Errorf("get mysql db error: %w", err)
 	}
 
-	return m.Up()
+	sqlDB.SetConnMaxLifetime(defaultMaxLifetime)
+	sqlDB.SetMaxOpenConns(defaultConns)
+	sqlDB.SetMaxIdleConns(defaultConns)
+
+	return db, nil
 }
