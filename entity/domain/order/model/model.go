@@ -24,6 +24,7 @@ type Order struct {
 	Items []OrderItem `json:"items,omitempty" bson:"items" gorm:"foreignKey:OrderID;references:ID"`
 
 	// Status is the current status of the order (e.g., pending, confirmed, delivered).
+	// todo: 2024/7/5|sean|how to save to mariadb with interface
 	Status OrderState `json:"status,omitempty" bson:"status" gorm:"-"`
 
 	// TotalAmount is the total amount of the order.
