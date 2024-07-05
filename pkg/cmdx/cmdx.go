@@ -56,9 +56,14 @@ func (c *ServiceListCmd) NewCmd() *cobra.Command {
 		Use:   c.Use,
 		Short: c.Short,
 		Run: func(cmd *cobra.Command, args []string) {
-			v := viper.GetViper()
+			for _, serviceCmd := range c.Cmds {
+				serviceCmd := serviceCmd // capture range variable
+				subCmd := serviceCmd.NewCmd()
 
-			// todo: 2024/7/6|sean|implement me
+				subCmd.SetArgs(args) // Pass the same args to sub-command
+				err := subCmd.Execute()
+				cobra.CheckErr(err)
+			}
 		},
 	}
 }
