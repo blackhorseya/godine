@@ -37,3 +37,28 @@ func (c *ServiceCmd) NewCmd() *cobra.Command {
 		},
 	}
 }
+
+// ServiceListCmd represents the service list command.
+type ServiceListCmd struct {
+	Use   string
+	Short string
+	Cmds  []*ServiceCmd
+}
+
+// NewServiceListCmd creates a new service list command.
+func NewServiceListCmd(use string, short string, cmds ...*ServiceCmd) *cobra.Command {
+	return (&ServiceListCmd{Use: use, Short: short, Cmds: cmds}).NewCmd()
+}
+
+// NewCmd creates a new service list command.
+func (c *ServiceListCmd) NewCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   c.Use,
+		Short: c.Short,
+		Run: func(cmd *cobra.Command, args []string) {
+			v := viper.GetViper()
+
+			// todo: 2024/7/6|sean|implement me
+		},
+	}
+}
