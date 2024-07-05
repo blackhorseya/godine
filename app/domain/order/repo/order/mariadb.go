@@ -95,8 +95,45 @@ func (i *mariadb) List(
 	ctx contextx.Contextx,
 	condition repo.ListCondition,
 ) (items []*model.Order, total int, err error) {
-	// todo: 2024/7/5|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.List")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	var orders []*model.Order
+	query := i.rw.WithContext(timeout).Model(&model.Order{})
+
+	// Apply filters based on the condition
+	if condition.UserID != "" {
+		query = query.Where("user_id = ?", condition.UserID)
+	}
+	if condition.RestaurantID != "" {
+		query = query.Where("restaurant_id = ?", condition.RestaurantID)
+	}
+	if condition.Status != "" {
+		query = query.Where("status = ?", condition.Status)
+	}
+
+	// Get total count
+	var count int64
+	err = query.Count(&count).Error
+	if err != nil {
+		ctx.Error("count orders from mariadb failed", zap.Error(err))
+		return nil, 0, err
+	}
+
+	// Apply limit and offset
+	query = query.Limit(condition.Limit).Offset(condition.Offset)
+
+	// Execute the query
+	err = query.Find(&orders).Error
+	if err != nil {
+		ctx.Error("list orders from mariadb failed", zap.Error(err))
+		return nil, 0, err
+	}
+
+	return orders, int(count), nil
 }
 
 func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) error {

@@ -80,3 +80,7 @@ func (s *mariadbExternalTester) TestGetByID() {
 
 	ctx.Debug("find order success", zap.Any("order", &find))
 }
+
+func (s *mariadbExternalTester) TestList() {
+
+}
