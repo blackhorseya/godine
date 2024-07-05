@@ -33,7 +33,7 @@ func NewMariadb(rw *gorm.DB, node *snowflake.Node) (repo.IOrderRepo, error) {
 	return &mariadb{rw: rw, node: node}, nil
 }
 
-func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
+func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) (err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.Create")
 	defer span.End()
 
@@ -51,9 +51,14 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
 		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
 		return tx.Error
 	}
+	defer func() {
+		if r := recover(); r != nil || err != nil {
+			tx.Rollback()
+		}
+	}()
 
 	// 创建订单
-	err := tx.Create(order).Error
+	err = tx.Create(order).Error
 	if err != nil {
 		tx.Rollback()
 		ctx.Error("create order to mariadb failed", zap.Error(err), zap.Any("order", &order))
@@ -149,7 +154,7 @@ func (i *mariadb) List(
 	return orders, int(count), nil
 }
 
-func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) error {
+func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) (err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.Update")
 	defer span.End()
 
@@ -162,9 +167,14 @@ func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) error {
 		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
 		return tx.Error
 	}
+	defer func() {
+		if r := recover(); r != nil || err != nil {
+			tx.Rollback()
+		}
+	}()
 
 	// update order
-	err := tx.Save(order).Error
+	err = tx.Save(order).Error
 	if err != nil {
 		tx.Rollback()
 		ctx.Error("update order to mariadb failed", zap.Error(err), zap.Any("order", &order))
