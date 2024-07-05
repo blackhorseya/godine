@@ -1,3 +1,13 @@
+## 0.4.3 (2024-07-06)
+
+### Feat
+
+- refactor snowflake node ID generation
+
+### Refactor
+
+- update order ID values throughout API tests
+
 ## 0.4.2 (2024-07-06)
 
 ### Feat
