@@ -1,3 +1,19 @@
+## 0.4.2 (2024-07-06)
+
+### Feat
+
+- refactor Order struct to include BigIntID field (#66)
+- refactor Order struct to include BigIntID field
+- implement snowflake node creation and ID generation
+- add new field `NewID` to Order struct
+- update `orderId` value in API endpoints
+
+### Refactor
+
+- refactor order model and error logging
+- refactor order ID generation across files
+- set default value for order.NewID when not provided
+
 ## 0.4.1 (2024-07-05)
 
 ### Feat
