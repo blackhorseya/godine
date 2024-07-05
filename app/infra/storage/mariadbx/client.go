@@ -6,6 +6,8 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	_ "github.com/go-sql-driver/mysql" // import MySQL driver
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/mysql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -26,4 +28,19 @@ func NewClient(app *configx.Application) (*sqlx.DB, error) {
 	db.SetMaxIdleConns(defaultConns)
 
 	return db, nil
+}
+
+// AutoMigrate auto migrate the database.
+func AutoMigrate(db *sqlx.DB, source string, dbName string) error {
+	driver, err := mysql.WithInstance(db.DB, &mysql.Config{DatabaseName: dbName})
+	if err != nil {
+		return fmt.Errorf("create mysql driver error: %w", err)
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(source, "mysql", driver)
+	if err != nil {
+		return fmt.Errorf("create migration instance error: %w", err)
+	}
+
+	return m.Up()
 }
