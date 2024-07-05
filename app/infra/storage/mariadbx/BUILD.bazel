@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mariadbx",
+    srcs = ["client.go"],
+    importpath = "github.com/blackhorseya/godine/app/infra/storage/mariadbx",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//app/infra/configx",
+        "@com_github_go_sql_driver_mysql//:mysql",
+        "@com_github_jmoiron_sqlx//:sqlx",
+    ],
+)
