@@ -13,6 +13,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -58,4 +59,6 @@ func (s *mariadbExternalTester) TestCreate() {
 	ctx := contextx.Background()
 	err := s.repo.Create(ctx, order)
 	s.Require().NoError(err)
+
+	ctx.Debug("create order success", zap.Any("order", &order))
 }
