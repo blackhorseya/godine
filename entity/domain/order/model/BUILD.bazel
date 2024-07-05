@@ -12,6 +12,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/contextx",
+        "@io_gorm_gorm//:gorm",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//bson/primitive",
     ],

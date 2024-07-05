@@ -7,6 +7,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gorm.io/gorm"
 )
 
 // Order represents an order entity.
@@ -24,8 +25,8 @@ type Order struct {
 	Items []OrderItem `json:"items,omitempty" bson:"items" gorm:"foreignKey:OrderID;references:ID"`
 
 	// Status is the current status of the order (e.g., pending, confirmed, delivered).
-	// todo: 2024/7/5|sean|how to save to mariadb with interface
-	Status OrderState `json:"status,omitempty" bson:"status" gorm:"-"`
+	Status       OrderState `json:"status,omitempty" bson:"status" gorm:"-"`
+	StatusString string     `json:"-" bson:"-" gorm:"column:status;not null"`
 
 	// TotalAmount is the total amount of the order.
 	TotalAmount float64 `json:"total_amount,omitempty" bson:"total_amount" gorm:"column:total_amount"`
@@ -130,6 +131,22 @@ func (x *Order) Next(ctx contextx.Contextx) (event *OrderEvent, err error) {
 func (x *Order) AddItem(item OrderItem) {
 	x.Items = append(x.Items, item)
 	x.UpdatedAt = time.Now()
+}
+
+// BeforeSave GORM hook - convert OrderState to string before saving
+func (x *Order) BeforeSave(tx *gorm.DB) (err error) {
+	if x.Status != nil {
+		x.StatusString = x.Status.String()
+	}
+	return
+}
+
+// AfterFind GORM hook - convert string to OrderState after fetching from DB
+func (x *Order) AfterFind(tx *gorm.DB) (err error) {
+	if x.StatusString != "" {
+		x.Status, err = UnmarshalOrderState(x.StatusString)
+	}
+	return
 }
 
 // OrderItem represents an item in the order.
