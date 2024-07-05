@@ -122,6 +122,13 @@ deploy-notify-restful: ## deploy notify
   --history-max 3 \
   --values ./deployments/$(DEPLOY_TO)/godine-notify-restful.yaml
 
+.PHONY: deploy-mariadb
+deploy-mariadb: ## deploy mariadb
+	@helm upgrade $(DEPLOY_TO)-godine-mariadb bitnami/mariadb \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-mariadb.yaml
+
 .PHONY: deploy-mongodb
 deploy-mongodb: ## deploy mongodb
 	@helm upgrade $(DEPLOY_TO)-godine-mongodb bitnami/mongodb \
