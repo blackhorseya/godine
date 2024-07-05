@@ -45,10 +45,6 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
 		order.ID = uuid.New().String()
 	}
 
-	if order.NewID == 0 {
-		order.NewID = i.node.Generate().Int64()
-	}
-
 	// 开启事务
 	tx := i.rw.WithContext(timeout).Begin()
 	if tx.Error != nil {
