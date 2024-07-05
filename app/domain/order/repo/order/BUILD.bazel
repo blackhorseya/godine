@@ -2,7 +2,10 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "order",
-    srcs = ["mongodb.go"],
+    srcs = [
+        "mariadb.go",
+        "mongodb.go",
+    ],
     importpath = "github.com/blackhorseya/godine/app/domain/order/repo/order",
     visibility = ["//visibility:public"],
     deps = [
