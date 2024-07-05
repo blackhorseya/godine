@@ -54,7 +54,7 @@ const SLEEP_DURATION = 0.1;
 
 export default function() {
   group('/v1/orders/{order_id}', () => {
-    let orderId = '853d1e77-b6cd-49fd-8dd1-5c7902df7905'; // specify value as there is no example value for this parameter in OpenAPI spec
+    let orderId = '1809363491119697920'; // specify value as there is no example value for this parameter in OpenAPI spec
 
     // Request No. 1:
     {
@@ -68,7 +68,7 @@ export default function() {
   });
 
   group('/v1/orders/{order_id}/status', () => {
-    let orderId = '853d1e77-b6cd-49fd-8dd1-5c7902df7905'; // specify value as there is no example value for this parameter in OpenAPI spec
+    let orderId = '1809363491119697920'; // specify value as there is no example value for this parameter in OpenAPI spec
 
     // Request No. 1:
     {
