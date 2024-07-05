@@ -14,6 +14,7 @@ import (
 	biz3 "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/snowflakex"
 	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -55,6 +56,7 @@ var providerSet = wire.NewSet(
 	biz3.NewUserHTTPClient,
 	order.NewMariadb,
 	mariadbx.NewClient,
+	snowflakex.NewNode,
 	biz4.NewLogisticsHTTPClient,
 	biz5.NewNotificationHTTPClient,
 )

@@ -4,13 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/google/uuid"
+	"github.com/bwmarrin/snowflake"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -18,17 +19,18 @@ import (
 const defaultLimit = 100
 
 type mariadb struct {
-	rw *gorm.DB
+	rw   *gorm.DB
+	node *snowflake.Node
 }
 
 // NewMariadb create and return a new mariadb
-func NewMariadb(rw *gorm.DB) (repo.IOrderRepo, error) {
+func NewMariadb(rw *gorm.DB, node *snowflake.Node) (repo.IOrderRepo, error) {
 	err := rw.AutoMigrate(&model.Order{}, &model.OrderItem{})
 	if err != nil {
 		return nil, fmt.Errorf("migrate order and order item failed: %w", err)
 	}
 
-	return &mariadb{rw: rw}, nil
+	return &mariadb{rw: rw, node: node}, nil
 }
 
 func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
@@ -38,16 +40,16 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
+	// 检查订单 ID
+	if order.ID == "" {
+		order.ID = strconv.Itoa(int(i.node.Generate().Int64()))
+	}
+
 	// 开启事务
 	tx := i.rw.WithContext(timeout).Begin()
 	if tx.Error != nil {
 		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
 		return tx.Error
-	}
-
-	// 检查订单 ID
-	if order.ID == "" {
-		order.ID = uuid.New().String()
 	}
 
 	// 创建订单
@@ -82,7 +84,7 @@ func (i *mariadb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, 
 	err = i.rw.WithContext(timeout).Preload("Items").First(order, "id = ?", id).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			ctx.Warn("order not found", zap.String("id", id))
+			ctx.Error("order not found", zap.String("id", id))
 			return nil, errorx.Wrap(http.StatusNotFound, 404, err)
 		}
 
