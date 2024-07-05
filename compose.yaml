@@ -37,8 +37,8 @@ services:
     volumes:
       - ./configs/example.yaml:/app/configs/example.yaml
     depends_on:
-      - mongodb
-      - mariadb
+      mariadb:
+        condition: service_healthy
 
   user_restful:
     build:
@@ -105,6 +105,12 @@ services:
       MYSQL_DATABASE: godine
     volumes:
       - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   redis:
     image: redis:7
