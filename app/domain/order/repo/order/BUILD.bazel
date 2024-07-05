@@ -14,6 +14,7 @@ go_library(
         "//entity/domain/order/repo",
         "//pkg/contextx",
         "//pkg/errorx",
+        "@com_github_jmoiron_sqlx//:sqlx",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//bson/primitive",
         "@org_mongodb_go_mongo_driver//mongo",
