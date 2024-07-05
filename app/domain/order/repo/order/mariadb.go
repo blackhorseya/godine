@@ -156,10 +156,25 @@ func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) error {
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	// 更新订单
-	err := i.rw.WithContext(timeout).Save(order).Error
+	// start transaction
+	tx := i.rw.WithContext(timeout).Begin()
+	if tx.Error != nil {
+		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
+		return tx.Error
+	}
+
+	// update order
+	err := tx.Save(order).Error
 	if err != nil {
-		ctx.Error("update order in mariadb failed", zap.Error(err), zap.Any("order", order))
+		tx.Rollback()
+		ctx.Error("update order to mariadb failed", zap.Error(err), zap.Any("order", &order))
+		return err
+	}
+
+	// commit transaction
+	if err = tx.Commit().Error; err != nil {
+		tx.Rollback()
+		ctx.Error("failed to commit transaction", zap.Error(err))
 		return err
 	}
 
