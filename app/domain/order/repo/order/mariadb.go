@@ -38,16 +38,16 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
+	// 检查订单 ID
+	if order.ID == "" {
+		order.ID = uuid.New().String()
+	}
+
 	// 开启事务
 	tx := i.rw.WithContext(timeout).Begin()
 	if tx.Error != nil {
 		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
 		return tx.Error
-	}
-
-	// 检查订单 ID
-	if order.ID == "" {
-		order.ID = uuid.New().String()
 	}
 
 	// 创建订单
