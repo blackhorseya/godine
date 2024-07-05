@@ -6,9 +6,9 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	_ "github.com/go-sql-driver/mysql" // import MySQL driver
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/mysql"
 	"github.com/jmoiron/sqlx"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 const (
@@ -30,17 +30,12 @@ func NewClient(app *configx.Application) (*sqlx.DB, error) {
 	return db, nil
 }
 
-// AutoMigrate auto migrate the database.
-func AutoMigrate(db *sqlx.DB, source string, dbName string) error {
-	driver, err := mysql.WithInstance(db.DB, &mysql.Config{DatabaseName: dbName})
+// NewClientV2 init mysql client.
+func NewClientV2(app *configx.Application) (*gorm.DB, error) {
+	db, err := gorm.Open(mysql.Open(app.Storage.Mysql.DSN), &gorm.Config{})
 	if err != nil {
-		return fmt.Errorf("create mysql driver error: %w", err)
+		return nil, err
 	}
 
-	m, err := migrate.NewWithDatabaseInstance(source, "mysql", driver)
-	if err != nil {
-		return fmt.Errorf("create migration instance error: %w", err)
-	}
-
-	return m.Up()
+	return db, nil
 }
