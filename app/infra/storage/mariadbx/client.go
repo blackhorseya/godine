@@ -34,8 +34,17 @@ func NewClient(app *configx.Application) (*sqlx.DB, error) {
 func NewClientV2(app *configx.Application) (*gorm.DB, error) {
 	db, err := gorm.Open(mysql.Open(app.Storage.Mysql.DSN), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("open mysql client error: %w", err)
 	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, fmt.Errorf("get mysql db error: %w", err)
+	}
+
+	sqlDB.SetConnMaxLifetime(defaultMaxLifetime)
+	sqlDB.SetMaxOpenConns(defaultConns)
+	sqlDB.SetMaxIdleConns(defaultConns)
 
 	return db, nil
 }
