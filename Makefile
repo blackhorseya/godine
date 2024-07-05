@@ -85,7 +85,7 @@ DEPLOY_TO := prod
 HELM_REPO_NAME := blackhorseya
 
 .PHONY: deploy
-deploy: deploy-restaurant-restful deploy-order-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful deploy-mongodb ## deploy all
+deploy: deploy-restaurant-restful deploy-order-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful deploy-mariadb deploy-mongodb deploy-redis ## deploy all
 
 .PHONY: deploy-restaurant-restful
 deploy-restaurant-restful: ## deploy restaurant
@@ -121,6 +121,13 @@ deploy-notify-restful: ## deploy notify
   --install --namespace $(PROJECT_NAME) \
   --history-max 3 \
   --values ./deployments/$(DEPLOY_TO)/godine-notify-restful.yaml
+
+.PHONY: deploy-mariadb
+deploy-mariadb: ## deploy mariadb
+	@helm upgrade $(DEPLOY_TO)-godine-mariadb bitnami/mariadb \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-mariadb.yaml
 
 .PHONY: deploy-mongodb
 deploy-mongodb: ## deploy mongodb
