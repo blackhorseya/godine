@@ -138,15 +138,20 @@ func (x *Order) BeforeSave(tx *gorm.DB) (err error) {
 	if x.Status != nil {
 		x.StatusString = x.Status.String()
 	}
-	return
+
+	return nil
 }
 
 // AfterFind GORM hook - convert string to OrderState after fetching from DB
 func (x *Order) AfterFind(tx *gorm.DB) (err error) {
 	if x.StatusString != "" {
 		x.Status, err = UnmarshalOrderState(x.StatusString)
+		if err != nil {
+			return err
+		}
 	}
-	return
+
+	return nil
 }
 
 // OrderItem represents an item in the order.
