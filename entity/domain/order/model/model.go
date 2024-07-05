@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"strconv"
 	"time"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -13,7 +14,10 @@ import (
 // Order represents an order entity.
 type Order struct {
 	// ID is the unique identifier of the order.
-	ID string `json:"id,omitempty" bson:"_id,omitempty" gorm:"column:id;primaryKey;not null"`
+	ID string `json:"id,omitempty" bson:"_id,omitempty" gorm:"-"`
+
+	// BigIntID is the actual field stored as BIGINT in the DB.
+	BigIntID int64 `json:"-" gorm:"column:id;primaryKey;not null"`
 
 	// UserID is the identifier of the user who placed the order.
 	UserID string `json:"user_id,omitempty" bson:"user_id" gorm:"column:user_id;not null"`
@@ -135,6 +139,13 @@ func (x *Order) AddItem(item OrderItem) {
 
 // BeforeSave GORM hook - convert OrderState to string before saving
 func (x *Order) BeforeSave(tx *gorm.DB) (err error) {
+	if x.ID != "" {
+		x.BigIntID, err = strconv.ParseInt(x.ID, 10, 64)
+		if err != nil {
+			return err
+		}
+	}
+
 	if x.Status != nil {
 		x.StatusString = x.Status.String()
 	}
@@ -144,6 +155,8 @@ func (x *Order) BeforeSave(tx *gorm.DB) (err error) {
 
 // AfterFind GORM hook - convert string to OrderState after fetching from DB
 func (x *Order) AfterFind(tx *gorm.DB) (err error) {
+	x.ID = strconv.FormatInt(x.BigIntID, 10)
+
 	if x.StatusString != "" {
 		x.Status, err = UnmarshalOrderState(x.StatusString)
 		if err != nil {
