@@ -82,5 +82,25 @@ func (s *mariadbExternalTester) TestGetByID() {
 }
 
 func (s *mariadbExternalTester) TestList() {
+	order := model.NewOrder(primitive.NewObjectID().Hex(), primitive.NewObjectID().Hex(), []model.OrderItem{
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 10, 2),
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 20, 4),
+	})
 
+	ctx := contextx.Background()
+	err := s.repo.Create(ctx, order)
+	s.Require().NoError(err)
+
+	ctx.Debug("create order success", zap.Any("order", &order))
+
+	list, total, err := s.repo.List(ctx, repo.ListCondition{
+		UserID:       "",
+		RestaurantID: "",
+		Status:       "",
+		Limit:        0,
+		Offset:       0,
+	})
+	s.Require().NoError(err)
+
+	ctx.Debug("list order success", zap.Any("list", &list), zap.Int("total", total))
 }
