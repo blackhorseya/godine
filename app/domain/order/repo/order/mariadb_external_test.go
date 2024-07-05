@@ -11,15 +11,16 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type mariadbExternalTester struct {
 	suite.Suite
 
-	rw   *sqlx.DB
+	rw   *gorm.DB
 	repo repo.IOrderRepo
 }
 
@@ -33,17 +34,16 @@ func (s *mariadbExternalTester) SetupTest() {
 	err = logging.Init(app.Log)
 	s.Require().NoError(err)
 
-	rw, err := mariadbx.NewClient(app)
+	rw, err := mariadbx.NewClientV2(app)
 	s.Require().NoError(err)
 	s.rw = rw
 
-	s.repo = NewMariadb(s.rw)
+	orderRepo, err := NewMariadb(s.rw)
+	s.Require().NoError(err)
+	s.repo = orderRepo
 }
 
 func (s *mariadbExternalTester) TearDownTest() {
-	if s.rw != nil {
-		_ = s.rw.Close()
-	}
 }
 
 func TestMariadbExternal(t *testing.T) {
@@ -59,4 +59,48 @@ func (s *mariadbExternalTester) TestCreate() {
 	ctx := contextx.Background()
 	err := s.repo.Create(ctx, order)
 	s.Require().NoError(err)
+
+	ctx.Debug("create order success", zap.Any("order", &order))
+}
+
+func (s *mariadbExternalTester) TestGetByID() {
+	order := model.NewOrder(primitive.NewObjectID().Hex(), primitive.NewObjectID().Hex(), []model.OrderItem{
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 10, 2),
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 20, 4),
+	})
+
+	ctx := contextx.Background()
+	err := s.repo.Create(ctx, order)
+	s.Require().NoError(err)
+
+	ctx.Debug("create order success", zap.Any("order", &order))
+
+	find, err := s.repo.GetByID(ctx, order.ID)
+	s.Require().NoError(err)
+
+	ctx.Debug("find order success", zap.Any("order", &find))
+}
+
+func (s *mariadbExternalTester) TestList() {
+	order := model.NewOrder(primitive.NewObjectID().Hex(), primitive.NewObjectID().Hex(), []model.OrderItem{
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 10, 2),
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 20, 4),
+	})
+
+	ctx := contextx.Background()
+	err := s.repo.Create(ctx, order)
+	s.Require().NoError(err)
+
+	ctx.Debug("create order success", zap.Any("order", &order))
+
+	list, total, err := s.repo.List(ctx, repo.ListCondition{
+		UserID:       "",
+		RestaurantID: "",
+		Status:       "",
+		Limit:        0,
+		Offset:       0,
+	})
+	s.Require().NoError(err)
+
+	ctx.Debug("list order success", zap.Any("list", &list), zap.Int("total", total))
 }

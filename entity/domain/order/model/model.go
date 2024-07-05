@@ -12,42 +12,49 @@ import (
 // Order represents an order entity.
 type Order struct {
 	// ID is the unique identifier of the order.
-	ID string `json:"id,omitempty" bson:"_id,omitempty"`
+	ID string `json:"id,omitempty" bson:"_id,omitempty" gorm:"column:id;primaryKey;not null"`
 
 	// UserID is the identifier of the user who placed the order.
-	UserID string `json:"user_id,omitempty" bson:"user_id"`
+	UserID string `json:"user_id,omitempty" bson:"user_id" gorm:"column:user_id;not null"`
 
 	// RestaurantID is the identifier of the restaurant where the order was placed.
-	RestaurantID string `json:"restaurant_id,omitempty" bson:"restaurant_id"`
+	RestaurantID string `json:"restaurant_id,omitempty" bson:"restaurant_id" gorm:"column:restaurant_id;not null"`
 
 	// Items are the list of items in the order.
-	Items []OrderItem `json:"items,omitempty" bson:"items"`
+	Items []OrderItem `json:"items,omitempty" bson:"items" gorm:"foreignKey:OrderID;references:ID"`
 
 	// Status is the current status of the order (e.g., pending, confirmed, delivered).
-	Status OrderState `json:"status,omitempty" bson:"status"`
+	// todo: 2024/7/5|sean|how to save to mariadb with interface
+	Status OrderState `json:"status,omitempty" bson:"status" gorm:"-"`
 
 	// TotalAmount is the total amount of the order.
-	TotalAmount float64 `json:"total_amount,omitempty" bson:"total_amount"`
+	TotalAmount float64 `json:"total_amount,omitempty" bson:"total_amount" gorm:"column:total_amount"`
 
 	// CreatedAt is the timestamp when the order was created.
-	CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at"`
+	CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at" gorm:"column:created_at;autoCreateTime"`
 
 	// UpdatedAt is the timestamp when the order was last updated.
-	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
+	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at" gorm:"column:updated_at;autoUpdateTime"`
 
 	// DeliveryID is the identifier of the delivery associated with the order.
-	DeliveryID string `json:"delivery_id,omitempty" bson:"delivery_id"`
+	DeliveryID string `json:"delivery_id,omitempty" bson:"delivery_id" gorm:"column:delivery_id"`
 }
 
 func (x *Order) MarshalJSON() ([]byte, error) {
 	type Alias Order
-	return json.Marshal(&struct {
+	alias := &struct {
 		*Alias `json:",inline"`
 		Status string `json:"status,omitempty"`
 	}{
 		Alias:  (*Alias)(x),
-		Status: x.Status.String(),
-	})
+		Status: "",
+	}
+
+	if x.Status != nil {
+		alias.Status = x.Status.String()
+	}
+
+	return json.Marshal(alias)
 }
 
 func (x *Order) UnmarshalBSON(bytes []byte) error {
@@ -127,14 +134,17 @@ func (x *Order) AddItem(item OrderItem) {
 
 // OrderItem represents an item in the order.
 type OrderItem struct {
+	// OrderID is the identifier of the order to which the item belongs.
+	OrderID string `json:"order_id,omitempty" bson:"order_id" gorm:"column:order_id;primaryKey"`
+
 	// MenuItemID is the identifier of the menu item.
-	MenuItemID string `json:"menu_item_id,omitempty" bson:"menu_item_id"`
+	MenuItemID string `json:"menu_item_id,omitempty" bson:"menu_item_id" gorm:"column:item_id;primaryKey"`
 
 	// Quantity is the quantity of the menu item ordered.
-	Quantity int `json:"quantity,omitempty" bson:"quantity" example:"2"`
+	Quantity int `json:"quantity,omitempty" bson:"quantity" example:"2" gorm:"column:quantity"`
 
 	// Price is the price of a single unit of the menu item.
-	Price float64 `json:"price,omitempty" bson:"price" example:"10"`
+	Price float64 `json:"price,omitempty" bson:"price" example:"10.5" gorm:"column:price"`
 }
 
 // NewOrderItem creates a new order item.
