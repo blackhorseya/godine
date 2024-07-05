@@ -12,7 +12,7 @@ restaurantRestful:
 
   storage:
     mysql:
-      dsn: root:changeme@mariadb:3306/godine?charset=utf8mb4&parseTime=True&loc=Local
+      dsn: root:changeme@tcp(mariadb:3306)/godine?charset=utf8mb4&parseTime=True&loc=Local
 
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
@@ -37,7 +37,7 @@ orderRestful:
 
   storage:
     mysql:
-      dsn: root:changeme@mariadb:3306/godine?charset=utf8mb4&parseTime=True&loc=Local
+      dsn: root:changeme@tcp(mariadb:3306)/godine?charset=utf8mb4&parseTime=True&loc=Local
 
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
@@ -62,7 +62,7 @@ userRestful:
 
   storage:
     mysql:
-      dsn: root:changeme@mariadb:3306/godine?charset=utf8mb4&parseTime=True&loc=Local
+      dsn: root:changeme@tcp(mariadb:3306)/godine?charset=utf8mb4&parseTime=True&loc=Local
 
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
@@ -87,7 +87,7 @@ logisticsRestful:
 
   storage:
     mysql:
-      dsn: root:changeme@mariadb:3306/godine?charset=utf8mb4&parseTime=True&loc=Local
+      dsn: root:changeme@tcp(mariadb:3306)/godine?charset=utf8mb4&parseTime=True&loc=Local
 
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
@@ -118,7 +118,7 @@ notifyRestful:
 
   storage:
     mysql:
-      dsn: root:changeme@mariadb:3306/godine?charset=utf8mb4&parseTime=True&loc=Local
+      dsn: root:changeme@tcp(mariadb:3306)/godine?charset=utf8mb4&parseTime=True&loc=Local
 
     mongodb:
       dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority

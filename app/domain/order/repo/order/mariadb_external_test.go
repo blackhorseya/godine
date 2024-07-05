@@ -7,10 +7,13 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
+	"github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/suite"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type mariadbExternalTester struct {
@@ -45,4 +48,15 @@ func (s *mariadbExternalTester) TearDownTest() {
 
 func TestMariadbExternal(t *testing.T) {
 	suite.Run(t, new(mariadbExternalTester))
+}
+
+func (s *mariadbExternalTester) TestCreate() {
+	order := model.NewOrder(primitive.NewObjectID().Hex(), primitive.NewObjectID().Hex(), []model.OrderItem{
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 10, 2),
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 20, 4),
+	})
+
+	ctx := contextx.Background()
+	err := s.repo.Create(ctx, order)
+	s.Require().NoError(err)
 }
