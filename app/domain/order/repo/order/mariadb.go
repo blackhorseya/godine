@@ -15,6 +15,8 @@ import (
 	"gorm.io/gorm"
 )
 
+const defaultLimit = 100
+
 type mariadb struct {
 	rw *gorm.DB
 }
@@ -124,6 +126,12 @@ func (i *mariadb) List(
 	}
 
 	// Apply limit and offset
+	if condition.Limit == 0 {
+		condition.Limit = defaultLimit
+	}
+	if condition.Offset < 0 {
+		condition.Offset = 0
+	}
 	query = query.Limit(condition.Limit).Offset(condition.Offset)
 
 	// Execute the query
