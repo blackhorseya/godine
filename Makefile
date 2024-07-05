@@ -85,7 +85,7 @@ DEPLOY_TO := prod
 HELM_REPO_NAME := blackhorseya
 
 .PHONY: deploy
-deploy: deploy-restaurant-restful deploy-order-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful deploy-mongodb ## deploy all
+deploy: deploy-restaurant-restful deploy-order-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful deploy-mariadb deploy-mongodb deploy-redis ## deploy all
 
 .PHONY: deploy-restaurant-restful
 deploy-restaurant-restful: ## deploy restaurant
