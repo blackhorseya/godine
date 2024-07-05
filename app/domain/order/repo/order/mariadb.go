@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/order/model"
@@ -11,7 +12,6 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/bwmarrin/snowflake"
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -42,7 +42,7 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
 
 	// 检查订单 ID
 	if order.ID == "" {
-		order.ID = uuid.New().String()
+		order.ID = strconv.Itoa(int(i.node.Generate().Int64()))
 	}
 
 	// 开启事务

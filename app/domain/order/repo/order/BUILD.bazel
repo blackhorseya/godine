@@ -15,7 +15,6 @@ go_library(
         "//pkg/contextx",
         "//pkg/errorx",
         "@com_github_bwmarrin_snowflake//:snowflake",
-        "@com_github_google_uuid//:uuid",
         "@io_gorm_gorm//:gorm",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//bson/primitive",
