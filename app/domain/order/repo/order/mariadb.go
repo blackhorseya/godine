@@ -1,10 +1,12 @@
 package order
 
 import (
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 )
 
 type mariadb struct {
@@ -17,8 +19,27 @@ func NewMariadb(rw *sqlx.DB) repo.IOrderRepo {
 }
 
 func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
+	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.Create")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
 	// todo: 2024/7/5|sean|implement me
-	panic("implement me")
+	stmt := ``
+
+	_, err := i.rw.NamedExecContext(timeout, stmt, order)
+	if err != nil {
+		ctx.Error(
+			"create order to mariadb failed",
+			zap.Error(err),
+			zap.String("stmt", stmt),
+			zap.Any("order", &order),
+		)
+		return err
+	}
+
+	return nil
 }
 
 func (i *mariadb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, err error) {
