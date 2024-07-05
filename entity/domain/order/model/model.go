@@ -15,6 +15,8 @@ type Order struct {
 	// ID is the unique identifier of the order.
 	ID string `json:"id,omitempty" bson:"_id,omitempty" gorm:"column:id;primaryKey;not null"`
 
+	NewID int64 `json:"new_id,omitempty" bson:"-" gorm:"column:new_id;not null"`
+
 	// UserID is the identifier of the user who placed the order.
 	UserID string `json:"user_id,omitempty" bson:"user_id" gorm:"column:user_id;not null"`
 
