@@ -12,13 +12,13 @@ import (
 // Order represents an order entity.
 type Order struct {
 	// ID is the unique identifier of the order.
-	ID string `json:"id,omitempty" bson:"_id,omitempty" gorm:"column:id;primaryKey"`
+	ID string `json:"id,omitempty" bson:"_id,omitempty" gorm:"column:id;primaryKey;not null"`
 
 	// UserID is the identifier of the user who placed the order.
-	UserID string `json:"user_id,omitempty" bson:"user_id" gorm:"column:user_id"`
+	UserID string `json:"user_id,omitempty" bson:"user_id" gorm:"column:user_id;not null"`
 
 	// RestaurantID is the identifier of the restaurant where the order was placed.
-	RestaurantID string `json:"restaurant_id,omitempty" bson:"restaurant_id" gorm:"column:restaurant_id"`
+	RestaurantID string `json:"restaurant_id,omitempty" bson:"restaurant_id" gorm:"column:restaurant_id;not null"`
 
 	// Items are the list of items in the order.
 	Items []OrderItem `json:"items,omitempty" bson:"items" gorm:"foreignKey:OrderID;references:ID"`
