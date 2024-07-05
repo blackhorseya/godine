@@ -33,12 +33,30 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
+	// 开启事务
+	tx := i.rw.WithContext(timeout).Begin()
+	if tx.Error != nil {
+		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
+		return tx.Error
+	}
+
+	// 检查订单 ID
 	if order.ID == "" {
 		order.ID = uuid.New().String()
 	}
-	err := i.rw.WithContext(timeout).Create(order).Error
+
+	// 创建订单
+	err := tx.Create(order).Error
 	if err != nil {
+		tx.Rollback()
 		ctx.Error("create order to mariadb failed", zap.Error(err), zap.Any("order", &order))
+		return err
+	}
+
+	// 提交事务
+	if err = tx.Commit().Error; err != nil {
+		tx.Rollback()
+		ctx.Error("failed to commit transaction", zap.Error(err))
 		return err
 	}
 
