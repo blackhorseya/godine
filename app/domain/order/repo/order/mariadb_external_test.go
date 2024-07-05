@@ -11,15 +11,15 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
-	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gorm.io/gorm"
 )
 
 type mariadbExternalTester struct {
 	suite.Suite
 
-	rw   *sqlx.DB
+	rw   *gorm.DB
 	repo repo.IOrderRepo
 }
 
@@ -33,7 +33,7 @@ func (s *mariadbExternalTester) SetupTest() {
 	err = logging.Init(app.Log)
 	s.Require().NoError(err)
 
-	rw, err := mariadbx.NewClient(app)
+	rw, err := mariadbx.NewClientV2(app)
 	s.Require().NoError(err)
 	s.rw = rw
 
@@ -41,9 +41,6 @@ func (s *mariadbExternalTester) SetupTest() {
 }
 
 func (s *mariadbExternalTester) TearDownTest() {
-	if s.rw != nil {
-		_ = s.rw.Close()
-	}
 }
 
 func TestMariadbExternal(t *testing.T) {
