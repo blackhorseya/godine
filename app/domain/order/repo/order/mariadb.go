@@ -1,6 +1,8 @@
 package order
 
 import (
+	"fmt"
+
 	"github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -12,8 +14,13 @@ type mariadb struct {
 }
 
 // NewMariadb create and return a new mariadb
-func NewMariadb(rw *gorm.DB) repo.IOrderRepo {
-	return &mariadb{rw: rw}
+func NewMariadb(rw *gorm.DB) (repo.IOrderRepo, error) {
+	err := rw.AutoMigrate(&model.Order{}, &model.OrderItem{})
+	if err != nil {
+		return nil, fmt.Errorf("migrate order and order item failed: %w", err)
+	}
+
+	return &mariadb{rw: rw}, nil
 }
 
 func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {

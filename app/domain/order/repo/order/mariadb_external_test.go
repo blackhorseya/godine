@@ -37,7 +37,9 @@ func (s *mariadbExternalTester) SetupTest() {
 	s.Require().NoError(err)
 	s.rw = rw
 
-	s.repo = NewMariadb(s.rw)
+	orderRepo, err := NewMariadb(s.rw)
+	s.Require().NoError(err)
+	s.repo = orderRepo
 }
 
 func (s *mariadbExternalTester) TearDownTest() {
