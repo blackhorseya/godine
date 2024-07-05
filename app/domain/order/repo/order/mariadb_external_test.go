@@ -34,7 +34,7 @@ func (s *mariadbExternalTester) SetupTest() {
 	err = logging.Init(app.Log)
 	s.Require().NoError(err)
 
-	rw, err := mariadbx.NewClientV2(app)
+	rw, err := mariadbx.NewClient(app)
 	s.Require().NoError(err)
 	s.rw = rw
 

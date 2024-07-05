@@ -16,7 +16,7 @@ import (
 	biz2 "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -41,11 +41,14 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	iUserBiz := biz2.NewUserHTTPClient()
 	iLogisticsBiz := biz3.NewLogisticsHTTPClient()
 	iNotificationBiz := biz4.NewNotificationHTTPClient()
-	client, err := mongodbx.NewClient(application)
+	db, err := mariadbx.NewClient(application)
 	if err != nil {
 		return nil, err
 	}
-	iOrderRepo := order.NewMongodb(client)
+	iOrderRepo, err := order.NewMariadb(db)
+	if err != nil {
+		return nil, err
+	}
 	iOrderBiz := biz5.NewOrderBiz(iRestaurantBiz, iMenuBiz, iUserBiz, iLogisticsBiz, iNotificationBiz, iOrderRepo)
 	injector := &wirex.Injector{
 		A:            application,
@@ -81,5 +84,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz5.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMongodb, mongodbx.NewClient, biz3.NewLogisticsHTTPClient, biz4.NewNotificationHTTPClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz5.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMariadb, mariadbx.NewClient, biz3.NewLogisticsHTTPClient, biz4.NewNotificationHTTPClient,
 )

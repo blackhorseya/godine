@@ -14,7 +14,7 @@ import (
 	biz3 "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
-	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -53,8 +53,8 @@ var providerSet = wire.NewSet(
 	biz2.NewRestaurantHTTPClient,
 	biz2.NewMenuHTTPClient,
 	biz3.NewUserHTTPClient,
-	order.NewMongodb,
-	mongodbx.NewClient,
+	order.NewMariadb,
+	mariadbx.NewClient,
 	biz4.NewLogisticsHTTPClient,
 	biz5.NewNotificationHTTPClient,
 )

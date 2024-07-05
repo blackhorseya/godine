@@ -134,6 +134,9 @@ func (i *mariadb) List(
 	}
 	query = query.Limit(condition.Limit).Offset(condition.Offset)
 
+	// Order by updated_at descending
+	query = query.Order("updated_at DESC")
+
 	// Execute the query
 	err = query.Find(&orders).Error
 	if err != nil {

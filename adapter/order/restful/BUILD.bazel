@@ -20,7 +20,7 @@ go_library(
         "//app/domain/user/biz",
         "//app/infra/configx",
         "//app/infra/otelx",
-        "//app/infra/storage/mongodbx",
+        "//app/infra/storage/mariadbx",
         "//app/infra/transports/httpx",
         "//pkg/adapterx",
         "//pkg/contextx",

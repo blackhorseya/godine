@@ -8,7 +8,6 @@ go_library(
     deps = [
         "//app/infra/configx",
         "@com_github_go_sql_driver_mysql//:mysql",
-        "@com_github_jmoiron_sqlx//:sqlx",
         "@io_gorm_driver_mysql//:mysql",
         "@io_gorm_gorm//:gorm",
     ],
