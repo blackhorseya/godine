@@ -1,12 +1,15 @@
 package order
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -64,8 +67,28 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
 }
 
 func (i *mariadb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, err error) {
-	// todo: 2024/7/5|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.GetByID")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	// 初始化 Order 对象
+	order := &model.Order{}
+
+	// 根据 ID 查询订单
+	err = i.rw.WithContext(timeout).Preload("Items").First(order, "id = ?", id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			ctx.Warn("order not found", zap.String("id", id))
+			return nil, errorx.Wrap(http.StatusNotFound, 404, err)
+		}
+
+		ctx.Error("get order by id from mariadb failed", zap.Error(err), zap.String("id", id))
+		return nil, err
+	}
+
+	return order, nil
 }
 
 func (i *mariadb) List(

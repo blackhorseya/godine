@@ -41,13 +41,19 @@ type Order struct {
 
 func (x *Order) MarshalJSON() ([]byte, error) {
 	type Alias Order
-	return json.Marshal(&struct {
+	alias := &struct {
 		*Alias `json:",inline"`
 		Status string `json:"status,omitempty"`
 	}{
 		Alias:  (*Alias)(x),
-		Status: x.Status.String(),
-	})
+		Status: "",
+	}
+
+	if x.Status != nil {
+		alias.Status = x.Status.String()
+	}
+
+	return json.Marshal(alias)
 }
 
 func (x *Order) UnmarshalBSON(bytes []byte) error {

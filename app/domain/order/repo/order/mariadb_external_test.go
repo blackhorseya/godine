@@ -62,3 +62,21 @@ func (s *mariadbExternalTester) TestCreate() {
 
 	ctx.Debug("create order success", zap.Any("order", &order))
 }
+
+func (s *mariadbExternalTester) TestGetByID() {
+	order := model.NewOrder(primitive.NewObjectID().Hex(), primitive.NewObjectID().Hex(), []model.OrderItem{
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 10, 2),
+		*model.NewOrderItem(primitive.NewObjectID().Hex(), "item 1", 20, 4),
+	})
+
+	ctx := contextx.Background()
+	err := s.repo.Create(ctx, order)
+	s.Require().NoError(err)
+
+	ctx.Debug("create order success", zap.Any("order", &order))
+
+	find, err := s.repo.GetByID(ctx, order.ID)
+	s.Require().NoError(err)
+
+	ctx.Debug("find order success", zap.Any("order", &find))
+}
