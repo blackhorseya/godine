@@ -16,6 +16,7 @@ import (
 	biz2 "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/snowflakex"
 	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -45,7 +46,11 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	iOrderRepo, err := order.NewMariadb(db)
+	node, err := snowflakex.NewNode()
+	if err != nil {
+		return nil, err
+	}
+	iOrderRepo, err := order.NewMariadb(db, node)
 	if err != nil {
 		return nil, err
 	}
@@ -84,5 +89,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz5.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMariadb, mariadbx.NewClient, biz3.NewLogisticsHTTPClient, biz4.NewNotificationHTTPClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz5.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMariadb, mariadbx.NewClient, snowflakex.NewNode, biz3.NewLogisticsHTTPClient, biz4.NewNotificationHTTPClient,
 )

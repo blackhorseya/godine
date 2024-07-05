@@ -10,6 +10,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
+	"github.com/bwmarrin/snowflake"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -18,17 +19,18 @@ import (
 const defaultLimit = 100
 
 type mariadb struct {
-	rw *gorm.DB
+	rw   *gorm.DB
+	node *snowflake.Node
 }
 
 // NewMariadb create and return a new mariadb
-func NewMariadb(rw *gorm.DB) (repo.IOrderRepo, error) {
+func NewMariadb(rw *gorm.DB, node *snowflake.Node) (repo.IOrderRepo, error) {
 	err := rw.AutoMigrate(&model.Order{}, &model.OrderItem{})
 	if err != nil {
 		return nil, fmt.Errorf("migrate order and order item failed: %w", err)
 	}
 
-	return &mariadb{rw: rw}, nil
+	return &mariadb{rw: rw, node: node}, nil
 }
 
 func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {

@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/blackhorseya/godine/app/infra/configx"
+	"github.com/blackhorseya/godine/app/infra/snowflakex"
 	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
 	"github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
@@ -38,7 +39,10 @@ func (s *mariadbExternalTester) SetupTest() {
 	s.Require().NoError(err)
 	s.rw = rw
 
-	orderRepo, err := NewMariadb(s.rw)
+	node, err := snowflakex.NewNode()
+	s.Require().NoError(err)
+
+	orderRepo, err := NewMariadb(s.rw, node)
 	s.Require().NoError(err)
 	s.repo = orderRepo
 }
