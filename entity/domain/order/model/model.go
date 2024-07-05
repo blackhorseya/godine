@@ -26,7 +26,7 @@ type Order struct {
 	RestaurantID string `json:"restaurant_id,omitempty" bson:"restaurant_id" gorm:"column:restaurant_id;not null"`
 
 	// Items are the list of items in the order.
-	Items []OrderItem `json:"items,omitempty" bson:"items" gorm:"foreignKey:OrderID;references:ID"`
+	Items []OrderItem `json:"items,omitempty" bson:"items" gorm:"foreignKey:BigIntOrderID;references:BigIntID"`
 
 	// Status is the current status of the order (e.g., pending, confirmed, delivered).
 	Status       OrderState `json:"status,omitempty" bson:"status" gorm:"-"`
@@ -170,7 +170,10 @@ func (x *Order) AfterFind(tx *gorm.DB) (err error) {
 // OrderItem represents an item in the order.
 type OrderItem struct {
 	// OrderID is the identifier of the order to which the item belongs.
-	OrderID string `json:"order_id,omitempty" bson:"order_id" gorm:"column:order_id;primaryKey"`
+	OrderID string `json:"order_id,omitempty" bson:"order_id" gorm:"-"`
+
+	// BigIntOrderID is the actual field stored as BIGINT in the DB.
+	BigIntOrderID int64 `json:"-" gorm:"column:order_id;primaryKey;not null"`
 
 	// MenuItemID is the identifier of the menu item.
 	MenuItemID string `json:"menu_item_id,omitempty" bson:"menu_item_id" gorm:"column:item_id;primaryKey"`

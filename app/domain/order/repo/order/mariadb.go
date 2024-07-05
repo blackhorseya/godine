@@ -84,7 +84,7 @@ func (i *mariadb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, 
 	err = i.rw.WithContext(timeout).Preload("Items").First(order, "id = ?", id).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			ctx.Warn("order not found", zap.String("id", id))
+			ctx.Error("order not found", zap.String("id", id))
 			return nil, errorx.Wrap(http.StatusNotFound, 404, err)
 		}
 
