@@ -16,7 +16,7 @@ var (
 
 // NewConfiguration creates a new configuration.
 func NewConfiguration(v *viper.Viper) (*Configuration, error) {
-	configFile := v.GetString("config")
+	configFile := viper.GetString("config")
 	if configFile == "" {
 		home, _ := os.UserHomeDir()
 		if home == "" {
