@@ -7,6 +7,7 @@ import (
 
 // Injector defines the injector struct.
 type Injector struct {
+	C *configx.Configuration
 	A *configx.Application
 
 	UserService biz.IUserBiz
