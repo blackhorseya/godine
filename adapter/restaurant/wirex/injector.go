@@ -7,6 +7,7 @@ import (
 
 // Injector is used to inject restaurant service.
 type Injector struct {
+	C *configx.Configuration
 	A *configx.Application
 
 	RestaurantService biz2.IRestaurantBiz
