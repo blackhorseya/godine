@@ -1,3 +1,21 @@
+## 0.4.5 (2024-07-06)
+
+### Feat
+
+- improve service initialization and error handling (#71)
+- improve server shutdown logging for multiple adapters
+- implement graceful shutdown for server
+- improve service initialization and error handling
+- refactor command execution logic in main loop
+- introduce new service listing functionality
+
+### Refactor
+
+- refactor signal handling and remove otelx references
+- refactor and clean up code in multiple adapter packages
+- improve error handling and signal handling
+- refactor service commands in `start.go` and `cmdx.go`
+
 ## 0.4.4 (2024-07-06)
 
 ### Feat
