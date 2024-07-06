@@ -7,7 +7,20 @@ import (
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/blackhorseya/godine/pkg/netx"
 	"github.com/google/uuid"
+	"github.com/spf13/viper"
 )
+
+// NewApplication is used to create a new application.
+func NewApplication(v *viper.Viper, name string) (*Application, error) {
+	app := new(Application)
+
+	err := v.UnmarshalKey(name, app)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal application: %w", err)
+	}
+
+	return app, nil
+}
 
 // Application defines the application struct.
 type Application struct {

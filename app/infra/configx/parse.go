@@ -32,13 +32,13 @@ func NewConfiguration(v *viper.Viper) (*Configuration, error) {
 		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
 
-	var ret *Configuration
-	err = v.Unmarshal(&ret)
+	config := new(Configuration)
+	err = v.Unmarshal(&config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal configuration: %w", err)
 	}
 
-	return ret, nil
+	return config, nil
 }
 
 // LoadConfig loads the configuration.

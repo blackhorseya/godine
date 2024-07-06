@@ -24,8 +24,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-func initApplication() (*configx.Application, error) {
-	app, err := configx.LoadApplication(&configx.C.OrderRestful)
+func initApplication(v *viper.Viper) (*configx.Application, error) {
+	app, err := configx.NewApplication(v, "orderRestful")
 	if err != nil {
 		return nil, err
 	}
