@@ -43,7 +43,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		return nil, err
 	}
 	iDeliveryRepo := delivery.NewMongodb(client)
-	iLogisticsBiz, err := biz2.NewLogistics(iNotificationBiz, iDeliveryRepo)
+	iLogisticsBiz, err := biz2.NewLogistics(iNotificationBiz, iDeliveryRepo, application)
 	if err != nil {
 		return nil, err
 	}

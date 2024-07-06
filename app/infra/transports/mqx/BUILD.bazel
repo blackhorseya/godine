@@ -10,6 +10,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/infra/transports/mqx",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/configx",
         "//app/infra/transports/kafkax",
         "//entity/domain/logistics/model",
         "//entity/events",
