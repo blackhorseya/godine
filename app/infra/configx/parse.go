@@ -41,35 +41,6 @@ func NewConfiguration(v *viper.Viper) (*Configuration, error) {
 	return config, nil
 }
 
-// LoadConfig loads the configuration.
-func LoadConfig(path string) (err error) {
-	v := viper.GetViper()
-
-	if path != "" {
-		v.SetConfigFile(path)
-	} else {
-		home, _ := os.UserHomeDir()
-		if home == "" {
-			home = "/root"
-		}
-		v.AddConfigPath(home + "/.config/godine")
-		v.SetConfigType("yaml")
-		v.SetConfigName(".godine")
-	}
-
-	err = v.ReadInConfig()
-	if err != nil && !errors.As(err, &viper.ConfigFileNotFoundError{}) {
-		return err
-	}
-
-	err = v.Unmarshal(&C)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func bindEnv(v *viper.Viper) (err error) {
 	v.AutomaticEnv()
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))

@@ -28,9 +28,6 @@ type suiteMongodbExternal struct {
 }
 
 func (s *suiteMongodbExternal) SetupTest() {
-	err := configx.LoadConfig("")
-	s.Require().NoError(err)
-
 	app, err := configx.NewApplication(viper.GetViper(), "restaurantRestful")
 	s.Require().NoError(err)
 

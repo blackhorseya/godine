@@ -5,13 +5,10 @@ package restful
 import (
 	"testing"
 
-	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/spf13/viper"
 )
 
 func TestRun(t *testing.T) {
-	_ = configx.LoadConfig("")
-
 	restful, err := New(viper.GetViper())
 	if err != nil {
 		t.Fatalf("New() error = %v", err)

@@ -27,9 +27,6 @@ type mariadbExternalTester struct {
 }
 
 func (s *mariadbExternalTester) SetupTest() {
-	err := configx.LoadConfig("")
-	s.Require().NoError(err)
-
 	app, err := configx.NewApplication(viper.GetViper(), "orderRestful")
 	s.Require().NoError(err)
 
