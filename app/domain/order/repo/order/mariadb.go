@@ -33,7 +33,7 @@ func NewMariadb(rw *gorm.DB, node *snowflake.Node) (repo.IOrderRepo, error) {
 	return &mariadb{rw: rw, node: node}, nil
 }
 
-func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
+func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) (err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.Create")
 	defer span.End()
 
@@ -51,9 +51,14 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) error {
 		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
 		return tx.Error
 	}
+	defer func() {
+		if r := recover(); r != nil || err != nil {
+			tx.Rollback()
+		}
+	}()
 
 	// 创建订单
-	err := tx.Create(order).Error
+	err = tx.Create(order).Error
 	if err != nil {
 		tx.Rollback()
 		ctx.Error("create order to mariadb failed", zap.Error(err), zap.Any("order", &order))
@@ -149,17 +154,37 @@ func (i *mariadb) List(
 	return orders, int(count), nil
 }
 
-func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) error {
+func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) (err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.Update")
 	defer span.End()
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	// 更新订单
-	err := i.rw.WithContext(timeout).Save(order).Error
+	// start transaction
+	tx := i.rw.WithContext(timeout).Begin()
+	if tx.Error != nil {
+		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
+		return tx.Error
+	}
+	defer func() {
+		if r := recover(); r != nil || err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// update order
+	err = tx.Save(order).Error
 	if err != nil {
-		ctx.Error("update order in mariadb failed", zap.Error(err), zap.Any("order", order))
+		tx.Rollback()
+		ctx.Error("update order to mariadb failed", zap.Error(err), zap.Any("order", &order))
+		return err
+	}
+
+	// commit transaction
+	if err = tx.Commit().Error; err != nil {
+		tx.Rollback()
+		ctx.Error("failed to commit transaction", zap.Error(err))
 		return err
 	}
 
