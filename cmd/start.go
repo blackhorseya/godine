@@ -1,19 +1,63 @@
 package cmd
 
 import (
+	"log"
+
 	logistics "github.com/blackhorseya/godine/adapter/logistics/restful"
 	notify "github.com/blackhorseya/godine/adapter/notify/restful"
 	order "github.com/blackhorseya/godine/adapter/order/restful"
 	restaurant "github.com/blackhorseya/godine/adapter/restaurant/restful"
 	user "github.com/blackhorseya/godine/adapter/user/restful"
+	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/cmdx"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"golang.org/x/sync/errgroup"
 )
 
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start the server",
+	Run: func(cmd *cobra.Command, args []string) {
+		services := []func(*viper.Viper) (adapterx.Restful, error){
+			restaurant.New,
+			order.New,
+			user.New,
+			logistics.New,
+			notify.New,
+		}
+
+		var g errgroup.Group
+
+		for _, getService := range services {
+			getService := getService // capture range variable
+			g.Go(func() error {
+				v := viper.New()
+				service, err := getService(v)
+				if err != nil {
+					log.Printf("Failed to initialize service: %v", err)
+					return err
+				}
+
+				if err = service.Start(); err != nil {
+					log.Printf("Failed to start service: %v", err)
+					return err
+				}
+
+				if err = service.AwaitSignal(); err != nil {
+					log.Printf("Service encountered an error: %v", err)
+					return err
+				}
+
+				return nil
+			})
+		}
+
+		if err := g.Wait(); err != nil {
+			log.Fatalf("Failed to start all services: %v", err)
+		}
+	},
 }
 
 func init() {
