@@ -3,8 +3,8 @@ package cmd
 import (
 	"os"
 
-	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var cfgFile string
@@ -46,6 +46,7 @@ func init() {
 		"",
 		"config file (default is $HOME/.config/godine/.godine.yaml)",
 	)
+	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -54,6 +55,4 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	err := configx.LoadConfig(cfgFile)
-	cobra.CheckErr(err)
 }

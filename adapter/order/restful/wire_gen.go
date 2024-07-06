@@ -33,7 +33,11 @@ import (
 // Injectors from wire.go:
 
 func New(v *viper.Viper) (adapterx.Restful, error) {
-	application, err := initApplication()
+	configuration, err := configx.NewConfiguration(v)
+	if err != nil {
+		return nil, err
+	}
+	application, err := initApplication(v)
 	if err != nil {
 		return nil, err
 	}
@@ -56,6 +60,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	}
 	iOrderBiz := biz5.NewOrderBiz(iRestaurantBiz, iMenuBiz, iUserBiz, iLogisticsBiz, iNotificationBiz, iOrderRepo)
 	injector := &wirex.Injector{
+		C:            configuration,
 		A:            application,
 		OrderService: iOrderBiz,
 	}
@@ -69,8 +74,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 
 // wire.go:
 
-func initApplication() (*configx.Application, error) {
-	app, err := configx.LoadApplication(&configx.C.OrderRestful)
+func initApplication(v *viper.Viper) (*configx.Application, error) {
+	app, err := configx.NewApplication(v, "orderRestful")
 	if err != nil {
 		return nil, err
 	}
@@ -89,5 +94,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz5.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMariadb, mariadbx.NewClient, snowflakex.NewNode, biz3.NewLogisticsHTTPClient, biz4.NewNotificationHTTPClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz5.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMariadb, mariadbx.NewClient, snowflakex.NewNode, biz3.NewLogisticsHTTPClient, biz4.NewNotificationHTTPClient,
 )
