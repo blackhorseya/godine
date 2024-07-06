@@ -2,10 +2,7 @@ package restful
 
 import (
 	"fmt"
-	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 
 	v1 "github.com/blackhorseya/godine/adapter/user/restful/v1"
 	"github.com/blackhorseya/godine/adapter/user/wirex"
@@ -67,18 +64,12 @@ func (i *impl) Start() error {
 }
 
 func (i *impl) AwaitSignal() error {
-	c := make(chan os.Signal, 1)
-	signal.Reset(syscall.SIGTERM, syscall.SIGINT)
-	signal.Notify(c, syscall.SIGTERM, syscall.SIGINT)
+	ctx := contextx.Background()
+	ctx.Info("receive signal to stop server")
 
-	if sig := <-c; true {
-		ctx := contextx.Background()
-		ctx.Info("receive signal", zap.String("signal", sig.String()))
-
-		err := i.server.Stop(ctx)
-		if err != nil {
-			ctx.Error("shutdown restful server error", zap.Error(err))
-		}
+	if err := i.server.Stop(ctx); err != nil {
+		ctx.Error("Failed to stop server", zap.Error(err))
+		return fmt.Errorf("failed to stop server: %w", err)
 	}
 
 	return nil
