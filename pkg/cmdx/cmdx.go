@@ -39,8 +39,7 @@ func (c *ServiceCmd) NewCmd() *cobra.Command {
 			signalChan := make(chan os.Signal, 1)
 			signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT)
 
-			sig := <-signalChan
-			_ = sig
+			<-signalChan
 
 			err = service.AwaitSignal()
 			cobra.CheckErr(err)

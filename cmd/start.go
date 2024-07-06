@@ -2,6 +2,9 @@ package cmd
 
 import (
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	logistics "github.com/blackhorseya/godine/adapter/logistics/restful"
 	notify "github.com/blackhorseya/godine/adapter/notify/restful"
@@ -10,6 +13,7 @@ import (
 	user "github.com/blackhorseya/godine/adapter/user/restful"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/cmdx"
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"golang.org/x/sync/errgroup"
@@ -20,6 +24,9 @@ var startCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start the server",
 	Run: func(cmd *cobra.Command, args []string) {
+		ctx, cancel := contextx.WithCancel(contextx.Background())
+		defer cancel()
+
 		services := []func(*viper.Viper) (adapterx.Restful, error){
 			restaurant.New,
 			order.New,
@@ -45,6 +52,8 @@ var startCmd = &cobra.Command{
 					return err
 				}
 
+				<-ctx.Done()
+
 				if err = service.AwaitSignal(); err != nil {
 					log.Printf("Service encountered an error: %v", err)
 					return err
@@ -52,6 +61,17 @@ var startCmd = &cobra.Command{
 
 				return nil
 			})
+		}
+
+		// Setup signal handling
+		signalChan := make(chan os.Signal, 1)
+		signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT)
+
+		select {
+		case sig := <-signalChan:
+			log.Printf("Received signal: %v", sig)
+			cancel() // Cancel the context to stop all services
+		case <-ctx.Done():
 		}
 
 		if err := g.Wait(); err != nil {

@@ -7,7 +7,6 @@ import (
 	v1 "github.com/blackhorseya/godine/adapter/restaurant/restful/v1"
 	"github.com/blackhorseya/godine/adapter/restaurant/wirex"
 	_ "github.com/blackhorseya/godine/api/restaurant/restful" // swagger docs
-	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -71,11 +70,6 @@ func (i *impl) AwaitSignal() error {
 	if err := i.server.Stop(ctx); err != nil {
 		ctx.Error("Failed to stop server", zap.Error(err))
 		return fmt.Errorf("failed to stop server: %w", err)
-	}
-
-	if err := otelx.Shutdown(ctx); err != nil {
-		ctx.Error("Failed to shutdown OpenTelemetry SDK", zap.Error(err))
-		return fmt.Errorf("failed to shutdown OpenTelemetry SDK: %w", err)
 	}
 
 	return nil
