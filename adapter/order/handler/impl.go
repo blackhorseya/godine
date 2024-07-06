@@ -2,10 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 
 	_ "github.com/blackhorseya/godine/api/order/restful" // swagger docs
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -48,12 +45,7 @@ func (i *impl) Start() error {
 }
 
 func (i *impl) AwaitSignal() error {
-	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT)
-
-	sig := <-signalChan
 	ctx := contextx.Background()
-	ctx.Info("Received signal", zap.String("signal", sig.String()))
 
 	if err := i.server.Stop(ctx); err != nil {
 		ctx.Error("Failed to stop server", zap.Error(err))
