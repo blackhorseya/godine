@@ -2,6 +2,7 @@ package configx
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 
@@ -15,12 +16,29 @@ var (
 
 // NewConfiguration creates a new configuration.
 func NewConfiguration(v *viper.Viper) (*Configuration, error) {
-	err := LoadConfig("")
-	if err != nil {
-		return nil, err
+	configFile := v.GetString("config")
+	if configFile == "" {
+		home, _ := os.UserHomeDir()
+		if home == "" {
+			home = "/root"
+		}
+		configFile = home + "/.config/godine/.godine.yaml"
 	}
 
-	return C, nil
+	v.SetConfigFile(configFile)
+
+	err := v.ReadInConfig()
+	if err != nil && !errors.As(err, &viper.ConfigFileNotFoundError{}) {
+		return nil, fmt.Errorf("failed to read config file: %w", err)
+	}
+
+	var ret *Configuration
+	err = v.Unmarshal(&ret)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal configuration: %w", err)
+	}
+
+	return ret, nil
 }
 
 // LoadConfig loads the configuration.
