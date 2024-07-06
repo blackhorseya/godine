@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	_ "github.com/blackhorseya/godine/api/order/restful" // swagger docs
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -47,18 +48,21 @@ func (i *impl) Start() error {
 }
 
 func (i *impl) AwaitSignal() error {
-	c := make(chan os.Signal, 1)
-	signal.Reset(syscall.SIGTERM, syscall.SIGINT)
-	signal.Notify(c, syscall.SIGTERM, syscall.SIGINT)
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT)
 
-	if sig := <-c; true {
-		ctx := contextx.Background()
-		ctx.Info("receive signal", zap.String("signal", sig.String()))
+	sig := <-signalChan
+	ctx := contextx.Background()
+	ctx.Info("Received signal", zap.String("signal", sig.String()))
 
-		err := i.server.Stop(ctx)
-		if err != nil {
-			ctx.Error("shutdown restful server error", zap.Error(err))
-		}
+	if err := i.server.Stop(ctx); err != nil {
+		ctx.Error("Failed to stop server", zap.Error(err))
+		return fmt.Errorf("failed to stop server: %w", err)
+	}
+
+	if err := otelx.Shutdown(ctx); err != nil {
+		ctx.Error("Failed to shutdown OpenTelemetry SDK", zap.Error(err))
+		return fmt.Errorf("failed to shutdown OpenTelemetry SDK: %w", err)
 	}
 
 	return nil
