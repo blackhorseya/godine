@@ -37,7 +37,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	iNotificationBiz := biz.NewNotificationHTTPClient()
+	iNotificationBiz := biz.NewNotificationHTTPClient(configuration)
 	client, err := mongodbx.NewClient(application)
 	if err != nil {
 		return nil, err

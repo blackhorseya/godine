@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	C = new(Configuration)
 	A = new(Application)
 )
 
@@ -39,54 +38,6 @@ func NewConfiguration(v *viper.Viper) (*Configuration, error) {
 	}
 
 	return config, nil
-}
-
-// LoadConfig loads the configuration.
-func LoadConfig(path string) (err error) {
-	v := viper.GetViper()
-
-	if path != "" {
-		v.SetConfigFile(path)
-	} else {
-		home, _ := os.UserHomeDir()
-		if home == "" {
-			home = "/root"
-		}
-		v.AddConfigPath(home + "/.config/godine")
-		v.SetConfigType("yaml")
-		v.SetConfigName(".godine")
-	}
-
-	err = v.ReadInConfig()
-	if err != nil && !errors.As(err, &viper.ConfigFileNotFoundError{}) {
-		return err
-	}
-
-	err = v.Unmarshal(&C)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// LoadApplication loads the application configuration.
-func LoadApplication(app *Application) (*Application, error) {
-	v := viper.GetViper()
-
-	err := bindEnv(v)
-	if err != nil {
-		return nil, err
-	}
-
-	err = v.Unmarshal(&app)
-	if err != nil {
-		return nil, err
-	}
-
-	A = app
-
-	return A, nil
 }
 
 func bindEnv(v *viper.Viper) (err error) {
