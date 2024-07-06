@@ -28,7 +28,11 @@ import (
 // Injectors from wire.go:
 
 func New(v *viper.Viper) (adapterx.Restful, error) {
-	application, err := initApplication()
+	configuration, err := configx.NewConfiguration(v)
+	if err != nil {
+		return nil, err
+	}
+	application, err := initApplication(v)
 	if err != nil {
 		return nil, err
 	}
@@ -39,6 +43,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	iUserRepo := user.NewMongodb(client)
 	iUserBiz := biz.NewUserBiz(iUserRepo)
 	injector := &wirex.Injector{
+		C:           configuration,
 		A:           application,
 		UserService: iUserBiz,
 	}
@@ -52,8 +57,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 
 // wire.go:
 
-func initApplication() (*configx.Application, error) {
-	app, err := configx.LoadApplication(&configx.C.UserRestful)
+func initApplication(v *viper.Viper) (*configx.Application, error) {
+	app, err := configx.NewApplication(v, "userRestful")
 	if err != nil {
 		return nil, err
 	}
@@ -72,5 +77,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
 )

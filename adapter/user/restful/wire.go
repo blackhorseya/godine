@@ -19,8 +19,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-func initApplication() (*configx.Application, error) {
-	app, err := configx.LoadApplication(&configx.C.UserRestful)
+func initApplication(v *viper.Viper) (*configx.Application, error) {
+	app, err := configx.NewApplication(v, "userRestful")
 	if err != nil {
 		return nil, err
 	}
@@ -42,6 +42,7 @@ var providerSet = wire.NewSet(
 	newRestful,
 
 	wire.Struct(new(wirex.Injector), "*"),
+	configx.NewConfiguration,
 	initApplication,
 	httpx.NewServer,
 
