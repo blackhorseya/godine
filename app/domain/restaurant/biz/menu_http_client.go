@@ -26,9 +26,9 @@ type menuHTTPClient struct {
 }
 
 // NewMenuHTTPClient is used to create a new menu biz client.
-func NewMenuHTTPClient() biz.IMenuBiz {
+func NewMenuHTTPClient(config *configx.Configuration) biz.IMenuBiz {
 	return &menuHTTPClient{
-		url:    configx.C.RestaurantRestful.HTTP.URL,
+		url:    config.RestaurantRestful.HTTP.URL,
 		client: &http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)},
 	}
 }

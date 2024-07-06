@@ -41,11 +41,11 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	iRestaurantBiz := biz.NewRestaurantHTTPClient()
-	iMenuBiz := biz.NewMenuHTTPClient()
-	iUserBiz := biz2.NewUserHTTPClient()
-	iLogisticsBiz := biz3.NewLogisticsHTTPClient()
-	iNotificationBiz := biz4.NewNotificationHTTPClient()
+	iRestaurantBiz := biz.NewRestaurantHTTPClient(configuration)
+	iMenuBiz := biz.NewMenuHTTPClient(configuration)
+	iUserBiz := biz2.NewUserHTTPClient(configuration)
+	iLogisticsBiz := biz3.NewLogisticsHTTPClient(configuration)
+	iNotificationBiz := biz4.NewNotificationHTTPClient(configuration)
 	db, err := mariadbx.NewClient(application)
 	if err != nil {
 		return nil, err

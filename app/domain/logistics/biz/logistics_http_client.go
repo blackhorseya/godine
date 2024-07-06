@@ -23,9 +23,9 @@ type logisticsHTTPClient struct {
 }
 
 // NewLogisticsHTTPClient will create a new logistics biz
-func NewLogisticsHTTPClient() biz.ILogisticsBiz {
+func NewLogisticsHTTPClient(config *configx.Configuration) biz.ILogisticsBiz {
 	return &logisticsHTTPClient{
-		url:    configx.C.LogisticsRestful.HTTP.URL,
+		url:    config.LogisticsRestful.HTTP.URL,
 		client: &http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)},
 	}
 }
