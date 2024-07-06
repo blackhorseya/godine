@@ -70,25 +70,6 @@ func LoadConfig(path string) (err error) {
 	return nil
 }
 
-// LoadApplication loads the application configuration.
-func LoadApplication(app *Application) (*Application, error) {
-	v := viper.GetViper()
-
-	err := bindEnv(v)
-	if err != nil {
-		return nil, err
-	}
-
-	err = v.Unmarshal(&app)
-	if err != nil {
-		return nil, err
-	}
-
-	A = app
-
-	return A, nil
-}
-
 func bindEnv(v *viper.Viper) (err error) {
 	v.AutomaticEnv()
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
