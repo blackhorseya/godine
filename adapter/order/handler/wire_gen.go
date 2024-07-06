@@ -24,7 +24,7 @@ import (
 // Injectors from wire.go:
 
 func New(v *viper.Viper) (adapterx.Restful, error) {
-	application, err := initApplication()
+	application, err := initApplication(v)
 	if err != nil {
 		return nil, err
 	}
@@ -41,8 +41,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 
 // wire.go:
 
-func initApplication() (*configx.Application, error) {
-	app, err := configx.LoadApplication(&configx.C.OrderHandler)
+func initApplication(v *viper.Viper) (*configx.Application, error) {
+	app, err := configx.NewApplication(v, "orderHandler")
 	if err != nil {
 		return nil, err
 	}
