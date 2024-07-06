@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	C = new(Configuration)
 	A = new(Application)
 )
 
