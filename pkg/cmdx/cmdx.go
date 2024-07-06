@@ -1,6 +1,10 @@
 package cmdx
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -31,6 +35,12 @@ func (c *ServiceCmd) NewCmd() *cobra.Command {
 
 			err = service.Start()
 			cobra.CheckErr(err)
+
+			signalChan := make(chan os.Signal, 1)
+			signal.Notify(signalChan, syscall.SIGTERM, syscall.SIGINT)
+
+			sig := <-signalChan
+			_ = sig
 
 			err = service.AwaitSignal()
 			cobra.CheckErr(err)
