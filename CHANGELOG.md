@@ -1,3 +1,36 @@
+## 0.4.4 (2024-07-06)
+
+### Feat
+
+- refactor configuration package in `configx` module
+- add Configuration Field to Injector Struct (#68)
+- improve error handling and dynamic config file path logic
+- refactor configuration initialization across multiple files
+- add Configuration Field to Injector Struct
+- improve transaction handling and error logging (#67)
+- improve transaction handling and error logging
+
+### Fix
+
+- refactor application initialization for configuration injection
+- improve error handling and rollback in mariadb functions
+
+### Refactor
+
+- refactor codebase for improved efficiency
+- refactor code to remove unnecessary variables
+- refactor code to include `app *configx.Application` parameter
+- refactor Configuration struct properties (#70)
+- refactor Configuration struct properties
+- update HTTP client functions to accept config parameter
+- refactor configuration handling in external tests
+- refactor configuration handling in wire setup
+- refactor initialization process to use viper parameter
+- refactor initialization process for better parameter passing
+- refactor application configuration handling
+- refactor initialization and imports in test files
+- refactor configuration handling in cmdx package
+
 ## 0.4.3 (2024-07-06)
 
 ### Feat
