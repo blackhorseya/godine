@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -34,31 +33,4 @@ func NewConfiguration(v *viper.Viper) (*Configuration, error) {
 	}
 
 	return config, nil
-}
-
-func bindEnv(v *viper.Viper) (err error) {
-	v.AutomaticEnv()
-	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-
-	err = v.BindEnv("log.level", "LOG_LEVEL")
-	if err != nil {
-		return err
-	}
-
-	err = v.BindEnv("log.format", "LOG_FORMAT")
-	if err != nil {
-		return err
-	}
-
-	err = v.BindEnv("http.mode", "HTTP_MODE")
-	if err != nil {
-		return err
-	}
-
-	err = v.BindEnv("storage.mongodb.dsn", "STORAGE_MONGODB_DSN")
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
