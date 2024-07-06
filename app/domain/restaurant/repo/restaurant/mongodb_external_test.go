@@ -13,6 +13,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/redis/go-redis/v9"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -27,10 +28,7 @@ type suiteMongodbExternal struct {
 }
 
 func (s *suiteMongodbExternal) SetupTest() {
-	err := configx.LoadConfig("")
-	s.Require().NoError(err)
-
-	app, err := configx.LoadApplication(&configx.C.RestaurantRestful)
+	app, err := configx.NewApplication(viper.GetViper(), "restaurantRestful")
 	s.Require().NoError(err)
 
 	err = logging.Init(app.Log)

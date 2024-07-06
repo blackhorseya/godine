@@ -8,7 +8,6 @@ import (
 	"syscall"
 
 	_ "github.com/blackhorseya/godine/api/order/restful" // swagger docs
-	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -41,7 +40,7 @@ func (i *impl) Start() error {
 
 	ctx.Info("start restful server", zap.String("swagger_url", fmt.Sprintf(
 		"http://%s/api/docs/index.html",
-		strings.ReplaceAll(configx.A.HTTP.GetAddr(), "0.0.0.0", "localhost"),
+		strings.ReplaceAll(i.injector.A.HTTP.GetAddr(), "0.0.0.0", "localhost"),
 	)))
 
 	return nil

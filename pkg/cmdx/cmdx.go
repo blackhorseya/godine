@@ -24,7 +24,7 @@ func (c *ServiceCmd) NewCmd() *cobra.Command {
 		Use:   c.Use,
 		Short: c.Short,
 		Run: func(cmd *cobra.Command, args []string) {
-			v := viper.GetViper()
+			v := viper.New()
 
 			service, err := c.GetService(v)
 			cobra.CheckErr(err)

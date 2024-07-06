@@ -7,6 +7,7 @@ import (
 
 // Injector is a struct that contains all the dependencies needed by the order package.
 type Injector struct {
+	C *configx.Configuration
 	A *configx.Application
 
 	NotifyService biz.INotificationBiz

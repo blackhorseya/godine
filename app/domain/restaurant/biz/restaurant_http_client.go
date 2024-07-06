@@ -27,9 +27,9 @@ type restaurantHTTPClient struct {
 }
 
 // NewRestaurantHTTPClient is used to create a new restaurant biz client.
-func NewRestaurantHTTPClient() biz.IRestaurantBiz {
+func NewRestaurantHTTPClient(config *configx.Configuration) biz.IRestaurantBiz {
 	return &restaurantHTTPClient{
-		url:    configx.C.RestaurantRestful.HTTP.URL,
+		url:    config.RestaurantRestful.HTTP.URL,
 		client: &http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)},
 	}
 }

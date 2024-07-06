@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"sync"
 
+	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/transports/kafkax"
 	"github.com/blackhorseya/godine/entity/domain/logistics/model"
 	"github.com/blackhorseya/godine/entity/events"
@@ -21,13 +22,13 @@ type KafkaEventBus struct {
 }
 
 // NewKafkaEventBus creates a new Kafka event bus
-func NewKafkaEventBus(topic string) (EventBus, error) {
-	reader, err := kafkax.NewReaderWithTopic(topic)
+func NewKafkaEventBus(app *configx.Application, topic string) (EventBus, error) {
+	reader, err := kafkax.NewReaderWithTopic(app, topic)
 	if err != nil {
 		return nil, err
 	}
 
-	writer, err := kafkax.NewWriterWithTopic(topic)
+	writer, err := kafkax.NewWriterWithTopic(app, topic)
 	if err != nil {
 		return nil, err
 	}

@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "app.go",
         "config.go",
-        "parse.go",
     ],
     importpath = "github.com/blackhorseya/godine/app/infra/configx",
     visibility = ["//visibility:public"],

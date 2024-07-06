@@ -12,6 +12,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/logging"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
@@ -26,10 +27,7 @@ type mariadbExternalTester struct {
 }
 
 func (s *mariadbExternalTester) SetupTest() {
-	err := configx.LoadConfig("")
-	s.Require().NoError(err)
-
-	app, err := configx.LoadApplication(&configx.C.OrderRestful)
+	app, err := configx.NewApplication(viper.GetViper(), "orderRestful")
 	s.Require().NoError(err)
 
 	err = logging.Init(app.Log)

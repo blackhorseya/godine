@@ -10,10 +10,10 @@ import (
 )
 
 // NewReaderWithTopic returns a new Reader instance with the specified topic.
-func NewReaderWithTopic(topic string) (*kafka.Reader, error) {
+func NewReaderWithTopic(app *configx.Application, topic string) (*kafka.Reader, error) {
 	return kafka.NewReader(kafka.ReaderConfig{
-		Brokers: configx.A.Kafka.Brokers,
-		GroupID: configx.A.GetID(),
+		Brokers: app.Kafka.Brokers,
+		GroupID: app.GetID(),
 		Topic:   topic,
 		Dialer: &kafka.Dialer{
 			Timeout:   10 * time.Second,
@@ -22,8 +22,8 @@ func NewReaderWithTopic(topic string) (*kafka.Reader, error) {
 				InsecureSkipVerify: true, //nolint:gosec // skip
 			},
 			SASLMechanism: plain.Mechanism{
-				Username: configx.A.Kafka.Username,
-				Password: configx.A.Kafka.Password,
+				Username: app.Kafka.Username,
+				Password: app.Kafka.Password,
 			},
 		},
 	}), nil

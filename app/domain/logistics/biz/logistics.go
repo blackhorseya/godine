@@ -3,6 +3,7 @@ package biz
 import (
 	"fmt"
 
+	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/mqx"
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
@@ -27,8 +28,9 @@ type logistics struct {
 func NewLogistics(
 	notifyService notifyB.INotificationBiz,
 	deliveries repo.IDeliveryRepo,
+	app *configx.Application,
 ) (biz.ILogisticsBiz, error) {
-	bus, err := mqx.NewKafkaEventBus(topic)
+	bus, err := mqx.NewKafkaEventBus(app, topic)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create kafka event with topic: %v, bus: %w", topic, err)
 	}

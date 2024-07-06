@@ -23,9 +23,9 @@ type notificationHTTPClient struct {
 }
 
 // NewNotificationHTTPClient creates a new notification service.
-func NewNotificationHTTPClient() biz.INotificationBiz {
+func NewNotificationHTTPClient(config *configx.Configuration) biz.INotificationBiz {
 	return &notificationHTTPClient{
-		url:    configx.C.NotifyRestful.HTTP.URL,
+		url:    config.NotifyRestful.HTTP.URL,
 		client: &http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)},
 	}
 }
