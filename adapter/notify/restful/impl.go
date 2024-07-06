@@ -66,6 +66,7 @@ func (i *impl) Start() error {
 
 func (i *impl) AwaitSignal() error {
 	ctx := contextx.Background()
+	ctx.Info("receive signal to stop server")
 
 	if err := i.server.Stop(ctx); err != nil {
 		ctx.Error("Failed to stop server", zap.Error(err))
