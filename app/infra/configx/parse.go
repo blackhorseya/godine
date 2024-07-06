@@ -13,6 +13,16 @@ var (
 	A = new(Application)
 )
 
+// NewConfiguration creates a new configuration.
+func NewConfiguration(v *viper.Viper) (*Configuration, error) {
+	err := LoadConfig("")
+	if err != nil {
+		return nil, err
+	}
+
+	return C, nil
+}
+
 // LoadConfig loads the configuration.
 func LoadConfig(path string) (err error) {
 	v := viper.GetViper()

@@ -33,6 +33,10 @@ import (
 // Injectors from wire.go:
 
 func New(v *viper.Viper) (adapterx.Restful, error) {
+	configuration, err := configx.NewConfiguration(v)
+	if err != nil {
+		return nil, err
+	}
 	application, err := initApplication()
 	if err != nil {
 		return nil, err
@@ -56,6 +60,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	}
 	iOrderBiz := biz5.NewOrderBiz(iRestaurantBiz, iMenuBiz, iUserBiz, iLogisticsBiz, iNotificationBiz, iOrderRepo)
 	injector := &wirex.Injector{
+		C:            configuration,
 		A:            application,
 		OrderService: iOrderBiz,
 	}
@@ -89,5 +94,5 @@ func initApplication() (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), initApplication, httpx.NewServer, biz5.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMariadb, mariadbx.NewClient, snowflakex.NewNode, biz3.NewLogisticsHTTPClient, biz4.NewNotificationHTTPClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz5.NewOrderBiz, biz.NewRestaurantHTTPClient, biz.NewMenuHTTPClient, biz2.NewUserHTTPClient, order.NewMariadb, mariadbx.NewClient, snowflakex.NewNode, biz3.NewLogisticsHTTPClient, biz4.NewNotificationHTTPClient,
 )

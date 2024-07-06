@@ -47,6 +47,7 @@ var providerSet = wire.NewSet(
 	newRestful,
 
 	wire.Struct(new(wirex.Injector), "*"),
+	configx.NewConfiguration,
 	initApplication,
 	httpx.NewServer,
 
