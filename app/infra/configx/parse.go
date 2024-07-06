@@ -9,10 +9,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	A = new(Application)
-)
-
 // NewConfiguration creates a new configuration.
 func NewConfiguration(v *viper.Viper) (*Configuration, error) {
 	configFile := viper.GetString("config")
