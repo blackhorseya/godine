@@ -45,8 +45,15 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) (err error) 
 		order.ID = strconv.Itoa(int(i.node.Generate().Int64()))
 	}
 
-	// 开启事务
-	tx := i.rw.WithContext(timeout).Begin()
+	// 创建一个新的会话并设置隔离级别
+	session := i.rw.Session(&gorm.Session{})
+	if err = session.Exec("SET TRANSACTION ISOLATION LEVEL READ COMMITTED").Error; err != nil {
+		ctx.Error("failed to set transaction isolation level", zap.Error(err))
+		return err
+	}
+
+	// 开始事务
+	tx := session.Begin()
 	if tx.Error != nil {
 		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
 		return tx.Error
@@ -58,7 +65,7 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) (err error) 
 	}()
 
 	// 创建订单
-	err = tx.Create(order).Error
+	err = tx.WithContext(timeout).Create(order).Error
 	if err != nil {
 		tx.Rollback()
 		ctx.Error("create order to mariadb failed", zap.Error(err), zap.Any("order", &order))
@@ -174,7 +181,6 @@ func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) (err error) 
 		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
 		return tx.Error
 	}
-
 	defer func() {
 		if r := recover(); r != nil || err != nil {
 			tx.Rollback()
