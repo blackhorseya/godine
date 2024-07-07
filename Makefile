@@ -73,7 +73,7 @@ test-api: ## test api
 
 .PHONY: test-load
 test-load: ## test load
-	@k6 run ./tests/k6/order.api.test.js --out=cloud
+	@k6 run --env SCENARIO=peak_load ./tests/k6/order.api.test.js --out=cloud
 
 ## docker
 .PHONY: docker-push

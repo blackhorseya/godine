@@ -14,6 +14,27 @@
 import http from 'k6/http';
 import {check, group, sleep} from 'k6';
 
+const scenarios = {
+  average_load: {
+    executor: 'ramping-vus',
+    stages: [
+      {duration: '20s', target: 10},
+      {duration: '40s', target: 10},
+      {duration: '20s', target: 50},
+      {duration: '40s', target: 50},
+      {duration: '20s', target: 100},
+      {duration: '40s', target: 100},
+    ],
+  },
+  peak_load: {
+    executor: 'constant-vus',
+    vus: 100,
+    duration: '1m',
+  },
+};
+
+const {SCENARIO} = __ENV;
+
 export const options = {
   cloud: {
     // Project: Default project
@@ -29,20 +50,9 @@ export const options = {
   },
 
   // define scenarios
-  scenarios: {
-    // arbitrary name of scenario
-    average_load: {
-      executor: 'ramping-vus',
-      stages: [
-        {duration: '20s', target: 10}, // Ramp-up to 10 users over 20 seconds
-        {duration: '40s', target: 10},  // Stay at 10 users for 40 seconds
-        {duration: '20s', target: 50}, // Ramp-up to 50 users over 20 seconds
-        {duration: '40s', target: 50},  // Stay at 50 users for 40 seconds
-        {duration: '20s', target: 100}, // Ramp-up to 100 users over 20 seconds
-        {duration: '40s', target: 100}, // Stay at 100 users for 40 seconds
-      ],
-    },
-  },
+  scenarios: SCENARIO ? {
+    [SCENARIO]: scenarios[SCENARIO],
+  } : scenarios,
 };
 
 const BASE_URL = 'http://prod-godine.seancheng.space/api';
