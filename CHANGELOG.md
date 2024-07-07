@@ -1,3 +1,10 @@
+## 0.4.9 (2024-07-07)
+
+### Feat
+
+- refactor transaction handling and session creation
+- refactor load testing targets and scenarios
+
 ## 0.4.8 (2024-07-07)
 
 ### Feat
