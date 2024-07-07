@@ -173,6 +173,13 @@ func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) (err error) 
 		}
 	}()
 
+	// 设置隔离级别为 READ COMMITTED
+	if err = tx.Exec("SET TRANSACTION ISOLATION LEVEL READ COMMITTED").Error; err != nil {
+		tx.Rollback()
+		ctx.Error("failed to set transaction isolation level", zap.Error(err))
+		return err
+	}
+
 	// update order
 	err = tx.Save(order).Error
 	if err != nil {
