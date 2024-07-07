@@ -71,9 +71,13 @@ gen-swagger: ## generate swagger
 test-api: ## test api
 	@k6 run --vus=1 --iterations=1 ./tests/k6/order.api.test.js
 
-.PHONY: test-load
-test-load: ## test load
+.PHONY: test-stress
+test-stress: ## test load
 	@k6 run --env SCENARIO=peak_load ./tests/k6/order.api.test.js --out=cloud
+
+.PHONY: test-load
+test-load: ## test stress
+	@k6 run --env SCENARIO=average_load ./tests/k6/order.api.test.js --out=cloud
 
 ## docker
 .PHONY: docker-push
