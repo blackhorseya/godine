@@ -1,3 +1,9 @@
+## 0.4.8 (2024-07-07)
+
+### Feat
+
+- improve transaction handling and error checking
+
 ## 0.4.7 (2024-07-07)
 
 ### Fix
