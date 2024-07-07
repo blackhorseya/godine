@@ -1,3 +1,9 @@
+## 0.4.7 (2024-07-07)
+
+### Fix
+
+- improve transaction isolation handling
+
 ## 0.4.6 (2024-07-06)
 
 ## 0.4.5 (2024-07-06)
