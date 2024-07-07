@@ -161,34 +161,35 @@ func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) (err error) 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	// start transaction
-	tx := i.rw.WithContext(timeout).Begin()
+	// 创建一个新的会话并设置隔离级别
+	session := i.rw.Session(&gorm.Session{})
+	if err = session.Exec("SET TRANSACTION ISOLATION LEVEL READ COMMITTED").Error; err != nil {
+		ctx.Error("failed to set transaction isolation level", zap.Error(err))
+		return err
+	}
+
+	// 开始事务
+	tx := session.Begin()
 	if tx.Error != nil {
 		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
 		return tx.Error
 	}
+
 	defer func() {
 		if r := recover(); r != nil || err != nil {
 			tx.Rollback()
 		}
 	}()
 
-	// 设置隔离级别为 READ COMMITTED
-	if err = tx.Exec("SET TRANSACTION ISOLATION LEVEL READ COMMITTED").Error; err != nil {
-		tx.Rollback()
-		ctx.Error("failed to set transaction isolation level", zap.Error(err))
-		return err
-	}
-
-	// update order
-	err = tx.Save(order).Error
+	// 更新订单
+	err = tx.WithContext(timeout).Save(order).Error
 	if err != nil {
 		tx.Rollback()
 		ctx.Error("update order to mariadb failed", zap.Error(err), zap.Any("order", &order))
 		return err
 	}
 
-	// commit transaction
+	// 提交事务
 	if err = tx.Commit().Error; err != nil {
 		tx.Rollback()
 		ctx.Error("failed to commit transaction", zap.Error(err))
