@@ -14,6 +14,39 @@
 import http from 'k6/http';
 import {check, group, sleep} from 'k6';
 
+// General error handler to log error details.
+class ErrorHandler {
+  // Instruct the error handler how to log errors
+  constructor(logErrorDetails) {
+    this.logErrorDetails = logErrorDetails;
+  }
+
+  // Logs response error details if isError is true.
+  logError(isError, res, tags = {}) {
+    if (!isError) return;
+
+    // the Traceparent header is a W3C Trace Context
+    const traceparentHeader = res.request.headers['Traceparent'];
+
+    // Add any other useful information
+    const errorData = Object.assign(
+        {
+          url: res.url,
+          status: res.status,
+          error_code: res.error_code,
+          traceparent: traceparentHeader && traceparentHeader.toString(),
+        },
+        tags,
+    );
+    this.logErrorDetails(errorData);
+  }
+}
+
+// Set up the error handler to log errors to the console
+const errorHandler = new ErrorHandler((error) => {
+  console.error(error);
+});
+
 const scenarios = {
   average_load: {
     executor: 'ramping-vus',
@@ -125,9 +158,11 @@ export default function() {
               `/v1/orders?page=${page}&restaurant_id=${restaurantId}&size=${size}&status=${status}&user_id=${userId}`;
           let request = http.get(url);
 
-          check(request, {
+          let status = check(request, {
             'List orders ok': (r) => r.status === 200,
           });
+
+          errorHandler.logError(!status, request);
 
           sleep(SLEEP_DURATION);
         }
@@ -157,9 +192,11 @@ export default function() {
           };
           let request = http.post(url, JSON.stringify(body), params);
 
-          check(request, {
+          let status = check(request, {
             'Create order ok': (r) => r.status === 200,
           });
+
+          errorHandler.logError(!status, request);
         }
       });
 }
