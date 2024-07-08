@@ -17,7 +17,10 @@ const (
 
 // NewClient init mysql client.
 func NewClient(app *configx.Application) (*gorm.DB, error) {
-	db, err := gorm.Open(mysql.Open(app.Storage.Mysql.DSN), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(app.Storage.Mysql.DSN), &gorm.Config{
+		SkipDefaultTransaction: true,
+		PrepareStmt:            true,
+	})
 	if err != nil {
 		return nil, fmt.Errorf("open mysql client error: %w", err)
 	}
