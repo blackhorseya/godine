@@ -1,3 +1,9 @@
+## 0.5.0 (2024-07-08)
+
+### Refactor
+
+- update variable names for clarity
+
 ## 0.4.10 (2024-07-08)
 
 ### Feat
