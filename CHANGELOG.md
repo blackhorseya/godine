@@ -1,3 +1,10 @@
+## 0.4.10 (2024-07-08)
+
+### Feat
+
+- refactor database configuration options
+- improve error handling and logging across project
+
 ## 0.4.9 (2024-07-07)
 
 ### Feat
