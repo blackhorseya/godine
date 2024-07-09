@@ -67,8 +67,8 @@ gen-swagger: ## generate swagger
   -o ./api/notify/restful --instanceName notify_restful --parseDependency
 
 ### testing
-.PHONY: test-api
-test-api: ## test api
+.PHONY: test-api-order
+test-api-order: ## test api
 	@k6 run --vus=1 --iterations=1 ./tests/k6/order.api.test.js
 
 .PHONY: test-api-user
