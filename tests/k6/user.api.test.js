@@ -12,116 +12,90 @@
  */
 
 import http from 'k6/http';
-import {check, group, sleep} from 'k6';
+import {check, group} from 'k6';
 import errorHandler from './errorHandler.js';
 
 const BASE_URL = 'http://localhost:1994/api';
-// Sleep duration between successive requests.
-// You might want to edit the value of this variable or remove calls to the sleep function on the script.
-const SLEEP_DURATION = 0.1;
-// Global variables should be initialized.
 
 export default function() {
-  group('/v1/users/{id}', () => {
-    let id = 'TODO_EDIT_THE_ID'; // specify value as there is no example value for this parameter in OpenAPI spec
+  group('User API CRUD Operations', () => {
+    let createdUserId = null;
 
-    // Request No. 1:
-    {
-      let url = BASE_URL + `/v1/users/${id}`;
-      let request = http.get(url);
+    // Create User
+    let url = BASE_URL + `/v1/users`;
+    let body = {
+      'address': {
+        'city': 'string',
+        'state': 'string',
+        'street': 'string',
+        'zipCode': 'string',
+      },
+      'email': 'string',
+      'name': 'string',
+      'password': 'string',
+    };
+    let params = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    };
+    let request = http.post(url, JSON.stringify(body), params);
 
-      errorHandler.logError(!check(request, {
-        'OK': (r) => r.status === 200,
-      }), request);
-
-      sleep(SLEEP_DURATION);
+    if (check(request, {'create an user': (r) => r.status === 201})) {
+      createdUserId = request.json('data.id');
+      console.log('User created successfully with ID: ' + createdUserId);
+    } else {
+      console.log(`Unable to create a user ${request.status} ${request.body}`);
+      return; // Exit if user creation failed
     }
 
-    // Request No. 2:
-    {
-      let url = BASE_URL + `/v1/users/${id}`;
-      let request = http.del(url);
-
-      errorHandler.logError(!check(request, {
-        'No Content': (r) => r.status === 204,
-      }), request);
-    }
-  });
-
-  group('/v1/users/{id}/status', () => {
-    let id = 'TODO_EDIT_THE_ID'; // specify value as there is no example value for this parameter in OpenAPI spec
-
-    // Request No. 1:
-    {
-      let url = BASE_URL + `/v1/users/${id}/status`;
-      // TODO: edit the parameters of the request body.
-      let body = {'isActive': 'boolean'};
-      let params = {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      };
-      let request = http.patch(url, JSON.stringify(body), params);
-
-      errorHandler.logError(!check(request, {
-        'OK': (r) => r.status === 200,
-      }), request);
-    }
-  });
-
-  group('/v1/users', () => {
-    let size = 'TODO_EDIT_THE_SIZE'; // specify value as there is no example value for this parameter in OpenAPI spec
-    let page = 'TODO_EDIT_THE_PAGE'; // specify value as there is no example value for this parameter in OpenAPI spec
-
-    // Request No. 1:
-    {
-      let url = BASE_URL + `/v1/users?page=${page}&size=${size}`;
-      let request = http.get(url);
-
-      errorHandler.logError(!check(request, {
-        'OK': (r) => r.status === 200,
-      }), request);
-
-      sleep(SLEEP_DURATION);
+    // Get User by ID
+    let id = createdUserId;
+    if (!id) {
+      console.log('No user ID available to fetch.');
+      return;
     }
 
-    // Request No. 2:
-    {
-      let url = BASE_URL + `/v1/users`;
-      // TODO: edit the parameters of the request body.
-      let body = {
-        'address': {
-          'city': 'string',
-          'state': 'string',
-          'street': 'string',
-          'zipCode': 'string',
-        }, 'email': 'string', 'name': 'string', 'password': 'string',
-      };
-      let params = {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      };
-      let request = http.post(url, JSON.stringify(body), params);
+    url = BASE_URL + `/v1/users/${id}`;
+    request = http.get(url);
 
-      errorHandler.logError(!check(request, {
-        'OK': (r) => r.status === 200,
-      }), request);
-    }
-  });
+    errorHandler.logError(!check(request, {
+      'get user by id': (r) => r.status === 200,
+    }), request);
 
-  group('/healthz', () => {
+    // Get Users List
+    let size = '10';
+    let page = '1';
 
-    // Request No. 1:
-    {
-      let url = BASE_URL + `/healthz`;
-      let request = http.get(url);
+    url = BASE_URL + `/v1/users?page=${page}&size=${size}`;
+    request = http.get(url);
 
-      errorHandler.logError(!check(request, {
-        'OK': (r) => r.status === 200,
-      }), request);
-    }
+    errorHandler.logError(!check(request, {
+      'get user list': (r) => r.status === 200,
+    }), request);
+
+    // Update User Status
+    url = BASE_URL + `/v1/users/${id}/status`;
+    body = {'is_active': true};
+    params = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    };
+    request = http.patch(url, JSON.stringify(body), params);
+
+    errorHandler.logError(!check(request, {
+      'update user status': (r) => r.status === 200,
+    }), request);
+
+    // Delete User by ID
+    url = BASE_URL + `/v1/users/${id}`;
+    request = http.del(url);
+
+    errorHandler.logError(!check(request, {
+      'delete user by id': (r) => r.status === 204,
+    }), request);
   });
 }

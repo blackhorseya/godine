@@ -72,7 +72,7 @@ func (i *impl) Post(c *gin.Context) {
 		return
 	}
 
-	responsex.OK(c, item)
+	responsex.WithCode(c, http.StatusCreated, item)
 }
 
 // GetByID is used to get a user by id.
@@ -266,5 +266,5 @@ func (i *impl) Delete(c *gin.Context) {
 		return
 	}
 
-	responsex.OK(c, nil)
+	responsex.WithCode(c, http.StatusNoContent, nil)
 }
