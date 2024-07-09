@@ -13,6 +13,7 @@
 
 import http from 'k6/http';
 import {check, group, sleep} from 'k6';
+import errorHandler from './errorHandler.js';
 
 const BASE_URL = 'http://localhost:1994/api';
 // Sleep duration between successive requests.
@@ -29,9 +30,9 @@ export default function() {
       let url = BASE_URL + `/v1/users/${id}`;
       let request = http.get(url);
 
-      check(request, {
+      errorHandler.logError(!check(request, {
         'OK': (r) => r.status === 200,
-      });
+      }), request);
 
       sleep(SLEEP_DURATION);
     }
@@ -41,9 +42,9 @@ export default function() {
       let url = BASE_URL + `/v1/users/${id}`;
       let request = http.del(url);
 
-      check(request, {
+      errorHandler.logError(!check(request, {
         'No Content': (r) => r.status === 204,
-      });
+      }), request);
     }
   });
 
@@ -63,9 +64,9 @@ export default function() {
       };
       let request = http.patch(url, JSON.stringify(body), params);
 
-      check(request, {
+      errorHandler.logError(!check(request, {
         'OK': (r) => r.status === 200,
-      });
+      }), request);
     }
   });
 
@@ -78,9 +79,9 @@ export default function() {
       let url = BASE_URL + `/v1/users?page=${page}&size=${size}`;
       let request = http.get(url);
 
-      check(request, {
+      errorHandler.logError(!check(request, {
         'OK': (r) => r.status === 200,
-      });
+      }), request);
 
       sleep(SLEEP_DURATION);
     }
@@ -105,9 +106,9 @@ export default function() {
       };
       let request = http.post(url, JSON.stringify(body), params);
 
-      check(request, {
+      errorHandler.logError(!check(request, {
         'OK': (r) => r.status === 200,
-      });
+      }), request);
     }
   });
 
@@ -118,10 +119,9 @@ export default function() {
       let url = BASE_URL + `/healthz`;
       let request = http.get(url);
 
-      check(request, {
+      errorHandler.logError(!check(request, {
         'OK': (r) => r.status === 200,
-      });
+      }), request);
     }
   });
-
 }
