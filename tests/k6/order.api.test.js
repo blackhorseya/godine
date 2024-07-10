@@ -72,9 +72,9 @@ export default function() {
       let url = BASE_URL + `/v1/orders/${orderId}`;
       let request = http.get(url);
 
-      check(request, {
-        'OK': (r) => r.status === 200,
-      });
+      errorHandler.logError(!check(request, {
+        'get order by id is ok': (r) => r.status === 200,
+      }), request);
     }
   });
 
@@ -93,22 +93,9 @@ export default function() {
       };
       let request = http.patch(url, JSON.stringify(body), params);
 
-      check(request, {
-        'OK': (r) => r.status === 200,
-      });
-    }
-  });
-
-  group('/healthz', () => {
-
-    // Request No. 1:
-    {
-      let url = BASE_URL + `/healthz`;
-      let request = http.get(url);
-
-      check(request, {
-        'OK': (r) => r.status === 200,
-      });
+      errorHandler.logError(!check(request, {
+        'patch status is ok': (r) => r.status === 200,
+      }), request);
     }
   });
 
@@ -126,11 +113,9 @@ export default function() {
               `/v1/orders?page=${page}&restaurant_id=${restaurantId}&size=${size}&status=${status}&user_id=${userId}`;
           let request = http.get(url);
 
-          let got = check(request, {
-            'List orders ok': (r) => r.status === 200,
-          });
-
-          errorHandler.logError(!got, request);
+          errorHandler.logError(!check(request, {
+            'list orders is ok': (r) => r.status === 200,
+          }), request);
 
           sleep(SLEEP_DURATION);
         }
@@ -160,11 +145,9 @@ export default function() {
           };
           let request = http.post(url, JSON.stringify(body), params);
 
-          let got = check(request, {
-            'Create order ok': (r) => r.status === 200,
-          });
-
-          errorHandler.logError(!got, request);
+          errorHandler.logError(!check(request, {
+            'create an order is ok': (r) => r.status === 200,
+          }), request);
         }
       });
 }
