@@ -131,14 +131,6 @@ func (i *mariadb) List(
 		query = query.Where("status = ?", condition.Status)
 	}
 
-	// Get total count
-	var count int64
-	err = query.Count(&count).Error
-	if err != nil {
-		ctx.Error("count orders from mariadb failed", zap.Error(err))
-		return nil, 0, err
-	}
-
 	// Apply limit and offset
 	if condition.Limit == 0 {
 		condition.Limit = defaultLimit
@@ -152,7 +144,8 @@ func (i *mariadb) List(
 	query = query.Order("updated_at DESC")
 
 	// Execute the query
-	err = query.Find(&orders).Error
+	var count int64
+	err = query.Count(&count).Find(&orders).Error
 	if err != nil {
 		ctx.Error("list orders from mariadb failed", zap.Error(err))
 		return nil, 0, err
