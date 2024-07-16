@@ -45,37 +45,10 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) (err error) 
 		order.ID = strconv.Itoa(int(i.node.Generate().Int64()))
 	}
 
-	// 创建一个新的会话并设置隔离级别
-	session := i.rw.Session(&gorm.Session{})
-	if err = session.Exec("SET TRANSACTION ISOLATION LEVEL READ COMMITTED").Error; err != nil {
-		ctx.Error("failed to set transaction isolation level", zap.Error(err))
-		return err
-	}
-
-	// 开始事务
-	tx := session.Begin()
-	if tx.Error != nil {
-		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
-		return tx.Error
-	}
-	defer func() {
-		if r := recover(); r != nil || err != nil {
-			tx.Rollback()
-		}
-	}()
-
 	// 创建订单
-	err = tx.WithContext(timeout).Create(order).Error
+	err = i.rw.WithContext(timeout).Create(order).Error
 	if err != nil {
-		tx.Rollback()
 		ctx.Error("create order to mariadb failed", zap.Error(err), zap.Any("order", &order))
-		return err
-	}
-
-	// 提交事务
-	if err = tx.Commit().Error; err != nil {
-		tx.Rollback()
-		ctx.Error("failed to commit transaction", zap.Error(err))
 		return err
 	}
 
@@ -161,37 +134,10 @@ func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) (err error) 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	// 创建一个新的会话并设置隔离级别
-	session := i.rw.Session(&gorm.Session{})
-	if err = session.Exec("SET TRANSACTION ISOLATION LEVEL READ COMMITTED").Error; err != nil {
-		ctx.Error("failed to set transaction isolation level", zap.Error(err))
-		return err
-	}
-
-	// 开始事务
-	tx := session.Begin()
-	if tx.Error != nil {
-		ctx.Error("failed to begin transaction", zap.Error(tx.Error))
-		return tx.Error
-	}
-	defer func() {
-		if r := recover(); r != nil || err != nil {
-			tx.Rollback()
-		}
-	}()
-
 	// 更新订单
-	err = tx.WithContext(timeout).Save(order).Error
+	err = i.rw.WithContext(timeout).Save(order).Error
 	if err != nil {
-		tx.Rollback()
 		ctx.Error("update order to mariadb failed", zap.Error(err), zap.Any("order", &order))
-		return err
-	}
-
-	// 提交事务
-	if err = tx.Commit().Error; err != nil {
-		tx.Rollback()
-		ctx.Error("failed to commit transaction", zap.Error(err))
 		return err
 	}
 
