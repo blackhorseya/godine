@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "postgresqlx",
+    srcs = ["client.go"],
+    importpath = "github.com/blackhorseya/godine/app/infra/storage/postgresqlx",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//app/infra/configx",
+        "@io_gorm_driver_postgres//:postgres",
+        "@io_gorm_gorm//:gorm",
+    ],
+)
