@@ -1,3 +1,23 @@
+## 0.5.1-rc0 (2024-07-18)
+
+### Feat
+
+- refactor response handling and user creation logic (#75)
+- refactor response handling and user creation logic
+
+### Refactor
+
+- refactor order creation and update process (#80)
+- refactor order creation and update process
+- improve error handling and test functions (#78)
+- improve error handling and test functions
+- improve efficiency of order count retrieval (#77)
+- improve efficiency of order count retrieval
+- refactor error handling in test files (#74)
+- refactor error handling in test files
+- consolidate error handling logic across files (#73)
+- consolidate error handling logic across files
+
 ## 0.5.0 (2024-07-08)
 
 ### Refactor
