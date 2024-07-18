@@ -64,41 +64,6 @@ const SLEEP_DURATION = 0.1;
 // Global variables should be initialized.
 
 export default function() {
-  group('/v1/orders/{order_id}', () => {
-    let orderId = '1809363491119697920'; // specify value as there is no example value for this parameter in OpenAPI spec
-
-    // Request No. 1:
-    {
-      let url = BASE_URL + `/v1/orders/${orderId}`;
-      let request = http.get(url);
-
-      errorHandler.logError(!check(request, {
-        'get order by id is ok': (r) => r.status === 200,
-      }), request);
-    }
-  });
-
-  group('/v1/orders/{order_id}/status', () => {
-    let orderId = '1809363491119697920'; // specify value as there is no example value for this parameter in OpenAPI spec
-
-    // Request No. 1:
-    {
-      let url = BASE_URL + `/v1/orders/${orderId}/status`;
-      let body = {'status': 'confirmed'};
-      let params = {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      };
-      let request = http.patch(url, JSON.stringify(body), params);
-
-      errorHandler.logError(!check(request, {
-        'patch status is ok': (r) => r.status === 200,
-      }), request);
-    }
-  });
-
   group('/v1/orders', () => {
     {
       let url = BASE_URL + `/v1/orders`;
