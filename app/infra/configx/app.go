@@ -35,6 +35,10 @@ type Application struct {
 			DSN string `json:"dsn" yaml:"dsn"`
 		} `json:"mysql" yaml:"mysql"`
 
+		Postgresql struct {
+			DSN string `json:"dsn" yaml:"dsn"`
+		} `json:"postgresql" yaml:"postgresql"`
+
 		Mongodb struct {
 			DSN string `json:"dsn" yaml:"dsn"`
 		} `json:"mongodb" yaml:"mongodb"`
