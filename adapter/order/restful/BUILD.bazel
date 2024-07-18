@@ -21,7 +21,7 @@ go_library(
         "//app/infra/configx",
         "//app/infra/otelx",
         "//app/infra/snowflakex",
-        "//app/infra/storage/postgresqlx",
+        "//app/infra/storage/mariadbx",
         "//app/infra/transports/httpx",
         "//pkg/adapterx",
         "//pkg/contextx",
