@@ -3,7 +3,7 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "order",
     srcs = [
-        "mariadb.go",
+        "gorm.go",
         "mongodb.go",
     ],
     importpath = "github.com/blackhorseya/godine/app/domain/order/repo/order",

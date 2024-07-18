@@ -18,23 +18,23 @@ import (
 
 const defaultLimit = 100
 
-type mariadb struct {
+type gormDB struct {
 	rw   *gorm.DB
 	node *snowflake.Node
 }
 
-// NewMariadb create and return a new mariadb
+// NewMariadb create and return a new gormDB
 func NewMariadb(rw *gorm.DB, node *snowflake.Node) (repo.IOrderRepo, error) {
 	err := rw.AutoMigrate(&model.Order{}, &model.OrderItem{})
 	if err != nil {
 		return nil, fmt.Errorf("migrate order and order item failed: %w", err)
 	}
 
-	return &mariadb{rw: rw, node: node}, nil
+	return &gormDB{rw: rw, node: node}, nil
 }
 
-func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) (err error) {
-	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.Create")
+func (i *gormDB) Create(ctx contextx.Contextx, order *model.Order) (err error) {
+	ctx, span := otelx.Span(ctx, "biz.order.repo.order.gormDB.Create")
 	defer span.End()
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
@@ -48,15 +48,15 @@ func (i *mariadb) Create(ctx contextx.Contextx, order *model.Order) (err error) 
 	// 创建订单
 	err = i.rw.WithContext(timeout).Create(order).Error
 	if err != nil {
-		ctx.Error("create order to mariadb failed", zap.Error(err), zap.Any("order", &order))
+		ctx.Error("create order to gormDB failed", zap.Error(err), zap.Any("order", &order))
 		return err
 	}
 
 	return nil
 }
 
-func (i *mariadb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, err error) {
-	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.GetByID")
+func (i *gormDB) GetByID(ctx contextx.Contextx, id string) (item *model.Order, err error) {
+	ctx, span := otelx.Span(ctx, "biz.order.repo.order.gormDB.GetByID")
 	defer span.End()
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
@@ -73,18 +73,18 @@ func (i *mariadb) GetByID(ctx contextx.Contextx, id string) (item *model.Order, 
 			return nil, errorx.Wrap(http.StatusNotFound, 404, err)
 		}
 
-		ctx.Error("get order by id from mariadb failed", zap.Error(err), zap.String("id", id))
+		ctx.Error("get order by id from gormDB failed", zap.Error(err), zap.String("id", id))
 		return nil, err
 	}
 
 	return order, nil
 }
 
-func (i *mariadb) List(
+func (i *gormDB) List(
 	ctx contextx.Contextx,
 	condition repo.ListCondition,
 ) (items []*model.Order, total int, err error) {
-	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.List")
+	ctx, span := otelx.Span(ctx, "biz.order.repo.order.gormDB.List")
 	defer span.End()
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
@@ -120,15 +120,15 @@ func (i *mariadb) List(
 	var count int64
 	err = query.Count(&count).Find(&orders).Error
 	if err != nil {
-		ctx.Error("list orders from mariadb failed", zap.Error(err))
+		ctx.Error("list orders from gormDB failed", zap.Error(err))
 		return nil, 0, err
 	}
 
 	return orders, int(count), nil
 }
 
-func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) (err error) {
-	ctx, span := otelx.Span(ctx, "biz.order.repo.order.mariadb.Update")
+func (i *gormDB) Update(ctx contextx.Contextx, order *model.Order) (err error) {
+	ctx, span := otelx.Span(ctx, "biz.order.repo.order.gormDB.Update")
 	defer span.End()
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
@@ -137,7 +137,7 @@ func (i *mariadb) Update(ctx contextx.Contextx, order *model.Order) (err error) 
 	// 更新订单
 	err = i.rw.WithContext(timeout).Save(order).Error
 	if err != nil {
-		ctx.Error("update order to mariadb failed", zap.Error(err), zap.Any("order", &order))
+		ctx.Error("update order to gormDB failed", zap.Error(err), zap.Any("order", &order))
 		return err
 	}
 
