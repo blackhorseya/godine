@@ -12,7 +12,7 @@
  */
 
 import http from 'k6/http';
-import {check, group, sleep} from 'k6';
+import {check, group} from 'k6';
 import errorHandler from './errorHandler.js';
 
 const scenarios = {
@@ -99,55 +99,34 @@ export default function() {
     }
   });
 
-  group('/v1/orders',
-      () => {
-        let size = '10'; // specify value as there is no example value for this parameter in OpenAPI spec
-        let page = '1'; // specify value as there is no example value for this parameter in OpenAPI spec
-        let restaurantId = ''; // specify value as there is no example value for this parameter in OpenAPI spec
-        let userId = ''; // specify value as there is no example value for this parameter in OpenAPI spec
-        let status = ''; // specify value as there is no example value for this parameter in OpenAPI spec
+  group('/v1/orders', () => {
+    {
+      let url = BASE_URL + `/v1/orders`;
+      let body = {
+        'items': [
+          {
+            'menu_item_id': '6685d61813c4956eac2592d0',
+            'quantity': 5,
+          },
+          {
+            'menu_item_id': '6685d61d13c4956eac2592d1',
+            'quantity': 3,
+          },
+        ],
+        'restaurant_id': '6685d60013c4956eac2592cf',
+        'user_id': '6685d5d9a1fddcdd0872b0ed',
+      };
+      let params = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      };
+      let request = http.post(url, JSON.stringify(body), params);
 
-        // Request No. 1:
-        {
-          let url = BASE_URL +
-              `/v1/orders?page=${page}&restaurant_id=${restaurantId}&size=${size}&status=${status}&user_id=${userId}`;
-          let request = http.get(url);
-
-          errorHandler.logError(!check(request, {
-            'list orders is ok': (r) => r.status === 200,
-          }), request);
-
-          sleep(SLEEP_DURATION);
-        }
-
-        // Request No. 2:
-        {
-          let url = BASE_URL + `/v1/orders`;
-          let body = {
-            'items': [
-              {
-                'menu_item_id': '6685d61813c4956eac2592d0',
-                'quantity': 5,
-              },
-              {
-                'menu_item_id': '6685d61d13c4956eac2592d1',
-                'quantity': 3,
-              },
-            ],
-            'restaurant_id': '6685d60013c4956eac2592cf',
-            'user_id': '6685d5d9a1fddcdd0872b0ed',
-          };
-          let params = {
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-          };
-          let request = http.post(url, JSON.stringify(body), params);
-
-          errorHandler.logError(!check(request, {
-            'create an order is ok': (r) => r.status === 200,
-          }), request);
-        }
-      });
+      errorHandler.logError(!check(request, {
+        'create an order is ok': (r) => r.status === 200,
+      }), request);
+    }
+  });
 }
