@@ -21,12 +21,12 @@ func NewClient(app *configx.Application) (*gorm.DB, error) {
 		PrepareStmt:            true,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("open mysql client error: %w", err)
+		return nil, fmt.Errorf("open postgres client error: %w", err)
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		return nil, fmt.Errorf("get mysql db error: %w", err)
+		return nil, fmt.Errorf("get postgres db error: %w", err)
 	}
 
 	sqlDB.SetConnMaxLifetime(defaultMaxLifetime)

@@ -7,7 +7,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/configx",
-        "@io_gorm_driver_mysql//:mysql",
+        "@io_gorm_driver_postgres//:postgres",
         "@io_gorm_gorm//:gorm",
     ],
 )
