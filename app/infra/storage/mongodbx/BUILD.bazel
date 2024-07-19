@@ -8,8 +8,6 @@ go_library(
     deps = [
         "//app/infra/configx",
         "//pkg/contextx",
-        "@com_github_pkg_errors//:errors",
-        "@com_github_testcontainers_testcontainers_go//:testcontainers-go",
         "@com_github_testcontainers_testcontainers_go_modules_mongodb//:mongodb",
         "@org_mongodb_go_mongo_driver//mongo",
         "@org_mongodb_go_mongo_driver//mongo/options",
