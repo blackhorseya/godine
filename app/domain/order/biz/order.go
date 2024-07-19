@@ -56,7 +56,7 @@ func (i *orderBiz) CreateOrder(
 	address model4.Address,
 	totalAmount float64,
 ) (order *model4.Order, err error) {
-	ctx, span := otelx.Span(ctx, "rB.order.create_order")
+	ctx, span := otelx.Span(ctx, "biz.order.create_order")
 	defer span.End()
 
 	restaurant, err := i.restaurantService.GetRestaurant(ctx, restaurantID)
@@ -170,7 +170,7 @@ func (i *orderBiz) CreateOrder(
 }
 
 func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model4.Order, err error) {
-	ctx, span := otelx.Span(ctx, "rB.order.get_order")
+	ctx, span := otelx.Span(ctx, "biz.order.get_order")
 	defer span.End()
 
 	return i.orders.GetByID(ctx, id)
@@ -180,7 +180,7 @@ func (i *orderBiz) ListOrders(
 	ctx contextx.Contextx,
 	options orderB.ListOrdersOptions,
 ) (orders []*model4.Order, total int, err error) {
-	ctx, span := otelx.Span(ctx, "rB.order.list_orders")
+	ctx, span := otelx.Span(ctx, "biz.order.list_orders")
 	defer span.End()
 
 	return i.orders.List(ctx, repo.ListCondition{
@@ -193,7 +193,7 @@ func (i *orderBiz) ListOrders(
 }
 
 func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status string) error {
-	ctx, span := otelx.Span(ctx, "rB.order.update_order_status")
+	ctx, span := otelx.Span(ctx, "biz.order.update_order_status")
 	defer span.End()
 
 	order, err := i.orders.GetByID(ctx, id)
@@ -254,7 +254,7 @@ func (i *orderBiz) ListOrdersByUser(
 	userID string,
 	options orderB.ListOrdersOptions,
 ) (orders []*model4.Order, total int, err error) {
-	ctx, span := otelx.Span(ctx, "rB.order.list_orders_by_user")
+	ctx, span := otelx.Span(ctx, "biz.order.list_orders_by_user")
 	defer span.End()
 
 	return i.orders.List(ctx, repo.ListCondition{
@@ -271,7 +271,7 @@ func (i *orderBiz) ListOrdersByRestaurant(
 	restaurantID string,
 	options orderB.ListOrdersOptions,
 ) (orders []*model4.Order, total int, err error) {
-	ctx, span := otelx.Span(ctx, "rB.order.list_orders_by_restaurant")
+	ctx, span := otelx.Span(ctx, "biz.order.list_orders_by_restaurant")
 	defer span.End()
 
 	return i.orders.List(ctx, repo.ListCondition{
