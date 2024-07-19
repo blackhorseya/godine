@@ -27,6 +27,7 @@ go_test(
     deps = [
         "//app/infra/storage/mongodbx",
         "//app/infra/storage/redix",
+        "//entity/domain/restaurant/model",
         "//entity/domain/restaurant/repo",
         "//pkg/contextx",
         "@com_github_redis_go_redis_v9//:go-redis",

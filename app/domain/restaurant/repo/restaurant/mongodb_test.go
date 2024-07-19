@@ -5,6 +5,7 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/redis/go-redis/v9"
@@ -62,4 +63,35 @@ func (s *suiteMongodbTester) TearDownTest() {
 
 func TestMongodb(t *testing.T) {
 	suite.Run(t, new(suiteMongodbTester))
+}
+
+func (s *suiteMongodbTester) Test_mongodb_Create() {
+	type args struct {
+		ctx  contextx.Contextx
+		data *model.Restaurant
+		mock func()
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    "create success",
+			args:    args{data: &model.Restaurant{Name: "test restaurant"}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		s.T().Run(tt.name, func(t *testing.T) {
+			tt.args.ctx = contextx.Background()
+			if tt.args.mock != nil {
+				tt.args.mock()
+			}
+
+			if err := s.repo.Create(tt.args.ctx, tt.args.data); (err != nil) != tt.wantErr {
+				t.Errorf("Create() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
 }
