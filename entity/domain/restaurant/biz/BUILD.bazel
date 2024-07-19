@@ -13,7 +13,6 @@ go_library(
     deps = [
         "//entity/domain/restaurant/model",
         "//pkg/contextx",
-        "@com_github_google_uuid//:uuid",
         "@org_uber_go_mock//gomock",
     ],
 )

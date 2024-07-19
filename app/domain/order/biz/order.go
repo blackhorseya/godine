@@ -12,7 +12,7 @@ import (
 	orderB "github.com/blackhorseya/godine/entity/domain/order/biz"
 	model4 "github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
-	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	rB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
@@ -20,8 +20,8 @@ import (
 )
 
 type orderBiz struct {
-	restaurantService biz.IRestaurantBiz
-	menuService       biz.IMenuBiz
+	restaurantService rB.IRestaurantBiz
+	menuService       rB.IMenuBiz
 	userService       userB.IUserBiz
 	logisticsService  logisticsB.ILogisticsBiz
 	notifyService     notifyB.INotificationBiz
@@ -31,8 +31,8 @@ type orderBiz struct {
 
 // NewOrderBiz create and return a new order orderB
 func NewOrderBiz(
-	restaurantService biz.IRestaurantBiz,
-	menuService biz.IMenuBiz,
+	restaurantService rB.IRestaurantBiz,
+	menuService rB.IMenuBiz,
 	userService userB.IUserBiz,
 	logisticsService logisticsB.ILogisticsBiz,
 	notifyService notifyB.INotificationBiz,
