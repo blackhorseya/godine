@@ -26,8 +26,10 @@ go_test(
     embed = [":restaurant"],
     deps = [
         "//app/infra/storage/mongodbx",
+        "//app/infra/storage/redix",
         "//entity/domain/restaurant/repo",
         "//pkg/contextx",
+        "@com_github_redis_go_redis_v9//:go-redis",
         "@com_github_stretchr_testify//suite",
         "@org_mongodb_go_mongo_driver//mongo",
     ],

@@ -4,8 +4,10 @@ import (
 	"testing"
 
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -13,19 +15,31 @@ import (
 type suiteMongodbTester struct {
 	suite.Suite
 
-	container *mongodbx.Container
-	rw        *mongo.Client
-	repo      repo.IRestaurantRepo
+	mongodbContainer *mongodbx.Container
+	redisContainer   *redix.Container
+	rw               *mongo.Client
+	rdb              *redis.Client
+	repo             repo.IRestaurantRepo
 }
 
 func (s *suiteMongodbTester) SetupTest() {
-	container, err := mongodbx.NewContainer(contextx.Background())
+	mongodbC, err := mongodbx.NewContainer(contextx.Background())
 	s.Require().NoError(err)
-	s.container = container
+	s.mongodbContainer = mongodbC
 
-	rw, err := container.RW(contextx.Background())
+	rw, err := mongodbC.RW(contextx.Background())
 	s.Require().NoError(err)
 	s.rw = rw
+
+	redisC, err := redix.NewContainer(contextx.Background())
+	s.Require().NoError(err)
+	s.redisContainer = redisC
+
+	rdb, err := redisC.RW(contextx.Background())
+	s.Require().NoError(err)
+	s.rdb = rdb
+
+	s.repo = NewMongodb(s.rw, s.rdb)
 }
 
 func (s *suiteMongodbTester) TearDownTest() {
@@ -33,8 +47,16 @@ func (s *suiteMongodbTester) TearDownTest() {
 		_ = s.rw.Disconnect(contextx.Background())
 	}
 
-	if s.container != nil {
-		_ = s.container.Terminate(contextx.Background())
+	if s.rdb != nil {
+		_ = s.rdb.Close()
+	}
+
+	if s.mongodbContainer != nil {
+		_ = s.mongodbContainer.Terminate(contextx.Background())
+	}
+
+	if s.redisContainer != nil {
+		_ = s.redisContainer.Terminate(contextx.Background())
 	}
 }
 
