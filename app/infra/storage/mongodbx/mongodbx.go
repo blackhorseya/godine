@@ -51,3 +51,13 @@ func NewContainer(ctx contextx.Contextx) (*Container, error) {
 		MongoDBContainer: container,
 	}, nil
 }
+
+// RW returns a read-write client.
+func (c *Container) RW(ctx contextx.Contextx) (*mongo.Client, error) {
+	dsn, err := c.ConnectionString(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return mongo.Connect(ctx, options.Client().ApplyURI(dsn))
+}

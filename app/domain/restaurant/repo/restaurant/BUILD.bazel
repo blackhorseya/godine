@@ -27,6 +27,7 @@ go_test(
     deps = [
         "//app/infra/storage/mongodbx",
         "//entity/domain/restaurant/repo",
+        "//pkg/contextx",
         "@com_github_stretchr_testify//suite",
         "@org_mongodb_go_mongo_driver//mongo",
     ],
