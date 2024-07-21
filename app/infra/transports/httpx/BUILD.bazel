@@ -2,7 +2,10 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "httpx",
-    srcs = ["server.go"],
+    srcs = [
+        "cors.go",
+        "server.go",
+    ],
     importpath = "github.com/blackhorseya/godine/app/infra/transports/httpx",
     visibility = ["//visibility:public"],
     deps = [

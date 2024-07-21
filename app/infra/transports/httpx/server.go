@@ -28,6 +28,7 @@ func NewServer(app *configx.Application) (*Server, error) {
 	gin.SetMode(app.HTTP.Mode)
 
 	router := gin.New()
+	router.Use(AddCorsMiddleware())
 	router.Use(ginzap.GinzapWithConfig(ctx.Logger, &ginzap.Config{
 		TimeFormat: time.RFC3339,
 		UTC:        true,

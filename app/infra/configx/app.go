@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/blackhorseya/godine/pkg/netx"
 	"github.com/google/uuid"
@@ -29,6 +30,8 @@ type Application struct {
 
 	Log  logging.Options `json:"log" yaml:"log"`
 	HTTP HTTP            `json:"http" yaml:"http"`
+
+	Auth0 authx.Options `json:"auth0" yaml:"auth0"`
 
 	Storage struct {
 		Mysql struct {
