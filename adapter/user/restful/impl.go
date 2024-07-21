@@ -6,6 +6,7 @@ import (
 	"encoding/gob"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	v1 "github.com/blackhorseya/godine/adapter/user/restful/v1"
@@ -215,6 +216,29 @@ func IsAuthenticated(ctx *gin.Context) {
 }
 
 func (i *impl) logout(c *gin.Context) {
+	logoutURL, err := url.Parse("https://" + i.injector.A.Auth0.Domain + "/v2/logout")
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	scheme := "http"
+	if c.Request.TLS != nil {
+		scheme = "https"
+	}
+
+	returnTo, err := url.Parse(scheme + "://" + c.Request.Host)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	parameters := url.Values{}
+	parameters.Add("returnTo", returnTo.String())
+	parameters.Add("client_id", i.injector.Authx.ClientID)
+	logoutURL.RawQuery = parameters.Encode()
+
+	c.Redirect(http.StatusTemporaryRedirect, logoutURL.String())
 }
 
 func generateRandomState() (string, error) {
