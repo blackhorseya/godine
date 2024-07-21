@@ -48,7 +48,6 @@ func NewOrderBiz(
 	}
 }
 
-//nolint:funlen // it's okay
 func (i *orderBiz) CreateOrder(
 	ctx contextx.Contextx,
 	userID, restaurantID string,
@@ -68,13 +67,6 @@ func (i *orderBiz) CreateOrder(
 		)
 		return nil, err
 	}
-	if restaurant == nil {
-		ctx.Error(
-			"restaurant not found",
-			zap.String("restaurant_id", restaurantID),
-		)
-		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("restaurant not found"))
-	}
 
 	user, err := i.userService.GetUser(ctx, userID)
 	if err != nil {
@@ -84,13 +76,6 @@ func (i *orderBiz) CreateOrder(
 			zap.String("user_id", userID),
 		)
 		return nil, err
-	}
-	if user == nil {
-		ctx.Error(
-			"user not found",
-			zap.String("user_id", userID),
-		)
-		return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("user not found"))
 	}
 
 	items := make([]model4.OrderItem, 0, len(options))
@@ -103,13 +88,6 @@ func (i *orderBiz) CreateOrder(
 				zap.String("menu_item_id", option.MenuItemID),
 			)
 			return nil, err2
-		}
-		if menuItem == nil {
-			ctx.Error(
-				"menu item not found",
-				zap.String("menu_item_id", option.MenuItemID),
-			)
-			return nil, errorx.Wrap(http.StatusNotFound, 404, errors.New("menu item not found"))
 		}
 		if !menuItem.IsAvailable {
 			ctx.Error(
