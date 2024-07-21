@@ -98,6 +98,7 @@ func (i *impl) InitRouting() error {
 	router.GET("/login", i.login)
 	router.GET("/callback", i.callback)
 	router.GET("/user", IsAuthenticated, i.user)
+	router.GET("/logout", i.logout)
 
 	// api
 	api := router.Group("/api")
@@ -211,6 +212,9 @@ func IsAuthenticated(ctx *gin.Context) {
 	} else {
 		ctx.Next()
 	}
+}
+
+func (i *impl) logout(c *gin.Context) {
 }
 
 func generateRandomState() (string, error) {
