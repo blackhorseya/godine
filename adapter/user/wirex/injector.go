@@ -1,6 +1,7 @@
 package wirex
 
 import (
+	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/entity/domain/user/biz"
 )
@@ -9,6 +10,8 @@ import (
 type Injector struct {
 	C *configx.Configuration
 	A *configx.Application
+
+	Authx *authx.Authx
 
 	UserService biz.IUserBiz
 }

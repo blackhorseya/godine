@@ -1,7 +1,9 @@
 package restful
 
 import (
+	"encoding/gob"
 	"fmt"
+	"net/http"
 	"strings"
 
 	v1 "github.com/blackhorseya/godine/adapter/user/restful/v1"
@@ -11,6 +13,8 @@ import (
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/responsex"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -77,6 +81,17 @@ func (i *impl) AwaitSignal() error {
 
 func (i *impl) InitRouting() error {
 	router := i.server.Router
+
+	gob.Register(map[string]interface{}{})
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("auth-session", store))
+
+	router.Static("/public", "web/static")
+	router.LoadHTMLGlob("web/template/*")
+
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "home.html", nil)
+	})
 
 	// api
 	api := router.Group("/api")
