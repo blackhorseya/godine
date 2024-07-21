@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/adapter/user/wirex",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/authx",
         "//app/infra/configx",
         "//entity/domain/user/biz",
     ],

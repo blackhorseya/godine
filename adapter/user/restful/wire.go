@@ -8,6 +8,7 @@ import (
 	"github.com/blackhorseya/godine/adapter/user/wirex"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/domain/user/repo/user"
+	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
@@ -38,6 +39,10 @@ func initApplication(v *viper.Viper) (*configx.Application, error) {
 	return app, nil
 }
 
+func initAuthx(app *configx.Application) (*authx.Authx, error) {
+	return authx.New(app.Auth0)
+}
+
 var providerSet = wire.NewSet(
 	newRestful,
 
@@ -45,6 +50,7 @@ var providerSet = wire.NewSet(
 	configx.NewConfiguration,
 	initApplication,
 	httpx.NewServer,
+	initAuthx,
 
 	biz.NewUserBiz,
 	user.NewMongodb,
