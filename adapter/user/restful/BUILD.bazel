@@ -21,6 +21,7 @@ go_library(
         "//app/infra/transports/httpx",
         "//pkg/adapterx",
         "//pkg/contextx",
+        "//pkg/errorx",
         "//pkg/logging",
         "//pkg/responsex",
         "@com_github_gin_contrib_sessions//:sessions",

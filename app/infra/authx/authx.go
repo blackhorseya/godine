@@ -1,6 +1,7 @@
 package authx
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -41,4 +42,18 @@ func New(options Options) (*Authx, error) {
 		Provider: provider,
 		Config:   config,
 	}, nil
+}
+
+// VerifyIDToken is a method to verify the id token.
+func (a *Authx) VerifyIDToken(ctx contextx.Contextx, token *oauth2.Token) (*oidc.IDToken, error) {
+	rawIDToken, ok := token.Extra("id_token").(string)
+	if !ok {
+		return nil, errors.New("no id_token field in oauth2 token")
+	}
+
+	oidcConfig := &oidc.Config{
+		ClientID: a.ClientID,
+	}
+
+	return a.Verifier(oidcConfig).Verify(ctx, rawIDToken)
 }

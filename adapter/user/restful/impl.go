@@ -14,6 +14,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -95,6 +96,7 @@ func (i *impl) InitRouting() error {
 		c.HTML(http.StatusOK, "home.html", nil)
 	})
 	router.GET("/login", i.login)
+	router.GET("/callback", i.callback)
 
 	// api
 	api := router.Group("/api")
@@ -144,6 +146,49 @@ func (i *impl) login(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusTemporaryRedirect, i.injector.Authx.AuthCodeURL(state))
+}
+
+func (i *impl) callback(c *gin.Context) {
+	ctx, err := contextx.FromGin(c)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	session := sessions.Default(c)
+	if c.Query("state") != session.Get("state") {
+		responsex.Err(c, errorx.New(http.StatusBadRequest, 400, "invalid state parameter"))
+		return
+	}
+
+	token, err := i.injector.Authx.Exchange(ctx, c.Query("code"))
+	if err != nil {
+		responsex.Err(c, errorx.Wrap(http.StatusUnauthorized, 401, err))
+		return
+	}
+
+	idToken, err := i.injector.Authx.VerifyIDToken(ctx, token)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	var profile map[string]interface{}
+	err = idToken.Claims(&profile)
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	session.Set("access_token", token.AccessToken)
+	session.Set("profile", profile)
+	err = session.Save()
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	c.Redirect(http.StatusTemporaryRedirect, "/user")
 }
 
 func generateRandomState() (string, error) {
