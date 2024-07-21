@@ -97,6 +97,7 @@ func (i *impl) InitRouting() error {
 	})
 	router.GET("/login", i.login)
 	router.GET("/callback", i.callback)
+	router.GET("/user", IsAuthenticated, i.user)
 
 	// api
 	api := router.Group("/api")
@@ -189,6 +190,27 @@ func (i *impl) callback(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusTemporaryRedirect, "/user")
+}
+
+func (i *impl) user(c *gin.Context) {
+	session := sessions.Default(c)
+	profile := session.Get("profile")
+	accessToken := session.Get("access_token")
+
+	c.HTML(http.StatusOK, "user.html", map[string]interface{}{
+		"profile":      profile,
+		"access_token": accessToken,
+	})
+}
+
+// IsAuthenticated is a middleware that checks if
+// the user has already been authenticated previously.
+func IsAuthenticated(ctx *gin.Context) {
+	if sessions.Default(ctx).Get("profile") == nil {
+		ctx.Redirect(http.StatusSeeOther, "/")
+	} else {
+		ctx.Next()
+	}
 }
 
 func generateRandomState() (string, error) {
