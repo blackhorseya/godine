@@ -6,11 +6,11 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	logisticsB "github.com/blackhorseya/godine/entity/domain/logistics/biz"
-	model2 "github.com/blackhorseya/godine/entity/domain/logistics/model"
+	logisticsM "github.com/blackhorseya/godine/entity/domain/logistics/model"
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
-	model3 "github.com/blackhorseya/godine/entity/domain/notification/model"
+	notifyM "github.com/blackhorseya/godine/entity/domain/notification/model"
 	orderB "github.com/blackhorseya/godine/entity/domain/order/biz"
-	model4 "github.com/blackhorseya/godine/entity/domain/order/model"
+	orderM "github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	rB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
@@ -51,10 +51,10 @@ func NewOrderBiz(
 func (i *orderBiz) CreateOrder(
 	ctx contextx.Contextx,
 	userID, restaurantID string,
-	options []model4.OrderItem,
-	address model4.Address,
+	options []orderM.OrderItem,
+	address orderM.Address,
 	totalAmount float64,
-) (order *model4.Order, err error) {
+) (order *orderM.Order, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.create_order")
 	defer span.End()
 
@@ -78,7 +78,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	items := make([]model4.OrderItem, 0, len(options))
+	items := make([]orderM.OrderItem, 0, len(options))
 	for _, option := range options {
 		menuItem, err2 := i.menuService.GetMenuItem(ctx, restaurant.ID, option.MenuItemID)
 		if err2 != nil {
@@ -97,11 +97,11 @@ func (i *orderBiz) CreateOrder(
 			return nil, errorx.Wrap(http.StatusConflict, 409, errors.New("menu item not available"))
 		}
 
-		item := model4.NewOrderItem(menuItem.ID, menuItem.Name, menuItem.Price, option.Quantity)
+		item := orderM.NewOrderItem(menuItem.ID, menuItem.Name, menuItem.Price, option.Quantity)
 		items = append(items, *item)
 	}
 
-	order = model4.NewOrder(user.ID, restaurant.ID, items)
+	order = orderM.NewOrder(user.ID, restaurant.ID, items)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(
@@ -112,7 +112,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	err = i.notifyService.CreateNotification(ctx, model3.NewNotify(user.ID, user.ID, order.ID, "order created"))
+	err = i.notifyService.CreateNotification(ctx, notifyM.NewNotify(user.ID, user.ID, order.ID, "order created"))
 	if err != nil {
 		ctx.Error(
 			"create notification failed",
@@ -122,7 +122,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	delivery := model2.NewDelivery(order.ID, user.ID)
+	delivery := logisticsM.NewDelivery(order.ID, user.ID)
 	err = i.logisticsService.CreateDelivery(ctx, delivery)
 	if err != nil {
 		ctx.Error(
@@ -147,7 +147,7 @@ func (i *orderBiz) CreateOrder(
 	return order, nil
 }
 
-func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model4.Order, err error) {
+func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *orderM.Order, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.get_order")
 	defer span.End()
 
@@ -157,7 +157,7 @@ func (i *orderBiz) GetOrder(ctx contextx.Contextx, id string) (order *model4.Ord
 func (i *orderBiz) ListOrders(
 	ctx contextx.Contextx,
 	options orderB.ListOrdersOptions,
-) (orders []*model4.Order, total int, err error) {
+) (orders []*orderM.Order, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.list_orders")
 	defer span.End()
 
@@ -183,13 +183,6 @@ func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status st
 		)
 		return err
 	}
-	if order == nil {
-		ctx.Error(
-			"order not found",
-			zap.String("order_id", id),
-		)
-		return errorx.Wrap(http.StatusNotFound, 404, errors.New("order not found"))
-	}
 
 	event, err := order.Next(ctx)
 	if err != nil {
@@ -203,7 +196,7 @@ func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status st
 
 	ctx.Debug("order executed event", zap.Any("event", &event))
 
-	notify := model3.NewNotify(order.UserID, order.UserID, order.ID, "order status to "+event.Name)
+	notify := notifyM.NewNotify(order.UserID, order.UserID, order.ID, "order status to "+event.Name)
 	err = i.notifyService.CreateNotification(ctx, notify)
 	if err != nil {
 		ctx.Error(
@@ -231,7 +224,7 @@ func (i *orderBiz) ListOrdersByUser(
 	ctx contextx.Contextx,
 	userID string,
 	options orderB.ListOrdersOptions,
-) (orders []*model4.Order, total int, err error) {
+) (orders []*orderM.Order, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.list_orders_by_user")
 	defer span.End()
 
@@ -248,7 +241,7 @@ func (i *orderBiz) ListOrdersByRestaurant(
 	ctx contextx.Contextx,
 	restaurantID string,
 	options orderB.ListOrdersOptions,
-) (orders []*model4.Order, total int, err error) {
+) (orders []*orderM.Order, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.list_orders_by_restaurant")
 	defer span.End()
 
