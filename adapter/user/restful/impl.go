@@ -1,6 +1,8 @@
 package restful
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/gob"
 	"fmt"
 	"net/http"
@@ -92,6 +94,7 @@ func (i *impl) InitRouting() error {
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "home.html", nil)
 	})
+	router.GET("/login", i.login)
 
 	// api
 	api := router.Group("/api")
@@ -123,4 +126,34 @@ func (i *impl) GetRouter() *gin.Engine {
 // @Router /healthz [get]
 func (i *impl) Healthz(c *gin.Context) {
 	responsex.OK(c, nil)
+}
+
+func (i *impl) login(c *gin.Context) {
+	state, err := generateRandomState()
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	session := sessions.Default(c)
+	session.Set("state", state)
+	err = session.Save()
+	if err != nil {
+		responsex.Err(c, err)
+		return
+	}
+
+	c.Redirect(http.StatusTemporaryRedirect, i.injector.Authx.AuthCodeURL(state))
+}
+
+func generateRandomState() (string, error) {
+	b := make([]byte, 32)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
+	}
+
+	state := base64.StdEncoding.EncodeToString(b)
+
+	return state, nil
 }
