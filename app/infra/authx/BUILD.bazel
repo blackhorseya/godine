@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/infra/authx",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg/contextx",
         "@com_github_coreos_go_oidc_v3//oidc",
         "@org_golang_x_oauth2//:oauth2",
     ],
