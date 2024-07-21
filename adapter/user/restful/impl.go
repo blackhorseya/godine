@@ -3,6 +3,7 @@ package restful
 import (
 	"encoding/gob"
 	"fmt"
+	"net/http"
 	"strings"
 
 	v1 "github.com/blackhorseya/godine/adapter/user/restful/v1"
@@ -84,6 +85,13 @@ func (i *impl) InitRouting() error {
 	gob.Register(map[string]interface{}{})
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("auth-session", store))
+
+	router.Static("/public", "web/static")
+	router.LoadHTMLGlob("web/template/*")
+
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "home.html", nil)
+	})
 
 	// api
 	api := router.Group("/api")
