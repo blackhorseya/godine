@@ -2,7 +2,6 @@ package restful
 
 import (
 	"crypto/rand"
-	"embed"
 	"encoding/base64"
 	"encoding/gob"
 	"fmt"
@@ -11,6 +10,7 @@ import (
 	"strings"
 
 	v1 "github.com/blackhorseya/godine/adapter/user/restful/v1"
+	"github.com/blackhorseya/godine/adapter/user/restful/web/templates"
 	"github.com/blackhorseya/godine/adapter/user/wirex"
 	_ "github.com/blackhorseya/godine/api/user/restful" // swagger docs
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
@@ -84,9 +84,6 @@ func (i *impl) AwaitSignal() error {
 	return nil
 }
 
-//go:embed web/static web/template
-var _ embed.FS
-
 func (i *impl) InitRouting() error {
 	router := i.server.Router
 
@@ -94,8 +91,7 @@ func (i *impl) InitRouting() error {
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("auth-session", store))
 
-	router.Static("/public", "web/static")
-	router.LoadHTMLGlob("web/template/*")
+	templates.SetHTMLTemplate(router)
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "home.html", nil)
