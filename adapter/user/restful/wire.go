@@ -44,10 +44,6 @@ func initAuthx(app *configx.Application) (*authx.Authx, error) {
 	return authx.New(app.Auth0)
 }
 
-func initAuthz(app *configx.Application) (*authz.Authz, error) {
-	return authz.New(app)
-}
-
 var providerSet = wire.NewSet(
 	newRestful,
 
@@ -56,7 +52,7 @@ var providerSet = wire.NewSet(
 	initApplication,
 	httpx.NewServer,
 	initAuthx,
-	initAuthz,
+	authz.New,
 
 	biz.NewUserBiz,
 	user.NewMongodb,

@@ -42,7 +42,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	authz, err := initAuthz(application)
+	authzAuthz, err := authz.New(application)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		C:           configuration,
 		A:           application,
 		Authx:       authx,
-		Authz:       authz,
+		Authz:       authzAuthz,
 		UserService: iUserBiz,
 	}
 	server, err := httpx.NewServer(application)
@@ -92,11 +92,6 @@ func initAuthx(app *configx.Application) (*authx.Authx, error) {
 	return authx.New(app.Auth0)
 }
 
-func initAuthz(app *configx.Application) (*authz.Authz, error) {
-	return authz.New(app)
-}
-
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, initAuthx,
-	initAuthz, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, initAuthx, authz.New, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
 )
