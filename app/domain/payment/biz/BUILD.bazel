@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//entity/domain/payment/biz",
         "//entity/domain/payment/model",
+        "//entity/domain/payment/repo",
         "//pkg/contextx",
     ],
 )
