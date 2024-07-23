@@ -99,7 +99,7 @@ HELM_REPO_NAME := blackhorseya
 deploy: deploy-app deploy-storage ## deploy all
 
 .PHONY: deploy-app
-deploy-app: deploy-restaurant-restful deploy-order-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful ## deploy app
+deploy-app: deploy-restaurant-restful deploy-order-restful deploy-payment-restful deploy-user-restful deploy-logistics-restful deploy-notify-restful ## deploy app
 
 .PHONY: deploy-restaurant-restful
 deploy-restaurant-restful: ## deploy restaurant
@@ -107,6 +107,13 @@ deploy-restaurant-restful: ## deploy restaurant
   --install --namespace $(PROJECT_NAME) \
   --history-max 3 \
   --values ./deployments/$(DEPLOY_TO)/godine-restaurant-restful.yaml
+
+.PHONY: deploy-payment-restful
+deploy-payment-restful: ## deploy payment
+	@helm upgrade $(DEPLOY_TO)-godine-payment-restful $(HELM_REPO_NAME)/godine \
+  --install --namespace $(PROJECT_NAME) \
+  --history-max 3 \
+  --values ./deployments/$(DEPLOY_TO)/godine-payment-restful.yaml
 
 .PHONY: deploy-order-restful
 deploy-order-restful: ## deploy order
