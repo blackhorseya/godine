@@ -17,8 +17,8 @@ const (
 	// KeyCtx is the key of contextx.
 	KeyCtx = "contextx"
 
-	// KeyWho is the key of who.
-	KeyWho = "who"
+	// KeyHandler is the key of handler.
+	KeyHandler = "handler"
 )
 
 // Contextx extends google's context to support logging methods.

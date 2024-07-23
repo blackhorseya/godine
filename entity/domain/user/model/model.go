@@ -1,6 +1,9 @@
 package model
 
 import (
+	"errors"
+
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -43,6 +46,21 @@ func NewUser(name, email, password string, address Address) *User {
 		IsActive: true,
 		Level:    0,
 	}
+}
+
+// FromContext extracts the user from the context.
+func FromContext(ctx contextx.Contextx) (*User, error) {
+	user, ok := ctx.Value(contextx.KeyHandler).(*User)
+	if !ok {
+		return nil, errors.New("no user found in context")
+	}
+
+	return user, nil
+}
+
+// GetSubject returns the subject of the user.
+func (x *User) GetSubject() string {
+	return x.ID
 }
 
 // UpdateAddress updates the user's address.

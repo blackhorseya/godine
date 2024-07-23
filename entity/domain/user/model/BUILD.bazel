@@ -9,6 +9,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/entity/domain/user/model",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg/contextx",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//bson/primitive",
     ],
