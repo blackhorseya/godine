@@ -3,15 +3,19 @@ package biz
 import (
 	"github.com/blackhorseya/godine/entity/domain/payment/biz"
 	"github.com/blackhorseya/godine/entity/domain/payment/model"
+	"github.com/blackhorseya/godine/entity/domain/payment/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
 type impl struct {
+	payments repo.IPaymentRepo
 }
 
 // NewPaymentBiz creates a new payment service.
-func NewPaymentBiz() biz.IPaymentBiz {
-	return &impl{}
+func NewPaymentBiz(payments repo.IPaymentRepo) biz.IPaymentBiz {
+	return &impl{
+		payments: payments,
+	}
 }
 
 func (i *impl) GetPaymentByID(ctx contextx.Contextx, id string) (item *model.Payment, err error) {

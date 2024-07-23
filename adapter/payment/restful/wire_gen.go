@@ -9,8 +9,10 @@ package restful
 import (
 	"github.com/blackhorseya/godine/adapter/payment/wirex"
 	"github.com/blackhorseya/godine/app/domain/payment/biz"
+	"github.com/blackhorseya/godine/app/domain/payment/repo/payment"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -34,7 +36,12 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	iPaymentBiz := biz.NewPaymentBiz()
+	client, err := mongodbx.NewClient(application)
+	if err != nil {
+		return nil, err
+	}
+	iPaymentRepo := payment.NewMongodb(client)
+	iPaymentBiz := biz.NewPaymentBiz(iPaymentRepo)
 	injector := &wirex.Injector{
 		C:              configuration,
 		A:              application,
@@ -70,5 +77,5 @@ func initApplication(v *viper.Viper) (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz.NewPaymentBiz,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz.NewPaymentBiz, payment.NewMongodb, mongodbx.NewClient,
 )
