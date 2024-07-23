@@ -1,0 +1,16 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "repo",
+    srcs = [
+        "mock_payment.go",
+        "payment.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/entity/domain/payment/repo",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/payment/model",
+        "//pkg/contextx",
+        "@org_uber_go_mock//gomock",
+    ],
+)
