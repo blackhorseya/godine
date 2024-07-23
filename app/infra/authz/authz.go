@@ -41,6 +41,7 @@ func New(app *configx.Application) (*Authz, error) {
 	}
 
 	return &Authz{
+		enabled:  true,
 		Enforcer: enforcer,
 	}, nil
 }
@@ -63,6 +64,7 @@ func (a *Authz) ProtectRouter() gin.HandlerFunc {
 		if err != nil {
 			responsex.Err(c, errorx.Wrap(http.StatusUnauthorized, 401, err))
 			c.Abort()
+			return
 		}
 
 		subject := by.GetSubject()
@@ -73,6 +75,7 @@ func (a *Authz) ProtectRouter() gin.HandlerFunc {
 		if err != nil {
 			_ = c.Error(err)
 			c.Abort()
+			return
 		}
 
 		ctx.Debug("authz",
@@ -84,6 +87,7 @@ func (a *Authz) ProtectRouter() gin.HandlerFunc {
 		if !allowed {
 			responsex.Err(c, errorx.New(http.StatusForbidden, 403, "forbidden"))
 			c.Abort()
+			return
 		}
 
 		c.Next()
