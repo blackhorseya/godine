@@ -12,6 +12,7 @@ go_library(
         "//adapter/logistics/restful",
         "//adapter/notify/restful",
         "//adapter/order/restful",
+        "//adapter/payment/restful",
         "//adapter/restaurant/restful",
         "//adapter/user/restful",
         "//pkg/adapterx",

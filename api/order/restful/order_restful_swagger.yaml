@@ -38,11 +38,13 @@ definitions:
     properties:
       menu_item_id:
         description: MenuItemID is the identifier of the menu item.
-        example: 174e9519-4c47-42f2-bb1c-b0eaa8f76d05
+        type: string
+      order_id:
+        description: OrderID is the identifier of the order to which the item belongs.
         type: string
       price:
         description: Price is the price of a single unit of the menu item.
-        example: 10
+        example: 10.5
         type: number
       quantity:
         description: Quantity is the quantity of the menu item ordered.
