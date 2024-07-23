@@ -6,6 +6,14 @@ go_library(
         "impl.go",
         "wire_gen.go",
     ],
+    embedsrcs = [
+        "web/static/css/app.css",
+        "web/static/image/auth0_logo_final_blue_RGB.png",
+        "web/static/js/js.cookie.js",
+        "web/static/js/user.js",
+        "web/template/home.html",
+        "web/template/user.html",
+    ],
     importpath = "github.com/blackhorseya/godine/adapter/user/restful",
     visibility = ["//visibility:public"],
     deps = [

@@ -2,6 +2,7 @@ package restful
 
 import (
 	"crypto/rand"
+	"embed"
 	"encoding/base64"
 	"encoding/gob"
 	"fmt"
@@ -82,6 +83,9 @@ func (i *impl) AwaitSignal() error {
 
 	return nil
 }
+
+//go:embed web/static web/template
+var _ embed.FS
 
 func (i *impl) InitRouting() error {
 	router := i.server.Router
