@@ -17,6 +17,7 @@ import (
 
 // Authz is the authorization struct.
 type Authz struct {
+	enabled bool
 	*casbin.Enforcer
 }
 
@@ -24,7 +25,9 @@ type Authz struct {
 func New(app *configx.Application) (*Authz, error) {
 	if !app.Casbin.Enabled {
 		contextx.Background().Warn("casbin is disabled")
-		return nil, nil //nolint:nilnil // return nil to indicate casbin is disabled
+		return &Authz{
+			enabled: false,
+		}, nil
 	}
 
 	var adapter, err = gormadapter.NewAdapter(app.Casbin.PolicyDriver, app.Storage.Mysql.DSN, true)
@@ -45,6 +48,11 @@ func New(app *configx.Application) (*Authz, error) {
 // ProtectRouter is used to protect the router.
 func (a *Authz) ProtectRouter() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if !a.enabled {
+			c.Next()
+			return
+		}
+
 		ctx, err := contextx.FromGin(c)
 		if err != nil {
 			_ = c.Error(err)
