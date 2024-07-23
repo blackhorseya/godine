@@ -10,7 +10,7 @@ type Payment struct {
 	ID string `json:"id,omitempty" bson:"_id,omitempty"`
 
 	// OrderID is the identifier of the associated order.
-	OrderID string `json:"order_id,omitempty" bson:"orderId"`
+	OrderID string `json:"order_id,omitempty" bson:"order_id"`
 
 	// Amount is the value object representing the payment amount.
 	Amount PaymentAmount `json:"amount,omitempty" bson:"amount"`
@@ -22,10 +22,10 @@ type Payment struct {
 	Records []*PaymentRecord `json:"records,omitempty" bson:"records"`
 
 	// CreatedAt is the time when the payment was created.
-	CreatedAt time.Time `json:"created_at,omitempty" bson:"createdAt"`
+	CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at"`
 
 	// UpdatedAt is the time when the payment was last updated.
-	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updatedAt"`
+	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at"`
 }
 
 // NewPayment creates a new Payment.

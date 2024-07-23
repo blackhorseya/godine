@@ -13,6 +13,7 @@ go_library(
         "//pkg/errorx",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//mongo",
+        "@org_mongodb_go_mongo_driver//mongo/options",
         "@org_uber_go_zap//:zap",
     ],
 )
