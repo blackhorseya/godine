@@ -11,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -93,8 +94,23 @@ func (i *mongodb) List(ctx contextx.Contextx, cond repo.ListCondition) (items []
 }
 
 func (i *mongodb) Create(ctx contextx.Contextx, item *model.Payment) (err error) {
-	// todo: 2024/7/23|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.payment.mongodb.create")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	if item.ID == "" {
+		item.ID = primitive.NewObjectID().Hex()
+	}
+
+	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, item)
+	if err != nil {
+		ctx.Error("failed to create payment", zap.Error(err), zap.Any("payment", item))
+		return err
+	}
+
+	return nil
 }
 
 func (i *mongodb) Update(ctx contextx.Contextx, item *model.Payment) (err error) {
