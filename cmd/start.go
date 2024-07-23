@@ -9,6 +9,7 @@ import (
 	logistics "github.com/blackhorseya/godine/adapter/logistics/restful"
 	notify "github.com/blackhorseya/godine/adapter/notify/restful"
 	order "github.com/blackhorseya/godine/adapter/order/restful"
+	payment "github.com/blackhorseya/godine/adapter/payment/restful"
 	restaurant "github.com/blackhorseya/godine/adapter/restaurant/restful"
 	user "github.com/blackhorseya/godine/adapter/user/restful"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -30,6 +31,7 @@ var startCmd = &cobra.Command{
 		services := []func(*viper.Viper) (adapterx.Restful, error){
 			restaurant.New,
 			order.New,
+			payment.New,
 			user.New,
 			logistics.New,
 			notify.New,
@@ -93,6 +95,12 @@ func init() {
 		order.New,
 	)
 
+	paymentRestfulCmd := cmdx.NewServiceCmd(
+		"payment-restful",
+		"Start the payment restful server",
+		payment.New,
+	)
+
 	userRestfulCmd := cmdx.NewServiceCmd(
 		"user-restful",
 		"Start the user restful server",
@@ -111,7 +119,14 @@ func init() {
 		notify.New,
 	)
 
-	startCmd.AddCommand(restaurantRestfulCmd, orderRestfulCmd, userRestfulCmd, logisticsRestfulCmd, notifyRestfulCmd)
+	startCmd.AddCommand(
+		restaurantRestfulCmd,
+		orderRestfulCmd,
+		paymentRestfulCmd,
+		userRestfulCmd,
+		logisticsRestfulCmd,
+		notifyRestfulCmd,
+	)
 
 	rootCmd.AddCommand(startCmd)
 
