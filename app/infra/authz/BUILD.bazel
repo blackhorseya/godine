@@ -7,8 +7,13 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/configx",
+        "//entity/domain/user/model",
         "//pkg/contextx",
+        "//pkg/errorx",
+        "//pkg/responsex",
         "@com_github_casbin_casbin_v2//:casbin",
         "@com_github_casbin_gorm_adapter_v3//:gorm-adapter",
+        "@com_github_gin_gonic_gin//:gin",
+        "@org_uber_go_zap//:zap",
     ],
 )

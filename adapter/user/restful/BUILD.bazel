@@ -33,6 +33,7 @@ go_library(
         "@com_github_spf13_viper//:viper",
         "@com_github_swaggo_files//:files",
         "@com_github_swaggo_gin_swagger//:gin-swagger",
+        "@org_golang_x_oauth2//:oauth2",
         "@org_uber_go_zap//:zap",
     ],
 )
