@@ -3,6 +3,7 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "cmd",
     srcs = [
+        "init.go",
         "root.go",
         "start.go",
     ],
@@ -15,9 +16,12 @@ go_library(
         "//adapter/payment/restful",
         "//adapter/restaurant/restful",
         "//adapter/user/restful",
+        "//app/infra/authz",
+        "//app/infra/configx",
         "//pkg/adapterx",
         "//pkg/cmdx",
         "//pkg/contextx",
+        "//pkg/logging",
         "@com_github_spf13_cobra//:cobra",
         "@com_github_spf13_viper//:viper",
         "@org_golang_x_sync//errgroup",
