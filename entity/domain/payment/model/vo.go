@@ -39,7 +39,7 @@ type PaymentRecord struct {
 	Status PaymentStatus `json:"status,omitempty" bson:"status"`
 
 	// ErrorMessage is the error message in case of a failed transaction.
-	ErrorMessage string `json:"error_message,omitempty" bson:"errorMessage"`
+	ErrorMessage string `json:"error_message,omitempty" bson:"error_message"`
 
 	// Timestamp is the time when the transaction occurred.
 	Timestamp time.Time `json:"timestamp,omitempty" bson:"timestamp"`
