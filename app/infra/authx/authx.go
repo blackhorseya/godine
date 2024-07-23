@@ -23,10 +23,11 @@ import (
 
 // Options is a struct that represents the options.
 type Options struct {
-	Domain       string `json:"domain" yaml:"domain"`
-	ClientID     string `json:"client_id" yaml:"clientID"`
-	ClientSecret string `json:"client_secret" yaml:"clientSecret"`
-	CallbackURL  string `json:"callback_url" yaml:"callbackURL"`
+	Domain       string   `json:"domain" yaml:"domain"`
+	ClientID     string   `json:"client_id" yaml:"clientID"`
+	ClientSecret string   `json:"client_secret" yaml:"clientSecret"`
+	CallbackURL  string   `json:"callback_url" yaml:"callbackURL"`
+	Audiences    []string `json:"audiences" yaml:"audiences"`
 }
 
 // Authx is a struct that represents the authx.
@@ -62,7 +63,7 @@ func New(options Options) (*Authx, error) {
 		jwksProvider.KeyFunc,
 		validator.RS256,
 		issuerURL.String(),
-		[]string{options.CallbackURL},
+		options.Audiences,
 		validator.WithCustomClaims(func() validator.CustomClaims {
 			return &CustomClaims{}
 		}),

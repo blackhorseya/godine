@@ -24,6 +24,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
+	"golang.org/x/oauth2"
 )
 
 // @title Godine User Restful API
@@ -149,7 +150,12 @@ func (i *impl) login(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(http.StatusTemporaryRedirect, i.injector.Authx.AuthCodeURL(state))
+	var options []oauth2.AuthCodeOption
+	for _, audience := range i.injector.A.Auth0.Audiences {
+		options = append(options, oauth2.SetAuthURLParam("audience", audience))
+	}
+
+	c.Redirect(http.StatusTemporaryRedirect, i.injector.Authx.AuthCodeURL(state, options...))
 }
 
 func (i *impl) callback(c *gin.Context) {
