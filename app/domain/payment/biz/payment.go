@@ -31,8 +31,16 @@ func (i *impl) CreatePayment(
 	orderID string,
 	amount model.PaymentAmount,
 ) (item *model.Payment, err error) {
-	// todo: 2024/7/23|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.payment.CreatePayment")
+	defer span.End()
+
+	payment := model.NewPayment(orderID, amount)
+	err = i.payments.Create(ctx, payment)
+	if err != nil {
+		return nil, err
+	}
+
+	return payment, nil
 }
 
 func (i *impl) ListPayments(
