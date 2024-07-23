@@ -106,7 +106,7 @@ func (i *mongodb) Create(ctx contextx.Contextx, item *model.Payment) (err error)
 
 	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, item)
 	if err != nil {
-		ctx.Error("failed to create payment", zap.Error(err), zap.Any("payment", item))
+		ctx.Error("failed to create payment", zap.Error(err), zap.Any("payment", &item))
 		return err
 	}
 
@@ -114,6 +114,20 @@ func (i *mongodb) Create(ctx contextx.Contextx, item *model.Payment) (err error)
 }
 
 func (i *mongodb) Update(ctx contextx.Contextx, item *model.Payment) (err error) {
-	// todo: 2024/7/23|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.payment.mongodb.update")
+	defer span.End()
+
+	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
+	defer cancelFunc()
+
+	filter := bson.M{"_id": item.ID}
+	update := bson.M{"$set": item}
+
+	_, err = i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)
+	if err != nil {
+		ctx.Error("failed to update payment", zap.Error(err), zap.Any("payment", &item))
+		return err
+	}
+
+	return nil
 }
