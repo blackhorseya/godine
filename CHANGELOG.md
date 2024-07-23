@@ -1,3 +1,48 @@
+## 0.5.2 (2024-07-23)
+
+### Feat
+
+- integrate Wirex payment adapter into project (#93)
+- integrate RESTful payment adapter in start command
+- refactor signal handling and testing
+- consolidate RESTful API definitions and implementations
+- integrate Wirex payment adapter into project
+- update dependency management and error handling in MongoDB integration (#92)
+- refactor functions for improved error handling
+- optimize MongoDB integration with OpenTelemetry tracing
+- update dependency management and error handling in MongoDB integration
+- create mock payment files for payment repository (#91)
+- create mock payment files for payment repository
+- refactor payment service and add BUILD file (#90)
+- refactor payment service and add BUILD file
+- consolidate new files in `biz` package
+- implement payment model in Bazel build system (#89)
+- implement payment model in Bazel build system
+- implement secure logout functionality (#88)
+- implement secure logout functionality
+- implement user authentication and styling enhancements
+- create new user interface template for web page (#87)
+- implement IsAuthenticated middleware for user authentication
+- update user profile route and template display
+- create new user interface template for web page
+- integrate new features and dependencies in code base (#86)
+- integrate new features and dependencies in code base
+- improve user authentication process (#85)
+- improve user authentication process
+- refactor authentication infrastructure (#84)
+- enhance home page functionality and design
+- refactor authentication infrastructure in `app/infra/authx`
+- refactor MongoDB testing and dependencies
+
+### Refactor
+
+- refactor package imports and function signatures
+- refactor error handling for missing resources
+- refactor user model package imports and function return types
+- refactor database package to use GORM instead of MariaDB
+- update database driver to postgresqlx throughout the codebase
+- refactor code organization and remove unnecessary OpenAPI spec values
+
 ## 0.5.1 (2024-07-18)
 
 ## 0.5.1-rc0 (2024-07-18)
