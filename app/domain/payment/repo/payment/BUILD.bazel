@@ -6,10 +6,14 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/domain/payment/repo/payment",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/otelx",
         "//entity/domain/payment/model",
         "//entity/domain/payment/repo",
         "//pkg/contextx",
+        "//pkg/errorx",
+        "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//mongo",
+        "@org_uber_go_zap//:zap",
     ],
 )
 
@@ -19,6 +23,7 @@ go_test(
     embed = [":payment"],
     deps = [
         "//app/infra/storage/mongodbx",
+        "//entity/domain/payment/model",
         "//entity/domain/payment/repo",
         "//pkg/contextx",
         "@com_github_stretchr_testify//suite",

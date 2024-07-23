@@ -51,3 +51,8 @@ func (p *Payment) AddPaymentRecord(status PaymentStatus, errorMessage string) {
 	p.Status = status
 	p.UpdatedAt = time.Now()
 }
+
+// Equal checks if the payment is equal to another payment.
+func (p *Payment) Equal(v *Payment) bool {
+	return p.ID == v.ID
+}
