@@ -1,4 +1,4 @@
-load("@rules_go//go:def.bzl", "go_library")
+load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "payment",
@@ -9,6 +9,19 @@ go_library(
         "//entity/domain/payment/model",
         "//entity/domain/payment/repo",
         "//pkg/contextx",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
+)
+
+go_test(
+    name = "payment_test",
+    srcs = ["mongodb_test.go"],
+    embed = [":payment"],
+    deps = [
+        "//app/infra/storage/mongodbx",
+        "//entity/domain/payment/repo",
+        "//pkg/contextx",
+        "@com_github_stretchr_testify//suite",
         "@org_mongodb_go_mongo_driver//mongo",
     ],
 )
