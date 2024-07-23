@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "biz",
+    srcs = ["payment.go"],
+    importpath = "github.com/blackhorseya/godine/app/domain/payment/biz",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/payment/biz",
+        "//entity/domain/payment/model",
+        "//pkg/contextx",
+    ],
+)
