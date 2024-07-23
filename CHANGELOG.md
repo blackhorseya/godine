@@ -1,3 +1,12 @@
+## 0.5.4 (2024-07-23)
+
+### Feat
+
+- implement HTML templates in user RESTful API
+- implement tracing for list payments function (#95)
+- improve error handling and tracing in payment function
+- implement tracing for list payments function
+
 ## 0.5.3 (2024-07-23)
 
 ### Feat
