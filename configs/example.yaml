@@ -60,6 +60,10 @@ userRestful:
     port: 1994
     mode: debug
 
+  casbin:
+    modelPath: configs/casbin_model.conf
+    policyDriver: mysql
+
   storage:
     mysql:
       dsn: root:changeme@tcp(mariadb:3306)/godine?charset=utf8mb4&parseTime=True&loc=Local

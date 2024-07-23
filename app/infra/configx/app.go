@@ -39,9 +39,6 @@ type Application struct {
 
 		// PolicyDriver is the casbin policy driver
 		PolicyDriver string `json:"policy_driver" yaml:"policyDriver"`
-
-		// PolicyDSN is the casbin policy data source name
-		PolicyDSN string `json:"policy_dsn" yaml:"policyDSN"`
 	} `json:"casbin" yaml:"casbin"`
 
 	Storage struct {
