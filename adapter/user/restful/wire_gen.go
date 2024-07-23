@@ -11,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/domain/user/repo/user"
 	"github.com/blackhorseya/godine/app/infra/authx"
+	"github.com/blackhorseya/godine/app/infra/authz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
@@ -41,6 +42,10 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
+	authz, err := initAuthz(application)
+	if err != nil {
+		return nil, err
+	}
 	client, err := mongodbx.NewClient(application)
 	if err != nil {
 		return nil, err
@@ -51,6 +56,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		C:           configuration,
 		A:           application,
 		Authx:       authx,
+		Authz:       authz,
 		UserService: iUserBiz,
 	}
 	server, err := httpx.NewServer(application)
@@ -86,6 +92,11 @@ func initAuthx(app *configx.Application) (*authx.Authx, error) {
 	return authx.New(app.Auth0)
 }
 
+func initAuthz(app *configx.Application) (*authz.Authz, error) {
+	return authz.New(app)
+}
+
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, initAuthx, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, initAuthx,
+	initAuthz, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
 )

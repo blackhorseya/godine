@@ -27,6 +27,9 @@ type User struct {
 
 	// Level is the level of the user.
 	Level uint `json:"level" bson:"level"`
+
+	// Roles is the list of roles the user has.
+	Roles []*UserRole `json:"roles,omitempty" bson:"roles"`
 }
 
 // NewUser creates and returns a new user.
@@ -81,4 +84,16 @@ func (x *User) MarshalBSON() ([]byte, error) {
 	alias.ID = id
 
 	return bson.Marshal(alias)
+}
+
+// UserRole represents the role of a user.
+type UserRole struct {
+	// UserID is the ID of the user.
+	UserID string `json:"user_id,omitempty" bson:"user_id"`
+
+	// RestaurantID is the ID of the restaurant.
+	RestaurantID string `json:"restaurant_id,omitempty" bson:"restaurant_id"`
+
+	// Role is the role of the user.
+	Role RoleType `json:"role,omitempty" bson:"role"`
 }

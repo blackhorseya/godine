@@ -18,3 +18,6 @@ type Address struct {
 func (a Address) String() string {
 	return a.Street + ", " + a.City + ", " + a.State + " " + a.ZipCode
 }
+
+// RoleType represents the type of role a user has.
+type RoleType string

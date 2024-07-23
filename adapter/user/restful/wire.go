@@ -9,6 +9,7 @@ import (
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/domain/user/repo/user"
 	"github.com/blackhorseya/godine/app/infra/authx"
+	"github.com/blackhorseya/godine/app/infra/authz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
@@ -43,6 +44,10 @@ func initAuthx(app *configx.Application) (*authx.Authx, error) {
 	return authx.New(app.Auth0)
 }
 
+func initAuthz(app *configx.Application) (*authz.Authz, error) {
+	return authz.New(app)
+}
+
 var providerSet = wire.NewSet(
 	newRestful,
 
@@ -51,6 +56,7 @@ var providerSet = wire.NewSet(
 	initApplication,
 	httpx.NewServer,
 	initAuthx,
+	initAuthz,
 
 	biz.NewUserBiz,
 	user.NewMongodb,

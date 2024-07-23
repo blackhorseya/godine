@@ -33,6 +33,14 @@ type Application struct {
 
 	Auth0 authx.Options `json:"auth0" yaml:"auth0"`
 
+	Casbin struct {
+		// ModelPath is the casbin model path
+		ModelPath string `json:"model_path" yaml:"modelPath"`
+
+		// PolicyDriver is the casbin policy driver
+		PolicyDriver string `json:"policy_driver" yaml:"policyDriver"`
+	} `json:"casbin" yaml:"casbin"`
+
 	Storage struct {
 		Mysql struct {
 			DSN string `json:"dsn" yaml:"dsn"`

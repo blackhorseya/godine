@@ -10,6 +10,9 @@ type Restaurant struct {
 	// ID is the unique identifier of the restaurant.
 	ID string `json:"id,omitempty" bson:"_id,omitempty"`
 
+	// OwnerID is the unique identifier of the restaurant owner.
+	OwnerID string `json:"owner_id,omitempty" bson:"owner_id,omitempty"`
+
 	// Name is the name of the restaurant.
 	Name string `json:"name,omitempty" bson:"name"`
 
