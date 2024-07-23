@@ -34,6 +34,9 @@ type Application struct {
 	Auth0 authx.Options `json:"auth0" yaml:"auth0"`
 
 	Casbin struct {
+		// Enabled is the casbin enabled
+		Enabled bool `json:"enabled" yaml:"enabled"`
+
 		// ModelPath is the casbin model path
 		ModelPath string `json:"model_path" yaml:"modelPath"`
 
