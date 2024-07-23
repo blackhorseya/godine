@@ -128,3 +128,22 @@ notifyRestful:
 
   otel:
     target: otel-collector:4317
+
+paymentRestful:
+  name: godine-payment-restful
+
+  log:
+    level: debug
+    format: console
+
+  http:
+    url: http://payment_restful:1997
+    port: 1997
+    mode: debug
+
+  storage:
+    mongodb:
+      dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+  otel:
+    target: otel-collector:4317

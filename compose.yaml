@@ -22,7 +22,21 @@ services:
       - ./configs/example.yaml:/app/configs/example.yaml
     depends_on:
       - mongodb
-      - mariadb
+
+  payment_restful:
+    build:
+      context: .
+      target: final
+    command:
+      - --config=/app/configs/example.yaml
+      - start
+      - payment-restful
+    ports:
+      - 1997:1997
+    volumes:
+      - ./configs/example.yaml:/app/configs/example.yaml
+    depends_on:
+      - mongodb
 
   order_restful:
     build:
