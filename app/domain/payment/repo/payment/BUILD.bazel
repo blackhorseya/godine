@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "payment",
+    srcs = ["mongodb.go"],
+    importpath = "github.com/blackhorseya/godine/app/domain/payment/repo/payment",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/payment/model",
+        "//entity/domain/payment/repo",
+        "//pkg/contextx",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
+)
