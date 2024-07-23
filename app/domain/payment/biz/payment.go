@@ -39,6 +39,11 @@ func (i *impl) ListPayments(
 	ctx contextx.Contextx,
 	options biz.ListPaymentsOptions,
 ) (items []*model.Payment, total int, err error) {
-	// todo: 2024/7/23|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.payment.ListPayments")
+	defer span.End()
+
+	return i.payments.List(ctx, repo.ListCondition{
+		Offset: options.Size,
+		Limit:  (options.Page - 1) * options.Size,
+	})
 }
