@@ -1,3 +1,11 @@
+## 0.5.3 (2024-07-23)
+
+### Feat
+
+- consolidate file embedding and path structure
+- integrate MongoDB client and payment repository (#94)
+- integrate MongoDB client and payment repository
+
 ## 0.5.2 (2024-07-23)
 
 ### Feat
