@@ -93,3 +93,15 @@ func (a *Authz) ProtectRouter() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func (a *Authz) InitPolicy() error {
+	if !a.enabled {
+		return nil
+	}
+
+	a.Enforcer.ClearPolicy()
+
+	// todo: 2024/7/24|sean|add default policy here
+
+	return nil
+}
