@@ -100,7 +100,7 @@ func (a *Authz) InitPolicy() (err error) {
 		return nil
 	}
 
-	a.Enforcer.ClearPolicy()
+	a.ClearPolicy()
 
 	_, err = a.AddPolicy("owner", "restaurant", "manage")
 	if err != nil {
