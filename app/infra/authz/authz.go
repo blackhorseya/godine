@@ -68,8 +68,8 @@ func (a *Authz) ProtectRouter() gin.HandlerFunc {
 		}
 
 		subject := by.GetSubject()
-		path := c.Request.URL.Path
-		method := c.Request.Method
+		path := c.Request.URL.Path // example: /api/v1/restaurants
+		method := c.Request.Method // example: GET
 
 		allowed, err := a.Enforcer.Enforce(subject, path, method)
 		if err != nil {
