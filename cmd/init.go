@@ -35,16 +35,16 @@ var initCmd = &cobra.Command{
 		authz.ClearPolicy()
 
 		// add policy
-		_, err = authz.AddPolicy("owner", "restaurant", "manage")
+		_, err = authz.AddPolicy("owner", "restaurants", "manage")
 		cobra.CheckErr(err)
 
-		_, err = authz.AddPolicy("admin", "restaurant", "manage")
+		_, err = authz.AddPolicy("admin", "restaurants", "manage")
 		cobra.CheckErr(err)
 
-		_, err = authz.AddPolicy("editor", "restaurant", "edit")
+		_, err = authz.AddPolicy("editor", "restaurants", "edit")
 		cobra.CheckErr(err)
 
-		_, err = authz.AddPolicy("viewer", "restaurant", "view")
+		_, err = authz.AddPolicy("viewer", "restaurants", "view")
 		cobra.CheckErr(err)
 
 		// add role
