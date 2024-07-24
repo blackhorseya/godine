@@ -94,14 +94,33 @@ func (a *Authz) ProtectRouter() gin.HandlerFunc {
 	}
 }
 
-func (a *Authz) InitPolicy() error {
+// InitPolicy is used to initialize the policy.
+func (a *Authz) InitPolicy() (err error) {
 	if !a.enabled {
 		return nil
 	}
 
 	a.Enforcer.ClearPolicy()
 
-	// todo: 2024/7/24|sean|add default policy here
+	_, err = a.AddPolicy("owner", "restaurant", "manage")
+	if err != nil {
+		return err
+	}
+
+	_, err = a.AddPolicy("admin", "restaurant", "manage")
+	if err != nil {
+		return err
+	}
+
+	_, err = a.AddPolicy("editor", "restaurant", "edit")
+	if err != nil {
+		return err
+	}
+
+	_, err = a.AddPolicy("viewer", "restaurant", "view")
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

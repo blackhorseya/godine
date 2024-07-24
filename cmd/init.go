@@ -34,6 +34,9 @@ var initCmd = &cobra.Command{
 
 		err = authz.InitPolicy()
 		cobra.CheckErr(err)
+
+		_, err = authz.AddGroupingPolicy(userID, "owner")
+		cobra.CheckErr(err)
 	},
 }
 
