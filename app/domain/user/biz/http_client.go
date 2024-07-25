@@ -34,7 +34,7 @@ func NewUserHTTPClient(config *configx.Configuration) biz.IUserBiz {
 	}
 }
 
-func (i *httpClient) Register(ctx contextx.Contextx, name, email string) (item *model.User, err error) {
+func (i *httpClient) Register(ctx contextx.Contextx, name string) (item *model.User, err error) {
 	// todo: 2024/7/25|sean|implement me
 	return nil, errors.New("not implemented")
 }
@@ -58,10 +58,7 @@ func (i *httpClient) CreateUser(
 	}
 
 	payload, err := json.Marshal(users.PostPayload{
-		Name:     name,
-		Email:    email,
-		Password: password,
-		Address:  address,
+		Name: name,
 	})
 	if err != nil {
 		return nil, err

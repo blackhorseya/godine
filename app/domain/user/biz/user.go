@@ -22,7 +22,7 @@ func NewUserBiz(authz *authz.Authz, users repo.IUserRepo) biz.IUserBiz {
 	}
 }
 
-func (i *userBiz) Register(ctx contextx.Contextx, name, email string) (item *model.User, err error) {
+func (i *userBiz) Register(ctx contextx.Contextx, name string) (item *model.User, err error) {
 	// todo: 2024/7/25|sean|implement me
 	panic("implement me")
 }

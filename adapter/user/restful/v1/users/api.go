@@ -34,10 +34,7 @@ func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
 
 // PostPayload represents the post user payload.
 type PostPayload struct {
-	Name     string        `json:"name" binding:"required" example:"guest"`
-	Email    string        `json:"email" binding:"required" example:"guest@gmail.com"`
-	Password string        `json:"password" binding:"required" example:"guest"`
-	Address  model.Address `json:"address"`
+	Name string `json:"name" example:"sean"`
 }
 
 // Post is used to create a user.
@@ -66,8 +63,7 @@ func (i *impl) Post(c *gin.Context) {
 		return
 	}
 
-	// todo: 2024/7/25|sean|use register instead of create user
-	item, err := i.injector.UserService.CreateUser(ctx, payload.Name, payload.Email, payload.Password, payload.Address)
+	item, err := i.injector.UserService.Register(ctx, payload.Name)
 	if err != nil {
 		responsex.Err(c, err)
 		return
