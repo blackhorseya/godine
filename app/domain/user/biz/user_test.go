@@ -3,6 +3,7 @@ package biz
 import (
 	"testing"
 
+	"github.com/blackhorseya/godine/app/infra/authz"
 	"github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/mock/gomock"
@@ -11,8 +12,9 @@ import (
 type suiteTester struct {
 	suite.Suite
 
-	ctrl *gomock.Controller
-	biz  biz.IUserBiz
+	ctrl  *gomock.Controller
+	authz *authz.Authz
+	biz   biz.IUserBiz
 }
 
 func (s *suiteTester) SetupTest() {

@@ -28,6 +28,7 @@ go_test(
     srcs = ["user_test.go"],
     embed = [":biz"],
     deps = [
+        "//app/infra/authz",
         "//entity/domain/user/biz",
         "@com_github_stretchr_testify//suite",
         "@org_uber_go_mock//gomock",
