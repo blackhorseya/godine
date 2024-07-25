@@ -51,7 +51,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		return nil, err
 	}
 	iUserRepo := user.NewMongodb(client)
-	iUserBiz := biz.NewUserBiz(iUserRepo)
+	iUserBiz := biz.NewUserBiz(authzAuthz, iUserRepo)
 	injector := &wirex.Injector{
 		C:           configuration,
 		A:           application,
