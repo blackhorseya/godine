@@ -10,11 +10,11 @@
 package biz
 
 import (
-	"reflect"
+	reflect "reflect"
 
-	model2 "github.com/blackhorseya/godine/entity/domain/user/model"
-	"github.com/blackhorseya/godine/pkg/contextx"
-	"go.uber.org/mock/gomock"
+	model "github.com/blackhorseya/godine/entity/domain/user/model"
+	contextx "github.com/blackhorseya/godine/pkg/contextx"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockIUserBiz is a mock of IUserBiz interface.
@@ -55,10 +55,10 @@ func (mr *MockIUserBizMockRecorder) ChangeUserStatus(ctx, userID, isActive any) 
 }
 
 // CreateUser mocks base method.
-func (m *MockIUserBiz) CreateUser(ctx contextx.Contextx, name, email, password string, address model2.Address) (*model2.User, error) {
+func (m *MockIUserBiz) CreateUser(ctx contextx.Contextx, name, email, password string, address model.Address) (*model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", ctx, name, email, password, address)
-	ret0, _ := ret[0].(*model2.User)
+	ret0, _ := ret[0].(*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -84,10 +84,10 @@ func (mr *MockIUserBizMockRecorder) DeleteUser(ctx, id any) *gomock.Call {
 }
 
 // GetUser mocks base method.
-func (m *MockIUserBiz) GetUser(ctx contextx.Contextx, id string) (*model2.User, error) {
+func (m *MockIUserBiz) GetUser(ctx contextx.Contextx, id string) (*model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", ctx, id)
-	ret0, _ := ret[0].(*model2.User)
+	ret0, _ := ret[0].(*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -99,10 +99,10 @@ func (mr *MockIUserBizMockRecorder) GetUser(ctx, id any) *gomock.Call {
 }
 
 // ListUsers mocks base method.
-func (m *MockIUserBiz) ListUsers(ctx contextx.Contextx, options ListUsersOptions) ([]*model2.User, int, error) {
+func (m *MockIUserBiz) ListUsers(ctx contextx.Contextx, options ListUsersOptions) ([]*model.User, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUsers", ctx, options)
-	ret0, _ := ret[0].([]*model2.User)
+	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -114,8 +114,23 @@ func (mr *MockIUserBizMockRecorder) ListUsers(ctx, options any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsers", reflect.TypeOf((*MockIUserBiz)(nil).ListUsers), ctx, options)
 }
 
+// Login mocks base method.
+func (m *MockIUserBiz) Login(ctx contextx.Contextx, name string) (*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Login", ctx, name)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Login indicates an expected call of Login.
+func (mr *MockIUserBizMockRecorder) Login(ctx, name any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockIUserBiz)(nil).Login), ctx, name)
+}
+
 // UpdateUser mocks base method.
-func (m *MockIUserBiz) UpdateUser(ctx contextx.Contextx, id, name, email, password string, address model2.Address) error {
+func (m *MockIUserBiz) UpdateUser(ctx contextx.Contextx, id, name, email, password string, address model.Address) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUser", ctx, id, name, email, password, address)
 	ret0, _ := ret[0].(error)

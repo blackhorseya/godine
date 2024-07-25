@@ -3,6 +3,7 @@ package biz
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -31,6 +32,11 @@ func NewUserHTTPClient(config *configx.Configuration) biz.IUserBiz {
 		url:    config.UserRestful.HTTP.URL,
 		client: &http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)},
 	}
+}
+
+func (i *httpClient) Login(ctx contextx.Contextx, name string) (item *model.User, err error) {
+	// todo: 2024/7/25|sean|implement me
+	return nil, errors.New("not implemented")
 }
 
 func (i *httpClient) CreateUser(
