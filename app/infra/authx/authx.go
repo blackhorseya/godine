@@ -135,9 +135,15 @@ func (a *Authx) ParseJWT() gin.HandlerFunc {
 			}
 
 			by := &model.User{
-				ID:    claims.RegisteredClaims.Subject,
-				Email: customClaims.Email,
-				Roles: nil,
+				ID:       "",
+				Name:     "",
+				Email:    customClaims.Email,
+				Password: "",
+				Address:  model.Address{},
+				IsActive: false,
+				Level:    0,
+				Roles:    nil,
+				SocialID: claims.RegisteredClaims.Subject,
 			}
 			c.Set(contextx.KeyCtx, contextx.WithValue(ctx, contextx.KeyHandler, by))
 

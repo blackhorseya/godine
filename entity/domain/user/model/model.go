@@ -33,6 +33,9 @@ type User struct {
 
 	// Roles is the list of roles the user has.
 	Roles []*UserRole `json:"roles,omitempty" bson:"roles"`
+
+	// SocialID is the social ID of the user.
+	SocialID string `json:"social_id,omitempty" bson:"social_id"`
 }
 
 // NewUser creates and returns a new user.
