@@ -1,4 +1,4 @@
-load("@rules_go//go:def.bzl", "go_library")
+load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "biz",
@@ -20,5 +20,18 @@ go_library(
         "//pkg/errorx",
         "//pkg/responsex",
         "@io_opentelemetry_go_contrib_instrumentation_net_http_otelhttp//:otelhttp",
+    ],
+)
+
+go_test(
+    name = "biz_test",
+    srcs = ["user_test.go"],
+    embed = [":biz"],
+    deps = [
+        "//app/infra/authz",
+        "//entity/domain/user/biz",
+        "//entity/domain/user/repo",
+        "@com_github_stretchr_testify//suite",
+        "@org_uber_go_mock//gomock",
     ],
 )
