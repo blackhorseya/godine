@@ -8,7 +8,7 @@ import (
 
 // Handle is used to handle the v1 restful API.
 func Handle(g *gin.RouterGroup, injector *wirex.Injector) {
-	v1 := g.Group("/v1", injector.Authx.ParseJWT(), injector.Authz.ProtectRouter())
+	v1 := g.Group("/v1", injector.Authx.ParseJWT())
 	{
 		users.Handle(v1, injector)
 	}
