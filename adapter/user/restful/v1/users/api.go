@@ -66,6 +66,7 @@ func (i *impl) Post(c *gin.Context) {
 		return
 	}
 
+	// todo: 2024/7/25|sean|use register instead of create user
 	item, err := i.injector.UserService.CreateUser(ctx, payload.Name, payload.Email, payload.Password, payload.Address)
 	if err != nil {
 		responsex.Err(c, err)
