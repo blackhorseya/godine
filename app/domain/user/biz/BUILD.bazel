@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/user/restful/v1/users",
+        "//app/infra/authz",
         "//app/infra/configx",
         "//app/infra/otelx",
         "//entity/domain/user/biz",

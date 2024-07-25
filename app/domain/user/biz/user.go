@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"github.com/blackhorseya/godine/app/infra/authz"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/entity/domain/user/model"
@@ -9,12 +10,14 @@ import (
 )
 
 type userBiz struct {
+	authz *authz.Authz
 	users repo.IUserRepo
 }
 
 // NewUserBiz create and return a new user biz
-func NewUserBiz(users repo.IUserRepo) biz.IUserBiz {
+func NewUserBiz(authz *authz.Authz, users repo.IUserRepo) biz.IUserBiz {
 	return &userBiz{
+		authz: authz,
 		users: users,
 	}
 }
