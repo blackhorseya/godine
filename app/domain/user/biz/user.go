@@ -7,6 +7,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/entity/domain/user/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"go.uber.org/zap"
 )
 
 type userBiz struct {
@@ -23,8 +24,22 @@ func NewUserBiz(authz *authz.Authz, users repo.IUserRepo) biz.IUserBiz {
 }
 
 func (i *userBiz) Register(ctx contextx.Contextx, name string) (item *model.User, err error) {
-	// todo: 2024/7/25|sean|implement me
-	panic("implement me")
+	ctx, span := otelx.Span(ctx, "biz.user.Register")
+	defer span.End()
+
+	handler, err := model.FromContext(ctx)
+	if err != nil {
+		ctx.Error("get user from context failed", zap.Error(err))
+		return nil, err
+	}
+
+	err = i.users.Create(ctx, handler)
+	if err != nil {
+		ctx.Error("create user failed", zap.Error(err))
+		return nil, err
+	}
+
+	return handler, nil
 }
 
 func (i *userBiz) Login(ctx contextx.Contextx) (item *model.User, err error) {
