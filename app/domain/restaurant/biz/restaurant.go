@@ -5,6 +5,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
+	model2 "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
@@ -26,9 +27,15 @@ func (i *restaurantBiz) CreateRestaurant(
 	ctx, span := otelx.Span(ctx, "biz.restaurant.create_restaurant")
 	defer span.End()
 
+	handler, err := model2.FromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	restaurant := model.NewRestaurant(name, model.Address{
 		Street: address,
 	})
+	restaurant.OwnerID = handler.ID
 
 	err = i.restaurants.Create(ctx, restaurant)
 	if err != nil {

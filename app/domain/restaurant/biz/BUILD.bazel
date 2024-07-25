@@ -17,6 +17,7 @@ go_library(
         "//entity/domain/restaurant/biz",
         "//entity/domain/restaurant/model",
         "//entity/domain/restaurant/repo",
+        "//entity/domain/user/model",
         "//pkg/contextx",
         "//pkg/errorx",
         "//pkg/responsex",
