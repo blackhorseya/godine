@@ -78,21 +78,9 @@ definitions:
     type: object
   users.PostPayload:
     properties:
-      address:
-        $ref: '#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.Address'
-      email:
-        example: guest@gmail.com
-        type: string
       name:
-        example: guest
+        example: sean
         type: string
-      password:
-        example: guest
-        type: string
-    required:
-    - email
-    - name
-    - password
     type: object
 info:
   contact:

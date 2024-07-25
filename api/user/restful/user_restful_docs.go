@@ -641,26 +641,10 @@ const docTemplateuser_restful = `{
         },
         "users.PostPayload": {
             "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password"
-            ],
             "properties": {
-                "address": {
-                    "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.Address"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "guest@gmail.com"
-                },
                 "name": {
                     "type": "string",
-                    "example": "guest"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "guest"
+                    "example": "sean"
                 }
             }
         }
