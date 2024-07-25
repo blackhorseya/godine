@@ -18,8 +18,11 @@ type ListUsersOptions struct {
 
 // IUserBiz defines the business operations for user management.
 type IUserBiz interface {
+	// Register registers a new user with the provided name, email, and password.
+	Register(ctx contextx.Contextx, name, email string) (item *model.User, err error)
+
 	// Login authenticates a user with the provided email and password.
-	Login(ctx contextx.Contextx, name string) (item *model.User, err error)
+	Login(ctx contextx.Contextx) (item *model.User, err error)
 
 	// CreateUser creates a new user with the provided name, email, password, and address.
 	CreateUser(ctx contextx.Contextx, name, email, password string, address model.Address) (item *model.User, err error)

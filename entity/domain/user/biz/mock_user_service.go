@@ -115,18 +115,33 @@ func (mr *MockIUserBizMockRecorder) ListUsers(ctx, options any) *gomock.Call {
 }
 
 // Login mocks base method.
-func (m *MockIUserBiz) Login(ctx contextx.Contextx, name string) (*model.User, error) {
+func (m *MockIUserBiz) Login(ctx contextx.Contextx) (*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Login", ctx, name)
+	ret := m.ctrl.Call(m, "Login", ctx)
 	ret0, _ := ret[0].(*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Login indicates an expected call of Login.
-func (mr *MockIUserBizMockRecorder) Login(ctx, name any) *gomock.Call {
+func (mr *MockIUserBizMockRecorder) Login(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockIUserBiz)(nil).Login), ctx, name)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockIUserBiz)(nil).Login), ctx)
+}
+
+// Register mocks base method.
+func (m *MockIUserBiz) Register(ctx contextx.Contextx, name, email string) (*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Register", ctx, name, email)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Register indicates an expected call of Register.
+func (mr *MockIUserBizMockRecorder) Register(ctx, name, email any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockIUserBiz)(nil).Register), ctx, name, email)
 }
 
 // UpdateUser mocks base method.
