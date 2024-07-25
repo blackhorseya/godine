@@ -3,7 +3,7 @@ package biz
 import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
-	model2 "github.com/blackhorseya/godine/entity/domain/restaurant/model"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
@@ -22,11 +22,11 @@ func NewRestaurantBiz(restaurants repo.IRestaurantRepo) biz.IRestaurantBiz {
 func (i *restaurantBiz) CreateRestaurant(
 	ctx contextx.Contextx,
 	name, address string,
-) (item *model2.Restaurant, err error) {
+) (item *model.Restaurant, err error) {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.create_restaurant")
 	defer span.End()
 
-	restaurant := model2.NewRestaurant(name, model2.Address{
+	restaurant := model.NewRestaurant(name, model.Address{
 		Street: address,
 	})
 
@@ -38,7 +38,7 @@ func (i *restaurantBiz) CreateRestaurant(
 	return restaurant, nil
 }
 
-func (i *restaurantBiz) GetRestaurant(ctx contextx.Contextx, id string) (item *model2.Restaurant, err error) {
+func (i *restaurantBiz) GetRestaurant(ctx contextx.Contextx, id string) (item *model.Restaurant, err error) {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.get_restaurant")
 	defer span.End()
 
@@ -48,7 +48,7 @@ func (i *restaurantBiz) GetRestaurant(ctx contextx.Contextx, id string) (item *m
 func (i *restaurantBiz) ListRestaurants(
 	ctx contextx.Contextx,
 	options biz.ListRestaurantsOptions,
-) (items []*model2.Restaurant, total int, err error) {
+) (items []*model.Restaurant, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.list_restaurants")
 	defer span.End()
 
@@ -62,7 +62,7 @@ func (i *restaurantBiz) UpdateRestaurant(
 	ctx contextx.Contextx,
 	id string,
 	name string,
-	address model2.Address,
+	address model.Address,
 ) error {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.update_restaurant")
 	defer span.End()
