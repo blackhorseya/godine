@@ -10,5 +10,6 @@ go_library(
         "//pkg/contextx",
         "@com_github_casbin_casbin_v2//:casbin",
         "@com_github_casbin_gorm_adapter_v3//:gorm-adapter",
+        "@com_github_stretchr_testify//mock",
     ],
 )

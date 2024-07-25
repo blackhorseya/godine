@@ -7,10 +7,13 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
+	"github.com/stretchr/testify/mock"
 )
 
 // Authz is the authorization struct.
 type Authz struct {
+	mock.Mock
+
 	enabled bool
 	*casbin.Enforcer
 }

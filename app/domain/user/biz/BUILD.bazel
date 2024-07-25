@@ -30,6 +30,7 @@ go_test(
     deps = [
         "//app/infra/authz",
         "//entity/domain/user/biz",
+        "//entity/domain/user/repo",
         "@com_github_stretchr_testify//suite",
         "@org_uber_go_mock//gomock",
     ],
