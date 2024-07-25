@@ -45,6 +45,69 @@
                 }
             }
         },
+        "/v1/sessions": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "create a session",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "Create a session",
+                "parameters": [
+                    {
+                        "description": "session payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sessions.PostPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responsex.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users": {
             "get": {
                 "security": [
@@ -513,6 +576,30 @@
                 "password": {
                     "description": "Password is the hashed password of the user.",
                     "type": "string"
+                },
+                "roles": {
+                    "description": "Roles is the list of roles the user has.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_blackhorseya_godine_entity_domain_user_model.UserRole"
+                    }
+                }
+            }
+        },
+        "github_com_blackhorseya_godine_entity_domain_user_model.UserRole": {
+            "type": "object",
+            "properties": {
+                "restaurant_id": {
+                    "description": "RestaurantID is the ID of the restaurant.",
+                    "type": "string"
+                },
+                "role": {
+                    "description": "Role is the role of the user.",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "UserID is the ID of the user.",
+                    "type": "string"
                 }
             }
         },
@@ -524,6 +611,14 @@
                 },
                 "data": {},
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "sessions.PostPayload": {
+            "type": "object",
+            "properties": {
+                "name": {
                     "type": "string"
                 }
             }

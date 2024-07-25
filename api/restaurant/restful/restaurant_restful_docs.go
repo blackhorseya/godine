@@ -743,6 +743,10 @@ const docTemplaterestaurant_restful = `{
                 "name": {
                     "description": "Name is the name of the restaurant.",
                     "type": "string"
+                },
+                "owner_id": {
+                    "description": "OwnerID is the unique identifier of the restaurant owner.",
+                    "type": "string"
                 }
             }
         },
