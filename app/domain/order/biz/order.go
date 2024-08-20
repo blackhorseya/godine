@@ -80,7 +80,7 @@ func (i *orderBiz) CreateOrder(
 
 	items := make([]orderM.OrderItem, 0, len(options))
 	for _, option := range options {
-		menuItem, err2 := i.menuService.GetMenuItem(ctx, restaurant.ID, option.MenuItemID)
+		menuItem, err2 := i.menuService.GetMenuItem(ctx, restaurant.GetId(), option.MenuItemID)
 		if err2 != nil {
 			ctx.Error(
 				"get menu item from service failed",
@@ -97,11 +97,11 @@ func (i *orderBiz) CreateOrder(
 			return nil, errorx.Wrap(http.StatusConflict, 409, errors.New("menu item not available"))
 		}
 
-		item := orderM.NewOrderItem(menuItem.ID, menuItem.Name, menuItem.Price, option.Quantity)
+		item := orderM.NewOrderItem(menuItem.GetId(), menuItem.Name, menuItem.Price, option.Quantity)
 		items = append(items, *item)
 	}
 
-	order = orderM.NewOrder(user.Id, restaurant.ID, items)
+	order = orderM.NewOrder(user.Id, restaurant.GetId(), items)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(

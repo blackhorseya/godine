@@ -32,7 +32,7 @@ type IRestaurantBiz interface {
 	) (items []*model2.Restaurant, total int, err error)
 
 	// UpdateRestaurant updates the details of an existing restaurant.
-	UpdateRestaurant(ctx contextx.Contextx, id string, name string, address model2.Address) error
+	UpdateRestaurant(ctx contextx.Contextx, id string, name string, address *model2.Address) error
 
 	// DeleteRestaurant deletes a restaurant by its ID.
 	DeleteRestaurant(ctx contextx.Contextx, id string) error

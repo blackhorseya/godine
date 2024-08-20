@@ -32,10 +32,10 @@ func (i *restaurantBiz) CreateRestaurant(
 		return nil, err
 	}
 
-	restaurant := model.NewRestaurant(name, model.Address{
+	restaurant := model.NewRestaurant(name, &model.Address{
 		Street: address,
 	})
-	restaurant.OwnerID = handler.Id
+	restaurant.CreatedBy = handler.Id
 
 	err = i.restaurants.Create(ctx, restaurant)
 	if err != nil {
@@ -69,7 +69,7 @@ func (i *restaurantBiz) UpdateRestaurant(
 	ctx contextx.Contextx,
 	id string,
 	name string,
-	address model.Address,
+	address *model.Address,
 ) error {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.update_restaurant")
 	defer span.End()

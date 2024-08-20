@@ -71,10 +71,10 @@ func (mr *MockIMenuBizMockRecorder) GetMenuItem(ctx, restaurantID, menuItemID an
 }
 
 // ListMenuItems mocks base method.
-func (m *MockIMenuBiz) ListMenuItems(ctx contextx.Contextx, restaurantID string) ([]model.MenuItem, int, error) {
+func (m *MockIMenuBiz) ListMenuItems(ctx contextx.Contextx, restaurantID string) ([]*model.MenuItem, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListMenuItems", ctx, restaurantID)
-	ret0, _ := ret[0].([]model.MenuItem)
+	ret0, _ := ret[0].([]*model.MenuItem)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2

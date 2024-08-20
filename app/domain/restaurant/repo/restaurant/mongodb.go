@@ -45,8 +45,8 @@ func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err err
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	if data.ID == "" {
-		data.ID = primitive.NewObjectID().Hex()
+	if data.GetId() == "" {
+		data.Id = primitive.NewObjectID().Hex()
 	}
 
 	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, data)
@@ -65,9 +65,9 @@ func (i *mongodb) Update(ctx contextx.Contextx, data *model.Restaurant) (err err
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	id, err := primitive.ObjectIDFromHex(data.ID)
+	id, err := primitive.ObjectIDFromHex(data.GetId())
 	if err != nil {
-		ctx.Error("parse restaurant id failed", zap.Error(err), zap.String("id", data.ID))
+		ctx.Error("parse restaurant id failed", zap.Error(err), zap.String("id", data.GetId()))
 		return err
 	}
 
@@ -79,9 +79,9 @@ func (i *mongodb) Update(ctx contextx.Contextx, data *model.Restaurant) (err err
 		return err
 	}
 
-	err = cacheRestaurant(ctx, i.rdb, data.ID, data)
+	err = cacheRestaurant(ctx, i.rdb, data.GetId(), data)
 	if err != nil {
-		ctx.Error("cache restaurant to redis failed", zap.Error(err), zap.String("id", data.ID))
+		ctx.Error("cache restaurant to redis failed", zap.Error(err), zap.String("id", data.GetId()))
 	}
 
 	return nil

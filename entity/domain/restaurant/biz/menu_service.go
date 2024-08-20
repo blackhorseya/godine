@@ -18,7 +18,7 @@ type IMenuBiz interface {
 	) (item *model.MenuItem, err error)
 
 	// ListMenuItems retrieves a list of menu items from a restaurant's menu.
-	ListMenuItems(ctx contextx.Contextx, restaurantID string) (items []model.MenuItem, total int, err error)
+	ListMenuItems(ctx contextx.Contextx, restaurantID string) (items []*model.MenuItem, total int, err error)
 
 	// GetMenuItem retrieves a specific menu item by its ID from a restaurant's menu.
 	GetMenuItem(ctx contextx.Contextx, restaurantID, menuItemID string) (item *model.MenuItem, err error)
