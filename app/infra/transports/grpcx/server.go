@@ -3,8 +3,6 @@ package grpcx
 import (
 	"net"
 
-	"github.com/blackhorseya/godine/app/infra/authx"
-	"github.com/blackhorseya/godine/app/infra/authz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -26,7 +24,7 @@ type Server struct {
 }
 
 // NewServer creates a new grpc server.
-func NewServer(app *configx.Application, init InitServers, authx *authx.Authx, authz *authz.Authz) (*Server, error) {
+func NewServer(app *configx.Application, init InitServers) (*Server, error) {
 	logger := contextx.Background().Logger
 	server := grpc.NewServer(
 		grpc.StatsHandler(otelgrpc.NewServerHandler()),
@@ -34,17 +32,11 @@ func NewServer(app *configx.Application, init InitServers, authx *authx.Authx, a
 			grpc_ctxtags.StreamServerInterceptor(),
 			grpc_zap.StreamServerInterceptor(logger),
 			grpc_recovery.StreamServerInterceptor(),
-			contextx.StreamServerInterceptor(),
-			authx.StreamServerInterceptor(),
-			authz.StreamServerInterceptor(),
 		)),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			grpc_ctxtags.UnaryServerInterceptor(),
 			grpc_zap.UnaryServerInterceptor(logger),
 			grpc_recovery.UnaryServerInterceptor(),
-			contextx.UnaryServerInterceptor(),
-			authx.UnaryServerInterceptor(),
-			authz.UnaryServerInterceptor(),
 		)),
 	)
 
