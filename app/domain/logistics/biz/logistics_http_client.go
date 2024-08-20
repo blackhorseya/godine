@@ -69,7 +69,7 @@ func (i *logisticsHTTPClient) CreateDelivery(ctx contextx.Contextx, delivery *mo
 		return errorx.New(got.Code, got.Code, got.Message)
 	}
 
-	delivery.ID = got.Data.ID
+	delivery.Id = got.Data.Id
 
 	return nil
 }
