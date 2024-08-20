@@ -6,6 +6,7 @@ go_library(
         "menu_service.go",
         "mock_menu_service.go",
         "mock_restaurant_service.go",
+        "restaurant.pb.go",
         "restaurant_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/restaurant/biz",
@@ -13,6 +14,8 @@ go_library(
     deps = [
         "//entity/domain/restaurant/model",
         "//pkg/contextx",
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_uber_go_mock//gomock",
     ],
 )

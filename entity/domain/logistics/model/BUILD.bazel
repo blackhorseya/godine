@@ -4,6 +4,7 @@ go_library(
     name = "model",
     srcs = [
         "delivery_state.go",
+        "logistics.pb.go",
         "model.go",
         "vo.go",
     ],
@@ -12,6 +13,8 @@ go_library(
     deps = [
         "//entity/events",
         "//pkg/contextx",
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//bson/primitive",
     ],

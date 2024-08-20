@@ -3,10 +3,15 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "model",
     srcs = [
+        "account.pb.go",
         "model.go",
         "vo.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/user/model",
     visibility = ["//visibility:public"],
-    deps = ["//pkg/contextx"],
+    deps = [
+        "//pkg/contextx",
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
+    ],
 )
