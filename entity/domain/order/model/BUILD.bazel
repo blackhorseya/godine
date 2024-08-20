@@ -11,10 +11,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/contextx",
-        "@io_gorm_gorm//:gorm",
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//runtime/protoimpl",
-        "@org_mongodb_go_mongo_driver//bson",
-        "@org_mongodb_go_mongo_driver//bson/primitive",
+        "@org_golang_google_protobuf//types/known/timestamppb",
     ],
 )

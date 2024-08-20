@@ -3,6 +3,8 @@ package order;
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/order/model";
 
+import "google/protobuf/timestamp.proto";
+
 // Address is a value object that represents the address of a user.
 message Address {
   // Street is the street address of the user.
@@ -31,4 +33,69 @@ message OrderEvent {
   // Handler is the handler of the order.
   // @gotags: bson:"handler_id"
   string handler_id = 2;
+}
+
+// OrderItem is a value object that represents an item in an order.
+message OrderItem {
+  // OrderID is the unique identifier of the order.
+  // @gotags: gorm:"column:order_id;primaryKey;not null"
+  int64 order_id = 1;
+
+  // MenuItemID is the unique identifier of the menu item.
+  // @gotags: gorm:"column:menu_item_id;primaryKey;not null"
+  string menu_item_id = 2;
+
+  // Quantity is the quantity of the item.
+  // @gotags: gorm:"column:quantity"
+  int64 quantity = 3;
+
+  // Price is the price of the item.
+  // @gotags: gorm:"column:price"`
+  double price = 4;
+}
+
+// OrderStatus is an enum that represents the status of an order.
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_PENDING = 1;
+  ORDER_STATUS_CONFIRMED = 2;
+  ORDER_STATUS_PREPARING = 3;
+  ORDER_STATUS_OUT_FOR_DELIVERY = 4;
+  ORDER_STATUS_DELIVERED = 5;
+  ORDER_STATUS_CANCELLED = 6;
+}
+
+// Order is an entity and aggregate root that represents an order.
+message Order {
+  // ID is the unique identifier of the order.
+  // @gotags: gorm:"column:id;primaryKey;not null"`
+  int64 id = 1;
+
+  // UserID is the unique identifier of the user.
+  // @gotags: gorm:"column:user_id;not null"
+  string user_id = 2;
+
+  // RestaurantID is the unique identifier of the restaurant.
+  // @gotags: gorm:"column:restaurant_id;not null"
+  string restaurant_id = 3;
+
+  // DeliveryID is the unique identifier of the delivery.
+  // @gotags: gorm:"column:delivery_id"
+  string delivery_id = 4;
+
+  // Items is the items in the order.
+  // @gotags: gorm:"foreignKey:OrderID;references:ID"`
+  repeated OrderItem items = 5;
+
+  // Status is the status of the order.
+  // @gotags: gorm:"column:status;not null;default:1"`
+  OrderStatus status = 6;
+
+  // CreatedAt is the time the order was created.
+  // @gotags: gorm:"column:created_at;autoCreateTime"`
+  google.protobuf.Timestamp created_at = 7;
+
+  // UpdatedAt is the time the order was last updated.
+  // @gotags: gorm:"column:updated_at;autoUpdateTime"`
+  google.protobuf.Timestamp updated_at = 8;
 }

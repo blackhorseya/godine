@@ -3,6 +3,7 @@ package biz
 import (
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	logisticsB "github.com/blackhorseya/godine/entity/domain/logistics/biz"
@@ -78,27 +79,27 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	items := make([]orderM.OrderItem, 0, len(options))
+	items := make([]*orderM.OrderItem, 0, len(options))
 	for _, option := range options {
-		menuItem, err2 := i.menuService.GetMenuItem(ctx, restaurant.GetId(), option.MenuItemID)
+		menuItem, err2 := i.menuService.GetMenuItem(ctx, restaurant.GetId(), option.MenuItemId)
 		if err2 != nil {
 			ctx.Error(
 				"get menu item from service failed",
 				zap.Error(err2),
-				zap.String("menu_item_id", option.MenuItemID),
+				zap.String("menu_item_id", option.MenuItemId),
 			)
 			return nil, err2
 		}
 		if !menuItem.IsAvailable {
 			ctx.Error(
 				"menu item not available",
-				zap.String("menu_item_id", option.MenuItemID),
+				zap.String("menu_item_id", option.MenuItemId),
 			)
 			return nil, errorx.Wrap(http.StatusConflict, 409, errors.New("menu item not available"))
 		}
 
-		item := orderM.NewOrderItem(menuItem.GetId(), menuItem.Name, menuItem.Price, option.Quantity)
-		items = append(items, *item)
+		item := orderM.NewOrderItem(menuItem.GetId(), menuItem.Name, menuItem.Price, int(option.Quantity))
+		items = append(items, item)
 	}
 
 	order = orderM.NewOrder(user.Id, restaurant.GetId(), items)
@@ -112,7 +113,12 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	err = i.notifyService.CreateNotification(ctx, notifyM.NewNotify(user.Id, user.Id, order.ID, "order created"))
+	err = i.notifyService.CreateNotification(ctx, notifyM.NewNotify(
+		user.Id,
+		user.Id,
+		strconv.FormatInt(order.Id, 10),
+		"order created",
+	))
 	if err != nil {
 		ctx.Error(
 			"create notification failed",
@@ -122,7 +128,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	delivery := logisticsM.NewDelivery(order.ID, user.Id)
+	delivery := logisticsM.NewDelivery(strconv.FormatInt(order.Id, 10), user.Id)
 	err = i.logisticsService.CreateDelivery(ctx, delivery)
 	if err != nil {
 		ctx.Error(
@@ -133,7 +139,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	order.DeliveryID = delivery.Id
+	order.DeliveryId = delivery.Id
 	err = i.orders.Update(ctx, order)
 	if err != nil {
 		ctx.Error(
@@ -196,7 +202,12 @@ func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status st
 
 	ctx.Debug("order executed event", zap.Any("event", &event))
 
-	notify := notifyM.NewNotify(order.UserID, order.UserID, order.ID, "order status to "+event.Name)
+	notify := notifyM.NewNotify(
+		order.UserId,
+		order.UserId,
+		strconv.FormatInt(order.Id, 10),
+		"order status to "+event.Name,
+	)
 	err = i.notifyService.CreateNotification(ctx, notify)
 	if err != nil {
 		ctx.Error(

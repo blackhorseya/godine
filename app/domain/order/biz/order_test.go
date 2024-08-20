@@ -81,9 +81,9 @@ func (s *suiteTester) Test_orderBiz_GetOrder() {
 		{
 			name: "get order success",
 			args: args{id: "1", mock: func() {
-				s.orders.EXPECT().GetByID(gomock.Any(), "1").Return(&model4.Order{ID: "1"}, nil)
+				s.orders.EXPECT().GetByID(gomock.Any(), "1").Return(&model4.Order{Id: 1}, nil)
 			}},
-			wantOrder: &model4.Order{ID: "1"},
+			wantOrder: &model4.Order{Id: 1},
 			wantErr:   false,
 		},
 	}
