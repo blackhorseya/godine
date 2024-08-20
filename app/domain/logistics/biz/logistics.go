@@ -72,9 +72,9 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 	}
 
 	err = i.notifyService.CreateNotification(ctx, model2.NewNotify(
-		delivery.DriverID,
-		delivery.ID,
-		delivery.OrderID,
+		delivery.DriverId,
+		delivery.Id,
+		delivery.OrderId,
 		"delivery status changed",
 	))
 	if err != nil {

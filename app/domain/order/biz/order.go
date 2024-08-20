@@ -133,7 +133,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	order.DeliveryID = delivery.ID
+	order.DeliveryID = delivery.Id
 	err = i.orders.Update(ctx, order)
 	if err != nil {
 		ctx.Error(

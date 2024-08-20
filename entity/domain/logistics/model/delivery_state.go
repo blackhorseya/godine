@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -18,11 +19,11 @@ type DeliveryEvent struct {
 }
 
 func (x *DeliveryEvent) Key() []byte {
-	return []byte(x.Data.ID)
+	return []byte(x.Data.Id)
 }
 
 func (x *DeliveryEvent) Value() ([]byte, error) {
-	return x.Data.MarshalJSON()
+	return json.Marshal(x.Data)
 }
 
 func (x *DeliveryEvent) OccurredOn(ctx contextx.Contextx) time.Time {
@@ -66,8 +67,8 @@ func (s *PendingState) String() string {
 }
 
 func (s *PendingState) Next(ctx contextx.Contextx, delivery *Delivery) (event *DeliveryEvent, err error) {
-	delivery.Status = &PickedUpState{}
-	delivery.UpdatedAt = time.Now()
+	// delivery.Status = &PickedUpState{}
+	// delivery.UpdatedAt = time.Now()
 
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
@@ -84,8 +85,8 @@ func (s *PickedUpState) String() string {
 }
 
 func (s *PickedUpState) Next(ctx contextx.Contextx, delivery *Delivery) (event *DeliveryEvent, err error) {
-	delivery.Status = &InTransitState{}
-	delivery.UpdatedAt = time.Now()
+	// delivery.Status = &InTransitState{}
+	// delivery.UpdatedAt = time.Now()
 
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
@@ -102,8 +103,8 @@ func (s *InTransitState) String() string {
 }
 
 func (s *InTransitState) Next(ctx contextx.Contextx, delivery *Delivery) (event *DeliveryEvent, err error) {
-	delivery.Status = &CompletedState{}
-	delivery.UpdatedAt = time.Now()
+	// delivery.Status = &CompletedState{}
+	// delivery.UpdatedAt = time.Now()
 
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
@@ -121,7 +122,7 @@ func (s *CompletedState) String() string {
 
 func (s *CompletedState) Next(ctx contextx.Contextx, delivery *Delivery) (event *DeliveryEvent, err error) {
 	// Completed is a terminal state, no next state.
-	delivery.UpdatedAt = time.Now()
+	// delivery.UpdatedAt = time.Now()
 
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
@@ -139,7 +140,7 @@ func (s *CancelledState) String() string {
 
 func (s *CancelledState) Next(ctx contextx.Contextx, delivery *Delivery) (event *DeliveryEvent, err error) {
 	// Cancelled is a terminal state, no next state.
-	delivery.UpdatedAt = time.Now()
+	// delivery.UpdatedAt = time.Now()
 
 	return &DeliveryEvent{
 		Name:    delivery.Status.String(),
