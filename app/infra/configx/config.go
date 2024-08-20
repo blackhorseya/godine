@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/spf13/viper"
 )
 
@@ -16,6 +17,8 @@ type Configuration struct {
 	UserRestful       Application `json:"user_restful" yaml:"userRestful"`
 	LogisticsRestful  Application `json:"logistics_restful" yaml:"logisticsRestful"`
 	NotifyRestful     Application `json:"notify_restful" yaml:"notifyRestful"`
+
+	Log logging.Options `json:"log" yaml:"log"`
 }
 
 // NewConfiguration creates a new configuration.
@@ -40,6 +43,11 @@ func NewConfiguration(v *viper.Viper) (*Configuration, error) {
 	err = v.Unmarshal(&config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal configuration: %w", err)
+	}
+
+	err = logging.Init(config.Log)
+	if err != nil {
+		return nil, fmt.Errorf("failed to init logging: %w", err)
 	}
 
 	return config, nil
