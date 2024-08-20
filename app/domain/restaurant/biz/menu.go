@@ -56,13 +56,13 @@ func (i *menuBiz) AddMenuItem(
 		return nil, err
 	}
 
-	return &restaurant.Menu[len(restaurant.Menu)-1], nil
+	return restaurant.Menu[len(restaurant.Menu)-1], nil
 }
 
 func (i *menuBiz) ListMenuItems(
 	ctx contextx.Contextx,
 	restaurantID string,
-) (items []model.MenuItem, total int, err error) {
+) (items []*model.MenuItem, total int, err error) {
 	ctx, span := otelx.Span(ctx, "menu.biz.get_menu_items")
 	defer span.End()
 
@@ -105,8 +105,8 @@ func (i *menuBiz) GetMenuItem(
 	}
 
 	for _, menuItem := range restaurant.Menu {
-		if menuItem.ID == menuItemID {
-			return &menuItem, nil
+		if menuItem.Id == menuItemID {
+			return menuItem, nil
 		}
 	}
 
@@ -138,7 +138,7 @@ func (i *menuBiz) UpdateMenuItem(
 	}
 
 	for idx, menuItem := range restaurant.Menu {
-		if menuItem.ID == menuItemID {
+		if menuItem.Id == menuItemID {
 			restaurant.Menu[idx].Name = name
 			restaurant.Menu[idx].Description = description
 			restaurant.Menu[idx].Price = price
@@ -180,7 +180,7 @@ func (i *menuBiz) RemoveMenuItem(ctx contextx.Contextx, restaurantID, menuItemID
 	}
 
 	for idx, menuItem := range restaurant.Menu {
-		if menuItem.ID == menuItemID {
+		if menuItem.Id == menuItemID {
 			restaurant.Menu = append(restaurant.Menu[:idx], restaurant.Menu[idx+1:]...)
 
 			err = i.restaurants.Update(ctx, restaurant)
