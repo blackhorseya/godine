@@ -48,8 +48,8 @@ func (s *PendingState) Next(ctx contextx.Contextx, order *Order) (event *OrderEv
 	order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -67,8 +67,8 @@ func (s *ConfirmedState) Next(ctx contextx.Contextx, order *Order) (event *Order
 	order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -86,8 +86,8 @@ func (s *PreparedState) Next(ctx contextx.Contextx, order *Order) (event *OrderE
 	order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -105,8 +105,8 @@ func (s *OutForDeliveryState) Next(ctx contextx.Contextx, order *Order) (event *
 	order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -124,8 +124,8 @@ func (s *DeliveredState) Next(ctx contextx.Contextx, order *Order) (event *Order
 	order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -143,7 +143,7 @@ func (s *CancelledState) Next(ctx contextx.Contextx, order *Order) (event *Order
 	order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }

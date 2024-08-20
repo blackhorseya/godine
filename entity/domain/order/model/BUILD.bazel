@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "order.go",
         "order.pb.go",
-        "order_event.go",
         "order_state.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/order/model",

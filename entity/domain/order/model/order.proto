@@ -21,3 +21,14 @@ message Address {
   // @gotags: bson:"zip_code"
   string zip_code = 4;
 }
+
+// OrderEvent is an event that represents an order.
+message OrderEvent {
+  // Name is the name of the order.
+  // @gotags: bson:"name"
+  string name = 1;
+
+  // Handler is the handler of the order.
+  // @gotags: bson:"handler_id"
+  string handler_id = 2;
+}
