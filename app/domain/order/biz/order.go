@@ -49,11 +49,12 @@ func NewOrderBiz(
 	}
 }
 
+//nolint:funlen // this function is necessary
 func (i *orderBiz) CreateOrder(
 	ctx contextx.Contextx,
 	userID, restaurantID string,
-	options []orderM.OrderItem,
-	address orderM.Address,
+	options []*orderM.OrderItem,
+	address *orderM.Address,
 	totalAmount float64,
 ) (order *orderM.Order, err error) {
 	ctx, span := otelx.Span(ctx, "biz.order.create_order")

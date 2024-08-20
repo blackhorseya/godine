@@ -31,8 +31,8 @@ type IOrderBiz interface {
 	CreateOrder(
 		ctx contextx.Contextx,
 		userID, restaurantID string,
-		items []model2.OrderItem,
-		address model2.Address,
+		items []*model2.OrderItem,
+		address *model2.Address,
 		totalAmount float64,
 	) (order *model2.Order, err error)
 
