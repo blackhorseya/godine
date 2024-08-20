@@ -4,8 +4,8 @@ go_library(
     name = "model",
     srcs = [
         "delivery_state.go",
+        "logistics.go",
         "logistics.pb.go",
-        "model.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/logistics/model",
     visibility = ["//visibility:public"],
