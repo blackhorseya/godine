@@ -30,6 +30,7 @@ type Application struct {
 
 	Log  logging.Options `json:"log" yaml:"log"`
 	HTTP HTTP            `json:"http" yaml:"http"`
+	GRPC GRPC            `json:"grpc" yaml:"grpc"`
 
 	Auth0 authx.Options `json:"auth0" yaml:"auth0"`
 
@@ -100,14 +101,34 @@ type HTTP struct {
 }
 
 // GetAddr is used to get the http address.
-func (http *HTTP) GetAddr() string {
-	if http.Host == "" {
-		http.Host = "0.0.0.0"
+func (x *HTTP) GetAddr() string {
+	if x.Host == "" {
+		x.Host = "0.0.0.0"
 	}
 
-	if http.Port == 0 {
-		http.Port = netx.GetAvailablePort()
+	if x.Port == 0 {
+		x.Port = netx.GetAvailablePort()
 	}
 
-	return fmt.Sprintf("%s:%d", http.Host, http.Port)
+	return fmt.Sprintf("%s:%d", x.Host, x.Port)
+}
+
+// GRPC defines the grpc struct.
+type GRPC struct {
+	URL  string `json:"url" yaml:"url"`
+	Host string `json:"host" yaml:"host"`
+	Port int    `json:"port" yaml:"port"`
+}
+
+// GetAddr is used to get the grpc address.
+func (x *GRPC) GetAddr() string {
+	if x.Host == "" {
+		x.Host = "0.0.0.0"
+	}
+
+	if x.Port == 0 {
+		x.Port = netx.GetAvailablePort()
+	}
+
+	return fmt.Sprintf("%s:%d", x.Host, x.Port)
 }

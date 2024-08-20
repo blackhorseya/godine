@@ -14,6 +14,7 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/redis/go-redis/v9 v9.5.3
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/spf13/cobra v1.8.0
@@ -26,6 +27,7 @@ require (
 	github.com/testcontainers/testcontainers-go/modules/redis v0.32.0
 	go.mongodb.org/mongo-driver v1.15.0
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.52.0
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0
 	go.opentelemetry.io/otel v1.28.0
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.27.0
@@ -90,6 +92,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
