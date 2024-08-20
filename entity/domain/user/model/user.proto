@@ -53,6 +53,10 @@ message Account {
   // @gotags: json:"-" bson:"password"
   string password = 4;
 
+  // AccessToken is the access token of the user.
+  // @gotags: bson:"-"
+  string access_token = 12;
+
   // Address is the address of the user.
   // @gotags: bson:"address"
   Address address = 5;
