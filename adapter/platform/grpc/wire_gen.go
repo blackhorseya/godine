@@ -12,6 +12,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
+	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	biz2 "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -39,7 +40,11 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	restful := NewServer(server)
+	httpxServer, err := httpx.NewServer(application)
+	if err != nil {
+		return nil, err
+	}
+	restful := NewServer(server, httpxServer)
 	return restful, nil
 }
 

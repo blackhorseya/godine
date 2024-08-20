@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/blackhorseya/godine/app/infra/configx"
@@ -58,6 +59,9 @@ func NewServer(app *configx.Application) (*Server, error) {
 // Start is used to start the server.
 func (s *Server) Start(ctx contextx.Contextx) error {
 	go func() {
+		addr := fmt.Sprintf("http://%s", strings.ReplaceAll(s.httpserver.Addr, "0.0.0.0", "localhost"))
+		ctx.Info("start http server", zap.String("addr", addr))
+
 		err := s.httpserver.ListenAndServe()
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			ctx.Fatal("start http server error", zap.Error(err))

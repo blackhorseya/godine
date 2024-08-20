@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
+	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/gin-gonic/gin"
@@ -9,21 +10,29 @@ import (
 )
 
 type impl struct {
-	server *grpcx.Server
+	grpcserver *grpcx.Server
+	httpserver *httpx.Server
 }
 
-// NewServer creates and returns a new server.
-func NewServer(server *grpcx.Server) adapterx.Restful {
+// NewServer creates and returns a new grpcserver.
+func NewServer(grpcserver *grpcx.Server, httpserver *httpx.Server) adapterx.Restful {
 	return &impl{
-		server: server,
+		grpcserver: grpcserver,
+		httpserver: httpserver,
 	}
 }
 
 func (i *impl) Start() error {
 	ctx := contextx.Background()
-	err := i.server.Start(ctx)
+	err := i.grpcserver.Start(ctx)
 	if err != nil {
-		ctx.Error("Failed to start grpc server", zap.Error(err))
+		ctx.Error("Failed to start grpc grpcserver", zap.Error(err))
+		return err
+	}
+
+	err = i.httpserver.Start(ctx)
+	if err != nil {
+		ctx.Error("Failed to start http grpcserver", zap.Error(err))
 		return err
 	}
 
@@ -32,10 +41,15 @@ func (i *impl) Start() error {
 
 func (i *impl) AwaitSignal() error {
 	ctx := contextx.Background()
-	ctx.Info("receive signal to stop server")
+	ctx.Info("receive signal to stop grpcserver")
 
-	if err := i.server.Stop(ctx); err != nil {
-		ctx.Error("Failed to stop server", zap.Error(err))
+	if err := i.httpserver.Stop(ctx); err != nil {
+		ctx.Error("Failed to stop httpserver", zap.Error(err))
+		return err
+	}
+
+	if err := i.grpcserver.Stop(ctx); err != nil {
+		ctx.Error("Failed to stop grpcserver", zap.Error(err))
 		return err
 	}
 

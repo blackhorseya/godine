@@ -13,6 +13,7 @@ go_library(
         "//app/infra/configx",
         "//app/infra/otelx",
         "//app/infra/transports/grpcx",
+        "//app/infra/transports/httpx",
         "//entity/domain/user/biz",
         "//pkg/adapterx",
         "//pkg/contextx",

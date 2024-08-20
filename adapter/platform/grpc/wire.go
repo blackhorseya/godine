@@ -11,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
+	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -57,6 +58,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	panic(wire.Build(
 		NewServer,
 		grpcx.NewServer,
+		httpx.NewServer,
 		initApplication,
 		configx.NewConfiguration,
 		NewInitServersFn,
