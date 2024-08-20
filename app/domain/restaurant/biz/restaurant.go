@@ -35,7 +35,7 @@ func (i *restaurantBiz) CreateRestaurant(
 	restaurant := model.NewRestaurant(name, &model.Address{
 		Street: address,
 	})
-	restaurant.CreatedBy = handler.ID
+	restaurant.CreatedBy = handler.Id
 
 	err = i.restaurants.Create(ctx, restaurant)
 	if err != nil {

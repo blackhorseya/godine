@@ -3,9 +3,8 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "model",
     srcs = [
-        "account.pb.go",
         "model.go",
-        "vo.go",
+        "user.pb.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/user/model",
     visibility = ["//visibility:public"],
@@ -13,5 +12,6 @@ go_library(
         "//pkg/contextx",
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//runtime/protoimpl",
+        "@org_golang_google_protobuf//types/known/timestamppb",
     ],
 )

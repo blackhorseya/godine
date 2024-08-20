@@ -46,7 +46,7 @@ func (s *suiteTester) Test_userBiz_Register() {
 	tests := []struct {
 		name     string
 		args     args
-		wantItem *model.User
+		wantItem *model.Account
 		wantErr  bool
 	}{
 		{
@@ -54,16 +54,16 @@ func (s *suiteTester) Test_userBiz_Register() {
 			args: args{
 				name: "testUser",
 				mock: func() {
-					s.users.EXPECT().Create(gomock.Any(), &model.User{Name: "testUser"}).Return(nil)
+					s.users.EXPECT().Create(gomock.Any(), &model.Account{Username: "testUser"}).Return(nil)
 				},
 			},
-			wantItem: &model.User{Name: "testUser"},
+			wantItem: &model.Account{Username: "testUser"},
 			wantErr:  false,
 		},
 	}
 	for _, tt := range tests {
 		s.T().Run(tt.name, func(t *testing.T) {
-			tt.args.ctx = contextx.WithValue(contextx.Background(), contextx.KeyHandler, &model.User{Name: "testUser"})
+			tt.args.ctx = contextx.WithValue(contextx.Background(), contextx.KeyHandler, &model.Account{Username: "testUser"})
 			if tt.args.mock != nil {
 				tt.args.mock()
 			}

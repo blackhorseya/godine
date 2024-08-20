@@ -55,10 +55,10 @@ func (mr *MockIUserBizMockRecorder) ChangeUserStatus(ctx, userID, isActive any) 
 }
 
 // CreateUser mocks base method.
-func (m *MockIUserBiz) CreateUser(ctx contextx.Contextx, name, email, password string, address model.Address) (*model.User, error) {
+func (m *MockIUserBiz) CreateUser(ctx contextx.Contextx, name, email, password string, address *model.Address) (*model.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", ctx, name, email, password, address)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*model.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -84,10 +84,10 @@ func (mr *MockIUserBizMockRecorder) DeleteUser(ctx, id any) *gomock.Call {
 }
 
 // GetUser mocks base method.
-func (m *MockIUserBiz) GetUser(ctx contextx.Contextx, id string) (*model.User, error) {
+func (m *MockIUserBiz) GetUser(ctx contextx.Contextx, id string) (*model.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", ctx, id)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*model.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -99,10 +99,10 @@ func (mr *MockIUserBizMockRecorder) GetUser(ctx, id any) *gomock.Call {
 }
 
 // ListUsers mocks base method.
-func (m *MockIUserBiz) ListUsers(ctx contextx.Contextx, options ListUsersOptions) ([]*model.User, int, error) {
+func (m *MockIUserBiz) ListUsers(ctx contextx.Contextx, options ListUsersOptions) ([]*model.Account, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUsers", ctx, options)
-	ret0, _ := ret[0].([]*model.User)
+	ret0, _ := ret[0].([]*model.Account)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -115,10 +115,10 @@ func (mr *MockIUserBizMockRecorder) ListUsers(ctx, options any) *gomock.Call {
 }
 
 // Login mocks base method.
-func (m *MockIUserBiz) Login(ctx contextx.Contextx) (*model.User, error) {
+func (m *MockIUserBiz) Login(ctx contextx.Contextx) (*model.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", ctx)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*model.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -130,10 +130,10 @@ func (mr *MockIUserBizMockRecorder) Login(ctx any) *gomock.Call {
 }
 
 // Register mocks base method.
-func (m *MockIUserBiz) Register(ctx contextx.Contextx, name string) (*model.User, error) {
+func (m *MockIUserBiz) Register(ctx contextx.Contextx, name string) (*model.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Register", ctx, name)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*model.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -145,7 +145,7 @@ func (mr *MockIUserBizMockRecorder) Register(ctx, name any) *gomock.Call {
 }
 
 // UpdateUser mocks base method.
-func (m *MockIUserBiz) UpdateUser(ctx contextx.Contextx, id, name, email, password string, address model.Address) error {
+func (m *MockIUserBiz) UpdateUser(ctx contextx.Contextx, id, name, email, password string, address *model.Address) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUser", ctx, id, name, email, password, address)
 	ret0, _ := ret[0].(error)

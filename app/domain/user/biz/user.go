@@ -23,7 +23,7 @@ func NewUserBiz(authz *authz.Authz, users repo.IUserRepo) biz.IUserBiz {
 	}
 }
 
-func (i *userBiz) Register(ctx contextx.Contextx, name string) (item *model.User, err error) {
+func (i *userBiz) Register(ctx contextx.Contextx, name string) (item *model.Account, err error) {
 	ctx, span := otelx.Span(ctx, "biz.user.Register")
 	defer span.End()
 
@@ -42,7 +42,7 @@ func (i *userBiz) Register(ctx contextx.Contextx, name string) (item *model.User
 	return handler, nil
 }
 
-func (i *userBiz) Login(ctx contextx.Contextx) (item *model.User, err error) {
+func (i *userBiz) Login(ctx contextx.Contextx) (item *model.Account, err error) {
 	// todo: 2024/7/25|sean|implement me
 	panic("implement me")
 }
@@ -50,8 +50,8 @@ func (i *userBiz) Login(ctx contextx.Contextx) (item *model.User, err error) {
 func (i *userBiz) CreateUser(
 	ctx contextx.Contextx,
 	name, email, password string,
-	address model.Address,
-) (item *model.User, err error) {
+	address *model.Address,
+) (item *model.Account, err error) {
 	ctx, span := otelx.Span(ctx, "userBiz.CreateUser")
 	defer span.End()
 
@@ -64,7 +64,7 @@ func (i *userBiz) CreateUser(
 	return user, nil
 }
 
-func (i *userBiz) GetUser(ctx contextx.Contextx, id string) (item *model.User, err error) {
+func (i *userBiz) GetUser(ctx contextx.Contextx, id string) (item *model.Account, err error) {
 	ctx, span := otelx.Span(ctx, "userBiz.GetUser")
 	defer span.End()
 
@@ -74,7 +74,7 @@ func (i *userBiz) GetUser(ctx contextx.Contextx, id string) (item *model.User, e
 func (i *userBiz) ListUsers(
 	ctx contextx.Contextx,
 	options biz.ListUsersOptions,
-) (items []*model.User, total int, err error) {
+) (items []*model.Account, total int, err error) {
 	ctx, span := otelx.Span(ctx, "userBiz.ListUsers")
 	defer span.End()
 
@@ -88,7 +88,7 @@ func (i *userBiz) UpdateUser(
 	ctx contextx.Contextx,
 	id string,
 	name, email, password string,
-	address model.Address,
+	address *model.Address,
 ) error {
 	ctx, span := otelx.Span(ctx, "userBiz.UpdateUser")
 	defer span.End()
@@ -98,7 +98,7 @@ func (i *userBiz) UpdateUser(
 		return err
 	}
 
-	user.Name = name
+	user.Username = name
 	user.Email = email
 	user.Password = password
 	user.Address = address

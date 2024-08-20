@@ -33,7 +33,7 @@ type PostPayload struct {
 // @Produce json
 // @Security Bearer
 // @Param payload body PostPayload true "session payload"
-// @Success 200 {object} responsex.Response{data=model.User}
+// @Success 200 {object} responsex.Response{data=model.Account}
 // @Failure 400 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
 // @Router /v1/sessions [post]
