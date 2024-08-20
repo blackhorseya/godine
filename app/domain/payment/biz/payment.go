@@ -29,7 +29,7 @@ func (i *impl) GetPaymentByID(ctx contextx.Contextx, id string) (item *model.Pay
 func (i *impl) CreatePayment(
 	ctx contextx.Contextx,
 	orderID string,
-	amount model.PaymentAmount,
+	amount *model.PaymentAmount,
 ) (item *model.Payment, err error) {
 	ctx, span := otelx.Span(ctx, "biz.payment.CreatePayment")
 	defer span.End()

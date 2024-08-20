@@ -62,10 +62,10 @@ func (s *suiteMongodbTester) Test_mongodb_GetByID() {
 			args: args{id: "60f9b1b3b3b3b3b3b3b3b3b3", mock: func() {
 				_, _ = s.rw.Database(dbName).Collection(collName).InsertOne(
 					contextx.Background(),
-					&model.Payment{ID: "60f9b1b3b3b3b3b3b3b3b3b3"},
+					&model.Payment{Id: "60f9b1b3b3b3b3b3b3b3b3b3"},
 				)
 			}},
-			wantItem: &model.Payment{ID: "60f9b1b3b3b3b3b3b3b3b3b3"},
+			wantItem: &model.Payment{Id: "60f9b1b3b3b3b3b3b3b3b3b3"},
 			wantErr:  false,
 		},
 		{
@@ -88,7 +88,7 @@ func (s *suiteMongodbTester) Test_mongodb_GetByID() {
 				return
 			}
 			if err == nil && !gotItem.Equal(tt.wantItem) {
-				t.Errorf("GetByID() gotItem = %v, want %v", gotItem.ID, tt.wantItem.ID)
+				t.Errorf("GetByID() gotItem = %v, want %v", gotItem.Id, tt.wantItem.Id)
 			}
 		})
 	}

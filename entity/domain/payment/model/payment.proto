@@ -2,3 +2,39 @@ syntax = "proto3";
 package payment;
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/payment/model";
+
+import "google/protobuf/timestamp.proto";
+
+// PaymentAmount is a value object that represents the amount of payment
+message PaymentAmount {
+  // value is the amount of payment
+  // @gotags: bson:"value"
+  double value = 1;
+
+  // currency is the currency of payment
+  // @gotags: bson:"currency"
+  string currency = 2;
+}
+
+// Payment is an entity that represents a payment
+message Payment {
+  // id is the identifier of payment
+  // @gotags: bson:"_id,omitempty"
+  string id = 1;
+
+  // amount is the amount of payment
+  // @gotags: bson:"amount"
+  PaymentAmount amount = 2;
+
+  // createdAt is the time when payment created
+  // @gotags: bson:"created_at,omitempty"
+  google.protobuf.Timestamp created_at = 3;
+
+  // updatedAt is the time when payment updated
+  // @gotags: bson:"updated_at,omitempty"
+  google.protobuf.Timestamp updated_at = 4;
+
+  // OrderID is the identifier of order
+  // @gotags: bson:"order_id"
+  string order_id = 5;
+}
