@@ -3,8 +3,10 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "biz",
     srcs = [
-        "account.pb.go",
         "mock_user_service.go",
+        "user.pb.go",
+        "user_grpc.pb.go",
+        "user_grpc_mock.pb.go",
         "user_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/user/biz",
@@ -12,8 +14,12 @@ go_library(
     deps = [
         "//entity/domain/user/model",
         "//pkg/contextx",
+        "@org_golang_google_grpc//:grpc",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//runtime/protoimpl",
+        "@org_golang_google_protobuf//types/known/emptypb",
         "@org_uber_go_mock//gomock",
     ],
 )
