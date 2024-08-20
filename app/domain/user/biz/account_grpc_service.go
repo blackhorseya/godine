@@ -5,6 +5,10 @@ import (
 
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/entity/domain/user/model"
+	"github.com/blackhorseya/godine/pkg/contextx"
+	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -17,6 +21,16 @@ func NewAccountService() userB.AccountServiceServer {
 }
 
 func (i *accountService) WhoAmI(c context.Context, empty *emptypb.Empty) (*model.Account, error) {
-	// TODO: 2024/8/21|sean|implement me
-	panic("implement me")
+	ctx, err := contextx.FromContext(c)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get context: %v", err)
+	}
+
+	handler, err := model.FromContext(ctx)
+	if err != nil {
+		ctx.Error("failed to get user from context", zap.Error(err))
+		return nil, status.Error(codes.Unauthenticated, err.Error())
+	}
+
+	return handler, nil
 }
