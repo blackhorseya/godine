@@ -34,7 +34,10 @@ type Options struct {
 type Authx struct {
 	*oidc.Provider
 	oauth2.Config
+	*validator.Validator
 	middleware *jwtmiddleware.JWTMiddleware
+
+	SkipPaths []string
 }
 
 // New returns a new Authx.
@@ -74,14 +77,16 @@ func New(options Options) (*Authx, error) {
 	}
 
 	return &Authx{
-		Provider: provider,
-		Config:   config,
+		Provider:  provider,
+		Config:    config,
+		Validator: jwtValidator,
 		middleware: jwtmiddleware.New(
 			jwtValidator.ValidateToken,
 			jwtmiddleware.WithErrorHandler(func(w http.ResponseWriter, r *http.Request, err error) {
 				contextx.Background().Error("error validating token", zap.Error(err))
 			}),
 		),
+		SkipPaths: []string{},
 	}, nil
 }
 

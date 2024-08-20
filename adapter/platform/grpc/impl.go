@@ -84,10 +84,10 @@ func (i *impl) InitRouting() error {
 	router.GET("", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "home.html", nil)
 	})
-	// router.GET("/login", i.login)
-	// router.GET("/callback", i.callback)
-	// router.GET("/user", IsAuthenticated, i.user)
-	// router.GET("/logout", i.logout)
+	router.GET("/login", i.login)
+	router.GET("/callback", i.callback)
+	router.GET("/user", IsAuthenticated, i.user)
+	router.GET("/logout", i.logout)
 
 	return nil
 }

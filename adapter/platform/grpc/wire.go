@@ -9,6 +9,7 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
+	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
@@ -55,6 +56,10 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 	return app, nil
 }
 
+func initAuthx(app *configx.Application) (*authx.Authx, error) {
+	return authx.New(app.Auth0)
+}
+
 func New(v *viper.Viper) (adapterx.Restful, error) {
 	panic(wire.Build(
 		NewServer,
@@ -64,6 +69,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		initApplication,
 		configx.NewConfiguration,
 		NewInitServersFn,
+		initAuthx,
 
 		biz.NewAccountService,
 	))

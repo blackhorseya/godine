@@ -4,6 +4,7 @@ go_library(
     name = "grpc",
     srcs = [
         "impl.go",
+        "router.go",
         "wire_gen.go",
     ],
     importpath = "github.com/blackhorseya/godine/adapter/platform/grpc",
@@ -12,6 +13,7 @@ go_library(
         "//adapter/platform/grpc/web/templates",
         "//adapter/platform/wirex",
         "//app/domain/user/biz",
+        "//app/infra/authx",
         "//app/infra/configx",
         "//app/infra/otelx",
         "//app/infra/transports/grpcx",
@@ -19,6 +21,7 @@ go_library(
         "//entity/domain/user/biz",
         "//pkg/adapterx",
         "//pkg/contextx",
+        "//pkg/errorx",
         "@com_github_gin_contrib_sessions//:sessions",
         "@com_github_gin_contrib_sessions//cookie",
         "@com_github_gin_gonic_gin//:gin",
@@ -27,6 +30,7 @@ go_library(
         "@org_golang_google_grpc//health",
         "@org_golang_google_grpc//health/grpc_health_v1",
         "@org_golang_google_grpc//reflection",
+        "@org_golang_x_oauth2//:oauth2",
         "@org_uber_go_zap//:zap",
     ],
 )
