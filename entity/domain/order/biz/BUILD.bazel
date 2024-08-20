@@ -4,6 +4,7 @@ go_library(
     name = "biz",
     srcs = [
         "mock_order_service.go",
+        "order.pb.go",
         "order_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/order/biz",
@@ -11,6 +12,8 @@ go_library(
     deps = [
         "//entity/domain/order/model",
         "//pkg/contextx",
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_uber_go_mock//gomock",
     ],
 )

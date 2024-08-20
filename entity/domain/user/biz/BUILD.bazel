@@ -3,6 +3,7 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "biz",
     srcs = [
+        "account.pb.go",
         "mock_user_service.go",
         "user_service.go",
     ],
@@ -11,6 +12,8 @@ go_library(
     deps = [
         "//entity/domain/user/model",
         "//pkg/contextx",
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_uber_go_mock//gomock",
     ],
 )

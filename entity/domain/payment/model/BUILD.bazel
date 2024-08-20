@@ -4,8 +4,13 @@ go_library(
     name = "model",
     srcs = [
         "model.go",
+        "payment.pb.go",
         "vo.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/payment/model",
     visibility = ["//visibility:public"],
+    deps = [
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
+    ],
 )

@@ -4,6 +4,7 @@ go_library(
     name = "biz",
     srcs = [
         "mock_notification_service.go",
+        "notification.pb.go",
         "notification_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/notification/biz",
@@ -11,6 +12,8 @@ go_library(
     deps = [
         "//entity/domain/notification/model",
         "//pkg/contextx",
+        "@org_golang_google_protobuf//reflect/protoreflect",
+        "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_uber_go_mock//gomock",
     ],
 )
