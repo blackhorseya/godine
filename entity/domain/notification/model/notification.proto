@@ -3,4 +3,43 @@ package notification;
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/notification/model";
 
+import "google/protobuf/timestamp.proto";
 
+// Notification is an entity that represents a notification.
+message Notification {
+  // ID is the unique identifier of the notification.
+  // @gotags: bson:"_id,omitempty"
+  string id = 1;
+
+  // SenderID is the identifier of the user who sent the notification.
+  // @gotags: bson:"sender_id"
+  string sender_id = 2;
+
+  // UserID is the identifier of the user to whom the notification is sent.
+  // @gotags: bson:"user_id"
+  string user_id = 3;
+
+  // OrderID is the identifier of the order associated with the notification.
+  // @gotags: bson:"order_id"
+  string order_id = 4;
+
+  // Type represents the type of notification (e.g., order_status, delivery_status).
+  // @gotags: bson:"type"
+  string type = 5;
+
+  // Message is the content of the notification.
+  // @gotags: bson:"message"
+  string message = 6;
+
+  // Status is the current status of the notification (e.g., pending, sent).
+  // @gotags: bson:"status"
+  string status = 7;
+
+  // CreatedAt is the timestamp when the notification was created.
+  // @gotags: bson:"created_at"
+  google.protobuf.Timestamp created_at = 8;
+
+  // UpdatedAt is the timestamp when the notification was last updated.
+  // @gotags: bson:"updated_at"
+  google.protobuf.Timestamp updated_at = 9;
+}

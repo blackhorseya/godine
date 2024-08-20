@@ -3,7 +3,7 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "model",
     srcs = [
-        "model.go",
+        "notification.go",
         "notification.pb.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/notification/model",
@@ -11,6 +11,7 @@ go_library(
     deps = [
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//runtime/protoimpl",
+        "@org_golang_google_protobuf//types/known/timestamppb",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//bson/primitive",
     ],

@@ -15,6 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
@@ -39,11 +40,11 @@ func (i *mongodb) Create(ctx contextx.Contextx, notify *model.Notification) erro
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	if notify.ID == "" {
-		notify.ID = primitive.NewObjectID().Hex()
+	if notify.Id == "" {
+		notify.Id = primitive.NewObjectID().Hex()
 	}
-	notify.CreatedAt = time.Now()
-	notify.UpdatedAt = time.Now()
+	notify.CreatedAt = timestamppb.Now()
+	notify.UpdatedAt = timestamppb.Now()
 
 	_, err := i.rw.Database(dbName).Collection(collName).InsertOne(timeout, notify)
 	if err != nil {
