@@ -2,10 +2,7 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "order",
-    srcs = [
-        "gorm.go",
-        "mongodb.go",
-    ],
+    srcs = ["gorm.go"],
     importpath = "github.com/blackhorseya/godine/app/domain/order/repo/order",
     visibility = ["//visibility:public"],
     deps = [
@@ -16,10 +13,6 @@ go_library(
         "//pkg/errorx",
         "@com_github_bwmarrin_snowflake//:snowflake",
         "@io_gorm_gorm//:gorm",
-        "@org_mongodb_go_mongo_driver//bson",
-        "@org_mongodb_go_mongo_driver//bson/primitive",
-        "@org_mongodb_go_mongo_driver//mongo",
-        "@org_mongodb_go_mongo_driver//mongo/options",
         "@org_uber_go_zap//:zap",
     ],
 )

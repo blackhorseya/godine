@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
+	"time"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/order/model"
@@ -16,7 +16,10 @@ import (
 	"gorm.io/gorm"
 )
 
-const defaultLimit = 100
+const (
+	defaultLimit   = 100
+	defaultTimeout = 5 * time.Second
+)
 
 type gormDB struct {
 	rw   *gorm.DB
@@ -41,8 +44,8 @@ func (i *gormDB) Create(ctx contextx.Contextx, order *model.Order) (err error) {
 	defer cancelFunc()
 
 	// 检查订单 ID
-	if order.ID == "" {
-		order.ID = strconv.Itoa(int(i.node.Generate().Int64()))
+	if order.Id == 0 {
+		order.Id = i.node.Generate().Int64()
 	}
 
 	// 创建订单

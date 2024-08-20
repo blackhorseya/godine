@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
@@ -44,12 +43,12 @@ func (s *PendingState) String() string {
 }
 
 func (s *PendingState) Next(ctx contextx.Contextx, order *Order) (event *OrderEvent, err error) {
-	order.Status = &ConfirmedState{}
-	order.UpdatedAt = time.Now()
+	// order.Status = &ConfirmedState{}
+	// order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -63,12 +62,12 @@ func (s *ConfirmedState) String() string {
 }
 
 func (s *ConfirmedState) Next(ctx contextx.Contextx, order *Order) (event *OrderEvent, err error) {
-	order.Status = &PreparedState{}
-	order.UpdatedAt = time.Now()
+	// order.Status = &PreparedState{}
+	// order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -82,12 +81,12 @@ func (s *PreparedState) String() string {
 }
 
 func (s *PreparedState) Next(ctx contextx.Contextx, order *Order) (event *OrderEvent, err error) {
-	order.Status = &OutForDeliveryState{}
-	order.UpdatedAt = time.Now()
+	// order.Status = &OutForDeliveryState{}
+	// order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -101,12 +100,12 @@ func (s *OutForDeliveryState) String() string {
 }
 
 func (s *OutForDeliveryState) Next(ctx contextx.Contextx, order *Order) (event *OrderEvent, err error) {
-	order.Status = &DeliveredState{}
-	order.UpdatedAt = time.Now()
+	// order.Status = &DeliveredState{}
+	// order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -121,11 +120,11 @@ func (s *DeliveredState) String() string {
 
 func (s *DeliveredState) Next(ctx contextx.Contextx, order *Order) (event *OrderEvent, err error) {
 	// Delivered is a terminal state, no next state.
-	order.UpdatedAt = time.Now()
+	// order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }
 
@@ -140,10 +139,10 @@ func (s *CancelledState) String() string {
 
 func (s *CancelledState) Next(ctx contextx.Contextx, order *Order) (event *OrderEvent, err error) {
 	// Cancelled is a terminal state, no next state.
-	order.UpdatedAt = time.Now()
+	// order.UpdatedAt = time.Now()
 
 	return &OrderEvent{
-		Name:    order.Status.String(),
-		Handler: "example",
+		Name:      order.Status.String(),
+		HandlerId: "example",
 	}, nil
 }

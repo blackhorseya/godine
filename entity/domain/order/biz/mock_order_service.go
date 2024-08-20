@@ -41,7 +41,7 @@ func (m *MockIOrderBiz) EXPECT() *MockIOrderBizMockRecorder {
 }
 
 // CreateOrder mocks base method.
-func (m *MockIOrderBiz) CreateOrder(ctx contextx.Contextx, userID, restaurantID string, items []model.OrderItem, address model.Address, totalAmount float64) (*model.Order, error) {
+func (m *MockIOrderBiz) CreateOrder(ctx contextx.Contextx, userID, restaurantID string, items []*model.OrderItem, address *model.Address, totalAmount float64) (*model.Order, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrder", ctx, userID, restaurantID, items, address, totalAmount)
 	ret0, _ := ret[0].(*model.Order)
