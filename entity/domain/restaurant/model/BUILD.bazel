@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "model.go",
         "restaurant.pb.go",
-        "vo.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/restaurant/model",
     visibility = ["//visibility:public"],

@@ -2,3 +2,22 @@ syntax = "proto3";
 package restaurant;
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/model";
+
+// Address is a value object that represents the address of a user.
+message Address {
+  // Street is the street address of the user.
+  // @gotags: bson:"street"
+  string street = 1;
+
+  // City is the city where the user is located.
+  // @gotags: bson:"city"
+  string city = 2;
+
+  // State is the state where the user is located.
+  // @gotags: bson:"state"
+  string state = 3;
+
+  // ZipCode is the postal code of the user's location.
+  // @gotags: bson:"zip_code"
+  string zip_code = 4;
+}
