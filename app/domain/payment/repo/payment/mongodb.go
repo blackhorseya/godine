@@ -100,8 +100,8 @@ func (i *mongodb) Create(ctx contextx.Contextx, item *model.Payment) (err error)
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	if item.ID == "" {
-		item.ID = primitive.NewObjectID().Hex()
+	if item.Id == "" {
+		item.Id = primitive.NewObjectID().Hex()
 	}
 
 	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, item)
@@ -120,7 +120,7 @@ func (i *mongodb) Update(ctx contextx.Contextx, item *model.Payment) (err error)
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": item.ID}
+	filter := bson.M{"_id": item.Id}
 	update := bson.M{"$set": item}
 
 	_, err = i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)

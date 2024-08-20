@@ -22,7 +22,7 @@ type IPaymentBiz interface {
 	GetPaymentByID(ctx contextx.Contextx, id string) (item *model.Payment, err error)
 
 	// CreatePayment creates a new payment
-	CreatePayment(ctx contextx.Contextx, orderID string, amount model.PaymentAmount) (item *model.Payment, err error)
+	CreatePayment(ctx contextx.Contextx, orderID string, amount *model.PaymentAmount) (item *model.Payment, err error)
 
 	// ListPayments lists payments
 	ListPayments(ctx contextx.Contextx, options ListPaymentsOptions) (items []*model.Payment, total int, err error)
