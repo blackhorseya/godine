@@ -11,6 +11,7 @@ go_library(
         "//entity/domain/notification/repo",
         "//pkg/contextx",
         "//pkg/errorx",
+        "@org_golang_google_protobuf//types/known/timestamppb",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//bson/primitive",
         "@org_mongodb_go_mongo_driver//mongo",
