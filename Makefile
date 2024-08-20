@@ -49,6 +49,20 @@ test: ## test go binary
 coverage: ## generate coverage report
 	@go test -json -coverprofile=cover.out ./... >result.json
 
+.PHONY: gen-pb
+gen-pb: ## generate protobuf
+	@echo Starting generate pb
+	@protoc --proto_path=./ \
+  --go_out=paths=source_relative:./ \
+  --go-grpc_out=paths=source_relative,require_unimplemented_servers=false:./ \
+  --go-grpc-mock_out=paths=source_relative,require_unimplemented_servers=false:./ \
+  ./entity/domain/*/*/*.proto
+	@echo Successfully generated proto
+
+	@echo Starting inject tags
+	@protoc-go-inject-tag -input="./entity/domain/*/*/*.pb.go"
+	@echo Successfully injected tags
+
 .PHONY: gen-swagger
 gen-swagger: ## generate swagger
 	@swag init -q -g impl.go -d ./adapter/restaurant/restful,./entity,./pkg \
