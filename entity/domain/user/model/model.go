@@ -29,9 +29,6 @@ type User struct {
 	// Level is the level of the user.
 	Level uint `json:"level" bson:"level"`
 
-	// Roles is the list of roles the user has.
-	Roles []*UserRole `json:"roles,omitempty" bson:"roles"`
-
 	// SocialID is the social ID of the user.
 	SocialID string `json:"social_id,omitempty" bson:"social_id"`
 }
@@ -57,23 +54,4 @@ func FromContext(ctx contextx.Contextx) (*User, error) {
 	}
 
 	return user, nil
-}
-
-// GetSubject returns the subject of the user.
-func (x *User) GetSubject() string {
-	return x.ID
-}
-
-// UpdateAddress updates the user's address.
-func (x *User) UpdateAddress(newAddress Address) {
-	x.Address = newAddress
-}
-
-// UserRole represents the role of a user.
-type UserRole struct {
-	// UserID is the ID of the user.
-	UserID string `json:"user_id,omitempty" bson:"user_id"`
-
-	// RestaurantID is the ID of the restaurant.
-	RestaurantID string `json:"restaurant_id,omitempty" bson:"restaurant_id"`
 }

@@ -142,7 +142,6 @@ func (a *Authx) ParseJWT() gin.HandlerFunc {
 				Address:  model.Address{},
 				IsActive: false,
 				Level:    0,
-				Roles:    nil,
 				SocialID: "",
 			}
 			c.Set(contextx.KeyCtx, contextx.WithValue(ctx, contextx.KeyHandler, by))
