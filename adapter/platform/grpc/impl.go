@@ -1,21 +1,32 @@
 package grpc
 
 import (
+	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type impl struct {
+	server *grpcx.Server
 }
 
 // NewServer creates and returns a new server.
-func NewServer() adapterx.Restful {
-	return &impl{}
+func NewServer(server *grpcx.Server) adapterx.Restful {
+	return &impl{
+		server: server,
+	}
 }
 
 func (i *impl) Start() error {
-	// TODO: 2024/8/21|sean|implement grpc server start
+	ctx := contextx.Background()
+	err := i.server.Start(ctx)
+	if err != nil {
+		ctx.Error("Failed to start grpc server", zap.Error(err))
+		return err
+	}
+
 	return nil
 }
 
@@ -23,7 +34,10 @@ func (i *impl) AwaitSignal() error {
 	ctx := contextx.Background()
 	ctx.Info("receive signal to stop server")
 
-	// TODO: 2024/8/21|sean|implement grpc server stop
+	if err := i.server.Stop(ctx); err != nil {
+		ctx.Error("Failed to stop server", zap.Error(err))
+		return err
+	}
 
 	return nil
 }
