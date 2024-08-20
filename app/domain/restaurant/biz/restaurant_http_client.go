@@ -173,7 +173,7 @@ func (i *restaurantHTTPClient) UpdateRestaurant(
 	ctx contextx.Contextx,
 	id string,
 	name string,
-	address model.Address,
+	address *model.Address,
 ) error {
 	ctx, span := otelx.Span(ctx, "biz.restaurant.http_client.UpdateRestaurant")
 	defer span.End()
@@ -185,7 +185,7 @@ func (i *restaurantHTTPClient) UpdateRestaurant(
 
 	payload, err := json.Marshal(model.Restaurant{
 		Name:    name,
-		Address: address,
+		Address: nil,
 	})
 	if err != nil {
 		return err

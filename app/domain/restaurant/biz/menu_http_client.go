@@ -92,7 +92,7 @@ func (i *menuHTTPClient) AddMenuItem(
 func (i *menuHTTPClient) ListMenuItems(
 	ctx contextx.Contextx,
 	restaurantID string,
-) (items []model.MenuItem, total int, err error) {
+) (items []*model.MenuItem, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.menu.http_client.ListMenuItems")
 	defer span.End()
 
@@ -117,7 +117,7 @@ func (i *menuHTTPClient) ListMenuItems(
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               []model.MenuItem `json:"data"`
+		Data               []*model.MenuItem `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)

@@ -10,11 +10,11 @@
 package biz
 
 import (
-	"reflect"
+	reflect "reflect"
 
-	model2 "github.com/blackhorseya/godine/entity/domain/restaurant/model"
-	"github.com/blackhorseya/godine/pkg/contextx"
-	"go.uber.org/mock/gomock"
+	model "github.com/blackhorseya/godine/entity/domain/restaurant/model"
+	contextx "github.com/blackhorseya/godine/pkg/contextx"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockIRestaurantBiz is a mock of IRestaurantBiz interface.
@@ -55,10 +55,10 @@ func (mr *MockIRestaurantBizMockRecorder) ChangeRestaurantStatus(ctx, restaurant
 }
 
 // CreateRestaurant mocks base method.
-func (m *MockIRestaurantBiz) CreateRestaurant(ctx contextx.Contextx, name, address string) (*model2.Restaurant, error) {
+func (m *MockIRestaurantBiz) CreateRestaurant(ctx contextx.Contextx, name, address string) (*model.Restaurant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRestaurant", ctx, name, address)
-	ret0, _ := ret[0].(*model2.Restaurant)
+	ret0, _ := ret[0].(*model.Restaurant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -84,10 +84,10 @@ func (mr *MockIRestaurantBizMockRecorder) DeleteRestaurant(ctx, id any) *gomock.
 }
 
 // GetRestaurant mocks base method.
-func (m *MockIRestaurantBiz) GetRestaurant(ctx contextx.Contextx, id string) (*model2.Restaurant, error) {
+func (m *MockIRestaurantBiz) GetRestaurant(ctx contextx.Contextx, id string) (*model.Restaurant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetRestaurant", ctx, id)
-	ret0, _ := ret[0].(*model2.Restaurant)
+	ret0, _ := ret[0].(*model.Restaurant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -99,10 +99,10 @@ func (mr *MockIRestaurantBizMockRecorder) GetRestaurant(ctx, id any) *gomock.Cal
 }
 
 // ListRestaurants mocks base method.
-func (m *MockIRestaurantBiz) ListRestaurants(ctx contextx.Contextx, options ListRestaurantsOptions) ([]*model2.Restaurant, int, error) {
+func (m *MockIRestaurantBiz) ListRestaurants(ctx contextx.Contextx, options ListRestaurantsOptions) ([]*model.Restaurant, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRestaurants", ctx, options)
-	ret0, _ := ret[0].([]*model2.Restaurant)
+	ret0, _ := ret[0].([]*model.Restaurant)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -115,7 +115,7 @@ func (mr *MockIRestaurantBizMockRecorder) ListRestaurants(ctx, options any) *gom
 }
 
 // UpdateRestaurant mocks base method.
-func (m *MockIRestaurantBiz) UpdateRestaurant(ctx contextx.Contextx, id, name string, address model2.Address) error {
+func (m *MockIRestaurantBiz) UpdateRestaurant(ctx contextx.Contextx, id, name string, address *model.Address) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateRestaurant", ctx, id, name, address)
 	ret0, _ := ret[0].(error)
