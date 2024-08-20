@@ -30,6 +30,7 @@ type Application struct {
 
 	Log  logging.Options `json:"log" yaml:"log"`
 	HTTP HTTP            `json:"http" yaml:"http"`
+	GRPC GRPC            `json:"grpc" yaml:"grpc"`
 
 	Auth0 authx.Options `json:"auth0" yaml:"auth0"`
 
@@ -110,4 +111,10 @@ func (http *HTTP) GetAddr() string {
 	}
 
 	return fmt.Sprintf("%s:%d", http.Host, http.Port)
+}
+
+type GRPC struct {
+	URL  string `json:"url" yaml:"url"`
+	Host string `json:"host" yaml:"host"`
+	Port int    `json:"port" yaml:"port"`
 }
