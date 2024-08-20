@@ -9,6 +9,8 @@ go_library(
     importpath = "github.com/blackhorseya/godine/adapter/platform/grpc",
     visibility = ["//visibility:public"],
     deps = [
+        "//adapter/platform/grpc/web/templates",
+        "//adapter/platform/wirex",
         "//app/domain/user/biz",
         "//app/infra/configx",
         "//app/infra/otelx",
@@ -17,6 +19,8 @@ go_library(
         "//entity/domain/user/biz",
         "//pkg/adapterx",
         "//pkg/contextx",
+        "@com_github_gin_contrib_sessions//:sessions",
+        "@com_github_gin_contrib_sessions//cookie",
         "@com_github_gin_gonic_gin//:gin",
         "@com_github_spf13_viper//:viper",
         "@org_golang_google_grpc//:grpc",

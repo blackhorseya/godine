@@ -8,6 +8,7 @@ package grpc
 
 import (
 	"fmt"
+	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -34,6 +35,10 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
+	injector := &wirex.Injector{
+		C: configuration,
+		A: application,
+	}
 	accountServiceServer := biz.NewAccountService()
 	initServers := NewInitServersFn(accountServiceServer)
 	server, err := grpcx.NewServer(application, initServers)
@@ -44,7 +49,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	restful := NewServer(server, httpxServer)
+	restful := NewServer(injector, server, httpxServer)
 	return restful, nil
 }
 

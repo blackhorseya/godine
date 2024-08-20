@@ -7,6 +7,7 @@ package grpc
 import (
 	"fmt"
 
+	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -57,6 +58,7 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 func New(v *viper.Viper) (adapterx.Restful, error) {
 	panic(wire.Build(
 		NewServer,
+		wire.Struct(new(wirex.Injector), "*"),
 		grpcx.NewServer,
 		httpx.NewServer,
 		initApplication,
