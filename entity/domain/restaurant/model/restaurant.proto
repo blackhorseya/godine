@@ -21,3 +21,48 @@ message Address {
   // @gotags: bson:"zip_code"
   string zip_code = 4;
 }
+
+// Restaurant is a value object that represents a restaurant.
+message Restaurant {
+  // ID is the unique identifier of the restaurant.
+  // @gotags: bson:"_id"
+  string id = 1;
+
+  // Name is the name of the restaurant.
+  // @gotags: bson:"name"
+  string name = 2;
+
+  // Address is the address of the restaurant.
+  // @gotags: bson:"address"
+  Address address = 3;
+
+  // Menu is the menu of the restaurant.
+  // @gotags: bson:"menu"
+  repeated MenuItem menu = 4;
+
+  // IsOpen is the availability of the restaurant.
+  // @gotags: bson:"is_open"
+  bool is_open = 5;
+}
+
+message MenuItem {
+  // ID is the unique identifier of the menu item.
+  // @gotags: bson:"_id"
+  string id = 1;
+
+  // Name is the name of the menu item.
+  // @gotags: bson:"name"
+  string name = 2;
+
+  // Description is the description of the menu item.
+  // @gotags: bson:"description"
+  string description = 3;
+
+  // Price is the price of the menu item.
+  // @gotags: bson:"price"
+  float price = 4;
+
+  // IsAvailable is the availability of the menu item.
+  // @gotags: bson:"is_available"
+  bool is_available = 5;
+}
