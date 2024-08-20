@@ -76,7 +76,4 @@ type UserRole struct {
 
 	// RestaurantID is the ID of the restaurant.
 	RestaurantID string `json:"restaurant_id,omitempty" bson:"restaurant_id"`
-
-	// Role is the role of the user.
-	Role RoleType `json:"role,omitempty" bson:"role"`
 }
