@@ -14,6 +14,7 @@ go_library(
         "//adapter/notify/restful",
         "//adapter/order/restful",
         "//adapter/payment/restful",
+        "//adapter/platform/grpc",
         "//adapter/restaurant/restful",
         "//adapter/user/restful",
         "//app/infra/authz",
