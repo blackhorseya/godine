@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/spf13/viper"
 )
 
@@ -16,6 +17,9 @@ type Configuration struct {
 	UserRestful       Application `json:"user_restful" yaml:"userRestful"`
 	LogisticsRestful  Application `json:"logistics_restful" yaml:"logisticsRestful"`
 	NotifyRestful     Application `json:"notify_restful" yaml:"notifyRestful"`
+
+	Log      logging.Options         `json:"log" yaml:"log"`
+	Services map[string]*Application `json:"services" yaml:"services"`
 }
 
 // NewConfiguration creates a new configuration.
@@ -42,5 +46,20 @@ func NewConfiguration(v *viper.Viper) (*Configuration, error) {
 		return nil, fmt.Errorf("failed to unmarshal configuration: %w", err)
 	}
 
+	err = logging.Init(config.Log)
+	if err != nil {
+		return nil, fmt.Errorf("failed to init logging: %w", err)
+	}
+
 	return config, nil
+}
+
+// GetService is used to get the service by name.
+func (x *Configuration) GetService(name string) (*Application, error) {
+	app, ok := x.Services[name]
+	if !ok {
+		return nil, fmt.Errorf("service: [%s] not found", name)
+	}
+
+	return app, nil
 }
