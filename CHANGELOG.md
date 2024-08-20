@@ -1,3 +1,66 @@
+## 0.5.5 (2024-08-21)
+
+### Feat
+
+- implement protobuf messages for order processing
+- refactor user domain model and OpenAPI definitions (#105)
+- introduce new message types for restaurant and menu items (#106)
+- introduce new message types for restaurant and menu items
+- update restaurant protobuf with new Address message
+- consolidate and organize proto files for various domains (#104)
+- refactor user domain model and OpenAPI definitions
+- consolidate and organize proto files for various domains
+- enhance user authentication and data structure
+- implement logging using go.uber.org/zap (#102)
+- implement logging using go.uber.org/zap
+- refactor login method to register with new parameters
+- inject authz (#100)
+- update user authentication mechanism in `NewUserBiz` function
+- update API definitions and add session endpoints
+- refactor policy initialization and grouping logic (#99)
+- refactor policy initialization and grouping logic
+- consolidate policy initialization across files
+- refactor initialization process in cmd library
+- enhance authentication in Handle function (#97)
+- enhance authentication in Handle function
+- implement authentication and authorization in user API
+- enable authorization feature based on config flag
+- implement user authorization and context extraction
+- update Casbin struct with new Enabled field
+- implement user roles and ownership functionality (#96)
+- update authorization logic and configuration files
+- implement user roles and ownership functionality
+
+### Fix
+
+- improve error handling and model references
+
+### Refactor
+
+- refactor order event handling structures (#110)
+- refactor struct fields to use pointers
+- refactor order event handling structures
+- refactor and restructure codebase
+- update timestamp handling in notification and payment models
+- standardize variable names and imports across files (#108)
+- refactor file structure for logistics domain
+- standardize variable names and imports across files
+- consolidate file naming conventions in payment domain folder
+- standardize file naming conventions in domain packages
+- refactor code to use `GetId()` and `Id` methods consistently
+- update response data types to `model.Account` in various files
+- refactor user role logic in model files
+- refactor restaurant functions to use updated model
+- update user payload properties and examples
+- refactor user registration process across files
+- refactor authz package dependencies and code
+- refactor function calls for clarity
+- refactor method names for clarity
+- standardize variable names and method calls
+- standardize API endpoint paths across codebase
+- refactor code for improved consistency and readability
+- refactor authorization functionality across user RESTful adapter
+
 ## 0.5.4 (2024-07-23)
 
 ### Feat
