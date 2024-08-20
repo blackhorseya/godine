@@ -34,12 +34,12 @@ func NewUserHTTPClient(config *configx.Configuration) biz.IUserBiz {
 	}
 }
 
-func (i *httpClient) Register(ctx contextx.Contextx, name string) (item *model.User, err error) {
+func (i *httpClient) Register(ctx contextx.Contextx, name string) (item *model.Account, err error) {
 	// todo: 2024/7/25|sean|implement me
 	return nil, errors.New("not implemented")
 }
 
-func (i *httpClient) Login(ctx contextx.Contextx) (item *model.User, err error) {
+func (i *httpClient) Login(ctx contextx.Contextx) (item *model.Account, err error) {
 	// todo: 2024/7/25|sean|implement me
 	return nil, errors.New("not implemented")
 }
@@ -47,8 +47,8 @@ func (i *httpClient) Login(ctx contextx.Contextx) (item *model.User, err error) 
 func (i *httpClient) CreateUser(
 	ctx contextx.Contextx,
 	name, email, password string,
-	address model.Address,
-) (item *model.User, err error) {
+	address *model.Address,
+) (item *model.Account, err error) {
 	ctx, span := otelx.Span(ctx, "biz.user.http_client.create_user")
 	defer span.End()
 
@@ -77,7 +77,7 @@ func (i *httpClient) CreateUser(
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model.User `json:"data"`
+		Data               *model.Account `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -92,7 +92,7 @@ func (i *httpClient) CreateUser(
 	return got.Data, nil
 }
 
-func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.User, err error) {
+func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.Account, err error) {
 	ctx, span := otelx.Span(ctx, "biz.user.http_client.get_user")
 	defer span.End()
 
@@ -114,7 +114,7 @@ func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.User
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               *model.User `json:"data"`
+		Data               *model.Account `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -132,7 +132,7 @@ func (i *httpClient) GetUser(ctx contextx.Contextx, id string) (item *model.User
 func (i *httpClient) ListUsers(
 	ctx contextx.Contextx,
 	options biz.ListUsersOptions,
-) (items []*model.User, total int, err error) {
+) (items []*model.Account, total int, err error) {
 	ctx, span := otelx.Span(ctx, "biz.user.http_client.list_users")
 	defer span.End()
 
@@ -159,7 +159,7 @@ func (i *httpClient) ListUsers(
 
 	type response struct {
 		responsex.Response `json:",inline"`
-		Data               []*model.User `json:"data"`
+		Data               []*model.Account `json:"data"`
 	}
 	var got response
 	err = json.NewDecoder(resp.Body).Decode(&got)
@@ -183,7 +183,7 @@ func (i *httpClient) UpdateUser(
 	ctx contextx.Contextx,
 	id string,
 	name, email, password string,
-	address model.Address,
+	address *model.Address,
 ) error {
 	ctx, span := otelx.Span(ctx, "biz.user.http_client.update_user")
 	defer span.End()
@@ -193,8 +193,7 @@ func (i *httpClient) UpdateUser(
 		return err
 	}
 
-	payload, err := json.Marshal(model.User{
-		Name:     name,
+	payload, err := json.Marshal(model.Account{
 		Email:    email,
 		Password: password,
 		Address:  address,

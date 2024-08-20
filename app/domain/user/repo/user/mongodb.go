@@ -32,15 +32,15 @@ func NewMongodb(rw *mongo.Client) repo.IUserRepo {
 	return &mongodb{rw: rw}
 }
 
-func (i *mongodb) Create(ctx contextx.Contextx, user *model.User) error {
+func (i *mongodb) Create(ctx contextx.Contextx, user *model.Account) error {
 	ctx, span := otelx.Span(ctx, "user.mongodb.create")
 	defer span.End()
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	if user.ID == "" {
-		user.ID = primitive.NewObjectID().Hex()
+	if user.Id == "" {
+		user.Id = primitive.NewObjectID().Hex()
 	}
 
 	_, err := i.rw.Database(dbName).Collection(collName).InsertOne(timeout, user)
@@ -52,7 +52,7 @@ func (i *mongodb) Create(ctx contextx.Contextx, user *model.User) error {
 	return nil
 }
 
-func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.User, err error) {
+func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Account, err error) {
 	ctx, span := otelx.Span(ctx, "user.mongodb.getByID")
 	defer span.End()
 
@@ -83,7 +83,7 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.User, e
 func (i *mongodb) List(
 	ctx contextx.Contextx,
 	condition repo.ListCondition,
-) (items []*model.User, total int, err error) {
+) (items []*model.Account, total int, err error) {
 	ctx, span := otelx.Span(ctx, "user.mongodb.list")
 	defer span.End()
 
@@ -120,14 +120,14 @@ func (i *mongodb) List(
 	return items, int(count), nil
 }
 
-func (i *mongodb) Update(ctx contextx.Contextx, user *model.User) error {
+func (i *mongodb) Update(ctx contextx.Contextx, user *model.Account) error {
 	ctx, span := otelx.Span(ctx, "user.mongodb.update")
 	defer span.End()
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
 
-	filter := bson.M{"_id": user.ID}
+	filter := bson.M{"_id": user.Id}
 	update := bson.M{"$set": user}
 
 	_, err := i.rw.Database(dbName).Collection(collName).UpdateOne(timeout, filter, update)

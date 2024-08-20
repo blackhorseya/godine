@@ -45,7 +45,7 @@ type PostPayload struct {
 // @Produce json
 // @Param payload body PostPayload true "user payload"
 // @Security Bearer
-// @Success 200 {object} responsex.Response{data=model.User}
+// @Success 200 {object} responsex.Response{data=model.Account}
 // @Failure 400 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
 // @Router /v1/users [post]
@@ -80,7 +80,7 @@ func (i *impl) Post(c *gin.Context) {
 // @Produce json
 // @Param id path string true "user id"
 // @Security Bearer
-// @Success 200 {object} responsex.Response{data=model.User}
+// @Success 200 {object} responsex.Response{data=model.Account}
 // @Failure 400 {object} responsex.Response
 // @Failure 404 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
@@ -111,7 +111,7 @@ func (i *impl) GetByID(c *gin.Context) {
 // @Produce json
 // @Param params query biz.ListUsersOptions false "list users options"
 // @Security Bearer
-// @Success 200 {object} responsex.Response{data=[]model.User}
+// @Success 200 {object} responsex.Response{data=[]model.Account}
 // @Failure 400 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
 // @Header 200 {number} X-Total-Count "Total number of items"
@@ -147,9 +147,9 @@ func (i *impl) GetList(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "user id"
-// @Param payload body model.User true "user payload"
+// @Param payload body model.Account true "user payload"
 // @Security Bearer
-// @Success 200 {object} responsex.Response{data=model.User}
+// @Success 200 {object} responsex.Response{data=model.Account}
 // @Failure 400 {object} responsex.Response
 // @Failure 404 {object} responsex.Response
 // @Failure 500 {object} responsex.Response
@@ -163,14 +163,14 @@ func (i *impl) Put(c *gin.Context) {
 
 	id := c.Param("id")
 
-	var payload model.User
+	var payload model.Account
 	err = c.ShouldBindJSON(&payload)
 	if err != nil {
 		responsex.Err(c, errorx.Wrap(http.StatusBadRequest, 400, err))
 		return
 	}
 
-	err = i.injector.UserService.UpdateUser(ctx, id, payload.Name, payload.Email, payload.Password, payload.Address)
+	err = i.injector.UserService.UpdateUser(ctx, id, payload.Username, payload.Email, payload.Password, payload.Address)
 	if err != nil {
 		responsex.Err(c, err)
 		return
@@ -199,7 +199,7 @@ type PatchWithStatusPayload struct {
 // @Param id path string true "user id"
 // @Param payload body PatchWithStatusPayload true "user status payload"
 // @Security Bearer
-// @Success 200 {object} responsex.Response{data=model.User}
+// @Success 200 {object} responsex.Response{data=model.Account}
 // @Failure 400 {object} responsex.Response
 // @Failure 404 {object} responsex.Response
 // @Failure 500 {object} responsex.Response

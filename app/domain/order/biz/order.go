@@ -101,7 +101,7 @@ func (i *orderBiz) CreateOrder(
 		items = append(items, *item)
 	}
 
-	order = orderM.NewOrder(user.ID, restaurant.ID, items)
+	order = orderM.NewOrder(user.Id, restaurant.ID, items)
 	err = i.orders.Create(ctx, order)
 	if err != nil {
 		ctx.Error(
@@ -112,7 +112,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	err = i.notifyService.CreateNotification(ctx, notifyM.NewNotify(user.ID, user.ID, order.ID, "order created"))
+	err = i.notifyService.CreateNotification(ctx, notifyM.NewNotify(user.Id, user.Id, order.ID, "order created"))
 	if err != nil {
 		ctx.Error(
 			"create notification failed",
@@ -122,7 +122,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	delivery := logisticsM.NewDelivery(order.ID, user.ID)
+	delivery := logisticsM.NewDelivery(order.ID, user.Id)
 	err = i.logisticsService.CreateDelivery(ctx, delivery)
 	if err != nil {
 		ctx.Error(

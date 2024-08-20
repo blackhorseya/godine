@@ -41,7 +41,7 @@ func (m *MockIUserRepo) EXPECT() *MockIUserRepoMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockIUserRepo) Create(ctx contextx.Contextx, user *model.User) error {
+func (m *MockIUserRepo) Create(ctx contextx.Contextx, user *model.Account) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", ctx, user)
 	ret0, _ := ret[0].(error)
@@ -69,10 +69,10 @@ func (mr *MockIUserRepoMockRecorder) Delete(ctx, id any) *gomock.Call {
 }
 
 // GetByID mocks base method.
-func (m *MockIUserRepo) GetByID(ctx contextx.Contextx, id string) (*model.User, error) {
+func (m *MockIUserRepo) GetByID(ctx contextx.Contextx, id string) (*model.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetByID", ctx, id)
-	ret0, _ := ret[0].(*model.User)
+	ret0, _ := ret[0].(*model.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -84,10 +84,10 @@ func (mr *MockIUserRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockIUserRepo) List(ctx contextx.Contextx, condition ListCondition) ([]*model.User, int, error) {
+func (m *MockIUserRepo) List(ctx contextx.Contextx, condition ListCondition) ([]*model.Account, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, condition)
-	ret0, _ := ret[0].([]*model.User)
+	ret0, _ := ret[0].([]*model.Account)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -100,7 +100,7 @@ func (mr *MockIUserRepoMockRecorder) List(ctx, condition any) *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockIUserRepo) Update(ctx contextx.Contextx, user *model.User) error {
+func (m *MockIUserRepo) Update(ctx contextx.Contextx, user *model.Account) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, user)
 	ret0, _ := ret[0].(error)

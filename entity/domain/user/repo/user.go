@@ -14,9 +14,9 @@ type ListCondition struct {
 
 // IUserRepo is an interface for user repository.
 type IUserRepo interface {
-	Create(ctx contextx.Contextx, user *model.User) error
-	GetByID(ctx contextx.Contextx, id string) (item *model.User, err error)
-	List(ctx contextx.Contextx, condition ListCondition) (items []*model.User, total int, err error)
-	Update(ctx contextx.Contextx, user *model.User) error
+	Create(ctx contextx.Contextx, user *model.Account) error
+	GetByID(ctx contextx.Contextx, id string) (item *model.Account, err error)
+	List(ctx contextx.Contextx, condition ListCondition) (items []*model.Account, total int, err error)
+	Update(ctx contextx.Contextx, user *model.Account) error
 	Delete(ctx contextx.Contextx, id string) error
 }
