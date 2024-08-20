@@ -10,6 +10,7 @@ import (
 	notify "github.com/blackhorseya/godine/adapter/notify/restful"
 	order "github.com/blackhorseya/godine/adapter/order/restful"
 	payment "github.com/blackhorseya/godine/adapter/payment/restful"
+	"github.com/blackhorseya/godine/adapter/platform/grpc"
 	restaurant "github.com/blackhorseya/godine/adapter/restaurant/restful"
 	user "github.com/blackhorseya/godine/adapter/user/restful"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -119,6 +120,12 @@ func init() {
 		notify.New,
 	)
 
+	platformCmd := cmdx.NewServiceCmd(
+		"platform",
+		"Start the platform server",
+		grpc.New,
+	)
+
 	startCmd.AddCommand(
 		restaurantRestfulCmd,
 		orderRestfulCmd,
@@ -126,6 +133,7 @@ func init() {
 		userRestfulCmd,
 		logisticsRestfulCmd,
 		notifyRestfulCmd,
+		platformCmd,
 	)
 
 	rootCmd.AddCommand(startCmd)
