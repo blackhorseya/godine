@@ -1,0 +1,28 @@
+syntax = "proto3";
+package restaurant;
+
+option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
+
+import "entity/domain/restaurant/model/restaurant.proto";
+
+message AddMenuItemRequest {
+  string restaurant_id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+}
+
+message GetMenuItemRequest {
+  string restaurant_id = 1;
+  string menu_item_id = 2;
+}
+
+message ListMenuItemsRequest {
+  string restaurant_id = 1;
+}
+
+service MenuService {
+  rpc AddMenuItem(AddMenuItemRequest) returns (MenuItem);
+  rpc GetMenuItem(GetMenuItemRequest) returns (MenuItem);
+  rpc ListMenuItems(ListMenuItemsRequest) returns (stream MenuItem);
+}
