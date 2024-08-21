@@ -4,14 +4,27 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// NewPayment creates a new Payment.
-func NewPayment(orderID string, amount *PaymentAmount) *Payment {
+// NewPaymentLegacy creates a new Payment.
+// Deprecated: use NewPayment instead.
+func NewPaymentLegacy(orderID string, amount *PaymentAmount) *Payment {
 	return &Payment{
 		OrderId:   orderID,
 		Amount:    amount,
 		CreatedAt: timestamppb.Now(),
 		UpdatedAt: timestamppb.Now(),
 	}
+}
+
+// NewPayment creates a new Payment.
+func NewPayment(userID, orderID string, amount *PaymentAmount) (*Payment, error) {
+	return &Payment{
+		Id:        "",
+		Amount:    amount,
+		CreatedAt: timestamppb.Now(),
+		UpdatedAt: timestamppb.Now(),
+		OrderId:   orderID,
+		UserId:    userID,
+	}, nil
 }
 
 // Equal checks if the payment is equal to another payment.
