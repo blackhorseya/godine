@@ -2,3 +2,20 @@ syntax = "proto3";
 package payment;
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/payment/biz";
+
+import "entity/domain/payment/model/payment.proto";
+
+message CreatePaymentRequest {
+  string user_id = 1;
+  string order_id = 2;
+  double amount = 3;
+}
+
+message GetPaymentRequest {
+  string payment_id = 1;
+}
+
+service PaymentService {
+  rpc CreatePayment(CreatePaymentRequest) returns (Payment);
+  rpc GetPayment(GetPaymentRequest) returns (Payment);
+}

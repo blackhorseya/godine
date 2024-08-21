@@ -37,4 +37,8 @@ message Payment {
   // OrderID is the identifier of order
   // @gotags: bson:"order_id"
   string order_id = 5;
+
+  // UserID is the identifier of user
+  // @gotags: bson:"user_id"
+  string user_id = 6;
 }

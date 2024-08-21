@@ -4,7 +4,7 @@ go_library(
     name = "biz",
     srcs = [
         "account_grpc_client.go",
-        "account_grpc_service.go",
+        "account_grpc_server.go",
         "http_client.go",
         "user.go",
     ],
