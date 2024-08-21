@@ -8,6 +8,8 @@ go_library(
         "menu_grpc_server.go",
         "menu_http_client.go",
         "restaurant.go",
+        "restaurant_grpc_client.go",
+        "restaurant_grpc_server.go",
         "restaurant_http_client.go",
     ],
     importpath = "github.com/blackhorseya/godine/app/domain/restaurant/biz",
