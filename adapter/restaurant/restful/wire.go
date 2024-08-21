@@ -51,7 +51,7 @@ var providerSet = wire.NewSet(
 	biz.NewMenuBiz,
 	restaurant.NewMongodb,
 	mongodbx.NewClient,
-	redix.NewRedis,
+	redix.NewClient,
 )
 
 func New(v *viper.Viper) (adapterx.Restful, error) {

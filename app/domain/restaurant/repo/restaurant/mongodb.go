@@ -17,10 +17,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
 	defaultTimeout = 5 * time.Second
+	defaultLimit   = 100
 	dbName         = "godine"
 	collName       = "restaurants"
 )
@@ -48,6 +50,8 @@ func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err err
 	if data.GetId() == "" {
 		data.Id = primitive.NewObjectID().Hex()
 	}
+	data.CreatedAt = timestamppb.Now()
+	data.UpdatedAt = timestamppb.Now()
 
 	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, data)
 	if err != nil {
@@ -70,6 +74,7 @@ func (i *mongodb) Update(ctx contextx.Contextx, data *model.Restaurant) (err err
 		ctx.Error("parse restaurant id failed", zap.Error(err), zap.String("id", data.GetId()))
 		return err
 	}
+	data.UpdatedAt = timestamppb.Now()
 
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": data}
@@ -162,13 +167,13 @@ func (i *mongodb) List(
 	defer cancelFunc()
 
 	filter := bson.M{}
-	opts := options.Find()
-	if condition.Limit > 0 {
-		opts.SetLimit(int64(condition.Limit))
+	if condition.Limit <= 0 {
+		condition.Limit = defaultLimit
 	}
-	if condition.Offset > 0 {
-		opts.SetSkip(int64(condition.Offset))
+	if condition.Offset < 0 {
+		condition.Offset = 0
 	}
+	opts := options.Find().SetLimit(condition.Limit).SetSkip(condition.Offset).SetSort(bson.M{"updated_at": -1})
 
 	cursor, err := i.rw.Database(dbName).Collection(collName).Find(timeout, filter, opts)
 	if err != nil {

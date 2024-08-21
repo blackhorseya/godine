@@ -10,10 +10,13 @@ import (
 	"fmt"
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	biz2 "github.com/blackhorseya/godine/app/domain/restaurant/biz"
+	"github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	biz4 "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
@@ -48,7 +51,16 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		Authx: authxAuthx,
 	}
 	accountServiceServer := biz.NewAccountService()
-	restaurantServiceServer := biz2.NewRestaurantService()
+	client, err := mongodbx.NewClient(application)
+	if err != nil {
+		return nil, err
+	}
+	redisClient, err := redix.NewClient(application)
+	if err != nil {
+		return nil, err
+	}
+	iRestaurantRepo := restaurant.NewMongodb(client, redisClient)
+	restaurantServiceServer := biz2.NewRestaurantService(iRestaurantRepo)
 	menuServiceServer := biz2.NewMenuService()
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)

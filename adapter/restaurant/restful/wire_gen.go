@@ -41,7 +41,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	redisClient, err := redix.NewRedis(application)
+	redisClient, err := redix.NewClient(application)
 	if err != nil {
 		return nil, err
 	}
@@ -84,5 +84,5 @@ func initApplication(v *viper.Viper) (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz.NewRestaurantBiz, biz.NewMenuBiz, restaurant.NewMongodb, mongodbx.NewClient, redix.NewRedis,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz.NewRestaurantBiz, biz.NewMenuBiz, restaurant.NewMongodb, mongodbx.NewClient, redix.NewClient,
 )

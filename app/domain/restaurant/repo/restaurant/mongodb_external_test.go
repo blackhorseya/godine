@@ -38,7 +38,7 @@ func (s *suiteMongodbExternal) SetupTest() {
 	s.Require().NoError(err)
 	s.rw = rw
 
-	rdb, err := redix.NewRedis(app)
+	rdb, err := redix.NewClient(app)
 	s.Require().NoError(err)
 	s.rdb = rdb
 
