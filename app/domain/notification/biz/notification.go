@@ -8,40 +8,40 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
-type notification struct {
+type impl struct {
 	notifications repo.INotificationRepo
 }
 
-// NewNotification creates a new notification service.
+// NewNotification creates a new impl service.
 func NewNotification(notifications repo.INotificationRepo) biz.INotificationBiz {
-	return &notification{
+	return &impl{
 		notifications: notifications,
 	}
 }
 
-func (i *notification) CreateNotification(ctx contextx.Contextx, notification *model.Notification) error {
-	ctx, span := otelx.Span(ctx, "biz.notification.CreateNotification")
+func (i *impl) CreateNotification(ctx contextx.Contextx, notification *model.Notification) error {
+	ctx, span := otelx.Span(ctx, "biz.impl.CreateNotification")
 	defer span.End()
 
 	return i.notifications.Create(ctx, notification)
 }
 
-func (i *notification) GetNotification(
+func (i *impl) GetNotification(
 	ctx contextx.Contextx,
 	notificationID string,
 ) (item *model.Notification, err error) {
-	ctx, span := otelx.Span(ctx, "biz.notification.GetNotification")
+	ctx, span := otelx.Span(ctx, "biz.impl.GetNotification")
 	defer span.End()
 
 	return i.notifications.GetByID(ctx, notificationID)
 }
 
-func (i *notification) ListNotificationsByUser(
+func (i *impl) ListNotificationsByUser(
 	ctx contextx.Contextx,
 	userID string,
 	options biz.ListNotificationsOptions,
 ) (items []*model.Notification, total int, err error) {
-	ctx, span := otelx.Span(ctx, "biz.notification.ListNotificationsByUser")
+	ctx, span := otelx.Span(ctx, "biz.impl.ListNotificationsByUser")
 	defer span.End()
 
 	return i.notifications.List(ctx, repo.ListCondition{

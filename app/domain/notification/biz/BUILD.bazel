@@ -4,6 +4,8 @@ go_library(
     name = "biz",
     srcs = [
         "notification.go",
+        "notification_grpc_client.go",
+        "notification_grpc_server.go",
         "notification_http_client.go",
         "wire.go",
     ],
@@ -13,6 +15,7 @@ go_library(
         "//app/domain/notification/repo/notification",
         "//app/infra/configx",
         "//app/infra/otelx",
+        "//app/infra/transports/grpcx",
         "//entity/domain/notification/biz",
         "//entity/domain/notification/model",
         "//entity/domain/notification/repo",

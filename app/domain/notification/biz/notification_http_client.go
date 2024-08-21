@@ -22,7 +22,7 @@ type notificationHTTPClient struct {
 	client *http.Client
 }
 
-// NewNotificationHTTPClient creates a new notification service.
+// NewNotificationHTTPClient creates a new impl service.
 func NewNotificationHTTPClient(config *configx.Configuration) biz.INotificationBiz {
 	return &notificationHTTPClient{
 		url:    config.NotifyRestful.HTTP.URL,
@@ -31,7 +31,7 @@ func NewNotificationHTTPClient(config *configx.Configuration) biz.INotificationB
 }
 
 func (i *notificationHTTPClient) CreateNotification(ctx contextx.Contextx, notification *model.Notification) error {
-	ctx, span := otelx.Span(ctx, "biz.notification.http_client.CreateNotification")
+	ctx, span := otelx.Span(ctx, "biz.impl.http_client.CreateNotification")
 	defer span.End()
 
 	ep, err := url.ParseRequestURI(i.url + "/api/v1/notifications")
@@ -76,7 +76,7 @@ func (i *notificationHTTPClient) GetNotification(
 	ctx contextx.Contextx,
 	notificationID string,
 ) (item *model.Notification, err error) {
-	ctx, span := otelx.Span(ctx, "biz.notification.http_client.GetNotification")
+	ctx, span := otelx.Span(ctx, "biz.impl.http_client.GetNotification")
 	defer span.End()
 
 	ep, err := url.ParseRequestURI(i.url + "/api/v1/notifications/" + notificationID)
@@ -117,7 +117,7 @@ func (i *notificationHTTPClient) ListNotificationsByUser(
 	userID string,
 	options biz.ListNotificationsOptions,
 ) (items []*model.Notification, total int, err error) {
-	ctx, span := otelx.Span(ctx, "biz.notification.http_client.ListNotificationsByUser")
+	ctx, span := otelx.Span(ctx, "biz.impl.http_client.ListNotificationsByUser")
 	defer span.End()
 
 	ep, err := url.ParseRequestURI(i.url + "/api/v1/notifications")
