@@ -77,5 +77,5 @@ func initApplication(v *viper.Viper) (*configx.Application, error) {
 }
 
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz.ProviderNotificationSet, mongodbx.NewClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, biz.NewNotification, notification.NewMongodb, mongodbx.NewClient,
 )

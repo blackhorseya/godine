@@ -12,6 +12,8 @@ go_library(
     deps = [
         "//adapter/platform/grpc/web/templates",
         "//adapter/platform/wirex",
+        "//app/domain/notification/biz",
+        "//app/domain/notification/repo/notification",
         "//app/domain/payment/biz",
         "//app/domain/payment/repo/payment",
         "//app/domain/restaurant/biz",
@@ -24,6 +26,7 @@ go_library(
         "//app/infra/storage/redix",
         "//app/infra/transports/grpcx",
         "//app/infra/transports/httpx",
+        "//entity/domain/notification/biz",
         "//entity/domain/payment/biz",
         "//entity/domain/restaurant/biz",
         "//entity/domain/user/biz",

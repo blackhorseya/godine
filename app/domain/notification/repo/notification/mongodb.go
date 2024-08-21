@@ -20,6 +20,7 @@ import (
 
 const (
 	defaultTimeout = 5 * time.Second
+	defaultLimit   = 100
 	dbName         = "godine"
 	collName       = "notifications"
 )
@@ -102,13 +103,13 @@ func (i *mongodb) List(
 		filter["user_id"] = cond.UserID
 	}
 
-	opts := options.Find()
-	if cond.Limit > 0 {
-		opts.SetLimit(int64(cond.Limit))
+	if cond.Limit <= 0 || cond.Limit > defaultLimit {
+		cond.Limit = defaultLimit
 	}
-	if cond.Offset > 0 {
-		opts.SetSkip(int64(cond.Offset))
+	if cond.Offset < 0 {
+		cond.Offset = 0
 	}
+	opts := options.Find().SetLimit(cond.Limit).SetSkip(cond.Offset).SetSort(bson.M{"created_at": -1})
 
 	cursor, err := i.rw.Database(dbName).Collection(collName).Find(timeout, filter, opts)
 	if err != nil {

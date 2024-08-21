@@ -114,7 +114,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	err = i.notifyService.CreateNotification(ctx, notifyM.NewNotify(
+	err = i.notifyService.CreateNotification(ctx, notifyM.NewNotification(
 		user.Id,
 		user.Id,
 		strconv.FormatInt(order.Id, 10),
@@ -203,7 +203,7 @@ func (i *orderBiz) UpdateOrderStatus(ctx contextx.Contextx, id string, status st
 
 	ctx.Debug("order executed event", zap.Any("event", &event))
 
-	notify := notifyM.NewNotify(
+	notify := notifyM.NewNotification(
 		order.UserId,
 		order.UserId,
 		strconv.FormatInt(order.Id, 10),
