@@ -13,6 +13,8 @@ import (
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
@@ -74,7 +76,9 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		authx.New,
 
 		biz.NewAccountService,
-		biz2.NewRestaurantService,
-		biz2.NewMenuService,
+		biz2.ProviderRestaurantBizSet,
+
+		mongodbx.NewClient,
+		redix.NewClient,
 	))
 }

@@ -9,8 +9,8 @@ import (
 	"github.com/testcontainers/testcontainers-go/modules/redis"
 )
 
-// NewRedis is a function to create a new redis client
-func NewRedis(app *configx.Application) (*redisstd.Client, error) {
+// NewClient is a function to create a new redis client
+func NewClient(app *configx.Application) (*redisstd.Client, error) {
 	return redisstd.NewClient(&redisstd.Options{
 		Addr:     app.Storage.Redis.Addr,
 		Password: "",

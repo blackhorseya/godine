@@ -5,19 +5,23 @@ import (
 
 	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	restM "github.com/blackhorseya/godine/entity/domain/restaurant/model"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 )
 
 type restaurantService struct {
+	restaurants repo.IRestaurantRepo
 }
 
 // NewRestaurantService will create a new restaurant service.
-func NewRestaurantService() restB.RestaurantServiceServer {
-	return &restaurantService{}
+func NewRestaurantService(restaurants repo.IRestaurantRepo) restB.RestaurantServiceServer {
+	return &restaurantService{
+		restaurants: restaurants,
+	}
 }
 
 func (i *restaurantService) CreateRestaurant(
-	ctx context.Context,
-	request *restB.CreateRestaurantRequest,
+	c context.Context,
+	req *restB.CreateRestaurantRequest,
 ) (*restM.Restaurant, error) {
 	// TODO: 2024/8/21|sean|implement me
 	panic("implement me")
