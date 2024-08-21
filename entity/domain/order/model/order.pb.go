@@ -322,8 +322,8 @@ type Order struct {
 	// @gotags: gorm:"column:delivery_id"
 	DeliveryId string `protobuf:"bytes,4,opt,name=delivery_id,json=deliveryId,proto3" json:"delivery_id,omitempty" gorm:"column:delivery_id"`
 	// Items is the items in the order.
-	// @gotags: gorm:"foreignKey:OrderID;references:ID"`
-	Items []*OrderItem `protobuf:"bytes,5,rep,name=items,proto3" json:"items,omitempty" gorm:"foreignKey:OrderID;references:ID"`
+	// @gotags: gorm:"foreignKey:order_id;references:id"`
+	Items []*OrderItem `protobuf:"bytes,5,rep,name=items,proto3" json:"items,omitempty" gorm:"foreignKey:order_id;references:id"`
 	// Status is the status of the order.
 	// @gotags: gorm:"column:status;not null;default:1"`
 	Status OrderStatus `protobuf:"varint,6,opt,name=status,proto3,enum=order.OrderStatus" json:"status,omitempty" gorm:"column:status;not null;default:1"`

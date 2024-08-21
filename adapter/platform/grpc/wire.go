@@ -9,17 +9,21 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	notifyBI "github.com/blackhorseya/godine/app/domain/notification/biz"
+	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
 	payBI "github.com/blackhorseya/godine/app/domain/payment/biz"
 	restBI "github.com/blackhorseya/godine/app/domain/restaurant/biz"
 	userBI "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/snowflakex"
+	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
+	orderB "github.com/blackhorseya/godine/entity/domain/order/biz"
 	payB "github.com/blackhorseya/godine/entity/domain/payment/biz"
 	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
@@ -42,6 +46,7 @@ func NewInitServersFn(
 	menuServer restB.MenuServiceServer,
 	paymentServer payB.PaymentServiceServer,
 	notifyServer notifyB.NotificationServiceServer,
+	orderServer orderB.OrderServiceServer,
 ) grpcx.InitServers {
 	return func(s *grpc.Server) {
 		healthServer := health.NewServer()
@@ -53,6 +58,7 @@ func NewInitServersFn(
 		restB.RegisterMenuServiceServer(s, menuServer)
 		payB.RegisterPaymentServiceServer(s, paymentServer)
 		notifyB.RegisterNotificationServiceServer(s, notifyServer)
+		orderB.RegisterOrderServiceServer(s, orderServer)
 
 		reflection.Register(s)
 	}
@@ -87,7 +93,10 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		restBI.ProviderRestaurantBizSet,
 		payBI.ProviderPaymentBizSet,
 		notifyBI.ProviderNotificationBizSet,
+		orderBI.ProviderOrderBizSet,
 
+		snowflakex.NewNode,
+		mariadbx.NewClient,
 		mongodbx.NewClient,
 		redix.NewClient,
 	))
