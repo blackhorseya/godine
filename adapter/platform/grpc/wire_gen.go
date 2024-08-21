@@ -49,7 +49,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	}
 	accountServiceServer := biz.NewAccountService()
 	restaurantServiceServer := biz2.NewRestaurantService()
-	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer)
+	menuServiceServer := biz2.NewMenuService()
+	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer)
 	server, err := grpcx.NewServer(application, initServers)
 	if err != nil {
 		return nil, err
@@ -70,6 +71,7 @@ const serverName = "platform"
 func NewInitServersFn(
 	accountServer biz3.AccountServiceServer,
 	restaurantServer biz4.RestaurantServiceServer,
+	menuServer biz4.MenuServiceServer,
 ) grpcx.InitServers {
 	return func(s *grpc.Server) {
 		healthServer := health.NewServer()
@@ -77,6 +79,7 @@ func NewInitServersFn(
 		healthServer.SetServingStatus(serverName, grpc_health_v1.HealthCheckResponse_SERVING)
 		biz3.RegisterAccountServiceServer(s, accountServer)
 		biz4.RegisterRestaurantServiceServer(s, restaurantServer)
+		biz4.RegisterMenuServiceServer(s, menuServer)
 		reflection.Register(s)
 	}
 }
