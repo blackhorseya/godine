@@ -26,8 +26,8 @@ type gormDB struct {
 	node *snowflake.Node
 }
 
-// NewMariadb create and return a new gormDB
-func NewMariadb(rw *gorm.DB, node *snowflake.Node) (repo.IOrderRepo, error) {
+// NewGORM create and return a new gormDB
+func NewGORM(rw *gorm.DB, node *snowflake.Node) (repo.IOrderRepo, error) {
 	err := rw.AutoMigrate(&model.Order{}, &model.OrderItem{})
 	if err != nil {
 		return nil, fmt.Errorf("migrate order and order item failed: %w", err)

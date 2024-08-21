@@ -40,7 +40,7 @@ func (s *mariadbExternalTester) SetupTest() {
 	node, err := snowflakex.NewNode()
 	s.Require().NoError(err)
 
-	orderRepo, err := NewMariadb(s.rw, node)
+	orderRepo, err := NewGORM(s.rw, node)
 	s.Require().NoError(err)
 	s.repo = orderRepo
 }
