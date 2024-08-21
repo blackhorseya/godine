@@ -89,7 +89,31 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	orderServiceServer := biz5.NewOrderService(iOrderRepo)
+	grpcxClient, err := grpcx.NewClient(configuration)
+	if err != nil {
+		return nil, err
+	}
+	restaurantServiceClient, err := biz2.NewRestaurantServiceClient(grpcxClient)
+	if err != nil {
+		return nil, err
+	}
+	menuServiceClient, err := biz2.NewMenuServiceClient(grpcxClient)
+	if err != nil {
+		return nil, err
+	}
+	accountServiceClient, err := biz.NewAccountServiceClient(grpcxClient)
+	if err != nil {
+		return nil, err
+	}
+	notificationServiceClient, err := biz4.NewNotificationServiceClient(grpcxClient)
+	if err != nil {
+		return nil, err
+	}
+	paymentServiceClient, err := biz3.NewPaymentServiceClient(grpcxClient)
+	if err != nil {
+		return nil, err
+	}
+	orderServiceServer := biz5.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient)
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {

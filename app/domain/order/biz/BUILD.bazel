@@ -21,11 +21,13 @@ go_library(
         "//entity/domain/order/biz",
         "//entity/domain/order/model",
         "//entity/domain/order/repo",
+        "//entity/domain/payment/biz",
         "//entity/domain/restaurant/biz",
         "//entity/domain/user/biz",
         "//pkg/contextx",
         "//pkg/errorx",
         "@com_github_google_wire//:wire",
+        "@org_golang_google_grpc//metadata",
         "@org_uber_go_zap//:zap",
     ],
 )

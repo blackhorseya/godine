@@ -88,11 +88,17 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		configx.NewConfiguration,
 		NewInitServersFn,
 		authx.New,
+		grpcx.NewClient,
 
 		userBI.NewAccountService,
+		userBI.NewAccountServiceClient,
 		restBI.ProviderRestaurantBizSet,
+		restBI.NewRestaurantServiceClient,
+		restBI.NewMenuServiceClient,
 		payBI.ProviderPaymentBizSet,
+		payBI.NewPaymentServiceClient,
 		notifyBI.ProviderNotificationBizSet,
+		notifyBI.NewNotificationServiceClient,
 		orderBI.ProviderOrderBizSet,
 
 		snowflakex.NewNode,
