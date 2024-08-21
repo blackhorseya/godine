@@ -55,6 +55,19 @@ func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePayment
 }
 
 func (i *paymentService) GetPayment(c context.Context, req *biz.GetPaymentRequest) (*model.Payment, error) {
-	// TODO: 2024/8/21|sean|implement me
-	panic("implement me")
+	ctx, err := contextx.FromContext(c)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get contextx: %w", err)
+	}
+
+	ctx, span := otelx.Span(ctx, "payment.biz.GetPayment")
+	defer span.End()
+
+	payment, err := i.payments.GetByID(ctx, req.PaymentId)
+	if err != nil {
+		ctx.Error("failed to get payment", zap.Error(err))
+		return nil, err
+	}
+
+	return payment, nil
 }
