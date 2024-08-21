@@ -87,7 +87,7 @@ func New(options Options) (*Authx, error) {
 				contextx.Background().Error("error validating token", zap.Error(err))
 			}),
 		),
-		SkipPaths: []string{},
+		SkipPaths: []string{"/grpc.health.v1.Health", "/grpc.reflection.v1alpha.ServerReflection"},
 	}, nil
 }
 
