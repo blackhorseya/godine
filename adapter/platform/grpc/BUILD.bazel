@@ -15,6 +15,7 @@ go_library(
         "//app/domain/notification/biz",
         "//app/domain/notification/repo/notification",
         "//app/domain/payment/biz",
+        "//app/domain/payment/repo/payment",
         "//app/domain/restaurant/biz",
         "//app/domain/restaurant/repo/restaurant",
         "//app/domain/user/biz",

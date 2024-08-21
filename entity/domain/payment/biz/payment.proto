@@ -6,9 +6,8 @@ option go_package = "github.com/blackhorseya/godine/entity/domain/payment/biz";
 import "entity/domain/payment/model/payment.proto";
 
 message CreatePaymentRequest {
-  string user_id = 1;
-  string order_id = 2;
-  double amount = 3;
+  string order_id = 1;
+  PaymentAmount amount = 2;
 }
 
 message GetPaymentRequest {

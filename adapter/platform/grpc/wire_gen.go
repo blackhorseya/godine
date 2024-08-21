@@ -12,6 +12,7 @@ import (
 	biz4 "github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/domain/notification/repo/notification"
 	biz3 "github.com/blackhorseya/godine/app/domain/payment/biz"
+	"github.com/blackhorseya/godine/app/domain/payment/repo/payment"
 	biz2 "github.com/blackhorseya/godine/app/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
@@ -67,7 +68,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	iRestaurantRepo := restaurant.NewMongodb(client, redisClient)
 	restaurantServiceServer := biz2.NewRestaurantService(iRestaurantRepo)
 	menuServiceServer := biz2.NewMenuService(iRestaurantRepo)
-	paymentServiceServer := biz3.NewPaymentService()
+	iPaymentRepo := payment.NewMongodb(client)
+	paymentServiceServer := biz3.NewPaymentService(iPaymentRepo)
 	iNotificationRepo := notification.NewMongodb(client)
 	notificationServiceServer := biz4.NewNotificationService(iNotificationRepo)
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer)
