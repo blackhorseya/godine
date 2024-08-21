@@ -4,6 +4,8 @@ go_library(
     name = "biz",
     srcs = [
         "menu.go",
+        "menu_grpc_client.go",
+        "menu_grpc_server.go",
         "menu_http_client.go",
         "restaurant.go",
         "restaurant_grpc_client.go",
