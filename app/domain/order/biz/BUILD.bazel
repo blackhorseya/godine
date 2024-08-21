@@ -21,6 +21,7 @@ go_library(
         "//entity/domain/order/biz",
         "//entity/domain/order/model",
         "//entity/domain/order/repo",
+        "//entity/domain/payment/biz",
         "//entity/domain/restaurant/biz",
         "//entity/domain/user/biz",
         "//pkg/contextx",

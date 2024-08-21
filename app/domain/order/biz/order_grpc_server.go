@@ -5,9 +5,13 @@ import (
 	"fmt"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	"github.com/blackhorseya/godine/entity/domain/order/biz"
 	"github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
+	payB "github.com/blackhorseya/godine/entity/domain/payment/biz"
+	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
@@ -15,12 +19,31 @@ import (
 
 type orderService struct {
 	orders repo.IOrderRepo
+
+	// clients
+	restaurantClient restB.RestaurantServiceClient
+	menuClient       restB.MenuServiceClient
+	accountClient    userB.AccountServiceClient
+	notifyClient     notifyB.NotificationServiceClient
+	paymentClient    payB.PaymentServiceClient
 }
 
 // NewOrderService returns the order service instance.
-func NewOrderService(orders repo.IOrderRepo) biz.OrderServiceServer {
+func NewOrderService(
+	orders repo.IOrderRepo,
+	restaurantClient restB.RestaurantServiceClient,
+	menuClient restB.MenuServiceClient,
+	accountClient userB.AccountServiceClient,
+	notifyClient notifyB.NotificationServiceClient,
+	paymentClient payB.PaymentServiceClient,
+) biz.OrderServiceServer {
 	return &orderService{
-		orders: orders,
+		orders:           orders,
+		restaurantClient: restaurantClient,
+		menuClient:       menuClient,
+		accountClient:    accountClient,
+		notifyClient:     notifyClient,
+		paymentClient:    paymentClient,
 	}
 }
 
