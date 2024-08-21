@@ -8,11 +8,9 @@ import (
 // NewRestaurant creates a new RestaurantAggregate.
 func NewRestaurant(name string, address *Address) *Restaurant {
 	return &Restaurant{
-		Id:      "",
 		Name:    name,
 		Address: address,
-		Menu:    []*MenuItem{},
-		IsOpen:  false,
+		IsOpen:  true,
 	}
 }
 
