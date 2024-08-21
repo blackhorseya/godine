@@ -45,8 +45,8 @@ func (i *impl) ListNotificationsByUser(
 	defer span.End()
 
 	return i.notifications.List(ctx, repo.ListCondition{
-		Limit:  options.Size,
-		Offset: (options.Page - 1) * options.Size,
+		Limit:  int64(options.Size),
+		Offset: int64((options.Page - 1) * options.Size),
 		UserID: userID,
 	})
 }

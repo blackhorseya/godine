@@ -24,6 +24,7 @@ go_library(
         "//pkg/responsex",
         "@com_github_google_wire//:wire",
         "@io_opentelemetry_go_contrib_instrumentation_net_http_otelhttp//:otelhttp",
+        "@org_golang_google_grpc//metadata",
         "@org_uber_go_zap//:zap",
     ],
 )
