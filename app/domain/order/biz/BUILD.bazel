@@ -2,11 +2,18 @@ load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "biz",
-    srcs = ["order.go"],
+    srcs = [
+        "order.go",
+        "order_grpc_client.go",
+        "order_grpc_server.go",
+        "wire.go",
+    ],
     importpath = "github.com/blackhorseya/godine/app/domain/order/biz",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/domain/order/repo/order",
         "//app/infra/otelx",
+        "//app/infra/transports/grpcx",
         "//entity/domain/logistics/biz",
         "//entity/domain/logistics/model",
         "//entity/domain/notification/biz",
@@ -18,6 +25,7 @@ go_library(
         "//entity/domain/user/biz",
         "//pkg/contextx",
         "//pkg/errorx",
+        "@com_github_google_wire//:wire",
         "@org_uber_go_zap//:zap",
     ],
 )

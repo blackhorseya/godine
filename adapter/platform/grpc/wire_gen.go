@@ -11,6 +11,8 @@ import (
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	biz4 "github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/domain/notification/repo/notification"
+	biz5 "github.com/blackhorseya/godine/app/domain/order/biz"
+	"github.com/blackhorseya/godine/app/domain/order/repo/order"
 	biz3 "github.com/blackhorseya/godine/app/domain/payment/biz"
 	"github.com/blackhorseya/godine/app/domain/payment/repo/payment"
 	biz2 "github.com/blackhorseya/godine/app/domain/restaurant/biz"
@@ -19,14 +21,17 @@ import (
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	"github.com/blackhorseya/godine/app/infra/snowflakex"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
-	biz8 "github.com/blackhorseya/godine/entity/domain/notification/biz"
-	biz7 "github.com/blackhorseya/godine/entity/domain/payment/biz"
-	biz6 "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
-	biz5 "github.com/blackhorseya/godine/entity/domain/user/biz"
+	biz9 "github.com/blackhorseya/godine/entity/domain/notification/biz"
+	biz10 "github.com/blackhorseya/godine/entity/domain/order/biz"
+	biz8 "github.com/blackhorseya/godine/entity/domain/payment/biz"
+	biz7 "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	biz6 "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/spf13/viper"
@@ -72,7 +77,20 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	paymentServiceServer := biz3.NewPaymentService(iPaymentRepo)
 	iNotificationRepo := notification.NewMongodb(client)
 	notificationServiceServer := biz4.NewNotificationService(iNotificationRepo)
-	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer)
+	db, err := postgresqlx.NewClient(application)
+	if err != nil {
+		return nil, err
+	}
+	node, err := snowflakex.NewNode()
+	if err != nil {
+		return nil, err
+	}
+	iOrderRepo, err := order.NewGORM(db, node)
+	if err != nil {
+		return nil, err
+	}
+	orderServiceServer := biz5.NewOrderService(iOrderRepo)
+	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {
 		return nil, err
@@ -91,21 +109,23 @@ const serverName = "platform"
 
 // NewInitServersFn creates and returns a new InitServers function.
 func NewInitServersFn(
-	accountServer biz5.AccountServiceServer,
-	restaurantServer biz6.RestaurantServiceServer,
-	menuServer biz6.MenuServiceServer,
-	paymentServer biz7.PaymentServiceServer,
-	notifyServer biz8.NotificationServiceServer,
+	accountServer biz6.AccountServiceServer,
+	restaurantServer biz7.RestaurantServiceServer,
+	menuServer biz7.MenuServiceServer,
+	paymentServer biz8.PaymentServiceServer,
+	notifyServer biz9.NotificationServiceServer,
+	orderServer biz10.OrderServiceServer,
 ) grpcx.InitServers {
 	return func(s *grpc.Server) {
 		healthServer := health.NewServer()
 		grpc_health_v1.RegisterHealthServer(s, healthServer)
 		healthServer.SetServingStatus(serverName, grpc_health_v1.HealthCheckResponse_SERVING)
-		biz5.RegisterAccountServiceServer(s, accountServer)
-		biz6.RegisterRestaurantServiceServer(s, restaurantServer)
-		biz6.RegisterMenuServiceServer(s, menuServer)
-		biz7.RegisterPaymentServiceServer(s, paymentServer)
-		biz8.RegisterNotificationServiceServer(s, notifyServer)
+		biz6.RegisterAccountServiceServer(s, accountServer)
+		biz7.RegisterRestaurantServiceServer(s, restaurantServer)
+		biz7.RegisterMenuServiceServer(s, menuServer)
+		biz8.RegisterPaymentServiceServer(s, paymentServer)
+		biz9.RegisterNotificationServiceServer(s, notifyServer)
+		biz10.RegisterOrderServiceServer(s, orderServer)
 		reflection.Register(s)
 	}
 }

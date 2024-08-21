@@ -55,7 +55,7 @@ var providerSet = wire.NewSet(
 	biz2.NewRestaurantHTTPClient,
 	biz2.NewMenuHTTPClient,
 	biz3.NewUserHTTPClient,
-	order.NewMariadb,
+	order.NewGORM,
 	mariadbx.NewClient,
 	snowflakex.NewNode,
 	biz4.NewLogisticsHTTPClient,

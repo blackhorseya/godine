@@ -5,6 +5,8 @@ go_library(
     srcs = [
         "mock_order_service.go",
         "order.pb.go",
+        "order_grpc.pb.go",
+        "order_grpc_mock.pb.go",
         "order_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/order/biz",
@@ -12,6 +14,10 @@ go_library(
     deps = [
         "//entity/domain/order/model",
         "//pkg/contextx",
+        "@org_golang_google_grpc//:grpc",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//metadata",
+        "@org_golang_google_grpc//status",
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_uber_go_mock//gomock",
