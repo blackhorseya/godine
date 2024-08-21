@@ -84,7 +84,7 @@ message Order {
   string delivery_id = 4;
 
   // Items is the items in the order.
-  // @gotags: gorm:"foreignKey:order_id;references:id"`
+  // @gotags: gorm:"foreignKey:order_id;references:id;constraint:OnDelete:CASCADE"`
   repeated OrderItem items = 5;
 
   // Status is the status of the order.
