@@ -5,14 +5,18 @@ import (
 
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 )
 
 type menuService struct {
+	restaurants repo.IRestaurantRepo
 }
 
 // NewMenuService is used to create a new menu service.
-func NewMenuService() biz.MenuServiceServer {
-	return &menuService{}
+func NewMenuService(restaurants repo.IRestaurantRepo) biz.MenuServiceServer {
+	return &menuService{
+		restaurants: restaurants,
+	}
 }
 
 func (i *menuService) AddMenuItem(ctx context.Context, request *biz.AddMenuItemRequest) (*model.MenuItem, error) {
