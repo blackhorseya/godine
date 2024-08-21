@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
@@ -12,6 +13,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -65,9 +67,39 @@ func (i *restaurantService) GetRestaurant(
 }
 
 func (i *restaurantService) ListRestaurants(
-	request *biz.ListRestaurantsRequest,
+	req *biz.ListRestaurantsRequest,
 	stream biz.RestaurantService_ListRestaurantsServer,
 ) error {
-	// TODO: 2024/8/21|sean|implement me
-	panic("implement me")
+	ctx, err := contextx.FromContext(stream.Context())
+	if err != nil {
+		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
+	}
+
+	ctx, span := otelx.Span(ctx, "restaurant.biz.ListRestaurants")
+	defer span.End()
+
+	items, total, err := i.restaurants.List(ctx, repo.ListCondition{
+		Limit:  req.PageSize,
+		Offset: (req.Page - 1) * req.PageSize,
+	})
+	if err != nil {
+		ctx.Error("failed to list restaurants", zap.Error(err))
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	err = stream.SetHeader(metadata.New(map[string]string{"total": strconv.Itoa(total)}))
+	if err != nil {
+		ctx.Error("failed to set header", zap.Error(err))
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	for _, item := range items {
+		err = stream.Send(item)
+		if err != nil {
+			ctx.Error("failed to send restaurant", zap.Error(err))
+			return status.Error(codes.Internal, err.Error())
+		}
+	}
+
+	return nil
 }
