@@ -38,14 +38,14 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	authx, err := initAuthx(application)
+	authxAuthx, err := authx.New(application)
 	if err != nil {
 		return nil, err
 	}
 	injector := &wirex.Injector{
 		C:     configuration,
 		A:     application,
-		Authx: authx,
+		Authx: authxAuthx,
 	}
 	accountServiceServer := biz.NewAccountService()
 	restaurantServiceServer := biz2.NewRestaurantService()
@@ -96,8 +96,4 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 	}
 
 	return app, nil
-}
-
-func initAuthx(app *configx.Application) (*authx.Authx, error) {
-	return authx.New(app.Auth0)
 }

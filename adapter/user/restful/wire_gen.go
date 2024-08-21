@@ -38,7 +38,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	authx, err := initAuthx(application)
+	authxAuthx, err := authx.New(application)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	injector := &wirex.Injector{
 		C:           configuration,
 		A:           application,
-		Authx:       authx,
+		Authx:       authxAuthx,
 		Authz:       authzAuthz,
 		UserService: iUserBiz,
 	}
@@ -88,10 +88,6 @@ func initApplication(v *viper.Viper) (*configx.Application, error) {
 	return app, nil
 }
 
-func initAuthx(app *configx.Application) (*authx.Authx, error) {
-	return authx.New(app.Auth0)
-}
-
 var providerSet = wire.NewSet(
-	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, initAuthx, authz.New, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
+	newRestful, wire.Struct(new(wirex.Injector), "*"), configx.NewConfiguration, initApplication, httpx.NewServer, authx.New, authz.New, biz.NewUserBiz, user.NewMongodb, mongodbx.NewClient,
 )

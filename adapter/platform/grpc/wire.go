@@ -62,10 +62,6 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 	return app, nil
 }
 
-func initAuthx(app *configx.Application) (*authx.Authx, error) {
-	return authx.New(app.Auth0)
-}
-
 func New(v *viper.Viper) (adapterx.Restful, error) {
 	panic(wire.Build(
 		NewServer,
@@ -75,7 +71,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		initApplication,
 		configx.NewConfiguration,
 		NewInitServersFn,
-		initAuthx,
+		authx.New,
 
 		biz.NewAccountService,
 		biz2.NewRestaurantService,
