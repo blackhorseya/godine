@@ -34,7 +34,7 @@ func (i *impl) CreatePayment(
 	ctx, span := otelx.Span(ctx, "biz.payment.CreatePayment")
 	defer span.End()
 
-	payment := model.NewPayment(orderID, amount)
+	payment := model.NewPaymentLegacy(orderID, amount)
 	err = i.payments.Create(ctx, payment)
 	if err != nil {
 		return nil, err

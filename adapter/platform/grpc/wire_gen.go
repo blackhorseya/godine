@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	biz3 "github.com/blackhorseya/godine/app/domain/payment/biz"
+	"github.com/blackhorseya/godine/app/domain/payment/repo/payment"
 	biz2 "github.com/blackhorseya/godine/app/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
@@ -64,7 +65,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	iRestaurantRepo := restaurant.NewMongodb(client, redisClient)
 	restaurantServiceServer := biz2.NewRestaurantService(iRestaurantRepo)
 	menuServiceServer := biz2.NewMenuService(iRestaurantRepo)
-	paymentServiceServer := biz3.NewPaymentService()
+	iPaymentRepo := payment.NewMongodb(client)
+	paymentServiceServer := biz3.NewPaymentService(iPaymentRepo)
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {

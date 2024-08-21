@@ -15,6 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
@@ -103,6 +104,8 @@ func (i *mongodb) Create(ctx contextx.Contextx, item *model.Payment) (err error)
 	if item.Id == "" {
 		item.Id = primitive.NewObjectID().Hex()
 	}
+	item.CreatedAt = timestamppb.Now()
+	item.UpdatedAt = timestamppb.Now()
 
 	_, err = i.rw.Database(dbName).Collection(collName).InsertOne(timeout, item)
 	if err != nil {
@@ -119,6 +122,8 @@ func (i *mongodb) Update(ctx contextx.Contextx, item *model.Payment) (err error)
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
+
+	item.UpdatedAt = timestamppb.Now()
 
 	filter := bson.M{"_id": item.Id}
 	update := bson.M{"$set": item}
