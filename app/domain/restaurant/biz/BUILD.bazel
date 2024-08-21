@@ -4,6 +4,8 @@ go_library(
     name = "biz",
     srcs = [
         "menu.go",
+        "menu_grpc_client.go",
+        "menu_grpc_server.go",
         "menu_http_client.go",
         "restaurant.go",
         "restaurant_http_client.go",
@@ -14,6 +16,7 @@ go_library(
         "//adapter/restaurant/restful/v1/restaurants",
         "//app/infra/configx",
         "//app/infra/otelx",
+        "//app/infra/transports/grpcx",
         "//entity/domain/restaurant/biz",
         "//entity/domain/restaurant/model",
         "//entity/domain/restaurant/repo",
