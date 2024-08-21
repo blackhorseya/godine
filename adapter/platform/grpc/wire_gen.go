@@ -9,13 +9,15 @@ package grpc
 import (
 	"fmt"
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
+	biz2 "github.com/blackhorseya/godine/app/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
-	biz2 "github.com/blackhorseya/godine/entity/domain/user/biz"
+	biz4 "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	biz3 "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/spf13/viper"
@@ -46,7 +48,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		Authx: authx,
 	}
 	accountServiceServer := biz.NewAccountService()
-	initServers := NewInitServersFn(accountServiceServer)
+	restaurantServiceServer := biz2.NewRestaurantService()
+	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer)
 	server, err := grpcx.NewServer(application, initServers)
 	if err != nil {
 		return nil, err
@@ -65,13 +68,15 @@ const serverName = "platform"
 
 // NewInitServersFn creates and returns a new InitServers function.
 func NewInitServersFn(
-	accountServer biz2.AccountServiceServer,
+	accountServer biz3.AccountServiceServer,
+	restaurantServer biz4.RestaurantServiceServer,
 ) grpcx.InitServers {
 	return func(s *grpc.Server) {
 		healthServer := health.NewServer()
 		grpc_health_v1.RegisterHealthServer(s, healthServer)
 		healthServer.SetServingStatus(serverName, grpc_health_v1.HealthCheckResponse_SERVING)
-		biz2.RegisterAccountServiceServer(s, accountServer)
+		biz3.RegisterAccountServiceServer(s, accountServer)
+		biz4.RegisterRestaurantServiceServer(s, restaurantServer)
 		reflection.Register(s)
 	}
 }

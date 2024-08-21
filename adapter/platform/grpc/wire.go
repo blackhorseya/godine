@@ -8,12 +8,14 @@ import (
 	"fmt"
 
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
+	biz2 "github.com/blackhorseya/godine/app/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
+	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -30,6 +32,7 @@ const serverName = "platform"
 // NewInitServersFn creates and returns a new InitServers function.
 func NewInitServersFn(
 	accountServer userB.AccountServiceServer,
+	restaurantServer restB.RestaurantServiceServer,
 ) grpcx.InitServers {
 	return func(s *grpc.Server) {
 		healthServer := health.NewServer()
@@ -37,6 +40,7 @@ func NewInitServersFn(
 		healthServer.SetServingStatus(serverName, grpc_health_v1.HealthCheckResponse_SERVING)
 
 		userB.RegisterAccountServiceServer(s, accountServer)
+		restB.RegisterRestaurantServiceServer(s, restaurantServer)
 
 		reflection.Register(s)
 	}
@@ -72,5 +76,6 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		initAuthx,
 
 		biz.NewAccountService,
+		biz2.NewRestaurantService,
 	))
 }

@@ -15,6 +15,7 @@ go_library(
         "//app/infra/authz",
         "//app/infra/configx",
         "//app/infra/otelx",
+        "//app/infra/transports/grpcx",
         "//entity/domain/user/biz",
         "//entity/domain/user/model",
         "//entity/domain/user/repo",
