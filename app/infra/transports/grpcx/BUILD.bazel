@@ -9,6 +9,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/infra/transports/grpcx",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/authx",
         "//app/infra/configx",
         "//pkg/contextx",
         "@com_github_grpc_ecosystem_go_grpc_middleware//:go-grpc-middleware",

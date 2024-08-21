@@ -99,7 +99,7 @@ func (x *Authx) VerifyIDToken(ctx contextx.Contextx, token *oauth2.Token) (*oidc
 
 // CustomClaims is the custom claims.
 type CustomClaims struct {
-	Email string `json:"email,omitempty"`
+	Roles []string `json:"https://seancheng.space/roles"`
 }
 
 func (c *CustomClaims) Validate(_ context.Context) error {
@@ -126,15 +126,9 @@ func (x *Authx) ParseJWT() gin.HandlerFunc {
 				responsex.Err(c, errorx.Wrap(http.StatusUnauthorized, 401, errors.New("claims is not valid")))
 				return
 			}
-			customClaims, ok := claims.CustomClaims.(*CustomClaims)
-			if !ok {
-				ctx.Error("custom claims is not valid")
-				return
-			}
 
 			by := &model.Account{
 				Id:       claims.RegisteredClaims.Subject,
-				Email:    customClaims.Email,
 				Password: "",
 				Address:  nil,
 				IsActive: false,
@@ -167,14 +161,10 @@ func (x *Authx) ExtractAccountFromToken(accessToken string) (*model.Account, err
 	if !ok {
 		return nil, errors.New("claims is not valid")
 	}
-	customClaims, ok := claims.CustomClaims.(*CustomClaims)
-	if !ok {
-		return nil, errors.New("custom claims is not valid")
-	}
-	_ = customClaims
 
 	return &model.Account{
-		// TODO: 2024/8/21|sean|add more fields
+		Id:          claims.RegisteredClaims.Subject,
+		AccessToken: accessToken,
 	}, nil
 }
 

@@ -51,7 +51,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	restaurantServiceServer := biz2.NewRestaurantService()
 	menuServiceServer := biz2.NewMenuService()
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer)
-	server, err := grpcx.NewServer(application, initServers)
+	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {
 		return nil, err
 	}
