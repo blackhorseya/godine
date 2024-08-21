@@ -1,3 +1,40 @@
+## 0.5.6 (2024-08-21)
+
+### Feat
+
+- refactor menu service initialization and function parameters (#121)
+- improve error handling and logging for menu retrieval
+- improve error handling and logging in GetMenuItem function
+- refactor menu handling and error logging across files
+- refactor menu service initialization and function parameters
+- standardize limit and offset handling across files
+- enhance authentication features and custom claims
+- refactor authentication middleware and methods (#119)
+- refactor authentication middleware and methods
+- integrate menu service server into wire generation (#118)
+- integrate menu service server into wire generation
+- consolidate menu gRPC client and server files into biz package
+- define menu message structures in restaurant.proto (#116)
+- define new messages and service in menu.proto
+- define menu message structures in restaurant.proto
+- refactor server initialization and dependency injection
+- integrate HTTPX transport layer into web server
+- refactor gRPC server initialization and health checking
+- update gRPC server initialization and configuration steps (#115)
+- update gRPC server initialization and configuration steps
+- refactor Configuration struct for Services feature (#112)
+- refactor Configuration struct for Services feature
+- improve logging functionality across configuration files
+- refactor platform server initialization and dependencies
+- integrate gRPC functionality into application
+
+### Refactor
+
+- refactor restaurant service for improved modularity
+- refactor user domain entities and protocols (#111)
+- refactor user domain entities and protocols
+- refactor server methods and dependencies
+
 ## 0.5.5 (2024-08-21)
 
 ### Feat
