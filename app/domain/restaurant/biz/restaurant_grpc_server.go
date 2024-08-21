@@ -58,14 +58,6 @@ func (i *restaurantService) CreateRestaurant(
 	return restaurant, nil
 }
 
-func (i *restaurantService) GetRestaurant(
-	ctx context.Context,
-	request *biz.GetRestaurantRequest,
-) (*model.Restaurant, error) {
-	// TODO: 2024/8/21|sean|implement me
-	panic("implement me")
-}
-
 func (i *restaurantService) ListRestaurants(
 	req *biz.ListRestaurantsRequest,
 	stream biz.RestaurantService_ListRestaurantsServer,

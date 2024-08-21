@@ -21,7 +21,6 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	RestaurantService_CreateRestaurant_FullMethodName = "/restaurant.RestaurantService/CreateRestaurant"
-	RestaurantService_GetRestaurant_FullMethodName    = "/restaurant.RestaurantService/GetRestaurant"
 	RestaurantService_ListRestaurants_FullMethodName  = "/restaurant.RestaurantService/ListRestaurants"
 )
 
@@ -30,7 +29,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RestaurantServiceClient interface {
 	CreateRestaurant(ctx context.Context, in *CreateRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error)
-	GetRestaurant(ctx context.Context, in *GetRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error)
 	ListRestaurants(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (RestaurantService_ListRestaurantsClient, error)
 }
 
@@ -45,15 +43,6 @@ func NewRestaurantServiceClient(cc grpc.ClientConnInterface) RestaurantServiceCl
 func (c *restaurantServiceClient) CreateRestaurant(ctx context.Context, in *CreateRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error) {
 	out := new(model.Restaurant)
 	err := c.cc.Invoke(ctx, RestaurantService_CreateRestaurant_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *restaurantServiceClient) GetRestaurant(ctx context.Context, in *GetRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error) {
-	out := new(model.Restaurant)
-	err := c.cc.Invoke(ctx, RestaurantService_GetRestaurant_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +86,6 @@ func (x *restaurantServiceListRestaurantsClient) Recv() (*model.Restaurant, erro
 // for forward compatibility
 type RestaurantServiceServer interface {
 	CreateRestaurant(context.Context, *CreateRestaurantRequest) (*model.Restaurant, error)
-	GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error)
 	ListRestaurants(*ListRestaurantsRequest, RestaurantService_ListRestaurantsServer) error
 }
 
@@ -107,9 +95,6 @@ type UnimplementedRestaurantServiceServer struct {
 
 func (UnimplementedRestaurantServiceServer) CreateRestaurant(context.Context, *CreateRestaurantRequest) (*model.Restaurant, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRestaurant not implemented")
-}
-func (UnimplementedRestaurantServiceServer) GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRestaurant not implemented")
 }
 func (UnimplementedRestaurantServiceServer) ListRestaurants(*ListRestaurantsRequest, RestaurantService_ListRestaurantsServer) error {
 	return status.Errorf(codes.Unimplemented, "method ListRestaurants not implemented")
@@ -140,24 +125,6 @@ func _RestaurantService_CreateRestaurant_Handler(srv interface{}, ctx context.Co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RestaurantServiceServer).CreateRestaurant(ctx, req.(*CreateRestaurantRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RestaurantService_GetRestaurant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRestaurantRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RestaurantServiceServer).GetRestaurant(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RestaurantService_GetRestaurant_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RestaurantServiceServer).GetRestaurant(ctx, req.(*GetRestaurantRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -193,10 +160,6 @@ var RestaurantService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateRestaurant",
 			Handler:    _RestaurantService_CreateRestaurant_Handler,
-		},
-		{
-			MethodName: "GetRestaurant",
-			Handler:    _RestaurantService_GetRestaurant_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
