@@ -85,6 +85,26 @@ func (i *menuService) GetMenuItem(c context.Context, req *biz.GetMenuItemRequest
 }
 
 func (i *menuService) ListMenuItems(req *biz.ListMenuItemsRequest, stream biz.MenuService_ListMenuItemsServer) error {
-	// TODO: 2024/8/21|sean|implement me
-	panic("implement me")
+	ctx, err := contextx.FromContext(stream.Context())
+	if err != nil {
+		return status.Newf(codes.Internal, "failed to get contextx: %v", err).Err()
+	}
+
+	ctx, span := otelx.Span(ctx, "menu.biz.ListMenuItems")
+	defer span.End()
+
+	restaurant, err := i.restaurants.GetByID(ctx, req.RestaurantId)
+	if err != nil {
+		ctx.Error("get restaurant by id failed", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
+		return err
+	}
+
+	for _, item := range restaurant.Menu {
+		if err = stream.Send(item); err != nil {
+			ctx.Error("send menu item failed", zap.Error(err), zap.Any("item", item))
+			return err
+		}
+	}
+
+	return nil
 }
