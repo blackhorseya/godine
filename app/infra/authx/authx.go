@@ -12,6 +12,7 @@ import (
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/jwks"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
+	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/errorx"
@@ -21,15 +22,6 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 )
-
-// Options is a struct that represents the options.
-type Options struct {
-	Domain       string   `json:"domain" yaml:"domain"`
-	ClientID     string   `json:"client_id" yaml:"clientID"`
-	ClientSecret string   `json:"client_secret" yaml:"clientSecret"`
-	CallbackURL  string   `json:"callback_url" yaml:"callbackURL"`
-	Audiences    []string `json:"audiences" yaml:"audiences"`
-}
 
 // Authx is a struct that represents the authx.
 type Authx struct {
@@ -42,8 +34,8 @@ type Authx struct {
 }
 
 // New returns a new Authx.
-func New(options Options) (*Authx, error) {
-	issuerURL, err := url.Parse("https://" + options.Domain + "/")
+func New(app *configx.Application) (*Authx, error) {
+	issuerURL, err := url.Parse("https://" + app.Auth0.Domain + "/")
 	if err != nil {
 		return nil, err
 	}
@@ -54,10 +46,10 @@ func New(options Options) (*Authx, error) {
 	}
 
 	config := oauth2.Config{
-		ClientID:     options.ClientID,
-		ClientSecret: options.ClientSecret,
+		ClientID:     app.Auth0.ClientID,
+		ClientSecret: app.Auth0.ClientSecret,
 		Endpoint:     provider.Endpoint(),
-		RedirectURL:  options.CallbackURL,
+		RedirectURL:  app.Auth0.CallbackURL,
 		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
 	}
 
@@ -67,7 +59,7 @@ func New(options Options) (*Authx, error) {
 		jwksProvider.KeyFunc,
 		validator.RS256,
 		issuerURL.String(),
-		options.Audiences,
+		app.Auth0.Audiences,
 		validator.WithCustomClaims(func() validator.CustomClaims {
 			return &CustomClaims{}
 		}),

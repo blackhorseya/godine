@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/blackhorseya/godine/pkg/netx"
 	"github.com/google/uuid"
@@ -32,7 +31,13 @@ type Application struct {
 	HTTP HTTP            `json:"http" yaml:"http"`
 	GRPC GRPC            `json:"grpc" yaml:"grpc"`
 
-	Auth0 authx.Options `json:"auth0" yaml:"auth0"`
+	Auth0 struct {
+		Domain       string   `json:"domain" yaml:"domain"`
+		ClientID     string   `json:"client_id" yaml:"clientID"`
+		ClientSecret string   `json:"client_secret" yaml:"clientSecret"`
+		CallbackURL  string   `json:"callback_url" yaml:"callbackURL"`
+		Audiences    []string `json:"audiences" yaml:"audiences"`
+	} `json:"auth0" yaml:"auth0"`
 
 	Casbin struct {
 		// Enabled is the casbin enabled

@@ -40,10 +40,6 @@ func initApplication(v *viper.Viper) (*configx.Application, error) {
 	return app, nil
 }
 
-func initAuthx(app *configx.Application) (*authx.Authx, error) {
-	return authx.New(app.Auth0)
-}
-
 var providerSet = wire.NewSet(
 	newRestful,
 
@@ -51,7 +47,7 @@ var providerSet = wire.NewSet(
 	configx.NewConfiguration,
 	initApplication,
 	httpx.NewServer,
-	initAuthx,
+	authx.New,
 	authz.New,
 
 	biz.NewUserBiz,
