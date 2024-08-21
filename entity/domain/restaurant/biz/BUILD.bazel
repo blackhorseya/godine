@@ -3,10 +3,15 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "biz",
     srcs = [
+        "menu.pb.go",
+        "menu_grpc.pb.go",
+        "menu_grpc_mock.pb.go",
         "menu_service.go",
         "mock_menu_service.go",
         "mock_restaurant_service.go",
         "restaurant.pb.go",
+        "restaurant_grpc.pb.go",
+        "restaurant_grpc_mock.pb.go",
         "restaurant_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/restaurant/biz",
@@ -14,6 +19,10 @@ go_library(
     deps = [
         "//entity/domain/restaurant/model",
         "//pkg/contextx",
+        "@org_golang_google_grpc//:grpc",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//metadata",
+        "@org_golang_google_grpc//status",
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_uber_go_mock//gomock",
