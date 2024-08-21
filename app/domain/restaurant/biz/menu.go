@@ -44,7 +44,18 @@ func (i *menuBiz) AddMenuItem(
 		return nil, errorx.New(http.StatusNotFound, 404, "restaurant not found")
 	}
 
-	restaurant.AddMenuItem(name, description, price)
+	menuItem, err := restaurant.AddMenuItem(name, description, price)
+	if err != nil {
+		ctx.Error(
+			"add menu item failed",
+			zap.Error(err),
+			zap.String("restaurant_id", restaurantID),
+			zap.String("name", name),
+			zap.String("description", description),
+			zap.Float64("price", price),
+		)
+		return nil, err
+	}
 
 	err = i.restaurants.Update(ctx, restaurant)
 	if err != nil {
@@ -56,7 +67,7 @@ func (i *menuBiz) AddMenuItem(
 		return nil, err
 	}
 
-	return restaurant.Menu[len(restaurant.Menu)-1], nil
+	return menuItem, nil
 }
 
 func (i *menuBiz) ListMenuItems(

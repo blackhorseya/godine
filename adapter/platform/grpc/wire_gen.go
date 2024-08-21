@@ -61,7 +61,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	}
 	iRestaurantRepo := restaurant.NewMongodb(client, redisClient)
 	restaurantServiceServer := biz2.NewRestaurantService(iRestaurantRepo)
-	menuServiceServer := biz2.NewMenuService()
+	menuServiceServer := biz2.NewMenuService(iRestaurantRepo)
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {
