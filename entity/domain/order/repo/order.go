@@ -20,10 +20,7 @@ type ListCondition struct {
 // IOrderRepo is an interface that defines the methods that the order repository should implement
 type IOrderRepo interface {
 	Create(ctx contextx.Contextx, order *model.Order) error
-
 	GetByID(ctx contextx.Contextx, id string) (item *model.Order, err error)
-
 	List(ctx contextx.Contextx, condition ListCondition) (items []*model.Order, total int, err error)
-
 	Update(ctx contextx.Contextx, order *model.Order) error
 }
