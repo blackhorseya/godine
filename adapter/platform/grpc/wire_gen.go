@@ -22,8 +22,8 @@ import (
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/snowflakex"
-	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
@@ -77,7 +77,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	paymentServiceServer := biz3.NewPaymentService(iPaymentRepo)
 	iNotificationRepo := notification.NewMongodb(client)
 	notificationServiceServer := biz4.NewNotificationService(iNotificationRepo)
-	db, err := mariadbx.NewClient(application)
+	db, err := postgresqlx.NewClient(application)
 	if err != nil {
 		return nil, err
 	}

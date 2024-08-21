@@ -17,8 +17,8 @@ import (
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/snowflakex"
-	"github.com/blackhorseya/godine/app/infra/storage/mariadbx"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
+	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
@@ -96,7 +96,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		orderBI.ProviderOrderBizSet,
 
 		snowflakex.NewNode,
-		mariadbx.NewClient,
+		postgresqlx.NewClient,
 		mongodbx.NewClient,
 		redix.NewClient,
 	))
