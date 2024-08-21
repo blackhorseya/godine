@@ -2,10 +2,14 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "authx",
-    srcs = ["authx.go"],
+    srcs = [
+        "authx.go",
+        "grpc_server_middleware.go",
+    ],
     importpath = "github.com/blackhorseya/godine/app/infra/authx",
     visibility = ["//visibility:public"],
     deps = [
+        "//app/infra/otelx",
         "//entity/domain/user/model",
         "//pkg/contextx",
         "//pkg/errorx",
@@ -15,6 +19,11 @@ go_library(
         "@com_github_auth0_go_jwt_middleware_v2//validator",
         "@com_github_coreos_go_oidc_v3//oidc",
         "@com_github_gin_gonic_gin//:gin",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//:go-grpc-middleware",
+        "@org_golang_google_grpc//:grpc",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//metadata",
+        "@org_golang_google_grpc//status",
         "@org_golang_x_oauth2//:oauth2",
         "@org_uber_go_zap//:zap",
     ],

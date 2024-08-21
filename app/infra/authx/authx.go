@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
@@ -91,17 +92,17 @@ func New(options Options) (*Authx, error) {
 }
 
 // VerifyIDToken is a method to verify the id token.
-func (a *Authx) VerifyIDToken(ctx contextx.Contextx, token *oauth2.Token) (*oidc.IDToken, error) {
+func (x *Authx) VerifyIDToken(ctx contextx.Contextx, token *oauth2.Token) (*oidc.IDToken, error) {
 	rawIDToken, ok := token.Extra("id_token").(string)
 	if !ok {
 		return nil, errors.New("no id_token field in oauth2 token")
 	}
 
 	oidcConfig := &oidc.Config{
-		ClientID: a.ClientID,
+		ClientID: x.ClientID,
 	}
 
-	return a.Verifier(oidcConfig).Verify(ctx, rawIDToken)
+	return x.Verifier(oidcConfig).Verify(ctx, rawIDToken)
 }
 
 // CustomClaims is the custom claims.
@@ -114,7 +115,7 @@ func (c *CustomClaims) Validate(_ context.Context) error {
 }
 
 // ParseJWT is used to parse the jwt.
-func (a *Authx) ParseJWT() gin.HandlerFunc {
+func (x *Authx) ParseJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		encounteredError := true
 		var handler http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
@@ -153,7 +154,7 @@ func (a *Authx) ParseJWT() gin.HandlerFunc {
 			c.Next()
 		}
 
-		a.middleware.CheckJWT(handler).ServeHTTP(c.Writer, c.Request)
+		x.middleware.CheckJWT(handler).ServeHTTP(c.Writer, c.Request)
 
 		if encounteredError {
 			responsex.Err(c, errorx.Wrap(http.StatusUnauthorized, 401, errors.New("unauthorized")))
@@ -161,4 +162,37 @@ func (a *Authx) ParseJWT() gin.HandlerFunc {
 			return
 		}
 	}
+}
+
+// ExtractAccountFromToken is used to decode the access token.
+func (x *Authx) ExtractAccountFromToken(accessToken string) (*model.Account, error) {
+	validateToken, err := x.Validator.ValidateToken(context.Background(), accessToken)
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := validateToken.(*validator.ValidatedClaims)
+	if !ok {
+		return nil, errors.New("claims is not valid")
+	}
+	customClaims, ok := claims.CustomClaims.(*CustomClaims)
+	if !ok {
+		return nil, errors.New("custom claims is not valid")
+	}
+	_ = customClaims
+
+	return &model.Account{
+		// TODO: 2024/8/21|sean|add more fields
+	}, nil
+}
+
+// SkipPath is used to skip the path.
+func (x *Authx) SkipPath(path string) bool {
+	for _, p := range x.SkipPaths {
+		if strings.Contains(path, p) {
+			return true
+		}
+	}
+
+	return false
 }
