@@ -8,9 +8,7 @@ import "entity/domain/payment/model/payment.proto";
 message CreatePaymentRequest {
   string user_id = 1;
   string order_id = 2;
-  string payment_method = 3;
-  string payment_status = 4;
-  string payment_amount = 5;
+  double amount = 3;
 }
 
 message GetPaymentRequest {
