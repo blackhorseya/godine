@@ -1,6 +1,8 @@
 package model
 
 import (
+	"errors"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -51,7 +53,11 @@ func (x *Restaurant) MarshalBSON() ([]byte, error) {
 }
 
 // AddMenuItem adds a new menu item to the restaurant's menu.
-func (x *Restaurant) AddMenuItem(name, description string, price float64) {
+func (x *Restaurant) AddMenuItem(name, description string, price float64) (*MenuItem, error) {
+	if price <= 0 {
+		return nil, errors.New("price must be greater than 0")
+	}
+
 	menuItem := &MenuItem{
 		Id:          primitive.NewObjectID().Hex(),
 		Name:        name,
@@ -60,6 +66,8 @@ func (x *Restaurant) AddMenuItem(name, description string, price float64) {
 		IsAvailable: true,
 	}
 	x.Menu = append(x.Menu, menuItem)
+
+	return menuItem, nil
 }
 
 func (x *MenuItem) UnmarshalBSON(bytes []byte) error {
