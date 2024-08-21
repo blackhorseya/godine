@@ -10,6 +10,8 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type menuService struct {
@@ -53,9 +55,33 @@ func (i *menuService) AddMenuItem(c context.Context, req *biz.AddMenuItemRequest
 	return item, nil
 }
 
-func (i *menuService) GetMenuItem(ctx context.Context, request *biz.GetMenuItemRequest) (*model.MenuItem, error) {
-	// TODO: 2024/8/21|sean|implement me
-	panic("implement me")
+func (i *menuService) GetMenuItem(c context.Context, req *biz.GetMenuItemRequest) (*model.MenuItem, error) {
+	ctx, err := contextx.FromContext(c)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get contextx: %w", err)
+	}
+
+	ctx, span := otelx.Span(ctx, "menu.biz.GetMenuItem")
+	defer span.End()
+
+	restaurant, err := i.restaurants.GetByID(ctx, req.RestaurantId)
+	if err != nil {
+		ctx.Error("get restaurant by id failed", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
+		return nil, err
+	}
+
+	for _, item := range restaurant.Menu {
+		if item.Id == req.MenuItemId {
+			return item, nil
+		}
+	}
+
+	return nil, status.Errorf(
+		codes.NotFound,
+		"menu item %s in restaurant %s not found",
+		req.MenuItemId,
+		req.RestaurantId,
+	)
 }
 
 func (i *menuService) ListMenuItems(req *biz.ListMenuItemsRequest, stream biz.MenuService_ListMenuItemsServer) error {
