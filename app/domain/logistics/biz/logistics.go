@@ -71,7 +71,7 @@ func (i *logistics) UpdateDeliveryStatus(ctx contextx.Contextx, deliveryID strin
 		return err
 	}
 
-	err = i.notifyService.CreateNotification(ctx, model2.NewNotify(
+	err = i.notifyService.CreateNotification(ctx, model2.NewNotification(
 		delivery.DriverId,
 		delivery.Id,
 		delivery.OrderId,

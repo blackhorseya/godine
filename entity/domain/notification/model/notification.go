@@ -6,8 +6,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// NewNotify creates a new notification entity.
-func NewNotify(from, to string, orderID string, message string) *Notification {
+// NewNotification creates a new notification entity.
+func NewNotification(from, to string, orderID string, message string) *Notification {
 	return &Notification{
 		Id:        "",
 		SenderId:  from,

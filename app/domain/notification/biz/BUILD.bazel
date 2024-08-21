@@ -19,9 +19,11 @@ go_library(
         "//entity/domain/notification/biz",
         "//entity/domain/notification/model",
         "//entity/domain/notification/repo",
+        "//entity/domain/user/model",
         "//pkg/contextx",
         "//pkg/responsex",
         "@com_github_google_wire//:wire",
         "@io_opentelemetry_go_contrib_instrumentation_net_http_otelhttp//:otelhttp",
+        "@org_uber_go_zap//:zap",
     ],
 )

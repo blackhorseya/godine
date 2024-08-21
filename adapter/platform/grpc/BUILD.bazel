@@ -13,6 +13,7 @@ go_library(
         "//adapter/platform/grpc/web/templates",
         "//adapter/platform/wirex",
         "//app/domain/notification/biz",
+        "//app/domain/notification/repo/notification",
         "//app/domain/payment/biz",
         "//app/domain/restaurant/biz",
         "//app/domain/restaurant/repo/restaurant",
