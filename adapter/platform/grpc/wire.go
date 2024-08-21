@@ -8,8 +8,9 @@ import (
 	"fmt"
 
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
-	biz2 "github.com/blackhorseya/godine/app/domain/restaurant/biz"
-	"github.com/blackhorseya/godine/app/domain/user/biz"
+	payBI "github.com/blackhorseya/godine/app/domain/payment/biz"
+	restBI "github.com/blackhorseya/godine/app/domain/restaurant/biz"
+	userBI "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -17,6 +18,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
+	payB "github.com/blackhorseya/godine/entity/domain/payment/biz"
 	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -36,6 +38,7 @@ func NewInitServersFn(
 	accountServer userB.AccountServiceServer,
 	restaurantServer restB.RestaurantServiceServer,
 	menuServer restB.MenuServiceServer,
+	paymentServer payB.PaymentServiceServer,
 ) grpcx.InitServers {
 	return func(s *grpc.Server) {
 		healthServer := health.NewServer()
@@ -45,6 +48,7 @@ func NewInitServersFn(
 		userB.RegisterAccountServiceServer(s, accountServer)
 		restB.RegisterRestaurantServiceServer(s, restaurantServer)
 		restB.RegisterMenuServiceServer(s, menuServer)
+		payB.RegisterPaymentServiceServer(s, paymentServer)
 
 		reflection.Register(s)
 	}
@@ -75,8 +79,9 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		NewInitServersFn,
 		authx.New,
 
-		biz.NewAccountService,
-		biz2.ProviderRestaurantBizSet,
+		userBI.NewAccountService,
+		restBI.ProviderRestaurantBizSet,
+		payBI.ProviderPaymentBizSet,
 
 		mongodbx.NewClient,
 		redix.NewClient,

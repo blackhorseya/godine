@@ -7,7 +7,7 @@ import (
 
 // NewAccountServiceClient will create a new account service client.
 func NewAccountServiceClient(client *grpcx.Client) (biz.AccountServiceClient, error) {
-	conn, err := client.Dial("account")
+	conn, err := client.Dial("platform")
 	if err != nil {
 		return nil, err
 	}
