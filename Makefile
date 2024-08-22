@@ -52,10 +52,12 @@ coverage: ## generate coverage report
 .PHONY: gen-pb
 gen-pb: ## generate protobuf
 	@echo Starting generate pb
-	@protoc --proto_path=./ \
-  --go_out=paths=source_relative:./ \
-  --go-grpc_out=paths=source_relative,require_unimplemented_servers=false:./ \
-  --go-grpc-mock_out=paths=source_relative,require_unimplemented_servers=false:./ \
+	@protoc --proto_path=. --grpc-gateway_out=. \
+  --go_out=paths=source_relative:. \
+  --go-grpc_out=paths=source_relative,require_unimplemented_servers=false:. \
+  --go-grpc-mock_out=paths=source_relative,require_unimplemented_servers=false:. \
+  --grpc-gateway_opt paths=source_relative \
+  --grpc-gateway_opt generate_unbound_methods=true \
   ./entity/domain/*/*/*.proto
 	@echo Successfully generated proto
 
