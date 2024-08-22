@@ -5,14 +5,26 @@ import (
 
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	"github.com/blackhorseya/godine/entity/domain/logistics/model"
+	"github.com/blackhorseya/godine/entity/domain/logistics/repo"
+	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 )
 
 type logisticsService struct {
+	deliveries repo.IDeliveryRepo
+
+	// clients
+	notifyClient notifyB.NotificationServiceClient
 }
 
 // NewLogisticsService creates a new logistics service.
-func NewLogisticsService() biz.LogisticsServiceServer {
-	return &logisticsService{}
+func NewLogisticsService(
+	deliveries repo.IDeliveryRepo,
+	notifyClient notifyB.NotificationServiceClient,
+) biz.LogisticsServiceServer {
+	return &logisticsService{
+		deliveries:   deliveries,
+		notifyClient: notifyClient,
+	}
 }
 
 func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeliveryRequest) (*model.Delivery, error) {
