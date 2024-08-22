@@ -129,7 +129,7 @@ func (i *orderBiz) CreateOrder(
 		return nil, err
 	}
 
-	delivery := logisticsM.NewDelivery(strconv.FormatInt(order.Id, 10), user.Id)
+	delivery := logisticsM.NewDeliveryLegacy(strconv.FormatInt(order.Id, 10), user.Id)
 	err = i.logisticsService.CreateDelivery(ctx, delivery)
 	if err != nil {
 		ctx.Error(
