@@ -1,3 +1,54 @@
+## 0.5.7 (2024-08-22)
+
+### Feat
+
+- refactor order and payment domain models (#132)
+- standardize timestamp handling in gorm and protobuf files
+- refactor order and payment domain models
+- implement gRPC method for retrieving restaurant information (#130)
+- implement gRPC method for retrieving restaurant information
+- refactor user model dependencies and error handling
+- update delivery repository and integration in gRPC service (#128)
+- refactor logistics GRPC server functionality
+- implement new delivery creation functionality across files
+- update delivery repository and integration in gRPC service
+- add delivery request and service structures (#127)
+- refactor logistics module for gRPC integration
+- add delivery request and service structures
+- refactor order gRPC server imports, error handling, and response (#126)
+- refactor gRPC client initializations and imports
+- refactor order gRPC server imports, error handling, and response
+- refactor order service protobuf definitions (#125)
+- update dependencies and add TimestampSerializer functionality
+- refactor Order model and add new order item function
+- integrate gRPC client into order domain in biz package
+- enhance functionality for order requests
+- refactor order service protobuf definitions
+- introduce notification service and messages (#124)
+- improve error handling and tracing in payment function
+- refactor notification imports across multiple files
+- add notification service functionality
+- introduce notification service and messages
+- consolidate payment service definitions in protobuf files (#122)
+- refactor payment request and payment model properties
+- consolidate payment service definitions in protobuf files
+- refactor payment service methods
+
+### Refactor
+
+- update gRPC client middleware to include authx functionality (#131)
+- update gRPC client middleware to include authx functionality
+- refactor service dependencies and method parameters
+- refactor delivery creation process across files (#129)
+- refactor delivery creation process across files
+- refactor gRPC service initialization across files
+- update foreign key constraints in order model
+- refactor order package to use GORM instead of Mariadb
+- refactor payment processing logic across multiple files
+- refactor notification service for improved performance
+- refactor notification service dependencies across files
+- refactor payment proto and add user_id field
+
 ## 0.5.6 (2024-08-21)
 
 ### Feat
