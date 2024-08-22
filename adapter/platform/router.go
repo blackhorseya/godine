@@ -1,4 +1,4 @@
-package grpc
+package platform
 
 import (
 	"crypto/rand"

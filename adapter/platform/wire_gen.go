@@ -4,11 +4,10 @@
 //go:build !wireinject
 // +build !wireinject
 
-package grpc
+package platform
 
 import (
 	"fmt"
-	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	biz5 "github.com/blackhorseya/godine/app/domain/logistics/biz"
 	"github.com/blackhorseya/godine/app/domain/logistics/repo/delivery"
 	biz4 "github.com/blackhorseya/godine/app/domain/notification/biz"
@@ -59,7 +58,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	injector := &wirex.Injector{
+	injector := &Injector{
 		C:     configuration,
 		A:     application,
 		Authx: authxAuthx,
