@@ -2,12 +2,11 @@
 
 //go:generate wire
 
-package grpc
+package platform
 
 import (
 	"fmt"
 
-	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	opsBI "github.com/blackhorseya/godine/app/domain/logistics/biz"
 	notifyBI "github.com/blackhorseya/godine/app/domain/notification/biz"
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
@@ -85,7 +84,7 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 func New(v *viper.Viper) (adapterx.Restful, error) {
 	panic(wire.Build(
 		NewServer,
-		wire.Struct(new(wirex.Injector), "*"),
+		wire.Struct(new(Injector), "*"),
 		grpcx.NewServer,
 		httpx.NewServer,
 		initApplication,

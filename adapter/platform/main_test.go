@@ -1,6 +1,6 @@
 //go:build external
 
-package grpc
+package platform
 
 import (
 	"os"

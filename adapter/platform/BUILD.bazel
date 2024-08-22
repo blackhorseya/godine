@@ -1,17 +1,17 @@
 load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "grpc",
+    name = "platform",
     srcs = [
         "impl.go",
+        "injector.go",
         "router.go",
         "wire_gen.go",
     ],
-    importpath = "github.com/blackhorseya/godine/adapter/platform/grpc",
+    importpath = "github.com/blackhorseya/godine/adapter/platform",
     visibility = ["//visibility:public"],
     deps = [
-        "//adapter/platform/grpc/web/templates",
-        "//adapter/platform/wirex",
+        "//adapter/platform/web/templates",
         "//app/domain/logistics/biz",
         "//app/domain/logistics/repo/delivery",
         "//app/domain/notification/biz",

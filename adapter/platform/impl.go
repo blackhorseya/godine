@@ -1,11 +1,10 @@
-package grpc
+package platform
 
 import (
 	"encoding/gob"
 	"net/http"
 
-	"github.com/blackhorseya/godine/adapter/platform/grpc/web/templates"
-	"github.com/blackhorseya/godine/adapter/platform/wirex"
+	"github.com/blackhorseya/godine/adapter/platform/web/templates"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -17,13 +16,13 @@ import (
 )
 
 type impl struct {
-	injector   *wirex.Injector
+	injector   *Injector
 	grpcserver *grpcx.Server
 	httpserver *httpx.Server
 }
 
 // NewServer creates and returns a new grpcserver.
-func NewServer(injector *wirex.Injector, grpcserver *grpcx.Server, httpserver *httpx.Server) adapterx.Restful {
+func NewServer(injector *Injector, grpcserver *grpcx.Server, httpserver *httpx.Server) adapterx.Restful {
 	return &impl{
 		injector:   injector,
 		grpcserver: grpcserver,

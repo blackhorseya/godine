@@ -7,7 +7,7 @@ go_library(
         "home.html",
         "user.html",
     ],
-    importpath = "github.com/blackhorseya/godine/adapter/platform/grpc/web/templates",
+    importpath = "github.com/blackhorseya/godine/adapter/platform/web/templates",
     visibility = ["//visibility:public"],
     deps = ["@com_github_gin_gonic_gin//:gin"],
 )
