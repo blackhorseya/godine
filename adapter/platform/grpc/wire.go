@@ -105,6 +105,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		notifyBI.NewNotificationServiceClient,
 		orderBI.ProviderOrderBizSet,
 		opsBI.ProviderLogisticsBizSet,
+		opsBI.NewLogisticsServiceClient,
 
 		snowflakex.NewNode,
 		postgresqlx.NewClient,

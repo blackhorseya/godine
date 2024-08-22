@@ -9,10 +9,10 @@ package grpc
 import (
 	"fmt"
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
-	biz6 "github.com/blackhorseya/godine/app/domain/logistics/biz"
+	biz5 "github.com/blackhorseya/godine/app/domain/logistics/biz"
 	biz4 "github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/domain/notification/repo/notification"
-	biz5 "github.com/blackhorseya/godine/app/domain/order/biz"
+	biz6 "github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/order/repo/order"
 	biz3 "github.com/blackhorseya/godine/app/domain/payment/biz"
 	"github.com/blackhorseya/godine/app/domain/payment/repo/payment"
@@ -115,8 +115,12 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	orderServiceServer := biz5.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient)
-	logisticsServiceServer := biz6.NewLogisticsService()
+	logisticsServiceClient, err := biz5.NewLogisticsServiceClient(grpcxClient)
+	if err != nil {
+		return nil, err
+	}
+	orderServiceServer := biz6.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient, logisticsServiceClient)
+	logisticsServiceServer := biz5.NewLogisticsService()
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer, logisticsServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {

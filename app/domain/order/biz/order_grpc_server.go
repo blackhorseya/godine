@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
+	opsB "github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	"github.com/blackhorseya/godine/entity/domain/order/biz"
 	"github.com/blackhorseya/godine/entity/domain/order/model"
@@ -26,6 +27,7 @@ type orderService struct {
 	accountClient    userB.AccountServiceClient
 	notifyClient     notifyB.NotificationServiceClient
 	paymentClient    payB.PaymentServiceClient
+	logisticsClient  opsB.LogisticsServiceClient
 }
 
 // NewOrderService returns the order service instance.
@@ -36,6 +38,7 @@ func NewOrderService(
 	accountClient userB.AccountServiceClient,
 	notifyClient notifyB.NotificationServiceClient,
 	paymentClient payB.PaymentServiceClient,
+	logisticsClient opsB.LogisticsServiceClient,
 ) biz.OrderServiceServer {
 	return &orderService{
 		orders:           orders,
@@ -44,6 +47,7 @@ func NewOrderService(
 		accountClient:    accountClient,
 		notifyClient:     notifyClient,
 		paymentClient:    paymentClient,
+		logisticsClient:  logisticsClient,
 	}
 }
 
