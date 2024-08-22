@@ -9,8 +9,9 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// NewDelivery creates a new delivery entity.
-func NewDelivery(orderID string, userID string) *Delivery {
+// NewDeliveryLegacy creates a new delivery entity.
+// Deprecated: use NewDelivery instead.
+func NewDeliveryLegacy(orderID string, userID string) *Delivery {
 	return &Delivery{
 		Id:         "",
 		OrderId:    orderID,
@@ -22,6 +23,22 @@ func NewDelivery(orderID string, userID string) *Delivery {
 		CreatedAt:  timestamppb.Now(),
 		UpdatedAt:  timestamppb.Now(),
 	}
+}
+
+// NewDelivery creates a new delivery entity.
+func NewDelivery() (*Delivery, error) {
+	// TODO: 2024/8/22|sean|add more fields
+	return &Delivery{
+		Id:         "",
+		OrderId:    "",
+		UserId:     "",
+		DriverId:   "",
+		Status:     0,
+		PickupAt:   nil,
+		DeliveryAt: nil,
+		CreatedAt:  nil,
+		UpdatedAt:  nil,
+	}, nil
 }
 
 func (x *Delivery) UnmarshalBSON(bytes []byte) error {

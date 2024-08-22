@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	biz5 "github.com/blackhorseya/godine/app/domain/logistics/biz"
+	"github.com/blackhorseya/godine/app/domain/logistics/repo/delivery"
 	biz4 "github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/domain/notification/repo/notification"
 	biz6 "github.com/blackhorseya/godine/app/domain/order/biz"
@@ -120,7 +121,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		return nil, err
 	}
 	orderServiceServer := biz6.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient, logisticsServiceClient)
-	logisticsServiceServer := biz5.NewLogisticsService()
+	iDeliveryRepo := delivery.NewMongodb(client)
+	logisticsServiceServer := biz5.NewLogisticsService(iDeliveryRepo, notificationServiceClient)
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer, logisticsServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {
