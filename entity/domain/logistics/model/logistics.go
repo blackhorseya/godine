@@ -26,14 +26,26 @@ func NewDeliveryLegacy(orderID string, userID string) *Delivery {
 }
 
 // NewDelivery creates a new delivery entity.
-func NewDelivery() (*Delivery, error) {
-	// TODO: 2024/8/22|sean|add more fields
+func NewDelivery(orderID string, userID string, address *Address) (*Delivery, error) {
+	if orderID == "" {
+		return nil, errors.New("order id is required")
+	}
+
+	if userID == "" {
+		return nil, errors.New("user id is required")
+	}
+
+	if address == nil {
+		return nil, errors.New("address is required")
+	}
+
 	return &Delivery{
 		Id:         "",
-		OrderId:    "",
-		UserId:     "",
+		OrderId:    orderID,
+		UserId:     userID,
+		Address:    address,
 		DriverId:   "",
-		Status:     0,
+		Status:     DeliveryStatus_DELIVERY_STATUS_PENDING,
 		PickupAt:   nil,
 		DeliveryAt: nil,
 		CreatedAt:  nil,
