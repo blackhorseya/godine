@@ -54,6 +54,8 @@ func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeli
 		return nil, err
 	}
 
+	// TODO: 2024/8/22|sean|send notification to user
+
 	return delivery, nil
 }
 
