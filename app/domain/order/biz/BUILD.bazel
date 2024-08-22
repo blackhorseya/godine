@@ -1,4 +1,4 @@
-load("@rules_go//go:def.bzl", "go_library", "go_test")
+load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "biz",
@@ -31,23 +31,5 @@ go_library(
         "@com_github_google_wire//:wire",
         "@org_golang_google_grpc//metadata",
         "@org_uber_go_zap//:zap",
-    ],
-)
-
-go_test(
-    name = "biz_test",
-    srcs = ["order_test.go"],
-    embed = [":biz"],
-    deps = [
-        "//entity/domain/logistics/biz",
-        "//entity/domain/notification/biz",
-        "//entity/domain/order/biz",
-        "//entity/domain/order/model",
-        "//entity/domain/order/repo",
-        "//entity/domain/restaurant/biz",
-        "//entity/domain/user/biz",
-        "//pkg/contextx",
-        "@com_github_stretchr_testify//suite",
-        "@org_uber_go_mock//gomock",
     ],
 )
