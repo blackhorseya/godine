@@ -17,6 +17,7 @@ type ListUsersOptions struct {
 }
 
 // IUserBiz defines the business operations for user management.
+// Deprecated: use AccountServiceServer instead.
 type IUserBiz interface {
 	// Register registers a new user with the provided name, email, and password.
 	Register(ctx contextx.Contextx, name string) (item *model.Account, err error)

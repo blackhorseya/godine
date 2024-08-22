@@ -1,6 +1,8 @@
 package biz
 
 import (
+	"errors"
+
 	"github.com/blackhorseya/godine/app/infra/authz"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/user/biz"
@@ -16,6 +18,7 @@ type userBiz struct {
 }
 
 // NewUserBiz create and return a new user biz
+// Deprecated: use NewAccountService instead.
 func NewUserBiz(authz *authz.Authz, users repo.IUserRepo) biz.IUserBiz {
 	return &userBiz{
 		authz: authz,
@@ -43,8 +46,7 @@ func (i *userBiz) Register(ctx contextx.Contextx, name string) (item *model.Acco
 }
 
 func (i *userBiz) Login(ctx contextx.Contextx) (item *model.Account, err error) {
-	// todo: 2024/7/25|sean|implement me
-	panic("implement me")
+	return nil, errors.New("not implemented")
 }
 
 func (i *userBiz) CreateUser(

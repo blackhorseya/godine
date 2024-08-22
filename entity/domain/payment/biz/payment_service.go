@@ -17,6 +17,7 @@ type ListPaymentsOptions struct {
 }
 
 // IPaymentBiz is an interface for payment service
+// Deprecated: use PaymentServiceServer instead.
 type IPaymentBiz interface {
 	// GetPaymentByID gets payment by id
 	GetPaymentByID(ctx contextx.Contextx, id string) (item *model.Payment, err error)

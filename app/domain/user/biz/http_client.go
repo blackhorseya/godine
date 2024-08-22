@@ -35,12 +35,10 @@ func NewUserHTTPClient(config *configx.Configuration) biz.IUserBiz {
 }
 
 func (i *httpClient) Register(ctx contextx.Contextx, name string) (item *model.Account, err error) {
-	// todo: 2024/7/25|sean|implement me
 	return nil, errors.New("not implemented")
 }
 
 func (i *httpClient) Login(ctx contextx.Contextx) (item *model.Account, err error) {
-	// todo: 2024/7/25|sean|implement me
 	return nil, errors.New("not implemented")
 }
 

@@ -8,6 +8,7 @@ import (
 )
 
 // IMenuBiz defines the business operations for menu management.
+// Deprecated: use MenuServiceServer instead.
 type IMenuBiz interface {
 	// AddMenuItem adds a new menu item to a restaurant's menu.
 	AddMenuItem(

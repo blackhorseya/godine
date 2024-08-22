@@ -26,6 +26,7 @@ type ListOrdersOptions struct {
 }
 
 // IOrderBiz defines the business operations for order management.
+// Deprecated: use OrderServiceServer instead.
 type IOrderBiz interface {
 	// CreateOrder creates a new order.
 	CreateOrder(

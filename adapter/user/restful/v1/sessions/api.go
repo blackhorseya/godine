@@ -38,5 +38,4 @@ type PostPayload struct {
 // @Failure 500 {object} responsex.Response
 // @Router /v1/sessions [post]
 func (i *impl) Post(c *gin.Context) {
-	// todo: 2024/7/25|sean|implement the post session
 }

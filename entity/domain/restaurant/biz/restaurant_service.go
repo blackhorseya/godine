@@ -17,6 +17,7 @@ type ListRestaurantsOptions struct {
 }
 
 // IRestaurantBiz defines the business operations for restaurant management.
+// Deprecated: use RestaurantServiceServer instead.
 type IRestaurantBiz interface {
 	// CreateRestaurant creates a new restaurant. This method initializes a new
 	// restaurant with the provided name and address.

@@ -21,6 +21,7 @@ type ListDeliveriesOptions struct {
 // to manage deliveries and their statuses. The design allows for flexibility,
 // scalability, and maintainability of the logistics operations in the GoDine
 // system.
+// Deprecated: use LogisticsServiceServer instead.
 type ILogisticsBiz interface {
 	// CreateDelivery creates a new delivery. This method is responsible for
 	// initializing a new delivery entity with provided details such as OrderID,

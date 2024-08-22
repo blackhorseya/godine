@@ -20,6 +20,7 @@ type ListNotificationsOptions struct {
 // This interface abstracts the notification management functionality, making it
 // easier to manage notifications and their statuses. The design allows for flexibility,
 // scalability, and maintainability of the notification operations in the GoDine system.
+// Deprecated: use NotificationServiceServer instead.
 type INotificationBiz interface {
 	// CreateNotification creates a new notification. This method is responsible for
 	// initializing a new notification entity with provided details such as UserID,
