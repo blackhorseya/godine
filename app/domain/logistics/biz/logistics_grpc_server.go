@@ -41,7 +41,7 @@ func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeli
 	ctx, span := otelx.Span(ctx, "biz.logistics.CreateDelivery")
 	defer span.End()
 
-	delivery, err := model.NewDelivery()
+	delivery, err := model.NewDelivery(req.OrderId, req.UserId, req.Address)
 	if err != nil {
 		ctx.Error("failed to create new delivery", zap.Error(err))
 		return nil, err

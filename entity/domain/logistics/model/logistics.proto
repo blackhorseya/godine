@@ -1,72 +1,77 @@
 syntax = "proto3";
-package logistics;
 
-option go_package = "github.com/blackhorseya/godine/entity/domain/logistics/model";
+package logistics;
 
 import "google/protobuf/timestamp.proto";
 
+option go_package = "github.com/blackhorseya/godine/entity/domain/logistics/model";
+
 // Address is a value object that represents the address of a user.
 message Address {
-  // Street is the street address of the user.
-  // @gotags: bson:"street"
-  string street = 1;
+    // Street is the street address of the user.
+    // @gotags: bson:"street"
+    string street = 1;
 
-  // City is the city where the user is located.
-  // @gotags: bson:"city"
-  string city = 2;
+    // City is the city where the user is located.
+    // @gotags: bson:"city"
+    string city = 2;
 
-  // State is the state where the user is located.
-  // @gotags: bson:"state"
-  string state = 3;
+    // State is the state where the user is located.
+    // @gotags: bson:"state"
+    string state = 3;
 
-  // ZipCode is the postal code of the user's location.
-  // @gotags: bson:"zip_code"
-  string zip_code = 4;
+    // ZipCode is the postal code of the user's location.
+    // @gotags: bson:"zip_code"
+    string zip_code = 4;
 }
 
 // DeliveryState is an enum that represents the state of a delivery.
 enum DeliveryStatus {
-  DELIVERY_STATUS_UNSPECIFIED = 0;
-  DELIVERY_STATUS_PENDING = 1;
-  DELIVERY_STATUS_IN_TRANSIT = 2;
-  DELIVERY_STATUS_DELIVERED = 3;
+    DELIVERY_STATUS_UNSPECIFIED = 0;
+    DELIVERY_STATUS_PENDING = 1;
+    DELIVERY_STATUS_IN_TRANSIT = 2;
+    DELIVERY_STATUS_DELIVERED = 3;
 }
 
 // Delivery is an entity that represents a delivery.
 message Delivery {
-  // ID is the unique identifier of the delivery.
-  // @gotags: bson:"_id,omitempty"
-  string id = 1;
+    // ID is the unique identifier of the delivery.
+    // @gotags: bson:"_id,omitempty"
+    string id = 1;
 
-  // OrderID is the identifier of the order associated with the delivery.
-  // @gotags: bson:"order_id"
-  string order_id = 2;
+    // OrderID is the identifier of the order associated with the delivery.
+    // @gotags: bson:"order_id"
+    string order_id = 2;
 
-  // UserID is the identifier of the user who placed the order.
-  // @gotags: bson:"user_id"
-  string user_id = 3;
+    // UserID is the identifier of the user who placed the order.
+    // @gotags: bson:"user_id"
+    string user_id = 3;
 
-  // DriverID is the identifier of the driver assigned to the delivery.
-  // @gotags: bson:"driver_id"
-  string driver_id = 4;
+    // Address is the address where the delivery is to be made.
+    // @gotags: bson:"address"
+    Address address = 10;
 
-  // Status is the current status of the delivery (e.g., pending, in transit, delivered).
-  // @gotags: bson:"status"
-  DeliveryStatus status = 5;
+    // DriverID is the identifier of the driver assigned to the delivery.
+    // @gotags: bson:"driver_id"
+    string driver_id = 4;
 
-  // PickupAt is the timestamp when the delivery was picked up.
-  // @gotags: bson:"pickup_at"
-  google.protobuf.Timestamp pickup_at = 6;
+    // Status is the current status of the delivery (e.g., pending, in transit, delivered).
+    // @gotags: bson:"status"
+    DeliveryStatus status = 5;
 
-  // DeliveryAt is the timestamp when the delivery is expected to be delivered.
-  // @gotags: bson:"delivery_at"
-  google.protobuf.Timestamp delivery_at = 7;
+    // PickupAt is the timestamp when the delivery was picked up.
+    // @gotags: bson:"pickup_at"
+    google.protobuf.Timestamp pickup_at = 6;
 
-  // CreatedAt is the timestamp when the delivery was created.
-  // @gotags: bson:"created_at"
-  google.protobuf.Timestamp created_at = 8;
+    // DeliveryAt is the timestamp when the delivery is expected to be delivered.
+    // @gotags: bson:"delivery_at"
+    google.protobuf.Timestamp delivery_at = 7;
 
-  // UpdatedAt is the timestamp when the delivery was last updated.
-  // @gotags: bson:"updated_at"
-  google.protobuf.Timestamp updated_at = 9;
+    // CreatedAt is the timestamp when the delivery was created.
+    // @gotags: bson:"created_at"
+    google.protobuf.Timestamp created_at = 8;
+
+    // UpdatedAt is the timestamp when the delivery was last updated.
+    // @gotags: bson:"updated_at"
+    google.protobuf.Timestamp updated_at = 9;
 }
