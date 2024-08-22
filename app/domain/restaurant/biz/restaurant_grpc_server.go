@@ -95,3 +95,18 @@ func (i *restaurantService) ListRestaurants(
 
 	return nil
 }
+
+func (i *restaurantService) GetRestaurant(
+	c context.Context,
+	req *biz.GetRestaurantRequest,
+) (*model.Restaurant, error) {
+	ctx, err := contextx.FromContext(c)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get contextx: %w", err)
+	}
+
+	ctx, span := otelx.Span(ctx, "restaurant.biz.GetRestaurant")
+	defer span.End()
+
+	return i.restaurants.GetByID(ctx, req.RestaurantId)
+}
