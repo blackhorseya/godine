@@ -1,21 +1,27 @@
 syntax = "proto3";
-package restaurant;
 
-option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
+package restaurant;
 
 import "entity/domain/restaurant/model/restaurant.proto";
 
+option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
+
 message CreateRestaurantRequest {
-  string name = 1;
-  Address address = 2;
+    string name = 1;
+    Address address = 2;
 }
 
 message ListRestaurantsRequest {
-  int64 page = 1;
-  int64 page_size = 2;
+    int64 page = 1;
+    int64 page_size = 2;
+}
+
+message GetRestaurantRequest {
+    string restaurant_id = 1;
 }
 
 service RestaurantService {
-  rpc CreateRestaurant(CreateRestaurantRequest) returns (Restaurant) {}
-  rpc ListRestaurants(ListRestaurantsRequest) returns (stream Restaurant) {}
+    rpc CreateRestaurant (CreateRestaurantRequest) returns (Restaurant) {}
+    rpc ListRestaurants (ListRestaurantsRequest) returns (stream Restaurant) {}
+    rpc GetRestaurant (GetRestaurantRequest) returns (Restaurant) {}
 }
