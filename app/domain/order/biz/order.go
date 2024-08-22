@@ -99,7 +99,7 @@ func (i *orderBiz) CreateOrder(
 			return nil, errorx.Wrap(http.StatusConflict, 409, errors.New("menu item not available"))
 		}
 
-		item := orderM.NewOrderItem(menuItem.GetId(), menuItem.Name, menuItem.Price, int(option.Quantity))
+		item := orderM.NewOrderItem(menuItem.GetId(), menuItem.Price, int(option.Quantity))
 		items = append(items, item)
 	}
 

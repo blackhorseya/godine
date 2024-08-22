@@ -11,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/order/model"
 	"github.com/blackhorseya/godine/entity/domain/order/repo"
 	payB "github.com/blackhorseya/godine/entity/domain/payment/biz"
+	payM "github.com/blackhorseya/godine/entity/domain/payment/model"
 	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
@@ -67,12 +68,89 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 		ctx.Error("failed to get user from context", zap.Error(err))
 		return nil, err
 	}
-	_ = handler
 
 	// check restaurant is open
+	restaurant, err := i.restaurantClient.GetRestaurant(ctx, &restB.GetRestaurantRequest{RestaurantId: req.RestaurantId})
+	if err != nil {
+		ctx.Error("failed to get restaurant", zap.Error(err))
+		return nil, err
+	}
+	if !restaurant.IsOpen {
+		return nil, fmt.Errorf("restaurant %s is not open", req.RestaurantId)
+	}
 
-	// TODO: 2024/8/21|sean|implement me
-	panic("implement me")
+	// check menu is available and collect order items
+	var orderItems []*model.OrderItem
+	for _, item := range req.Items {
+		menuItem, err2 := i.menuClient.GetMenuItem(ctx, &restB.GetMenuItemRequest{
+			RestaurantId: restaurant.Id,
+			MenuItemId:   item.MenuItemId,
+		})
+		if err2 != nil {
+			ctx.Error("failed to get menu item", zap.Error(err2))
+			return nil, err2
+		}
+
+		if !menuItem.IsAvailable {
+			ctx.Error("menu item is not available", zap.Any("menu_item", menuItem))
+			return nil, fmt.Errorf("menu item %s is not available", item.MenuItemId)
+		}
+
+		orderItems = append(orderItems, model.NewOrderItem(menuItem.Id, menuItem.Price, int(item.Quantity)))
+	}
+
+	// new order with the user, order items
+	order := model.NewOrder(handler.Id, restaurant.Id, orderItems)
+
+	// store the order
+	err = i.orders.Create(ctx, order)
+	if err != nil {
+		ctx.Error("failed to create order", zap.Error(err))
+		return nil, err
+	}
+
+	payment, err := i.paymentClient.CreatePayment(ctx, &payB.CreatePaymentRequest{
+		OrderId: order.Id,
+		Amount: &payM.PaymentAmount{
+			Value:    order.TotalAmount,
+			Currency: "USD",
+		},
+	})
+	if err != nil {
+		ctx.Error("failed to create payment", zap.Error(err))
+		return nil, err
+	}
+	order.PaymentId = payment.Id
+
+	err = i.orders.Update(ctx, order)
+	if err != nil {
+		ctx.Error("failed to update order", zap.Error(err))
+		return nil, err
+	}
+
+	// book the delivery
+	delivery, err := i.logisticsClient.CreateDelivery(ctx, &opsB.CreateDeliveryRequest{
+		OrderId: order.Id,
+		UserId:  handler.Id,
+		Address: req.Address,
+		Phone:   "",
+		Note:    "",
+	})
+	if err != nil {
+		ctx.Error("failed to create delivery", zap.Error(err))
+		return nil, err
+	}
+	order.DeliveryId = delivery.Id
+
+	err = i.orders.Update(ctx, order)
+	if err != nil {
+		ctx.Error("failed to update order", zap.Error(err))
+		return nil, err
+	}
+
+	// TODO: 2024/8/22|sean|create notification
+
+	return order, nil
 }
 
 func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderService_ListOrdersServer) error {

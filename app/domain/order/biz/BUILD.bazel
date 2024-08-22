@@ -22,6 +22,7 @@ go_library(
         "//entity/domain/order/model",
         "//entity/domain/order/repo",
         "//entity/domain/payment/biz",
+        "//entity/domain/payment/model",
         "//entity/domain/restaurant/biz",
         "//entity/domain/user/biz",
         "//entity/domain/user/model",

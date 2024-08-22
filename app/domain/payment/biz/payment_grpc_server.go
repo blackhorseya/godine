@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/payment/biz"
@@ -39,7 +40,7 @@ func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePayment
 		return nil, err
 	}
 
-	payment, err := model.NewPayment(handler.Id, req.OrderId, req.Amount)
+	payment, err := model.NewPayment(handler.Id, strconv.FormatInt(req.OrderId, 10), req.Amount)
 	if err != nil {
 		ctx.Error("failed to create payment", zap.Error(err))
 		return nil, err

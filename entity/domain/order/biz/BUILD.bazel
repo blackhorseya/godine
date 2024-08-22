@@ -12,6 +12,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/entity/domain/order/biz",
     visibility = ["//visibility:public"],
     deps = [
+        "//entity/domain/logistics/model",
         "//entity/domain/order/model",
         "//pkg/contextx",
         "@org_golang_google_grpc//:grpc",
