@@ -101,10 +101,10 @@ message Order {
     OrderStatus status = 6;
 
     // CreatedAt is the time the order was created.
-    // @gotags: gorm:"serializer:timestamppb;type:time;column:created_at;autoCreateTime"`
+    // @gotags: gorm:"serializer:timestamppb;type:time;column:created_at"`
     google.protobuf.Timestamp created_at = 7;
 
     // UpdatedAt is the time the order was last updated.
-    // @gotags: gorm:"serializer:timestamppb;type:time;column:updated_at;autoUpdateTime"`
+    // @gotags: gorm:"serializer:timestamppb;type:time;column:updated_at"`
     google.protobuf.Timestamp updated_at = 8;
 }

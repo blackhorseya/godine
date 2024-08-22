@@ -334,11 +334,11 @@ type Order struct {
 	// @gotags: gorm:"column:status;not null;default:1"`
 	Status OrderStatus `protobuf:"varint,6,opt,name=status,proto3,enum=order.OrderStatus" json:"status,omitempty" gorm:"column:status;not null;default:1"`
 	// CreatedAt is the time the order was created.
-	// @gotags: gorm:"serializer:timestamppb;type:time;column:created_at;autoCreateTime"`
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" gorm:"serializer:timestamppb;type:time;column:created_at;autoCreateTime"`
+	// @gotags: gorm:"serializer:timestamppb;type:time;column:created_at"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" gorm:"serializer:timestamppb;type:time;column:created_at"`
 	// UpdatedAt is the time the order was last updated.
-	// @gotags: gorm:"serializer:timestamppb;type:time;column:updated_at;autoUpdateTime"`
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" gorm:"serializer:timestamppb;type:time;column:updated_at;autoUpdateTime"`
+	// @gotags: gorm:"serializer:timestamppb;type:time;column:updated_at"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" gorm:"serializer:timestamppb;type:time;column:updated_at"`
 }
 
 func (x *Order) Reset() {
