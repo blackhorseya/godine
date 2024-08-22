@@ -4,6 +4,7 @@ go_library(
     name = "authx",
     srcs = [
         "authx.go",
+        "grpc_client_middleware.go",
         "grpc_server_middleware.go",
     ],
     importpath = "github.com/blackhorseya/godine/app/infra/authx",

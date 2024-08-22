@@ -3,6 +3,7 @@ package grpcx
 import (
 	"fmt"
 
+	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
@@ -17,12 +18,16 @@ type Client struct {
 }
 
 // NewClient is used to create a new grpc client
-func NewClient(config *configx.Configuration) (*Client, error) {
+func NewClient(config *configx.Configuration, authx *authx.Authx) (*Client, error) {
 	options := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
-		grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient()),
-		grpc.WithStreamInterceptor(grpc_middleware.ChainStreamClient()),
+		grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(
+			authx.UnaryClientInterceptor(),
+		)),
+		grpc.WithStreamInterceptor(grpc_middleware.ChainStreamClient(
+			authx.StreamClientInterceptor(),
+		)),
 	}
 
 	return &Client{
