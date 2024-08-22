@@ -6,4 +6,4 @@ import (
 )
 
 // ProviderLogisticsSet is biz provider set.
-var ProviderLogisticsSet = wire.NewSet(NewLogistics, delivery.NewMongodb)
+var ProviderLogisticsSet = wire.NewSet(delivery.NewMongodb)

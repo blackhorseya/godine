@@ -4,6 +4,8 @@ go_library(
     name = "biz",
     srcs = [
         "logistics.pb.go",
+        "logistics_grpc.pb.go",
+        "logistics_grpc_mock.pb.go",
         "logistics_handler.go",
         "logistics_service.go",
         "mock_logistics_service.go",
@@ -13,6 +15,10 @@ go_library(
     deps = [
         "//entity/domain/logistics/model",
         "//pkg/contextx",
+        "@org_golang_google_grpc//:grpc",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//metadata",
+        "@org_golang_google_grpc//status",
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_uber_go_mock//gomock",
