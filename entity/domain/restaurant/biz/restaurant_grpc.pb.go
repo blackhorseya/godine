@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	RestaurantService_CreateRestaurant_FullMethodName = "/restaurant.RestaurantService/CreateRestaurant"
 	RestaurantService_ListRestaurants_FullMethodName  = "/restaurant.RestaurantService/ListRestaurants"
+	RestaurantService_GetRestaurant_FullMethodName    = "/restaurant.RestaurantService/GetRestaurant"
 )
 
 // RestaurantServiceClient is the client API for RestaurantService service.
@@ -30,6 +31,7 @@ const (
 type RestaurantServiceClient interface {
 	CreateRestaurant(ctx context.Context, in *CreateRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error)
 	ListRestaurants(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (RestaurantService_ListRestaurantsClient, error)
+	GetRestaurant(ctx context.Context, in *GetRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error)
 }
 
 type restaurantServiceClient struct {
@@ -81,12 +83,22 @@ func (x *restaurantServiceListRestaurantsClient) Recv() (*model.Restaurant, erro
 	return m, nil
 }
 
+func (c *restaurantServiceClient) GetRestaurant(ctx context.Context, in *GetRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error) {
+	out := new(model.Restaurant)
+	err := c.cc.Invoke(ctx, RestaurantService_GetRestaurant_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RestaurantServiceServer is the server API for RestaurantService service.
 // All implementations should embed UnimplementedRestaurantServiceServer
 // for forward compatibility
 type RestaurantServiceServer interface {
 	CreateRestaurant(context.Context, *CreateRestaurantRequest) (*model.Restaurant, error)
 	ListRestaurants(*ListRestaurantsRequest, RestaurantService_ListRestaurantsServer) error
+	GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error)
 }
 
 // UnimplementedRestaurantServiceServer should be embedded to have forward compatible implementations.
@@ -98,6 +110,9 @@ func (UnimplementedRestaurantServiceServer) CreateRestaurant(context.Context, *C
 }
 func (UnimplementedRestaurantServiceServer) ListRestaurants(*ListRestaurantsRequest, RestaurantService_ListRestaurantsServer) error {
 	return status.Errorf(codes.Unimplemented, "method ListRestaurants not implemented")
+}
+func (UnimplementedRestaurantServiceServer) GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRestaurant not implemented")
 }
 
 // UnsafeRestaurantServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -150,6 +165,24 @@ func (x *restaurantServiceListRestaurantsServer) Send(m *model.Restaurant) error
 	return x.ServerStream.SendMsg(m)
 }
 
+func _RestaurantService_GetRestaurant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRestaurantRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RestaurantServiceServer).GetRestaurant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RestaurantService_GetRestaurant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RestaurantServiceServer).GetRestaurant(ctx, req.(*GetRestaurantRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RestaurantService_ServiceDesc is the grpc.ServiceDesc for RestaurantService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -160,6 +193,10 @@ var RestaurantService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateRestaurant",
 			Handler:    _RestaurantService_CreateRestaurant_Handler,
+		},
+		{
+			MethodName: "GetRestaurant",
+			Handler:    _RestaurantService_GetRestaurant_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
