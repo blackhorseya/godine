@@ -92,7 +92,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	grpcxClient, err := grpcx.NewClient(configuration)
+	grpcxClient, err := grpcx.NewClient(configuration, authxAuthx)
 	if err != nil {
 		return nil, err
 	}
