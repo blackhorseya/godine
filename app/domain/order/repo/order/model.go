@@ -49,7 +49,7 @@ func (ts TimestampSerializer) Value(
 	)
 
 	if fieldValue == nil || reflect.ValueOf(fieldValue).IsNil() {
-		return nil, nil
+		return nil, nil //nolint:nilnil // return nil for nil value
 	}
 
 	if t, ok = fieldValue.(*timestamppb.Timestamp); !ok {
