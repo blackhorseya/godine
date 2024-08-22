@@ -13,6 +13,7 @@ import (
 	payB "github.com/blackhorseya/godine/entity/domain/payment/biz"
 	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
+	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
@@ -52,6 +53,24 @@ func NewOrderService(
 }
 
 func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderRequest) (*model.Order, error) {
+	ctx, err := contextx.FromContext(c)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get contextx: %w", err)
+	}
+
+	ctx, span := otelx.Span(ctx, "order.biz.SubmitOrder")
+	defer span.End()
+
+	// check if the user is logged in
+	handler, err := userM.FromContext(ctx)
+	if err != nil {
+		ctx.Error("failed to get user from context", zap.Error(err))
+		return nil, err
+	}
+	_ = handler
+
+	// check restaurant is open
+
 	// TODO: 2024/8/21|sean|implement me
 	panic("implement me")
 }
