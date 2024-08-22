@@ -20,34 +20,41 @@ func (ts TimestampSerializer) Scan(
 	dst reflect.Value,
 	dbValue interface{},
 ) error {
-	if dbValue == nil {
-		return nil
+	var t *timestamppb.Timestamp
+
+	if dbValue != nil {
+		switch v := dbValue.(type) {
+		case time.Time:
+			t = timestamppb.New(v)
+		default:
+			return fmt.Errorf("unsupported data type: %T", dbValue)
+		}
+
+		field.ReflectValueOf(ctx, dst).Set(reflect.ValueOf(t))
 	}
 
-	if value, ok := dbValue.(time.Time); ok {
-		timestamp := timestamppb.New(value)
-		if dst.CanSet() {
-			dst.Set(reflect.ValueOf(timestamp))
-		}
-		return nil
-	}
-	return fmt.Errorf("unsupported data type: %T", dbValue)
+	return nil
 }
 
 // Value converts google.protobuf.Timestamp to time.Time for database
 func (ts TimestampSerializer) Value(
-	ctx context.Context,
+	c context.Context,
 	field *schema.Field,
 	dst reflect.Value,
 	fieldValue interface{},
 ) (interface{}, error) {
-	switch value := fieldValue.(type) {
-	case timestamppb.Timestamp:
-		return value.AsTime(), nil
-	case *timestamppb.Timestamp:
-		if value != nil {
-			return value.AsTime(), nil
-		}
+	var (
+		t  *timestamppb.Timestamp
+		ok bool
+	)
+
+	if fieldValue == nil || reflect.ValueOf(fieldValue).IsNil() {
+		return nil, nil //nolint:nilnil // return nil for nil value
 	}
-	return nil, fmt.Errorf("invalid field value: %#v", fieldValue)
+
+	if t, ok = fieldValue.(*timestamppb.Timestamp); !ok {
+		return nil, fmt.Errorf("unsupported data type: %T", fieldValue)
+	}
+
+	return t.AsTime(), nil
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/errorx"
 	"github.com/bwmarrin/snowflake"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )
@@ -50,6 +51,8 @@ func (i *gormDB) Create(ctx contextx.Contextx, order *model.Order) (err error) {
 	if order.Id == 0 {
 		order.Id = i.node.Generate().Int64()
 	}
+	order.CreatedAt = timestamppb.Now()
+	order.UpdatedAt = timestamppb.Now()
 
 	// 创建订单
 	err = i.rw.WithContext(timeout).Create(order).Error
@@ -139,6 +142,8 @@ func (i *gormDB) Update(ctx contextx.Contextx, order *model.Order) (err error) {
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
+
+	order.UpdatedAt = timestamppb.Now()
 
 	// 更新订单
 	err = i.rw.WithContext(timeout).Save(order).Error

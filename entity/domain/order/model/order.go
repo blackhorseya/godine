@@ -18,6 +18,7 @@ func NewOrder(userID, restaurantID string, items []*OrderItem) *Order {
 		UserId:       userID,
 		RestaurantId: restaurantID,
 		Items:        items,
+		TotalAmount:  totalAmount,
 		Status:       OrderStatus_ORDER_STATUS_PENDING,
 		CreatedAt:    timestamppb.Now(),
 		UpdatedAt:    timestamppb.Now(),
@@ -31,8 +32,9 @@ func (x *Order) Next(ctx contextx.Contextx) (event *OrderEvent, err error) {
 }
 
 // NewOrderItem creates a new order item.
-func NewOrderItem(menuItemID, name string, price float64, quantity int) *OrderItem {
+func NewOrderItem(menuItemID string, price float64, quantity int) *OrderItem {
 	return &OrderItem{
+		OrderId:    0,
 		MenuItemId: menuItemID,
 		Quantity:   int64(quantity),
 		Price:      price,

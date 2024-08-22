@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"
@@ -41,7 +42,7 @@ func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeli
 	ctx, span := otelx.Span(ctx, "biz.logistics.CreateDelivery")
 	defer span.End()
 
-	delivery, err := model.NewDelivery(req.OrderId, req.UserId, req.Address)
+	delivery, err := model.NewDelivery(strconv.FormatInt(req.OrderId, 10), req.UserId, req.Address)
 	if err != nil {
 		ctx.Error("failed to create new delivery", zap.Error(err))
 		return nil, err
