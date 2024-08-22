@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
+	opsBI "github.com/blackhorseya/godine/app/domain/logistics/biz"
 	notifyBI "github.com/blackhorseya/godine/app/domain/notification/biz"
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
 	payBI "github.com/blackhorseya/godine/app/domain/payment/biz"
@@ -22,6 +23,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
+	opsB "github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	orderB "github.com/blackhorseya/godine/entity/domain/order/biz"
 	payB "github.com/blackhorseya/godine/entity/domain/payment/biz"
@@ -47,6 +49,7 @@ func NewInitServersFn(
 	paymentServer payB.PaymentServiceServer,
 	notifyServer notifyB.NotificationServiceServer,
 	orderServer orderB.OrderServiceServer,
+	logisticsServer opsB.LogisticsServiceServer,
 ) grpcx.InitServers {
 	return func(s *grpc.Server) {
 		healthServer := health.NewServer()
@@ -59,6 +62,7 @@ func NewInitServersFn(
 		payB.RegisterPaymentServiceServer(s, paymentServer)
 		notifyB.RegisterNotificationServiceServer(s, notifyServer)
 		orderB.RegisterOrderServiceServer(s, orderServer)
+		opsB.RegisterLogisticsServiceServer(s, logisticsServer)
 
 		reflection.Register(s)
 	}
@@ -100,6 +104,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		notifyBI.ProviderNotificationBizSet,
 		notifyBI.NewNotificationServiceClient,
 		orderBI.ProviderOrderBizSet,
+		opsBI.ProviderLogisticsBizSet,
 
 		snowflakex.NewNode,
 		postgresqlx.NewClient,

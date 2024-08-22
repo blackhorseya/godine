@@ -7,6 +7,7 @@ package restful
 import (
 	"github.com/blackhorseya/godine/adapter/logistics/wirex"
 	"github.com/blackhorseya/godine/app/domain/logistics/biz"
+	"github.com/blackhorseya/godine/app/domain/logistics/repo/delivery"
 	biz2 "github.com/blackhorseya/godine/app/domain/notification/biz"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -46,7 +47,8 @@ var providerSet = wire.NewSet(
 	initApplication,
 	httpx.NewServer,
 
-	biz.ProviderLogisticsSet,
+	biz.NewLogistics,
+	delivery.NewMongodb,
 	mongodbx.NewClient,
 
 	biz2.NewNotificationHTTPClient,

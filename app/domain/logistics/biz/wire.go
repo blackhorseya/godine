@@ -5,5 +5,5 @@ import (
 	"github.com/google/wire"
 )
 
-// ProviderLogisticsSet is biz provider set.
-var ProviderLogisticsSet = wire.NewSet(NewLogistics, delivery.NewMongodb)
+// ProviderLogisticsBizSet is biz provider set.
+var ProviderLogisticsBizSet = wire.NewSet(NewLogisticsService, delivery.NewMongodb)
