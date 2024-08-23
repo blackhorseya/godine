@@ -15,5 +15,6 @@ plugins:
     out: entity
     opt:
       - paths=source_relative
+      - generate_unbound_methods=true
 inputs:
   - directory: entity
