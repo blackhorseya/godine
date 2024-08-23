@@ -59,11 +59,17 @@ func (x *Authx) StreamClientInterceptor() grpc.StreamClientInterceptor {
 	) (grpc.ClientStream, error) {
 		ctx, err := contextx.FromContext(c)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("get context error: %w", err)
 		}
+
+		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryClientInterceptor")
+		defer span.End()
+
+		ctx.Debug("unary client interceptor", zap.String("method", method))
 
 		handler, err := userM.FromContext(ctx)
 		if err != nil {
+			ctx.Error("get user model from context error", zap.Error(err))
 			return nil, err
 		}
 		ctx.Debug("unary client interceptor", zap.Any("handler", &handler))
