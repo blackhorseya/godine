@@ -28,5 +28,9 @@ service RestaurantService {
       get: "/v1/restaurants"
     };
   }
-  rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {}
+  rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {
+    option (google.api.http) = {
+      get: "/v1/restaurants/{restaurant_id}"
+    };
+  }
 }
