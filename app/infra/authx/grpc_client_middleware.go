@@ -2,7 +2,9 @@ package authx
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.uber.org/zap"
@@ -22,11 +24,17 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 	) error {
 		ctx, err := contextx.FromContext(c)
 		if err != nil {
-			return err
+			return fmt.Errorf("get context error: %w", err)
 		}
+
+		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryClientInterceptor")
+		defer span.End()
+
+		ctx.Debug("unary client interceptor", zap.String("method", method))
 
 		handler, err := userM.FromContext(ctx)
 		if err != nil {
+			ctx.Error("get user model from context error", zap.Error(err))
 			return err
 		}
 		ctx.Debug("unary client interceptor", zap.Any("handler", &handler))

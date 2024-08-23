@@ -23,6 +23,12 @@ import (
 	"golang.org/x/oauth2"
 )
 
+var defaultSkipPaths = []string{
+	"/grpc.health.v1.Health",
+	"/grpc.reflection.v1alpha.ServerReflection",
+	"/restaurant.RestaurantService",
+}
+
 // Authx is a struct that represents the authx.
 type Authx struct {
 	*oidc.Provider
@@ -79,7 +85,7 @@ func New(app *configx.Application) (*Authx, error) {
 				contextx.Background().Error("error validating token", zap.Error(err))
 			}),
 		),
-		SkipPaths: []string{"/grpc.health.v1.Health", "/grpc.reflection.v1alpha.ServerReflection"},
+		SkipPaths: defaultSkipPaths,
 	}, nil
 }
 
