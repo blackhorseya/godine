@@ -15,6 +15,8 @@ import (
 )
 
 type paymentService struct {
+	biz.UnimplementedPaymentServiceServer
+
 	payments repo.IPaymentRepo
 }
 

@@ -16,6 +16,8 @@ import (
 )
 
 type logisticsService struct {
+	biz.UnimplementedLogisticsServiceServer
+
 	deliveries repo.IDeliveryRepo
 
 	// clients
