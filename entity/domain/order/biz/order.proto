@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package order;
 
-import "entity/domain/logistics/model/logistics.proto";
-import "entity/domain/order/model/order.proto";
+import "domain/logistics/model/logistics.proto";
+import "domain/order/model/order.proto";
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/order/biz";
 

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package restaurant;
 
-import "entity/domain/restaurant/model/restaurant.proto";
+import "domain/restaurant/model/restaurant.proto";
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
 

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package notification;
 
-import "entity/domain/notification/model/notification.proto";
+import "domain/notification/model/notification.proto";
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/notification/biz";
 

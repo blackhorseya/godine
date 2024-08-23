@@ -4,7 +4,7 @@ package user;
 option go_package = "github.com/blackhorseya/godine/entity/domain/user/biz";
 
 import "google/protobuf/empty.proto";
-import "entity/domain/user/model/user.proto";
+import "domain/user/model/user.proto";
 
 service AccountService {
   rpc WhoAmI(google.protobuf.Empty) returns (user.Account);
