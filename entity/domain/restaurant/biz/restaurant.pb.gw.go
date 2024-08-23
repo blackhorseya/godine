@@ -57,11 +57,18 @@ func local_request_RestaurantService_CreateRestaurant_0(ctx context.Context, mar
 
 }
 
+var (
+	filter_RestaurantService_ListRestaurants_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
 func request_RestaurantService_ListRestaurants_0(ctx context.Context, marshaler runtime.Marshaler, client RestaurantServiceClient, req *http.Request, pathParams map[string]string) (RestaurantService_ListRestaurantsClient, runtime.ServerMetadata, error) {
 	var protoReq ListRestaurantsRequest
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_RestaurantService_ListRestaurants_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -136,7 +143,7 @@ func RegisterRestaurantServiceHandlerServer(ctx context.Context, mux *runtime.Se
 
 	})
 
-	mux.Handle("POST", pattern_RestaurantService_ListRestaurants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RestaurantService_ListRestaurants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
 		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -231,13 +238,13 @@ func RegisterRestaurantServiceHandlerClient(ctx context.Context, mux *runtime.Se
 
 	})
 
-	mux.Handle("POST", pattern_RestaurantService_ListRestaurants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_RestaurantService_ListRestaurants_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/restaurant.RestaurantService/ListRestaurants", runtime.WithHTTPPathPattern("/restaurant.RestaurantService/ListRestaurants"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/restaurant.RestaurantService/ListRestaurants", runtime.WithHTTPPathPattern("/v1/restaurants"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -281,7 +288,7 @@ func RegisterRestaurantServiceHandlerClient(ctx context.Context, mux *runtime.Se
 var (
 	pattern_RestaurantService_CreateRestaurant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"restaurant.RestaurantService", "CreateRestaurant"}, ""))
 
-	pattern_RestaurantService_ListRestaurants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"restaurant.RestaurantService", "ListRestaurants"}, ""))
+	pattern_RestaurantService_ListRestaurants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "restaurants"}, ""))
 
 	pattern_RestaurantService_GetRestaurant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"restaurant.RestaurantService", "GetRestaurant"}, ""))
 )
