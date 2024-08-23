@@ -25,12 +25,12 @@ service RestaurantService {
   rpc CreateRestaurant(CreateRestaurantRequest) returns (Restaurant) {}
   rpc ListRestaurants(ListRestaurantsRequest) returns (stream Restaurant) {
     option (google.api.http) = {
-      get: "/v1/restaurants"
+      get: "/api/v1/restaurants"
     };
   }
   rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {
     option (google.api.http) = {
-      get: "/v1/restaurants/{restaurant_id}"
+      get: "/api/v1/restaurants/{restaurant_id}"
     };
   }
 }

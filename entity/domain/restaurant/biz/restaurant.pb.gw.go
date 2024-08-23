@@ -133,7 +133,7 @@ func RegisterRestaurantServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/restaurant.RestaurantService/GetRestaurant", runtime.WithHTTPPathPattern("/v1/restaurants/{restaurant_id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/restaurant.RestaurantService/GetRestaurant", runtime.WithHTTPPathPattern("/api/v1/restaurants/{restaurant_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -197,7 +197,7 @@ func RegisterRestaurantServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/restaurant.RestaurantService/ListRestaurants", runtime.WithHTTPPathPattern("/v1/restaurants"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/restaurant.RestaurantService/ListRestaurants", runtime.WithHTTPPathPattern("/api/v1/restaurants"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -219,7 +219,7 @@ func RegisterRestaurantServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/restaurant.RestaurantService/GetRestaurant", runtime.WithHTTPPathPattern("/v1/restaurants/{restaurant_id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/restaurant.RestaurantService/GetRestaurant", runtime.WithHTTPPathPattern("/api/v1/restaurants/{restaurant_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -239,9 +239,9 @@ func RegisterRestaurantServiceHandlerClient(ctx context.Context, mux *runtime.Se
 }
 
 var (
-	pattern_RestaurantService_ListRestaurants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "restaurants"}, ""))
+	pattern_RestaurantService_ListRestaurants_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "restaurants"}, ""))
 
-	pattern_RestaurantService_GetRestaurant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "restaurants", "restaurant_id"}, ""))
+	pattern_RestaurantService_GetRestaurant_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "restaurants", "restaurant_id"}, ""))
 )
 
 var (
