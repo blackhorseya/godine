@@ -29,16 +29,16 @@ type Address struct {
 
 	// Street is the street address of the user.
 	// @gotags: bson:"street"
-	Street string `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty"`
+	Street string `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty" bson:"street"`
 	// City is the city where the user is located.
 	// @gotags: bson:"city"
-	City string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
+	City string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty" bson:"city"`
 	// State is the state where the user is located.
 	// @gotags: bson:"state"
-	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
+	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty" bson:"state"`
 	// ZipCode is the postal code of the user's location.
 	// @gotags: bson:"zip_code"
-	ZipCode string `protobuf:"bytes,4,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty"`
+	ZipCode string `protobuf:"bytes,4,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty" bson:"zip_code"`
 }
 
 func (x *Address) Reset() {
@@ -109,28 +109,28 @@ type Restaurant struct {
 
 	// ID is the unique identifier of the restaurant.
 	// @gotags: bson:"_id"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id"`
 	// Name is the name of the restaurant.
 	// @gotags: bson:"name"
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty" bson:"name"`
 	// Address is the address of the restaurant.
 	// @gotags: bson:"address"
-	Address *Address `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
+	Address *Address `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty" bson:"address"`
 	// Menu is the menu of the restaurant.
 	// @gotags: bson:"menu"
-	Menu []*MenuItem `protobuf:"bytes,4,rep,name=menu,proto3" json:"menu,omitempty"`
+	Menu []*MenuItem `protobuf:"bytes,4,rep,name=menu,proto3" json:"menu,omitempty" bson:"menu"`
 	// IsOpen is the availability of the restaurant.
 	// @gotags: bson:"is_open"
-	IsOpen bool `protobuf:"varint,5,opt,name=is_open,json=isOpen,proto3" json:"is_open,omitempty"`
+	IsOpen bool `protobuf:"varint,5,opt,name=is_open,json=isOpen,proto3" json:"is_open,omitempty" bson:"is_open"`
 	// CreatedBy is the user who created the restaurant.
 	// @gotags: bson:"created_by"
-	CreatedBy string `protobuf:"bytes,6,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
+	CreatedBy string `protobuf:"bytes,6,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty" bson:"created_by"`
 	// CreatedAt is the timestamp when the restaurant was created.
 	// @gotags: bson:"created_at"
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" bson:"created_at"`
 	// UpdatedAt is the timestamp when the restaurant was last updated.
 	// @gotags: bson:"updated_at"
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" bson:"updated_at"`
 }
 
 func (x *Restaurant) Reset() {
@@ -228,19 +228,19 @@ type MenuItem struct {
 
 	// ID is the unique identifier of the menu item.
 	// @gotags: bson:"_id"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id"`
 	// Name is the name of the menu item.
 	// @gotags: bson:"name"
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty" bson:"name"`
 	// Description is the description of the menu item.
 	// @gotags: bson:"description"
-	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty" bson:"description"`
 	// Price is the price of the menu item.
 	// @gotags: bson:"price"
-	Price float64 `protobuf:"fixed64,4,opt,name=price,proto3" json:"price,omitempty"`
+	Price float64 `protobuf:"fixed64,4,opt,name=price,proto3" json:"price,omitempty" bson:"price"`
 	// IsAvailable is the availability of the menu item.
 	// @gotags: bson:"is_available"
-	IsAvailable bool `protobuf:"varint,5,opt,name=is_available,json=isAvailable,proto3" json:"is_available,omitempty"`
+	IsAvailable bool `protobuf:"varint,5,opt,name=is_available,json=isAvailable,proto3" json:"is_available,omitempty" bson:"is_available"`
 }
 
 func (x *MenuItem) Reset() {

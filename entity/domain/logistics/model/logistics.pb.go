@@ -82,16 +82,16 @@ type Address struct {
 
 	// Street is the street address of the user.
 	// @gotags: bson:"street"
-	Street string `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty"`
+	Street string `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty" bson:"street"`
 	// City is the city where the user is located.
 	// @gotags: bson:"city"
-	City string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
+	City string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty" bson:"city"`
 	// State is the state where the user is located.
 	// @gotags: bson:"state"
-	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
+	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty" bson:"state"`
 	// ZipCode is the postal code of the user's location.
 	// @gotags: bson:"zip_code"
-	ZipCode string `protobuf:"bytes,4,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty"`
+	ZipCode string `protobuf:"bytes,4,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty" bson:"zip_code"`
 }
 
 func (x *Address) Reset() {
@@ -162,34 +162,34 @@ type Delivery struct {
 
 	// ID is the unique identifier of the delivery.
 	// @gotags: bson:"_id,omitempty"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id,omitempty"`
 	// OrderID is the identifier of the order associated with the delivery.
 	// @gotags: bson:"order_id"
-	OrderId string `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId string `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" bson:"order_id"`
 	// UserID is the identifier of the user who placed the order.
 	// @gotags: bson:"user_id"
-	UserId string `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId string `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" bson:"user_id"`
 	// Address is the address where the delivery is to be made.
 	// @gotags: bson:"address"
-	Address *Address `protobuf:"bytes,10,opt,name=address,proto3" json:"address,omitempty"`
+	Address *Address `protobuf:"bytes,10,opt,name=address,proto3" json:"address,omitempty" bson:"address"`
 	// DriverID is the identifier of the driver assigned to the delivery.
 	// @gotags: bson:"driver_id"
-	DriverId string `protobuf:"bytes,4,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
+	DriverId string `protobuf:"bytes,4,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty" bson:"driver_id"`
 	// Status is the current status of the delivery (e.g., pending, in transit, delivered).
 	// @gotags: bson:"status"
-	Status DeliveryStatus `protobuf:"varint,5,opt,name=status,proto3,enum=logistics.DeliveryStatus" json:"status,omitempty"`
+	Status DeliveryStatus `protobuf:"varint,5,opt,name=status,proto3,enum=logistics.DeliveryStatus" json:"status,omitempty" bson:"status"`
 	// PickupAt is the timestamp when the delivery was picked up.
 	// @gotags: bson:"pickup_at"
-	PickupAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=pickup_at,json=pickupAt,proto3" json:"pickup_at,omitempty"`
+	PickupAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=pickup_at,json=pickupAt,proto3" json:"pickup_at,omitempty" bson:"pickup_at"`
 	// DeliveryAt is the timestamp when the delivery is expected to be delivered.
 	// @gotags: bson:"delivery_at"
-	DeliveryAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=delivery_at,json=deliveryAt,proto3" json:"delivery_at,omitempty"`
+	DeliveryAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=delivery_at,json=deliveryAt,proto3" json:"delivery_at,omitempty" bson:"delivery_at"`
 	// CreatedAt is the timestamp when the delivery was created.
 	// @gotags: bson:"created_at"
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" bson:"created_at"`
 	// UpdatedAt is the timestamp when the delivery was last updated.
 	// @gotags: bson:"updated_at"
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" bson:"updated_at"`
 }
 
 func (x *Delivery) Reset() {

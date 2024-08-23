@@ -52,6 +52,8 @@ coverage: ## generate coverage report
 .PHONY: gen-pb
 gen-pb: ## generate protobuf
 	buf generate
+	protoc-go-inject-tag -input="./entity/domain/*/*/*.pb.go"
+
 #	protoc --proto_path=. \
 #	        --grpc-gateway_out=. \
 #	        --go_out=paths=source_relative:. \
@@ -61,10 +63,6 @@ gen-pb: ## generate protobuf
 #	        --grpc-gateway_opt generate_unbound_methods=true \
 #	        ./entity/domain/*/*/*.proto
 #	@echo Successfully generated proto
-#
-#	@echo Starting inject tags
-#	protoc-go-inject-tag -input="./entity/domain/*/*/*.pb.go"
-#	@echo Successfully injected tags
 
 .PHONY: gen-swagger
 gen-swagger: ## generate swagger

@@ -91,16 +91,16 @@ type Address struct {
 
 	// Street is the street address of the user.
 	// @gotags: bson:"street"
-	Street string `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty"`
+	Street string `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty" bson:"street"`
 	// City is the city where the user is located.
 	// @gotags: bson:"city"
-	City string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
+	City string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty" bson:"city"`
 	// State is the state where the user is located.
 	// @gotags: bson:"state"
-	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
+	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty" bson:"state"`
 	// ZipCode is the postal code of the user's location.
 	// @gotags: bson:"zip_code"
-	ZipCode string `protobuf:"bytes,4,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty"`
+	ZipCode string `protobuf:"bytes,4,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty" bson:"zip_code"`
 }
 
 func (x *Address) Reset() {
@@ -171,10 +171,10 @@ type OrderEvent struct {
 
 	// Name is the name of the order.
 	// @gotags: bson:"name"
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty" bson:"name"`
 	// Handler is the handler of the order.
 	// @gotags: bson:"handler_id"
-	HandlerId string `protobuf:"bytes,2,opt,name=handler_id,json=handlerId,proto3" json:"handler_id,omitempty"`
+	HandlerId string `protobuf:"bytes,2,opt,name=handler_id,json=handlerId,proto3" json:"handler_id,omitempty" bson:"handler_id"`
 }
 
 func (x *OrderEvent) Reset() {
@@ -231,16 +231,16 @@ type OrderItem struct {
 
 	// OrderID is the unique identifier of the order.
 	// @gotags: gorm:"column:order_id;primaryKey;not null"
-	OrderId int64 `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId int64 `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" gorm:"column:order_id;primaryKey;not null"`
 	// MenuItemID is the unique identifier of the menu item.
 	// @gotags: gorm:"column:menu_item_id;primaryKey;not null"
-	MenuItemId string `protobuf:"bytes,2,opt,name=menu_item_id,json=menuItemId,proto3" json:"menu_item_id,omitempty"`
+	MenuItemId string `protobuf:"bytes,2,opt,name=menu_item_id,json=menuItemId,proto3" json:"menu_item_id,omitempty" gorm:"column:menu_item_id;primaryKey;not null"`
 	// Quantity is the quantity of the item.
 	// @gotags: gorm:"column:quantity"
-	Quantity int64 `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Quantity int64 `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty" gorm:"column:quantity"`
 	// Price is the price of the item.
 	// @gotags: gorm:"column:price"`
-	Price float64 `protobuf:"fixed64,4,opt,name=price,proto3" json:"price,omitempty"`
+	Price float64 `protobuf:"fixed64,4,opt,name=price,proto3" json:"price,omitempty" gorm:"column:price"`
 }
 
 func (x *OrderItem) Reset() {
@@ -311,34 +311,34 @@ type Order struct {
 
 	// ID is the unique identifier of the order.
 	// @gotags: gorm:"column:id;primaryKey;not null"`
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" gorm:"column:id;primaryKey;not null"`
 	// UserID is the unique identifier of the user.
 	// @gotags: gorm:"column:user_id;not null"
-	UserId string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" gorm:"column:user_id;not null"`
 	// RestaurantID is the unique identifier of the restaurant.
 	// @gotags: gorm:"column:restaurant_id;not null"
-	RestaurantId string `protobuf:"bytes,3,opt,name=restaurant_id,json=restaurantId,proto3" json:"restaurant_id,omitempty"`
+	RestaurantId string `protobuf:"bytes,3,opt,name=restaurant_id,json=restaurantId,proto3" json:"restaurant_id,omitempty" gorm:"column:restaurant_id;not null"`
 	// PaymentID is the unique identifier of the payment.
 	// @gotags: gorm:"column:payment_id"
-	PaymentId string `protobuf:"bytes,10,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`
+	PaymentId string `protobuf:"bytes,10,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty" gorm:"column:payment_id"`
 	// DeliveryID is the unique identifier of the delivery.
 	// @gotags: gorm:"column:delivery_id"
-	DeliveryId string `protobuf:"bytes,4,opt,name=delivery_id,json=deliveryId,proto3" json:"delivery_id,omitempty"`
+	DeliveryId string `protobuf:"bytes,4,opt,name=delivery_id,json=deliveryId,proto3" json:"delivery_id,omitempty" gorm:"column:delivery_id"`
 	// Items is the items in the order.
 	// @gotags: gorm:"foreignKey:order_id;references:id;constraint:OnDelete:CASCADE"`
-	Items []*OrderItem `protobuf:"bytes,5,rep,name=items,proto3" json:"items,omitempty"`
+	Items []*OrderItem `protobuf:"bytes,5,rep,name=items,proto3" json:"items,omitempty" gorm:"foreignKey:order_id;references:id;constraint:OnDelete:CASCADE"`
 	// TotalPrice is the total price of the order.
 	// @gotags: gorm:"column:total_amount"`
-	TotalAmount float64 `protobuf:"fixed64,9,opt,name=total_amount,json=totalAmount,proto3" json:"total_amount,omitempty"`
+	TotalAmount float64 `protobuf:"fixed64,9,opt,name=total_amount,json=totalAmount,proto3" json:"total_amount,omitempty" gorm:"column:total_amount"`
 	// Status is the status of the order.
 	// @gotags: gorm:"column:status;not null;default:1"`
-	Status OrderStatus `protobuf:"varint,6,opt,name=status,proto3,enum=order.OrderStatus" json:"status,omitempty"`
+	Status OrderStatus `protobuf:"varint,6,opt,name=status,proto3,enum=order.OrderStatus" json:"status,omitempty" gorm:"column:status;not null;default:1"`
 	// CreatedAt is the time the order was created.
 	// @gotags: gorm:"serializer:timestamppb;type:time;column:created_at"`
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" gorm:"serializer:timestamppb;type:time;column:created_at"`
 	// UpdatedAt is the time the order was last updated.
 	// @gotags: gorm:"serializer:timestamppb;type:time;column:updated_at"`
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" gorm:"serializer:timestamppb;type:time;column:updated_at"`
 }
 
 func (x *Order) Reset() {

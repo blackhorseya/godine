@@ -29,10 +29,10 @@ type PaymentAmount struct {
 
 	// value is the amount of payment
 	// @gotags: bson:"value"
-	Value float64 `protobuf:"fixed64,1,opt,name=value,proto3" json:"value,omitempty"`
+	Value float64 `protobuf:"fixed64,1,opt,name=value,proto3" json:"value,omitempty" bson:"value"`
 	// currency is the currency of payment
 	// @gotags: bson:"currency"
-	Currency string `protobuf:"bytes,2,opt,name=currency,proto3" json:"currency,omitempty"`
+	Currency string `protobuf:"bytes,2,opt,name=currency,proto3" json:"currency,omitempty" bson:"currency"`
 }
 
 func (x *PaymentAmount) Reset() {
@@ -89,22 +89,22 @@ type Payment struct {
 
 	// id is the identifier of payment
 	// @gotags: bson:"_id,omitempty"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id,omitempty"`
 	// amount is the amount of payment
 	// @gotags: bson:"amount"
-	Amount *PaymentAmount `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	Amount *PaymentAmount `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty" bson:"amount"`
 	// createdAt is the time when payment created
 	// @gotags: bson:"created_at,omitempty"
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" bson:"created_at,omitempty"`
 	// updatedAt is the time when payment updated
 	// @gotags: bson:"updated_at,omitempty"
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 	// OrderID is the identifier of order
 	// @gotags: bson:"order_id"
-	OrderId string `protobuf:"bytes,5,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId string `protobuf:"bytes,5,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" bson:"order_id"`
 	// UserID is the identifier of user
 	// @gotags: bson:"user_id"
-	UserId string `protobuf:"bytes,6,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId string `protobuf:"bytes,6,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" bson:"user_id"`
 }
 
 func (x *Payment) Reset() {

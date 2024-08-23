@@ -29,31 +29,31 @@ type Notification struct {
 
 	// ID is the unique identifier of the notification.
 	// @gotags: bson:"_id,omitempty"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id,omitempty"`
 	// SenderID is the identifier of the user who sent the notification.
 	// @gotags: bson:"sender_id"
-	SenderId string `protobuf:"bytes,2,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	SenderId string `protobuf:"bytes,2,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty" bson:"sender_id"`
 	// UserID is the identifier of the user to whom the notification is sent.
 	// @gotags: bson:"user_id"
-	UserId string `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId string `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" bson:"user_id"`
 	// OrderID is the identifier of the order associated with the notification.
 	// @gotags: bson:"order_id"
-	OrderId string `protobuf:"bytes,4,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId string `protobuf:"bytes,4,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" bson:"order_id"`
 	// Type represents the type of notification (e.g., order_status, delivery_status).
 	// @gotags: bson:"type"
-	Type string `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"`
+	Type string `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty" bson:"type"`
 	// Message is the content of the notification.
 	// @gotags: bson:"message"
-	Message string `protobuf:"bytes,6,opt,name=message,proto3" json:"message,omitempty"`
+	Message string `protobuf:"bytes,6,opt,name=message,proto3" json:"message,omitempty" bson:"message"`
 	// Status is the current status of the notification (e.g., pending, sent).
 	// @gotags: bson:"status"
-	Status string `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	Status string `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty" bson:"status"`
 	// CreatedAt is the timestamp when the notification was created.
 	// @gotags: bson:"created_at"
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" bson:"created_at"`
 	// UpdatedAt is the timestamp when the notification was last updated.
 	// @gotags: bson:"updated_at"
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" bson:"updated_at"`
 }
 
 func (x *Notification) Reset() {

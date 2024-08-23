@@ -29,16 +29,16 @@ type Address struct {
 
 	// Street is the street address of the user.
 	// @gotags: bson:"street"
-	Street string `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty"`
+	Street string `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty" bson:"street"`
 	// City is the city where the user is located.
 	// @gotags: bson:"city"
-	City string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
+	City string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty" bson:"city"`
 	// State is the state where the user is located.
 	// @gotags: bson:"state"
-	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
+	State string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty" bson:"state"`
 	// ZipCode is the postal code of the user's location.
 	// @gotags: bson:"zip_code"
-	ZipCode string `protobuf:"bytes,4,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty"`
+	ZipCode string `protobuf:"bytes,4,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty" bson:"zip_code"`
 }
 
 func (x *Address) Reset() {
@@ -109,10 +109,10 @@ type Role struct {
 
 	// ID is the unique identifier of the role.
 	// @gotags: bson:"_id"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id"`
 	// Name is the name of the role.
 	// @gotags: bson:"name"
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty" bson:"name"`
 }
 
 func (x *Role) Reset() {
@@ -169,40 +169,40 @@ type Account struct {
 
 	// ID is the unique identifier of the user account.
 	// @gotags: bson:"_id"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" bson:"_id"`
 	// Username is the username of the user.
 	// @gotags: bson:"username"
-	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty" bson:"username"`
 	// Email is the email address of the user.
 	// @gotags: bson:"email"
-	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty" bson:"email"`
 	// Password is the password of the user.
 	// @gotags: json:"-" bson:"password"
-	Password string `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
+	Password string `protobuf:"bytes,4,opt,name=password,proto3" json:"-" bson:"password"`
 	// AccessToken is the access token of the user.
 	// @gotags: bson:"-"
-	AccessToken string `protobuf:"bytes,12,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	AccessToken string `protobuf:"bytes,12,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty" bson:"-"`
 	// Address is the address of the user.
 	// @gotags: bson:"address"
-	Address *Address `protobuf:"bytes,5,opt,name=address,proto3" json:"address,omitempty"`
+	Address *Address `protobuf:"bytes,5,opt,name=address,proto3" json:"address,omitempty" bson:"address"`
 	// IsActive is the status of the user account.
 	// @gotags: bson:"is_active"
-	IsActive bool `protobuf:"varint,6,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
+	IsActive bool `protobuf:"varint,6,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty" bson:"is_active"`
 	// Level is the access level of the user account.
 	// @gotags: bson:"level"
-	Level uint32 `protobuf:"varint,7,opt,name=Level,proto3" json:"Level,omitempty"`
+	Level uint32 `protobuf:"varint,7,opt,name=Level,proto3" json:"Level,omitempty" bson:"level"`
 	// Roles is the list of roles assigned to the user.
 	// @gotags: bson:"roles"
-	Roles []*Role `protobuf:"bytes,8,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles []*Role `protobuf:"bytes,8,rep,name=roles,proto3" json:"roles,omitempty" bson:"roles"`
 	// SocialIDMap is the map of social IDs of the user.
 	// @gotags: bson:"social_id_map"
-	SocialIDMap map[string]string `protobuf:"bytes,9,rep,name=socialIDMap,proto3" json:"socialIDMap,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	SocialIDMap map[string]string `protobuf:"bytes,9,rep,name=socialIDMap,proto3" json:"socialIDMap,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3" bson:"social_id_map"`
 	// CreatedAt is the creation time of the user account.
 	// @gotags: bson:"created_at"
-	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" bson:"created_at"`
 	// UpdatedAt is the update time of the user account.
 	// @gotags: bson:"updated_at"
-	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty" bson:"updated_at"`
 }
 
 func (x *Account) Reset() {
