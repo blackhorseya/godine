@@ -30,7 +30,10 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryClientInterceptor")
 		defer span.End()
 
-		ctx.Debug("unary client interceptor", zap.String("method", method))
+		if x.SkipPath(method) {
+			ctx.Debug("unary client interceptor", zap.String("method", method))
+			return invoker(c, method, req, reply, cc, opts...)
+		}
 
 		handler, err := userM.FromContext(ctx)
 		if err != nil {
@@ -65,7 +68,10 @@ func (x *Authx) StreamClientInterceptor() grpc.StreamClientInterceptor {
 		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryClientInterceptor")
 		defer span.End()
 
-		ctx.Debug("unary client interceptor", zap.String("method", method))
+		if x.SkipPath(method) {
+			ctx.Debug("unary client interceptor", zap.String("method", method))
+			return streamer(c, desc, cc, method, opts...)
+		}
 
 		handler, err := userM.FromContext(ctx)
 		if err != nil {
