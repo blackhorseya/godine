@@ -44,7 +44,7 @@ func (i *notificationService) SendNotification(
 		return nil, err
 	}
 
-	notification := model.NewNotification(handler.Id, req.UserId, req.OrderId, req.Message)
+	notification := model.NewNotification(handler.Id, req.UserId, strconv.FormatInt(req.OrderId, 10), req.Message)
 
 	err = i.notifications.Create(ctx, notification)
 	if err != nil {
