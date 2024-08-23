@@ -16,6 +16,8 @@ import (
 )
 
 type notificationService struct {
+	biz.UnimplementedNotificationServiceServer
+
 	notifications repo.INotificationRepo
 }
 

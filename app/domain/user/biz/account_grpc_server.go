@@ -3,7 +3,7 @@ package biz
 import (
 	"context"
 
-	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
+	"github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.uber.org/zap"
@@ -13,10 +13,11 @@ import (
 )
 
 type accountService struct {
+	biz.UnimplementedAccountServiceServer
 }
 
 // NewAccountService creates and returns a new AccountService.
-func NewAccountService() userB.AccountServiceServer {
+func NewAccountService() biz.AccountServiceServer {
 	return &accountService{}
 }
 

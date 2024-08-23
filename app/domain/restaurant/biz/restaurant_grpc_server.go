@@ -18,6 +18,8 @@ import (
 )
 
 type restaurantService struct {
+	biz.UnimplementedRestaurantServiceServer
+
 	restaurants repo.IRestaurantRepo
 }
 

@@ -21,6 +21,8 @@ import (
 )
 
 type orderService struct {
+	biz.UnimplementedOrderServiceServer
+
 	orders repo.IOrderRepo
 
 	// clients

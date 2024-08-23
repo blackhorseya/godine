@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package payment;
 
-import "entity/domain/payment/model/payment.proto";
+import "domain/payment/model/payment.proto";
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/payment/biz";
 

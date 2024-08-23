@@ -3,7 +3,7 @@ package restaurant;
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
 
-import "entity/domain/restaurant/model/restaurant.proto";
+import "domain/restaurant/model/restaurant.proto";
 
 message AddMenuItemRequest {
   string restaurant_id = 1;

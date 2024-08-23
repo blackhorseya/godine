@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package logistics;
 
-import "entity/domain/logistics/model/logistics.proto";
+import "domain/logistics/model/logistics.proto";
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/logistics/biz";
 

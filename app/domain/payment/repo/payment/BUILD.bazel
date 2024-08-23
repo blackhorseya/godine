@@ -1,4 +1,4 @@
-load("@rules_go//go:def.bzl", "go_library", "go_test")
+load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "payment",
@@ -17,19 +17,5 @@ go_library(
         "@org_mongodb_go_mongo_driver//mongo",
         "@org_mongodb_go_mongo_driver//mongo/options",
         "@org_uber_go_zap//:zap",
-    ],
-)
-
-go_test(
-    name = "payment_test",
-    srcs = ["mongodb_test.go"],
-    embed = [":payment"],
-    deps = [
-        "//app/infra/storage/mongodbx",
-        "//entity/domain/payment/model",
-        "//entity/domain/payment/repo",
-        "//pkg/contextx",
-        "@com_github_stretchr_testify//suite",
-        "@org_mongodb_go_mongo_driver//mongo",
     ],
 )
