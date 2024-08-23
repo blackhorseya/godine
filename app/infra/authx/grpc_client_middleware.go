@@ -32,7 +32,7 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 
 		if x.SkipPath(method) {
 			ctx.Debug("unary client interceptor", zap.String("method", method))
-			return invoker(c, method, req, reply, cc, opts...)
+			return invoker(ctx, method, req, reply, cc, opts...)
 		}
 
 		handler, err := userM.FromContext(ctx)
@@ -70,7 +70,7 @@ func (x *Authx) StreamClientInterceptor() grpc.StreamClientInterceptor {
 
 		if x.SkipPath(method) {
 			ctx.Debug("unary client interceptor", zap.String("method", method))
-			return streamer(c, desc, cc, method, opts...)
+			return streamer(ctx, desc, cc, method, opts...)
 		}
 
 		handler, err := userM.FromContext(ctx)

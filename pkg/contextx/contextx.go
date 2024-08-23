@@ -14,6 +14,14 @@ func init() {
 	zap.ReplaceGlobals(zap.NewExample())
 }
 
+// ContextKey is a type for context key.
+type ContextKey string
+
+const (
+	// KeyContextx is the key of contextx.
+	KeyContextx ContextKey = "contextx"
+)
+
 const (
 	// KeyCtx is the key of contextx.
 	KeyCtx = "contextx"
@@ -99,7 +107,7 @@ func FromContext(c context.Context) (Contextx, error) {
 
 // GetContextx returns a Contextx from context.Context.
 func GetContextx(c context.Context) (Contextx, error) {
-	ctx, ok := c.Value(KeyCtx).(Contextx)
+	ctx, ok := c.Value(KeyContextx).(Contextx)
 	if !ok {
 		return Contextx{}, errors.New("contextx not found in context.Context")
 	}
