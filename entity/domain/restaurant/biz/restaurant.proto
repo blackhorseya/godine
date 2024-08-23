@@ -3,6 +3,7 @@ syntax = "proto3";
 package restaurant;
 
 import "domain/restaurant/model/restaurant.proto";
+import "google/api/annotations.proto";
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
 
@@ -22,6 +23,14 @@ message GetRestaurantRequest {
 
 service RestaurantService {
   rpc CreateRestaurant(CreateRestaurantRequest) returns (Restaurant) {}
-  rpc ListRestaurants(ListRestaurantsRequest) returns (stream Restaurant) {}
-  rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {}
+  rpc ListRestaurants(ListRestaurantsRequest) returns (stream Restaurant) {
+    option (google.api.http) = {
+      get: "/v1/restaurants"
+    };
+  }
+  rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {
+    option (google.api.http) = {
+      get: "/v1/restaurants/{restaurant_id}"
+    };
+  }
 }
