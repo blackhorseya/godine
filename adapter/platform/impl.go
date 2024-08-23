@@ -2,16 +2,19 @@ package platform
 
 import (
 	"encoding/gob"
+	"fmt"
 	"net/http"
 
 	"github.com/blackhorseya/godine/adapter/platform/web/templates"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
+	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/zap"
 )
 
@@ -87,6 +90,14 @@ func (i *impl) InitRouting() error {
 	router.GET("/callback", i.callback)
 	router.GET("/user", IsAuthenticated, i.user)
 	router.GET("/logout", i.logout)
+
+	// api
+	gw := runtime.NewServeMux()
+	err := restB.RegisterRestaurantServiceHandlerClient(contextx.Background(), gw, i.injector.RestaurantClient)
+	if err != nil {
+		return fmt.Errorf("failed to register restaurant service handler client: %w", err)
+	}
+	router.Any("/api/*any", gin.WrapH(gw))
 
 	return nil
 }

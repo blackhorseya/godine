@@ -96,3 +96,13 @@ func FromContext(c context.Context) (Contextx, error) {
 
 	return ctx, nil
 }
+
+// GetContextx returns a Contextx from context.Context.
+func GetContextx(c context.Context) (Contextx, error) {
+	ctx, ok := c.Value(KeyCtx).(Contextx)
+	if !ok {
+		return Contextx{}, errors.New("contextx not found in context.Context")
+	}
+
+	return ctx, nil
+}

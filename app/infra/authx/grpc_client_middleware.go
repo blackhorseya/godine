@@ -2,7 +2,9 @@ package authx
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.uber.org/zap"
@@ -20,13 +22,22 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
-		ctx, err := contextx.FromContext(c)
+		ctx, err := contextx.GetContextx(c)
 		if err != nil {
-			return err
+			return fmt.Errorf("get context error: %w", err)
+		}
+
+		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryClientInterceptor")
+		defer span.End()
+
+		if x.SkipPath(method) {
+			ctx.Debug("unary client interceptor", zap.String("method", method))
+			return invoker(c, method, req, reply, cc, opts...)
 		}
 
 		handler, err := userM.FromContext(ctx)
 		if err != nil {
+			ctx.Error("get user model from context error", zap.Error(err))
 			return err
 		}
 		ctx.Debug("unary client interceptor", zap.Any("handler", &handler))
@@ -49,13 +60,22 @@ func (x *Authx) StreamClientInterceptor() grpc.StreamClientInterceptor {
 		streamer grpc.Streamer,
 		opts ...grpc.CallOption,
 	) (grpc.ClientStream, error) {
-		ctx, err := contextx.FromContext(c)
+		ctx, err := contextx.GetContextx(c)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("get context error: %w", err)
+		}
+
+		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryClientInterceptor")
+		defer span.End()
+
+		if x.SkipPath(method) {
+			ctx.Debug("unary client interceptor", zap.String("method", method))
+			return streamer(c, desc, cc, method, opts...)
 		}
 
 		handler, err := userM.FromContext(ctx)
 		if err != nil {
+			ctx.Error("get user model from context error", zap.Error(err))
 			return nil, err
 		}
 		ctx.Debug("unary client interceptor", zap.Any("handler", &handler))
