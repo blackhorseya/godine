@@ -44,6 +44,7 @@ go_library(
         "@com_github_gin_contrib_sessions//:sessions",
         "@com_github_gin_contrib_sessions//cookie",
         "@com_github_gin_gonic_gin//:gin",
+        "@com_github_grpc_ecosystem_grpc_gateway_v2//runtime",
         "@com_github_spf13_viper//:viper",
         "@org_golang_google_grpc//:grpc",
         "@org_golang_google_grpc//health",
