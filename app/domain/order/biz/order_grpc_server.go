@@ -148,7 +148,17 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 		return nil, err
 	}
 
-	// TODO: 2024/8/22|sean|create notification
+	// send notification
+	_, err = i.notifyClient.SendNotification(ctx, &notifyB.SendNotificationRequest{
+		UserId:  handler.Id,
+		OrderId: order.Id,
+		Type:    "",
+		Message: fmt.Sprintf("order %v is submitted", order.Id),
+	})
+	if err != nil {
+		ctx.Error("failed to send notification", zap.Error(err))
+		return nil, err
+	}
 
 	return order, nil
 }
