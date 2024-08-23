@@ -53,6 +53,7 @@ func NewOrderService(
 	}
 }
 
+//nolint:funlen // it's okay
 func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderRequest) (*model.Order, error) {
 	ctx, err := contextx.FromContext(c)
 	if err != nil {
