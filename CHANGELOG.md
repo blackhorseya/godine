@@ -1,3 +1,51 @@
+## 0.5.8 (2024-08-24)
+
+### Feat
+
+- update swagger file and proto for AccountService integration (#140)
+- update swagger file and proto for AccountService integration
+- refactor message definitions and imports for proto files
+- consolidate Swagger UI changes into `api/gateway` directory (#139)
+- improve logging and messaging consistency
+- refactor platform adapter for API integration
+- consolidate Swagger UI changes into `api/gateway` directory
+- update route paths to versioned API endpoints
+- refactor plugin configurations and outputs
+- refactor context handling in server middleware
+- refactor API endpoint paths for restaurants (#138)
+- refactor client interceptors to improve path handling
+- refactor request context handling
+- improve error handling and logging in client interceptors
+- refactor API endpoint paths for restaurants
+- refactor platform adapter routing and dependencies
+- update API endpoints and imports across files (#137)
+- update API endpoints and imports across files
+- refactor plugin options and dependencies
+- update `buf.yaml` configuration for linting rules (#136)
+- refactor code for improved performance
+- update remote plugin options for buf.build/grpc-ecosystem/gateway
+- refactor service server implementations
+- refactor build system to use `buf` for `gen-pb` target
+- update import paths in Protobuf files and configure new module
+- update `buf.yaml` configuration for linting rules
+- update notification service for OrderId consistency (#135)
+- improve code organization and readability in order service
+- update notification service for OrderId consistency
+
+### Fix
+
+- update file structures and improve code consistency
+- improve skip path handling and error logging
+
+### Refactor
+
+- refactor context handling for client middleware
+- refactor client middleware and context handling
+- refactor configuration options and remove obsolete settings
+- refactor BSON tags in struct fields across models
+- update generated protobuf files and paths in buf.gen.yaml
+- refactor service interfaces and implementations
+
 ## 0.5.7 (2024-08-22)
 
 ### Feat
