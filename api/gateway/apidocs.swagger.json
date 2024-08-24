@@ -1,10 +1,22 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "domain/logistics/model/logistics.proto",
-    "version": "version not set"
+    "title": "Restaurant Service",
+    "version": "0.1.0",
+    "contact": {
+      "name": "Sean Zheng",
+      "url": "https://github.com/blackhorseya",
+      "email": "blackhorseya@gmail.com"
+    },
+    "license": {
+      "name": "GNU General Public License v3.0",
+      "url": "https://github.com/blackhorseya/godine/blob/main/LICENSE"
+    }
   },
   "tags": [
+    {
+      "name": "RestaurantService"
+    },
     {
       "name": "LogisticsService"
     },
@@ -19,9 +31,6 @@
     },
     {
       "name": "MenuService"
-    },
-    {
-      "name": "RestaurantService"
     },
     {
       "name": "AccountService"
