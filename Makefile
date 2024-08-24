@@ -66,23 +66,23 @@ gen-pb: ## generate protobuf
 
 .PHONY: gen-swagger
 gen-swagger: ## generate swagger
-	@swag init -q -g impl.go -d ./adapter/restaurant/restful,./entity,./pkg \
-  -o ./api/restaurant/restful --instanceName restaurant_restful --parseDependency
-
-	@swag init -q -g impl.go -d ./adapter/order/restful,./entity,./pkg \
-  -o ./api/order/restful --instanceName order_restful --parseDependency
-
-	@swag init -q -g impl.go -d ./adapter/payment/restful,./entity,./pkg \
-  -o ./api/payment/restful --instanceName payment_restful --parseDependency
-
-	@swag init -q -g impl.go -d ./adapter/user/restful,./entity,./pkg \
-  -o ./api/user/restful --instanceName user_restful --parseDependency
-
-	@swag init -q -g impl.go -d ./adapter/logistics/restful,./entity,./pkg \
-  -o ./api/logistics/restful --instanceName logistics_restful --parseDependency
-
-	@swag init -q -g impl.go -d ./adapter/notify/restful,./entity,./pkg \
-  -o ./api/notify/restful --instanceName notify_restful --parseDependency
+#	@swag init -q -g impl.go -d ./adapter/restaurant/restful,./entity,./pkg \
+#  -o ./api/restaurant/restful --instanceName restaurant_restful --parseDependency
+#
+#	@swag init -q -g impl.go -d ./adapter/order/restful,./entity,./pkg \
+#  -o ./api/order/restful --instanceName order_restful --parseDependency
+#
+#	@swag init -q -g impl.go -d ./adapter/payment/restful,./entity,./pkg \
+#  -o ./api/payment/restful --instanceName payment_restful --parseDependency
+#
+#	@swag init -q -g impl.go -d ./adapter/user/restful,./entity,./pkg \
+#  -o ./api/user/restful --instanceName user_restful --parseDependency
+#
+#	@swag init -q -g impl.go -d ./adapter/logistics/restful,./entity,./pkg \
+#  -o ./api/logistics/restful --instanceName logistics_restful --parseDependency
+#
+#	@swag init -q -g impl.go -d ./adapter/notify/restful,./entity,./pkg \
+#  -o ./api/notify/restful --instanceName notify_restful --parseDependency
 
 ### testing
 .PHONY: test-api-order
