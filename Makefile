@@ -54,16 +54,6 @@ gen-pb: ## generate protobuf
 	buf generate
 	protoc-go-inject-tag -input="./entity/domain/*/*/*.pb.go"
 
-#	protoc --proto_path=. \
-#	        --grpc-gateway_out=. \
-#	        --go_out=paths=source_relative:. \
-#	        --go-grpc_out=paths=source_relative,require_unimplemented_servers=false:. \
-#	        --go-grpc-mock_out=paths=source_relative,require_unimplemented_servers=false:. \
-#	        --grpc-gateway_opt paths=source_relative \
-#	        --grpc-gateway_opt generate_unbound_methods=true \
-#	        ./entity/domain/*/*/*.proto
-#	@echo Successfully generated proto
-
 .PHONY: gen-swagger
 gen-swagger: ## generate swagger
 #	@swag init -q -g impl.go -d ./adapter/restaurant/restful,./entity,./pkg \
