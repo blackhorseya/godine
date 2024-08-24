@@ -116,6 +116,11 @@ func (i *impl) InitRouting() error {
 		ginSwagger.URL("/swagger"),
 	))
 
+	contextx.Background().Info(
+		"init routing success",
+		zap.String("swagger", fmt.Sprintf("http://localhost:%d/api/docs/index.html", i.injector.A.HTTP.Port)),
+	)
+
 	return nil
 }
 
