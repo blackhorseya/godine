@@ -97,7 +97,7 @@ func (i *impl) InitRouting() error {
 	if err != nil {
 		return fmt.Errorf("failed to register restaurant service handler client: %w", err)
 	}
-	router.Any("/api/*any", gin.WrapH(gw))
+	router.Any("/api/v1/*any", gin.WrapH(gw))
 
 	return nil
 }
