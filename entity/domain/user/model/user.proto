@@ -1,9 +1,9 @@
 syntax = "proto3";
 package user;
 
-option go_package = "github.com/blackhorseya/godine/entity/domain/user/model";
-
 import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/blackhorseya/godine/entity/domain/user/model";
 
 // Address is a value object that represents the address of a user.
 message Address {

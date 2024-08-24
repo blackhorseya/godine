@@ -1,9 +1,9 @@
 syntax = "proto3";
 package notification;
 
-option go_package = "github.com/blackhorseya/godine/entity/domain/notification/model";
-
 import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/blackhorseya/godine/entity/domain/notification/model";
 
 // Notification is an entity that represents a notification.
 message Notification {

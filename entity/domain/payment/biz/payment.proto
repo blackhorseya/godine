@@ -7,15 +7,15 @@ import "domain/payment/model/payment.proto";
 option go_package = "github.com/blackhorseya/godine/entity/domain/payment/biz";
 
 message CreatePaymentRequest {
-    int64 order_id = 1;
-    PaymentAmount amount = 2;
+  int64 order_id = 1;
+  PaymentAmount amount = 2;
 }
 
 message GetPaymentRequest {
-    string payment_id = 1;
+  string payment_id = 1;
 }
 
 service PaymentService {
-    rpc CreatePayment (CreatePaymentRequest) returns (Payment);
-    rpc GetPayment (GetPaymentRequest) returns (Payment);
+  rpc CreatePayment(CreatePaymentRequest) returns (Payment);
+  rpc GetPayment(GetPaymentRequest) returns (Payment);
 }

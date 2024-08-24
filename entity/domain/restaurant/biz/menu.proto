@@ -1,9 +1,9 @@
 syntax = "proto3";
 package restaurant;
 
-option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
-
 import "domain/restaurant/model/restaurant.proto";
+
+option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
 
 message AddMenuItemRequest {
   string restaurant_id = 1;

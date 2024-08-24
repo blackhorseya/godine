@@ -1,10 +1,10 @@
 syntax = "proto3";
 package user;
 
-option go_package = "github.com/blackhorseya/godine/entity/domain/user/biz";
-
-import "google/protobuf/empty.proto";
 import "domain/user/model/user.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/blackhorseya/godine/entity/domain/user/biz";
 
 service AccountService {
   rpc WhoAmI(google.protobuf.Empty) returns (user.Account);

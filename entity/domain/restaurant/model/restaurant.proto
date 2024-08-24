@@ -1,9 +1,9 @@
 syntax = "proto3";
 package restaurant;
 
-option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/model";
-
 import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/model";
 
 // Address is a value object that represents the address of a user.
 message Address {

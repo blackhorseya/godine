@@ -1,9 +1,9 @@
 syntax = "proto3";
 package payment;
 
-option go_package = "github.com/blackhorseya/godine/entity/domain/payment/model";
-
 import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/blackhorseya/godine/entity/domain/payment/model";
 
 // PaymentAmount is a value object that represents the amount of payment
 message PaymentAmount {
