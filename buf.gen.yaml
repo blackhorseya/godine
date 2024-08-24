@@ -16,7 +16,7 @@ plugins:
     opt:
       - paths=source_relative
   - remote: buf.build/grpc-ecosystem/openapiv2
-    out: api/swagger
+    out: api/gateway
     opt:
       - allow_merge=true
 inputs:

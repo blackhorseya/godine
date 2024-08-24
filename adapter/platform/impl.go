@@ -99,6 +99,9 @@ func (i *impl) InitRouting() error {
 	}
 	router.Any("/api/v1/*any", gin.WrapH(gw))
 
+	// swagger
+	// TODO: 2024/8/24|sean|implement swagger
+
 	return nil
 }
 
