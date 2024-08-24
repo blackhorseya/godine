@@ -15,8 +15,6 @@ import (
 )
 
 type menuService struct {
-	biz.UnimplementedMenuServiceServer
-
 	restaurants repo.IRestaurantRepo
 }
 

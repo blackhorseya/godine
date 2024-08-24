@@ -7,7 +7,9 @@ plugins:
     opt: paths=source_relative
   - remote: buf.build/grpc/go
     out: entity
-    opt: paths=source_relative
+    opt:
+      - paths=source_relative
+      - require_unimplemented_servers=false
   - local: protoc-gen-go-grpc-mock
     out: entity
     opt: paths=source_relative

@@ -72,17 +72,21 @@
         "parameters": [
           {
             "name": "page",
+            "description": "The page number.",
             "in": "query",
             "required": false,
             "type": "string",
-            "format": "int64"
+            "format": "int64",
+            "default": "1"
           },
           {
             "name": "pageSize",
+            "description": "The number of items per page.",
             "in": "query",
             "required": false,
             "type": "string",
-            "format": "int64"
+            "format": "int64",
+            "default": "10"
           }
         ],
         "tags": [

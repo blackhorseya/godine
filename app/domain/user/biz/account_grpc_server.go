@@ -13,7 +13,6 @@ import (
 )
 
 type accountService struct {
-	biz.UnimplementedAccountServiceServer
 }
 
 // NewAccountService creates and returns a new AccountService.

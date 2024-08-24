@@ -20,6 +20,7 @@ go_library(
     deps = [
         "//entity/domain/restaurant/model",
         "//pkg/contextx",
+        "@com_github_grpc_ecosystem_grpc_gateway_v2//protoc-gen-openapiv2/options",
         "@com_github_grpc_ecosystem_grpc_gateway_v2//runtime",
         "@com_github_grpc_ecosystem_grpc_gateway_v2//utilities",
         "@org_golang_google_genproto_googleapis_api//annotations",

@@ -70,15 +70,14 @@ func (c *logisticsServiceClient) ListDeliveries(ctx context.Context, in *ListDel
 type LogisticsService_ListDeliveriesClient = grpc.ServerStreamingClient[model.Delivery]
 
 // LogisticsServiceServer is the server API for LogisticsService service.
-// All implementations must embed UnimplementedLogisticsServiceServer
+// All implementations should embed UnimplementedLogisticsServiceServer
 // for forward compatibility.
 type LogisticsServiceServer interface {
 	CreateDelivery(context.Context, *CreateDeliveryRequest) (*model.Delivery, error)
 	ListDeliveries(*ListDeliveriesRequest, grpc.ServerStreamingServer[model.Delivery]) error
-	mustEmbedUnimplementedLogisticsServiceServer()
 }
 
-// UnimplementedLogisticsServiceServer must be embedded to have
+// UnimplementedLogisticsServiceServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
@@ -91,8 +90,7 @@ func (UnimplementedLogisticsServiceServer) CreateDelivery(context.Context, *Crea
 func (UnimplementedLogisticsServiceServer) ListDeliveries(*ListDeliveriesRequest, grpc.ServerStreamingServer[model.Delivery]) error {
 	return status.Errorf(codes.Unimplemented, "method ListDeliveries not implemented")
 }
-func (UnimplementedLogisticsServiceServer) mustEmbedUnimplementedLogisticsServiceServer() {}
-func (UnimplementedLogisticsServiceServer) testEmbeddedByValue()                          {}
+func (UnimplementedLogisticsServiceServer) testEmbeddedByValue() {}
 
 // UnsafeLogisticsServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to LogisticsServiceServer will

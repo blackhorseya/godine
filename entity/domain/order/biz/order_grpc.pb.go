@@ -70,15 +70,14 @@ func (c *orderServiceClient) ListOrders(ctx context.Context, in *ListOrdersReque
 type OrderService_ListOrdersClient = grpc.ServerStreamingClient[model.Order]
 
 // OrderServiceServer is the server API for OrderService service.
-// All implementations must embed UnimplementedOrderServiceServer
+// All implementations should embed UnimplementedOrderServiceServer
 // for forward compatibility.
 type OrderServiceServer interface {
 	SubmitOrder(context.Context, *SubmitOrderRequest) (*model.Order, error)
 	ListOrders(*ListOrdersRequest, grpc.ServerStreamingServer[model.Order]) error
-	mustEmbedUnimplementedOrderServiceServer()
 }
 
-// UnimplementedOrderServiceServer must be embedded to have
+// UnimplementedOrderServiceServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
@@ -91,8 +90,7 @@ func (UnimplementedOrderServiceServer) SubmitOrder(context.Context, *SubmitOrder
 func (UnimplementedOrderServiceServer) ListOrders(*ListOrdersRequest, grpc.ServerStreamingServer[model.Order]) error {
 	return status.Errorf(codes.Unimplemented, "method ListOrders not implemented")
 }
-func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
-func (UnimplementedOrderServiceServer) testEmbeddedByValue()                      {}
+func (UnimplementedOrderServiceServer) testEmbeddedByValue() {}
 
 // UnsafeOrderServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to OrderServiceServer will

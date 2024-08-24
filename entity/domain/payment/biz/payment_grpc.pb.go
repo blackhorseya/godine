@@ -61,15 +61,14 @@ func (c *paymentServiceClient) GetPayment(ctx context.Context, in *GetPaymentReq
 }
 
 // PaymentServiceServer is the server API for PaymentService service.
-// All implementations must embed UnimplementedPaymentServiceServer
+// All implementations should embed UnimplementedPaymentServiceServer
 // for forward compatibility.
 type PaymentServiceServer interface {
 	CreatePayment(context.Context, *CreatePaymentRequest) (*model.Payment, error)
 	GetPayment(context.Context, *GetPaymentRequest) (*model.Payment, error)
-	mustEmbedUnimplementedPaymentServiceServer()
 }
 
-// UnimplementedPaymentServiceServer must be embedded to have
+// UnimplementedPaymentServiceServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
@@ -82,8 +81,7 @@ func (UnimplementedPaymentServiceServer) CreatePayment(context.Context, *CreateP
 func (UnimplementedPaymentServiceServer) GetPayment(context.Context, *GetPaymentRequest) (*model.Payment, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPayment not implemented")
 }
-func (UnimplementedPaymentServiceServer) mustEmbedUnimplementedPaymentServiceServer() {}
-func (UnimplementedPaymentServiceServer) testEmbeddedByValue()                        {}
+func (UnimplementedPaymentServiceServer) testEmbeddedByValue() {}
 
 // UnsafePaymentServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to PaymentServiceServer will

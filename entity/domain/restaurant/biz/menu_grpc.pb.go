@@ -82,16 +82,15 @@ func (c *menuServiceClient) ListMenuItems(ctx context.Context, in *ListMenuItems
 type MenuService_ListMenuItemsClient = grpc.ServerStreamingClient[model.MenuItem]
 
 // MenuServiceServer is the server API for MenuService service.
-// All implementations must embed UnimplementedMenuServiceServer
+// All implementations should embed UnimplementedMenuServiceServer
 // for forward compatibility.
 type MenuServiceServer interface {
 	AddMenuItem(context.Context, *AddMenuItemRequest) (*model.MenuItem, error)
 	GetMenuItem(context.Context, *GetMenuItemRequest) (*model.MenuItem, error)
 	ListMenuItems(*ListMenuItemsRequest, grpc.ServerStreamingServer[model.MenuItem]) error
-	mustEmbedUnimplementedMenuServiceServer()
 }
 
-// UnimplementedMenuServiceServer must be embedded to have
+// UnimplementedMenuServiceServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
@@ -107,8 +106,7 @@ func (UnimplementedMenuServiceServer) GetMenuItem(context.Context, *GetMenuItemR
 func (UnimplementedMenuServiceServer) ListMenuItems(*ListMenuItemsRequest, grpc.ServerStreamingServer[model.MenuItem]) error {
 	return status.Errorf(codes.Unimplemented, "method ListMenuItems not implemented")
 }
-func (UnimplementedMenuServiceServer) mustEmbedUnimplementedMenuServiceServer() {}
-func (UnimplementedMenuServiceServer) testEmbeddedByValue()                     {}
+func (UnimplementedMenuServiceServer) testEmbeddedByValue() {}
 
 // UnsafeMenuServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to MenuServiceServer will

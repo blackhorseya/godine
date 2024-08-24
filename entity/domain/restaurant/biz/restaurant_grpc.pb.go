@@ -82,16 +82,15 @@ func (c *restaurantServiceClient) GetRestaurant(ctx context.Context, in *GetRest
 }
 
 // RestaurantServiceServer is the server API for RestaurantService service.
-// All implementations must embed UnimplementedRestaurantServiceServer
+// All implementations should embed UnimplementedRestaurantServiceServer
 // for forward compatibility.
 type RestaurantServiceServer interface {
 	CreateRestaurant(context.Context, *CreateRestaurantRequest) (*model.Restaurant, error)
 	ListRestaurants(*ListRestaurantsRequest, grpc.ServerStreamingServer[model.Restaurant]) error
 	GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error)
-	mustEmbedUnimplementedRestaurantServiceServer()
 }
 
-// UnimplementedRestaurantServiceServer must be embedded to have
+// UnimplementedRestaurantServiceServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
@@ -107,8 +106,7 @@ func (UnimplementedRestaurantServiceServer) ListRestaurants(*ListRestaurantsRequ
 func (UnimplementedRestaurantServiceServer) GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRestaurant not implemented")
 }
-func (UnimplementedRestaurantServiceServer) mustEmbedUnimplementedRestaurantServiceServer() {}
-func (UnimplementedRestaurantServiceServer) testEmbeddedByValue()                           {}
+func (UnimplementedRestaurantServiceServer) testEmbeddedByValue() {}
 
 // UnsafeRestaurantServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to RestaurantServiceServer will
