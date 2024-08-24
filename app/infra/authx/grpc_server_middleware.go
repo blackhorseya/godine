@@ -38,12 +38,13 @@ func (x *Authx) UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 		account, err := extractAccount(c, x)
 		if err != nil {
+			ctx.Error("failed to extract account", zap.Error(err))
 			return nil, err
 		}
 
 		ctx = contextx.WithValue(ctx, contextx.KeyHandler, account)
 
-		return handler(ctx, req)
+		return handler(context.WithValue(c, contextx.KeyContextx, ctx), req)
 	}
 }
 
@@ -74,7 +75,7 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 		ctx = contextx.WithValue(ctx, contextx.KeyHandler, account)
 
 		wrappedStream := grpc_middleware.WrapServerStream(stream)
-		wrappedStream.WrappedContext = ctx
+		wrappedStream.WrappedContext = context.WithValue(stream.Context(), contextx.KeyContextx, ctx)
 
 		return handler(srv, stream)
 	}

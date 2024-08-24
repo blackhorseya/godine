@@ -15,16 +15,16 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (resp any, err error) {
-		ctx := WithContext(c)
+		c = context.WithValue(c, KeyContextx, WithContext(c))
 
-		return handler(ctx, req)
+		return handler(c, req)
 	}
 }
 
 // StreamServerInterceptor is used to create a new stream interceptor
 func StreamServerInterceptor() grpc.StreamServerInterceptor {
 	return func(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
-		ctx := WithContext(ss.Context())
+		ctx := context.WithValue(ss.Context(), KeyContextx, Background())
 		wrappedStream := grpc_middleware.WrapServerStream(ss)
 		wrappedStream.WrappedContext = ctx
 
