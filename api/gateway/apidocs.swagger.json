@@ -1,21 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Restaurant Service",
-    "version": "0.1.0",
-    "contact": {
-      "name": "Sean Zheng",
-      "url": "https://github.com/blackhorseya",
-      "email": "blackhorseya@gmail.com"
-    },
-    "license": {
-      "name": "GNU General Public License v3.0",
-      "url": "https://github.com/blackhorseya/godine/blob/main/LICENSE"
-    }
+    "title": "domain/user/biz/user.proto",
+    "version": "version not set"
   },
   "tags": [
     {
-      "name": "RestaurantService"
+      "name": "AccountService"
     },
     {
       "name": "LogisticsService"
@@ -33,7 +24,7 @@
       "name": "MenuService"
     },
     {
-      "name": "AccountService"
+      "name": "RestaurantService"
     }
   ],
   "consumes": [
@@ -43,6 +34,35 @@
     "application/json"
   ],
   "paths": {
+    "/api/v1/accounts/whoami": {
+      "get": {
+        "summary": "Retrieve the current user's account information",
+        "description": "This endpoint returns the account details of the currently authenticated user.",
+        "operationId": "AccountService_WhoAmI",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userAccount"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AccountService"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
     "/api/v1/restaurants": {
       "get": {
         "operationId": "RestaurantService_ListRestaurants",
@@ -624,6 +644,13 @@
         }
       },
       "description": "Role is an entity that represents the role of a user."
+    }
+  },
+  "securityDefinitions": {
+    "bearer_auth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   }
 }
