@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/blackhorseya/godine/adapter/platform/web/templates"
+	"github.com/blackhorseya/godine/api"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
@@ -15,6 +16,8 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 )
 
@@ -100,7 +103,18 @@ func (i *impl) InitRouting() error {
 	router.Any("/api/v1/*any", gin.WrapH(gw))
 
 	// swagger
-	// TODO: 2024/8/24|sean|implement swagger
+	router.GET("/swagger", func(c *gin.Context) {
+		data, err2 := api.GatewayOpenAPI.ReadFile("gateway/apidocs.swagger.json")
+		if err2 != nil {
+			c.String(http.StatusInternalServerError, "failed to read swagger file")
+			return
+		}
+		c.Data(http.StatusOK, "application/json; charset=utf-8", data)
+	})
+	router.GET("/api/docs/*any", ginSwagger.WrapHandler(
+		swaggerFiles.Handler,
+		ginSwagger.URL("/swagger"),
+	))
 
 	return nil
 }
