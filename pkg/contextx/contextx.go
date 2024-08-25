@@ -35,6 +35,14 @@ type Contextx struct {
 	*zap.Logger
 }
 
+// WithLogger returns a new Contextx with the given context and logger.
+func WithLogger(ctx context.Context, logger *zap.Logger) Contextx {
+	return Contextx{
+		Context: ctx,
+		Logger:  logger,
+	}
+}
+
 // WithContextx returns a new Contextx with the given context and logger.
 func WithContextx(ctx context.Context) Contextx {
 	return Contextx{
