@@ -22,7 +22,6 @@ services:
       - ./configs/example.yaml:/app/configs/example.yaml
     depends_on:
       - mongodb
-      - mariadb
       - postgresql
 
   mongodb:
@@ -43,21 +42,6 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: changeme
       POSTGRES_DB: godine
-
-  mariadb:
-    image: mariadb:latest
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: changeme
-      MYSQL_DATABASE: godine
-    volumes:
-      - mariadb-data:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
-      start_period: 10s
-      interval: 10s
-      timeout: 5s
-      retries: 3
 
   redis:
     image: redis:7
