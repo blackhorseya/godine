@@ -35,6 +35,14 @@ type Contextx struct {
 	*zap.Logger
 }
 
+// WithContextx returns a new Contextx with the given context and logger.
+func WithContextx(ctx context.Context) *Contextx {
+	return &Contextx{
+		Context: ctx,
+		Logger:  zap.L(),
+	}
+}
+
 // Background returns a non-nil, empty Contextx. It is never canceled, has no values, and has no deadline.
 func Background() Contextx {
 	return Contextx{
@@ -43,8 +51,9 @@ func Background() Contextx {
 	}
 }
 
-// WithContext returns a copy of parent in which the context is set to ctx.
-func WithContext(ctx context.Context) Contextx {
+// WithContextLegacy returns a copy of parent in which the context is set to ctx.
+// Deprecated: Use WithContextx instead.
+func WithContextLegacy(ctx context.Context) Contextx {
 	return Contextx{
 		Context: ctx,
 		Logger:  zap.L(),
