@@ -8,99 +8,22 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  restaurant_restful:
+  platform:
     build:
       context: .
       target: final
     command:
       - --config=/app/configs/example.yaml
       - start
-      - restaurant-restful
+      - platform
     ports:
       - 1992:1992
     volumes:
       - ./configs/example.yaml:/app/configs/example.yaml
     depends_on:
       - mongodb
-
-  payment_restful:
-    build:
-      context: .
-      target: final
-    command:
-      - --config=/app/configs/example.yaml
-      - start
-      - payment-restful
-    ports:
-      - 1997:1997
-    volumes:
-      - ./configs/example.yaml:/app/configs/example.yaml
-    depends_on:
-      - mongodb
-
-  order_restful:
-    build:
-      context: .
-      target: final
-    command:
-      - --config=/app/configs/example.yaml
-      - start
-      - order-restful
-    ports:
-      - 1993:1993
-    volumes:
-      - ./configs/example.yaml:/app/configs/example.yaml
-    depends_on:
-      mariadb:
-        condition: service_healthy
-
-  user_restful:
-    build:
-      context: .
-      target: final
-    command:
-      - --config=/app/configs/example.yaml
-      - start
-      - user-restful
-    ports:
-      - 1994:1994
-    volumes:
-      - ./configs/example.yaml:/app/configs/example.yaml
-    depends_on:
-      - mongodb
       - mariadb
-
-  logistics_restful:
-    build:
-      context: .
-      target: final
-    command:
-      - --config=/app/configs/example.yaml
-      - start
-      - logistics-restful
-    ports:
-      - 1995:1995
-    volumes:
-      - ./configs/example.yaml:/app/configs/example.yaml
-    depends_on:
-      - mongodb
-      - mariadb
-
-  notify_restful:
-    build:
-      context: .
-      target: final
-    command:
-      - --config=/app/configs/example.yaml
-      - start
-      - notify-restful
-    ports:
-      - 1996:1996
-    volumes:
-      - ./configs/example.yaml:/app/configs/example.yaml
-    depends_on:
-      - mongodb
-      - mariadb
+      - postgresql
 
   mongodb:
     image: mongo
@@ -111,6 +34,16 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  postgresql:
+    image: postgres:14
+    restart: always
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_DB: godine
+
   mariadb:
     image: mariadb:latest
     restart: always
@@ -120,7 +53,7 @@ services:
     volumes:
       - mariadb-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       start_period: 10s
       interval: 10s
       timeout: 5s
@@ -151,3 +84,4 @@ services:
 volumes:
   mongo-data:
   mariadb-data:
+  pg-data:

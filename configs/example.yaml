@@ -6,6 +6,35 @@ services:
   platform:
     name: dev-godine-platform
 
+    http:
+      port: 1992
+      mode: debug
+
+    grpc:
+      url: localhost
+      port: 50051
+
+    storage:
+      postgresql:
+        dsn: "user=root password=changeme dbname=godine host=postgresql port=5432 sslmode=disable"
+
+      mongodb:
+        dsn: mongodb://admin:changeme@mongodb/?retryWrites=true&w=majority
+
+      redis:
+        addr: redis:6379
+
+    auth0:
+      domain: YOUR_DOMAIN
+      clientID: YOUR_CLIENT_ID
+      clientSecret: YOUR_CLIENT_SECRET
+      callbackURL: http://localhost:1992/callback
+      audiences:
+        - YOUR_AUDIENCE
+
+    otel:
+      target: otel-collector:4317
+
 restaurantRestful:
   name: godine-restaurant-restful
 
