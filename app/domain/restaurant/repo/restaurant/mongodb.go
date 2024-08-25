@@ -175,6 +175,8 @@ func (i *mongodb) List(
 	}
 	opts := options.Find().SetLimit(condition.Limit).SetSkip(condition.Offset).SetSort(bson.M{"updated_at": -1})
 
+	ctx.Debug("list restaurants from mongodb", zap.Any("condition", &condition))
+
 	cursor, err := i.rw.Database(dbName).Collection(collName).Find(timeout, filter, opts)
 	if err != nil {
 		ctx.Error("list restaurants from mongodb failed", zap.Error(err))
