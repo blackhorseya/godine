@@ -1,6 +1,7 @@
 package restaurant
 
 import (
+	"context"
 	"testing"
 
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
@@ -67,7 +68,7 @@ func TestMongodb(t *testing.T) {
 
 func (s *suiteMongodbTester) Test_mongodb_Create() {
 	type args struct {
-		ctx  contextx.Contextx
+		ctx  context.Context
 		data *model.Restaurant
 		mock func()
 	}
@@ -84,7 +85,7 @@ func (s *suiteMongodbTester) Test_mongodb_Create() {
 	}
 	for _, tt := range tests {
 		s.T().Run(tt.name, func(t *testing.T) {
-			tt.args.ctx = contextx.Background()
+			tt.args.ctx = context.WithValue(context.Background(), contextx.KeyContextx, contextx.Background())
 			if tt.args.mock != nil {
 				tt.args.mock()
 			}
