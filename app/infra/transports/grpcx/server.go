@@ -29,19 +29,19 @@ func NewServer(app *configx.Application, init InitServers, authx *authx.Authx) (
 	logger := contextx.Background().Logger
 	server := grpc.NewServer(
 		grpc.StatsHandler(otelgrpc.NewServerHandler()),
-		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
-			grpc_ctxtags.StreamServerInterceptor(),
-			grpc_zap.StreamServerInterceptor(logger),
-			grpc_recovery.StreamServerInterceptor(),
-			contextx.StreamServerInterceptor(),
-			authx.StreamServerInterceptor(),
-		)),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			grpc_ctxtags.UnaryServerInterceptor(),
 			grpc_zap.UnaryServerInterceptor(logger),
 			grpc_recovery.UnaryServerInterceptor(),
 			contextx.UnaryServerInterceptor(),
 			authx.UnaryServerInterceptor(),
+		)),
+		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+			grpc_ctxtags.StreamServerInterceptor(),
+			grpc_zap.StreamServerInterceptor(logger),
+			grpc_recovery.StreamServerInterceptor(),
+			contextx.StreamServerInterceptor(),
+			authx.StreamServerInterceptor(),
 		)),
 	)
 

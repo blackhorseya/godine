@@ -3,8 +3,9 @@
 package repo
 
 import (
+	"context"
+
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
-	"github.com/blackhorseya/godine/pkg/contextx"
 )
 
 // ListCondition is a struct that defines the condition for listing restaurants
@@ -15,9 +16,9 @@ type ListCondition struct {
 
 // IRestaurantRepo is an interface that defines the methods that the restaurant repository should implement
 type IRestaurantRepo interface {
-	Create(ctx contextx.Contextx, data *model.Restaurant) (err error)
-	Update(ctx contextx.Contextx, data *model.Restaurant) (err error)
-	Delete(ctx contextx.Contextx, id string) (err error)
-	GetByID(ctx contextx.Contextx, id string) (item *model.Restaurant, err error)
-	List(ctx contextx.Contextx, condition ListCondition) (items []*model.Restaurant, total int, err error)
+	Create(c context.Context, data *model.Restaurant) (err error)
+	Update(c context.Context, data *model.Restaurant) (err error)
+	Delete(c context.Context, id string) (err error)
+	GetByID(c context.Context, id string) (item *model.Restaurant, err error)
+	List(c context.Context, condition ListCondition) (items []*model.Restaurant, total int, err error)
 }

@@ -1,6 +1,7 @@
 package restaurant
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -17,6 +18,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -40,9 +43,14 @@ func NewMongodb(rw *mongo.Client, rdb *redis.Client) repo.IRestaurantRepo {
 	}
 }
 
-func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err error) {
-	ctx, span := otelx.Span(ctx, "restaurant.mongodb.create")
+func (i *mongodb) Create(c context.Context, data *model.Restaurant) (err error) {
+	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.create")
 	defer span.End()
+
+	ctx, err := contextx.FromContext(next)
+	if err != nil {
+		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
+	}
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
@@ -62,9 +70,14 @@ func (i *mongodb) Create(ctx contextx.Contextx, data *model.Restaurant) (err err
 	return nil
 }
 
-func (i *mongodb) Update(ctx contextx.Contextx, data *model.Restaurant) (err error) {
-	ctx, span := otelx.Span(ctx, "restaurant.mongodb.update")
+func (i *mongodb) Update(c context.Context, data *model.Restaurant) (err error) {
+	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.update")
 	defer span.End()
+
+	ctx, err := contextx.FromContext(next)
+	if err != nil {
+		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
+	}
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
@@ -92,9 +105,14 @@ func (i *mongodb) Update(ctx contextx.Contextx, data *model.Restaurant) (err err
 	return nil
 }
 
-func (i *mongodb) Delete(ctx contextx.Contextx, id string) (err error) {
-	ctx, span := otelx.Span(ctx, "restaurant.mongodb.delete")
+func (i *mongodb) Delete(c context.Context, id string) (err error) {
+	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.delete")
 	defer span.End()
+
+	ctx, err := contextx.FromContext(next)
+	if err != nil {
+		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
+	}
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
@@ -109,9 +127,14 @@ func (i *mongodb) Delete(ctx contextx.Contextx, id string) (err error) {
 	return nil
 }
 
-func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Restaurant, err error) {
-	ctx, span := otelx.Span(ctx, "restaurant.mongodb.get_by_id")
+func (i *mongodb) GetByID(c context.Context, id string) (item *model.Restaurant, err error) {
+	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.get_by_id")
 	defer span.End()
+
+	ctx, err := contextx.FromContext(next)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get contextx: %v", err)
+	}
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
@@ -157,11 +180,16 @@ func (i *mongodb) GetByID(ctx contextx.Contextx, id string) (item *model.Restaur
 }
 
 func (i *mongodb) List(
-	ctx contextx.Contextx,
+	c context.Context,
 	condition repo.ListCondition,
 ) (items []*model.Restaurant, total int, err error) {
-	ctx, span := otelx.Span(ctx, "restaurant.mongodb.list")
+	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.list")
 	defer span.End()
+
+	ctx, err := contextx.FromContext(next)
+	if err != nil {
+		return nil, 0, status.Errorf(codes.Internal, "failed to get contextx: %v", err)
+	}
 
 	timeout, cancelFunc := contextx.WithTimeout(ctx, defaultTimeout)
 	defer cancelFunc()
@@ -174,6 +202,8 @@ func (i *mongodb) List(
 		condition.Offset = 0
 	}
 	opts := options.Find().SetLimit(condition.Limit).SetSkip(condition.Offset).SetSort(bson.M{"updated_at": -1})
+
+	ctx.Debug("list restaurants from mongodb", zap.Any("condition", &condition))
 
 	cursor, err := i.rw.Database(dbName).Collection(collName).Find(timeout, filter, opts)
 	if err != nil {
@@ -196,11 +226,11 @@ func (i *mongodb) List(
 	return items, int(count), nil
 }
 
-func cacheRestaurant(ctx contextx.Contextx, rdb *redis.Client, id string, restaurant *model.Restaurant) error {
+func cacheRestaurant(c context.Context, rdb *redis.Client, id string, restaurant *model.Restaurant) error {
 	data, err := json.Marshal(restaurant)
 	if err != nil {
 		return err
 	}
 
-	return rdb.Set(ctx, id, data, 10*time.Minute).Err()
+	return rdb.Set(c, id, data, 10*time.Minute).Err()
 }

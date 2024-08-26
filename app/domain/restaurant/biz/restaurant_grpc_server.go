@@ -62,15 +62,15 @@ func (i *restaurantService) ListRestaurants(
 	req *biz.ListRestaurantsRequest,
 	stream biz.RestaurantService_ListRestaurantsServer,
 ) error {
+	next, span := otelx.Tracer.Start(stream.Context(), "restaurant.biz.ListRestaurants")
+	defer span.End()
+
 	ctx, err := contextx.FromContext(stream.Context())
 	if err != nil {
 		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 	}
 
-	ctx, span := otelx.Span(ctx, "restaurant.biz.ListRestaurants")
-	defer span.End()
-
-	items, total, err := i.restaurants.List(ctx, repo.ListCondition{
+	items, total, err := i.restaurants.List(next, repo.ListCondition{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})

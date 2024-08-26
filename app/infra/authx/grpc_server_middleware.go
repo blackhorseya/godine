@@ -19,13 +19,13 @@ const keyAccessToken = "access_token"
 // UnaryServerInterceptor is used to create a new unary interceptor
 func (x *Authx) UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(c context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
+		next, span := otelx.Tracer.Start(c, "authx.grpc.UnaryServerInterceptor")
+		defer span.End()
+
 		ctx, err := contextx.FromContext(c)
 		if err != nil {
 			return nil, status.Newf(codes.Internal, "failed to get contextx: %v", err).Err()
 		}
-
-		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryServerInterceptor")
-		defer span.End()
 
 		if x.SkipPath(info.FullMethod) {
 			ctx.Debug(
@@ -41,23 +41,22 @@ func (x *Authx) UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 			ctx.Error("failed to extract account", zap.Error(err))
 			return nil, err
 		}
+		next = context.WithValue(next, contextx.KeyHandler, account)
 
-		ctx = contextx.WithValue(ctx, contextx.KeyHandler, account)
-
-		return handler(context.WithValue(c, contextx.KeyContextx, ctx), req)
+		return handler(next, req)
 	}
 }
 
 // StreamServerInterceptor is used to create a new stream interceptor
 func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 	return func(srv any, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+		next, span := otelx.Tracer.Start(stream.Context(), "authx.grpc.StreamServerInterceptor")
+		defer span.End()
+
 		ctx, err := contextx.FromContext(stream.Context())
 		if err != nil {
 			return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 		}
-
-		ctx, span := otelx.Span(ctx, "authx.grpc.StreamServerInterceptor")
-		defer span.End()
 
 		if x.SkipPath(info.FullMethod) {
 			ctx.Debug(
@@ -72,10 +71,10 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 		if err != nil {
 			return err
 		}
-		ctx = contextx.WithValue(ctx, contextx.KeyHandler, account)
+		next = context.WithValue(next, contextx.KeyHandler, account)
 
 		wrappedStream := grpc_middleware.WrapServerStream(stream)
-		wrappedStream.WrappedContext = context.WithValue(stream.Context(), contextx.KeyContextx, ctx)
+		wrappedStream.WrappedContext = next
 
 		return handler(srv, stream)
 	}

@@ -146,5 +146,5 @@ func newMeter(
 // Span is used to start a span.
 func Span(parent contextx.Contextx, name string) (ctx contextx.Contextx, span trace.Span) {
 	next, span := Tracer.Start(parent, name)
-	return contextx.WithContext(next), span
+	return contextx.WithContextLegacy(next), span
 }

@@ -35,18 +35,35 @@ type Contextx struct {
 	*zap.Logger
 }
 
-// Background returns a non-nil, empty Contextx. It is never canceled, has no values, and has no deadline.
-func Background() Contextx {
+// WithLogger returns a new Contextx with the given context and logger.
+func WithLogger(ctx context.Context, logger *zap.Logger) Contextx {
 	return Contextx{
-		Context: context.Background(),
+		Context: ctx,
+		Logger:  logger,
+	}
+}
+
+// WithContextx returns a new Contextx with the given context and logger.
+func WithContextx(ctx context.Context) Contextx {
+	return Contextx{
+		Context: ctx,
 		Logger:  zap.L(),
 	}
 }
 
-// WithContext returns a copy of parent in which the context is set to ctx.
-func WithContext(ctx context.Context) Contextx {
+// WithContextLegacy returns a copy of parent in which the context is set to ctx.
+// Deprecated: Use WithContextx instead.
+func WithContextLegacy(ctx context.Context) Contextx {
 	return Contextx{
 		Context: ctx,
+		Logger:  zap.L(),
+	}
+}
+
+// Background returns a non-nil, empty Contextx. It is never canceled, has no values, and has no deadline.
+func Background() Contextx {
+	return Contextx{
+		Context: context.Background(),
 		Logger:  zap.L(),
 	}
 }
@@ -96,21 +113,6 @@ func FromGin(c *gin.Context) (Contextx, error) {
 
 // FromContext returns a Contextx from context.Context.
 func FromContext(c context.Context) (Contextx, error) {
-	// ctx, ok := c.(Contextx)
-	// if !ok {
-	// 	return Contextx{}, fmt.Errorf("invalid context type: %T", c)
-	// }
-
-	ctx, ok := c.Value(KeyContextx).(Contextx)
-	if !ok {
-		return Contextx{}, errors.New("contextx not found in context.Context")
-	}
-
-	return ctx, nil
-}
-
-// GetContextx returns a Contextx from context.Context.
-func GetContextx(c context.Context) (Contextx, error) {
 	ctx, ok := c.Value(KeyContextx).(Contextx)
 	if !ok {
 		return Contextx{}, errors.New("contextx not found in context.Context")

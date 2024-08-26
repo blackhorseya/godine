@@ -15,9 +15,8 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (resp any, err error) {
-		c = context.WithValue(c, KeyContextx, WithContext(c))
-
-		return handler(c, req)
+		ctx := context.WithValue(c, KeyContextx, Background())
+		return handler(ctx, req)
 	}
 }
 
