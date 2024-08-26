@@ -37,7 +37,7 @@ func Init(options Options) error {
 	cores = append(cores, zapcore.NewCore(enc, cw, level))
 
 	core := zapcore.NewTee(cores...)
-	logger := zap.New(core)
+	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))
 
 	zap.ReplaceGlobals(logger)
 

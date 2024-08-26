@@ -69,6 +69,7 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 
 		account, err := extractAccount(stream.Context(), x)
 		if err != nil {
+			ctx.Error("failed to extract account", zap.Error(err))
 			return err
 		}
 		next = context.WithValue(next, contextx.KeyHandler, account)
@@ -83,18 +84,18 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 func extractAccount(c context.Context, authx *Authx) (*model.Account, error) {
 	headers, ok := metadata.FromIncomingContext(c)
 	if !ok {
-		return nil, status.New(codes.Unauthenticated, "metadata not found").Err()
+		return nil, status.Errorf(codes.Unauthenticated, "metadata not found")
 	}
 
 	tokens := headers.Get(keyAccessToken)
 	if len(tokens) < 1 {
-		return nil, status.New(codes.Unauthenticated, "access token not found").Err()
+		return nil, status.Errorf(codes.Unauthenticated, "access token not found")
 	}
 	accessToken := tokens[0]
 
 	account, err := authx.ExtractAccountFromToken(accessToken)
 	if err != nil {
-		return nil, status.New(codes.Unauthenticated, "invalid access token").Err()
+		return nil, status.Errorf(codes.Unauthenticated, "failed to extract account: %v", err)
 	}
 
 	return account, nil
