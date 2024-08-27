@@ -41,5 +41,6 @@ go_test(
     name = "biz_test",
     srcs = ["restaurant_grpc_server_integration_test.go"],
     embed = [":biz"],
+    tags = ["integration"],
     deps = ["@com_github_stretchr_testify//suite"],
 )
