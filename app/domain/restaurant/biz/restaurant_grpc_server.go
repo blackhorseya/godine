@@ -67,6 +67,7 @@ func (i *restaurantService) ListRestaurants(
 
 	ctx, err := contextx.FromContext(stream.Context())
 	if err != nil {
+		contextx.Background().Error("failed to get contextx", zap.Error(err))
 		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 	}
 

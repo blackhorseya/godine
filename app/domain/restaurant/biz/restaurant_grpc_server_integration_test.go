@@ -11,6 +11,9 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/suite"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -57,7 +60,18 @@ func (s *suiteRestaurantServiceIntegration) SetupTest() {
 
 	buffer := 10 * 1024 * 1024
 	listen := bufconn.Listen(buffer)
-	s.baseServer = grpc.NewServer()
+	s.baseServer = grpc.NewServer(
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			grpc_ctxtags.UnaryServerInterceptor(),
+			grpc_recovery.UnaryServerInterceptor(),
+			contextx.UnaryServerInterceptor(),
+		)),
+		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+			grpc_ctxtags.StreamServerInterceptor(),
+			grpc_recovery.StreamServerInterceptor(),
+			contextx.StreamServerInterceptor(),
+		)),
+	)
 	biz.RegisterRestaurantServiceServer(s.baseServer, s.server)
 	go func() {
 		if err = s.baseServer.Serve(listen); err != nil {
@@ -102,4 +116,51 @@ func (s *suiteRestaurantServiceIntegration) TearDownTest() {
 
 func TestIntegrationAll(t *testing.T) {
 	suite.Run(t, new(suiteRestaurantServiceIntegration))
+}
+
+func (s *suiteRestaurantServiceIntegration) Test_restaurantService_ListRestaurants() {
+	type args struct {
+		c    context.Context
+		req  *biz.ListRestaurantsRequest
+		mock func()
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "list restaurants",
+			args: args{
+				c: context.TODO(),
+				req: &biz.ListRestaurantsRequest{
+					Page:     0,
+					PageSize: 0,
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		s.T().Run(tt.name, func(t *testing.T) {
+			if tt.args.mock != nil {
+				tt.args.mock()
+			}
+
+			stream, err := s.client.ListRestaurants(tt.args.c, tt.args.req)
+			if tt.wantErr {
+				s.Require().Error(err)
+				return
+			}
+
+			header, err := stream.Header()
+			s.Require().NoError(err)
+
+			totalSlice := header.Get("total")
+			s.Require().NotEmpty(totalSlice)
+
+			total := totalSlice[0]
+			s.Require().NotEmpty(total)
+		})
+	}
 }
