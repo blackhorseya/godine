@@ -140,7 +140,7 @@ func (x *Authx) ParseJWT() gin.HandlerFunc {
 				IsActive: false,
 				Level:    0,
 			}
-			c.Set(contextx.KeyCtx, contextx.WithValue(ctx, contextx.KeyHandler, by))
+			c.Set(contextx.KeyCtx, contextx.WithValue(ctx, contextx.KeyHandler{}, by))
 
 			// continue to the next middleware
 			c.Next()

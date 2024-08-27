@@ -13,6 +13,8 @@ func init() {
 	zap.ReplaceGlobals(zap.NewExample())
 }
 
+type KeyHandler struct{}
+
 // ContextKey is a type for context key.
 type ContextKey string
 
@@ -24,9 +26,6 @@ const (
 const (
 	// KeyCtx is the key of contextx.
 	KeyCtx = "contextx"
-
-	// KeyHandler is the key of handler.
-	KeyHandler = "handler"
 )
 
 // Contextx extends google's context to support logging methods.

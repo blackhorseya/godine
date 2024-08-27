@@ -63,7 +63,7 @@ func (s *suiteTester) Test_userBiz_Register() {
 	}
 	for _, tt := range tests {
 		s.T().Run(tt.name, func(t *testing.T) {
-			tt.args.ctx = contextx.WithValue(contextx.Background(), contextx.KeyHandler, &model.Account{Username: "testUser"})
+			tt.args.ctx = contextx.WithValue(contextx.Background(), contextx.KeyHandler{}, &model.Account{Username: "testUser"})
 			if tt.args.mock != nil {
 				tt.args.mock()
 			}
