@@ -35,15 +35,22 @@ clean: ## clean build directory
 
 .PHONY: gazelle
 gazelle: ## run gazelle with bazel
-	@bazel run //:gazelle
+	bazel run //:gazelle
 
 .PHONY: build
 build: ## build go binary
-	@bazel build //...
+	bazel build //...
 
-.PHONY: test
-test: ## test go binary
-	@bazel test --verbose_failures //...
+.PHNOY: test
+test: test-unit
+
+.PHONY: test-unit
+test-unit: ## Run unit tests
+	bazel test --verbose_failures //... --test_tag_filters=-integration,-external
+
+.PHONY: test-integration
+test-integration: ## Run integration tests
+	bazel test --verbose_failures //... --test_tag_filters=integration,-external
 
 .PHONY: coverage
 coverage: ## generate coverage report
