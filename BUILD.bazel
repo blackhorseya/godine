@@ -5,6 +5,7 @@ load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 # gazelle:prefix github.com/blackhorseya/godine
 # gazelle:proto disable_global
+# gazelle:build_tags integration
 gazelle(name = "gazelle")
 
 go_library(

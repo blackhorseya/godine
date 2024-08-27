@@ -1,4 +1,4 @@
-load("@rules_go//go:def.bzl", "go_library")
+load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "biz",
@@ -35,4 +35,11 @@ go_library(
         "@org_golang_google_grpc//status",
         "@org_uber_go_zap//:zap",
     ],
+)
+
+go_test(
+    name = "biz_test",
+    srcs = ["restaurant_grpc_server_integration_test.go"],
+    embed = [":biz"],
+    deps = ["@com_github_stretchr_testify//suite"],
 )
