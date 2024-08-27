@@ -3,6 +3,8 @@
 package biz
 
 import (
+	"context"
+	"net"
 	"testing"
 
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
@@ -14,6 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/resolver"
 	"google.golang.org/grpc/test/bufconn"
 )
 
@@ -52,7 +55,7 @@ func (s *suiteRestaurantServiceIntegration) SetupTest() {
 	s.Require().NoError(err)
 	s.server = server
 
-	buffer := 101024 * 1024
+	buffer := 10 * 1024 * 1024
 	listen := bufconn.Listen(buffer)
 	s.baseServer = grpc.NewServer()
 	biz.RegisterRestaurantServiceServer(s.baseServer, s.server)
@@ -62,7 +65,14 @@ func (s *suiteRestaurantServiceIntegration) SetupTest() {
 		}
 	}()
 
-	conn, err := grpc.NewClient("", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	resolver.SetDefaultScheme("passthrough")
+	conn, err := grpc.NewClient(
+		"bufnet",
+		grpc.WithContextDialer(func(c context.Context, s string) (net.Conn, error) {
+			return listen.Dial()
+		}),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	s.Require().NoError(err)
 
 	s.client = biz.NewRestaurantServiceClient(conn)
