@@ -26,7 +26,7 @@ func NewUser(name, email, password string, address *Address) *Account {
 
 // FromContext extracts the user from the context.
 func FromContext(ctx contextx.Contextx) (*Account, error) {
-	user, ok := ctx.Value(contextx.KeyHandler).(*Account)
+	user, ok := ctx.Value(contextx.KeyHandler{}).(*Account)
 	if !ok {
 		return nil, errors.New("no user found in context")
 	}
