@@ -111,3 +111,11 @@ func (i *restaurantService) GetRestaurant(
 
 	return i.restaurants.GetByID(ctx, req.RestaurantId)
 }
+
+func (i *restaurantService) ListRestaurantsNonStream(
+	c context.Context,
+	req *biz.ListRestaurantsRequest,
+) (*biz.ListRestaurantsResponse, error) {
+	// TODO: 2024/8/28|sean|implement me
+	panic("implement me")
+}
