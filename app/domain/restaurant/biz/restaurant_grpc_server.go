@@ -116,6 +116,25 @@ func (i *restaurantService) ListRestaurantsNonStream(
 	c context.Context,
 	req *biz.ListRestaurantsRequest,
 ) (*biz.ListRestaurantsResponse, error) {
-	// TODO: 2024/8/28|sean|implement me
-	panic("implement me")
+	next, span := otelx.Tracer.Start(c, "restaurant.biz.ListRestaurantsNonStream")
+	defer span.End()
+
+	ctx, err := contextx.FromContext(c)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	items, total, err := i.restaurants.List(next, repo.ListCondition{
+		Limit:  req.PageSize,
+		Offset: (req.Page - 1) * req.PageSize,
+	})
+	if err != nil {
+		ctx.Error("failed to list restaurants", zap.Error(err))
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &biz.ListRestaurantsResponse{
+		Restaurants: items,
+		Total:       uint64(total),
+	}, nil
 }
