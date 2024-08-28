@@ -20,9 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RestaurantService_CreateRestaurant_FullMethodName = "/restaurant.RestaurantService/CreateRestaurant"
-	RestaurantService_ListRestaurants_FullMethodName  = "/restaurant.RestaurantService/ListRestaurants"
-	RestaurantService_GetRestaurant_FullMethodName    = "/restaurant.RestaurantService/GetRestaurant"
+	RestaurantService_CreateRestaurant_FullMethodName         = "/restaurant.RestaurantService/CreateRestaurant"
+	RestaurantService_ListRestaurants_FullMethodName          = "/restaurant.RestaurantService/ListRestaurants"
+	RestaurantService_GetRestaurant_FullMethodName            = "/restaurant.RestaurantService/GetRestaurant"
+	RestaurantService_ListRestaurantsNonStream_FullMethodName = "/restaurant.RestaurantService/ListRestaurantsNonStream"
 )
 
 // RestaurantServiceClient is the client API for RestaurantService service.
@@ -32,6 +33,7 @@ type RestaurantServiceClient interface {
 	CreateRestaurant(ctx context.Context, in *CreateRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error)
 	ListRestaurants(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[model.Restaurant], error)
 	GetRestaurant(ctx context.Context, in *GetRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error)
+	ListRestaurantsNonStream(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (*ListRestaurantsResponse, error)
 }
 
 type restaurantServiceClient struct {
@@ -81,6 +83,16 @@ func (c *restaurantServiceClient) GetRestaurant(ctx context.Context, in *GetRest
 	return out, nil
 }
 
+func (c *restaurantServiceClient) ListRestaurantsNonStream(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (*ListRestaurantsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListRestaurantsResponse)
+	err := c.cc.Invoke(ctx, RestaurantService_ListRestaurantsNonStream_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RestaurantServiceServer is the server API for RestaurantService service.
 // All implementations should embed UnimplementedRestaurantServiceServer
 // for forward compatibility.
@@ -88,6 +100,7 @@ type RestaurantServiceServer interface {
 	CreateRestaurant(context.Context, *CreateRestaurantRequest) (*model.Restaurant, error)
 	ListRestaurants(*ListRestaurantsRequest, grpc.ServerStreamingServer[model.Restaurant]) error
 	GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error)
+	ListRestaurantsNonStream(context.Context, *ListRestaurantsRequest) (*ListRestaurantsResponse, error)
 }
 
 // UnimplementedRestaurantServiceServer should be embedded to have
@@ -105,6 +118,9 @@ func (UnimplementedRestaurantServiceServer) ListRestaurants(*ListRestaurantsRequ
 }
 func (UnimplementedRestaurantServiceServer) GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRestaurant not implemented")
+}
+func (UnimplementedRestaurantServiceServer) ListRestaurantsNonStream(context.Context, *ListRestaurantsRequest) (*ListRestaurantsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRestaurantsNonStream not implemented")
 }
 func (UnimplementedRestaurantServiceServer) testEmbeddedByValue() {}
 
@@ -173,6 +189,24 @@ func _RestaurantService_GetRestaurant_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RestaurantService_ListRestaurantsNonStream_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRestaurantsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RestaurantServiceServer).ListRestaurantsNonStream(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RestaurantService_ListRestaurantsNonStream_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RestaurantServiceServer).ListRestaurantsNonStream(ctx, req.(*ListRestaurantsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RestaurantService_ServiceDesc is the grpc.ServiceDesc for RestaurantService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -187,6 +221,10 @@ var RestaurantService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRestaurant",
 			Handler:    _RestaurantService_GetRestaurant_Handler,
+		},
+		{
+			MethodName: "ListRestaurantsNonStream",
+			Handler:    _RestaurantService_ListRestaurantsNonStream_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
