@@ -1,3 +1,29 @@
+## 0.5.9 (2024-08-28)
+
+### Feat
+
+- refactor gRPC client setup and dependencies (#145)
+- refactor gRPC client setup and dependencies
+- include new dependencies in the project configurations
+- refactor context handling and logging functionality
+- refactor services and configurations for new platform integration
+
+### Fix
+
+- improve error handling in gRPC middleware
+
+### Refactor
+
+- refactor context key handling across files (#143)
+- refactor context key handling across files
+- refactor grpc server stream interceptors (#142)
+- refactor context handling and initialization
+- implement OpenTelemetry tracing for gRPC server interceptors
+- refactor context handling in various files
+- refactor grpc server stream interceptors
+- refactor context handling and add MongoDB debug log
+- refactor context handling functions
+
 ## 0.5.8 (2024-08-24)
 
 ### Feat
