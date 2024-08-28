@@ -2,22 +2,16 @@ package platform
 
 import (
 	"encoding/gob"
-	"fmt"
 	"net/http"
 
 	"github.com/blackhorseya/godine/adapter/platform/web/templates"
-	"github.com/blackhorseya/godine/api"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
-	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 )
 
@@ -93,33 +87,6 @@ func (i *impl) InitRouting() error {
 	router.GET("/callback", i.callback)
 	router.GET("/user", IsAuthenticated, i.user)
 	router.GET("/logout", i.logout)
-
-	// api
-	gw := runtime.NewServeMux()
-	err := restB.RegisterRestaurantServiceHandlerClient(contextx.Background(), gw, i.injector.RestaurantClient)
-	if err != nil {
-		return fmt.Errorf("failed to register restaurant service handler client: %w", err)
-	}
-	router.Any("/api/v1/*any", gin.WrapH(gw))
-
-	// swagger
-	router.GET("/swagger", func(c *gin.Context) {
-		data, err2 := api.GatewayOpenAPI.ReadFile("gateway/apidocs.swagger.json")
-		if err2 != nil {
-			c.String(http.StatusInternalServerError, "failed to read swagger file")
-			return
-		}
-		c.Data(http.StatusOK, "application/json; charset=utf-8", data)
-	})
-	router.GET("/api/docs/*any", ginSwagger.WrapHandler(
-		swaggerFiles.Handler,
-		ginSwagger.URL("/swagger"),
-	))
-
-	contextx.Background().Info(
-		"init routing success",
-		zap.String("swagger", fmt.Sprintf("http://localhost:%d/api/docs/index.html", i.injector.A.HTTP.Port)),
-	)
 
 	return nil
 }

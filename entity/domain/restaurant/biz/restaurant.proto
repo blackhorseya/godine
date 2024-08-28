@@ -3,8 +3,6 @@ syntax = "proto3";
 package restaurant;
 
 import "domain/restaurant/model/restaurant.proto";
-import "google/api/annotations.proto";
-import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
 
@@ -14,18 +12,9 @@ message CreateRestaurantRequest {
 }
 
 message ListRestaurantsRequest {
-  int64 page = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-    description: "The page number."
-    default: "1"
-    minimum: 1
-  }];
+  int64 page = 1;
 
-  int64 page_size = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-    description: "The number of items per page."
-    default: "10"
-    minimum: 1
-    maximum: 100
-  }];
+  int64 page_size = 2;
 }
 
 message GetRestaurantRequest {
@@ -34,10 +23,6 @@ message GetRestaurantRequest {
 
 service RestaurantService {
   rpc CreateRestaurant(CreateRestaurantRequest) returns (Restaurant) {}
-  rpc ListRestaurants(ListRestaurantsRequest) returns (stream Restaurant) {
-    option (google.api.http) = {get: "/api/v1/restaurants"};
-  }
-  rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {
-    option (google.api.http) = {get: "/api/v1/restaurants/{restaurant_id}"};
-  }
+  rpc ListRestaurants(ListRestaurantsRequest) returns (stream Restaurant) {}
+  rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {}
 }
