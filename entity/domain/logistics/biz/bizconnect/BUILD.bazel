@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "bizconnect",
+    srcs = ["logistics.connect.go"],
+    importpath = "github.com/blackhorseya/godine/entity/domain/logistics/biz/bizconnect",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/logistics/biz",
+        "//entity/domain/logistics/model",
+        "@com_connectrpc_connect//:connect",
+    ],
+)

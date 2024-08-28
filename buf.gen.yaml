@@ -13,5 +13,9 @@ plugins:
   - local: protoc-gen-go-grpc-mock
     out: entity
     opt: paths=source_relative
+  - remote: buf.build/connectrpc/go
+    out: entity
+    opt:
+      - paths=source_relative
 inputs:
   - directory: entity

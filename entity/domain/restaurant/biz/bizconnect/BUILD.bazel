@@ -1,0 +1,16 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "bizconnect",
+    srcs = [
+        "menu.connect.go",
+        "restaurant.connect.go",
+    ],
+    importpath = "github.com/blackhorseya/godine/entity/domain/restaurant/biz/bizconnect",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/restaurant/biz",
+        "//entity/domain/restaurant/model",
+        "@com_connectrpc_connect//:connect",
+    ],
+)

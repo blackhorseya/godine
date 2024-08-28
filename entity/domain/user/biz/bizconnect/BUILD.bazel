@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "bizconnect",
+    srcs = ["user.connect.go"],
+    importpath = "github.com/blackhorseya/godine/entity/domain/user/biz/bizconnect",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/user/biz",
+        "//entity/domain/user/model",
+        "@com_connectrpc_connect//:connect",
+        "@org_golang_google_protobuf//types/known/emptypb",
+    ],
+)
