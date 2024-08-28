@@ -12,7 +12,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/platform/web/templates",
-        "//api",
         "//app/domain/logistics/biz",
         "//app/domain/logistics/repo/delivery",
         "//app/domain/notification/biz",
@@ -45,10 +44,7 @@ go_library(
         "@com_github_gin_contrib_sessions//:sessions",
         "@com_github_gin_contrib_sessions//cookie",
         "@com_github_gin_gonic_gin//:gin",
-        "@com_github_grpc_ecosystem_grpc_gateway_v2//runtime",
         "@com_github_spf13_viper//:viper",
-        "@com_github_swaggo_files//:files",
-        "@com_github_swaggo_gin_swagger//:gin-swagger",
         "@org_golang_google_grpc//:grpc",
         "@org_golang_google_grpc//health",
         "@org_golang_google_grpc//health/grpc_health_v1",
