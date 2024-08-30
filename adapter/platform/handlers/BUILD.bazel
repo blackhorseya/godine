@@ -1,0 +1,9 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "handlers",
+    srcs = ["restaurant.go"],
+    importpath = "github.com/blackhorseya/godine/adapter/platform/handlers",
+    visibility = ["//visibility:public"],
+    deps = ["//entity/domain/restaurant/biz/bizconnect"],
+)
