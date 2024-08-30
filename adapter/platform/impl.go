@@ -1,19 +1,15 @@
 package platform
 
 import (
-	"encoding/gob"
 	"errors"
 	"net/http"
 	"time"
 
-	"github.com/blackhorseya/godine/adapter/platform/web/templates"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz/bizconnect"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/cors"
 	"go.uber.org/zap"
@@ -96,23 +92,6 @@ func (i *impl) AwaitSignal() error {
 }
 
 func (i *impl) InitRouting() error {
-	router := i.web.Router
-
-	gob.Register(map[string]interface{}{})
-	store := cookie.NewStore([]byte("secret"))
-	router.Use(sessions.Sessions("auth-session", store))
-
-	templates.SetHTMLTemplate(router)
-
-	// web
-	router.GET("", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "home.html", nil)
-	})
-	router.GET("/login", i.login)
-	router.GET("/callback", i.callback)
-	router.GET("/user", IsAuthenticated, i.user)
-	router.GET("/logout", i.logout)
-
 	// grpc
 	api := http.NewServeMux()
 	api.Handle(bizconnect.NewRestaurantServiceHandler(i.injector.RestaurantServiceHandler))

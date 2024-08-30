@@ -1,20 +1,30 @@
 package user
 
 import (
+	"encoding/gob"
+	"net/http"
+
+	"github.com/blackhorseya/godine/adapter/user/web/templates"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
 type impl struct {
-	server *httpx.Server
+	injector *Injector
+	server   *httpx.Server
 }
 
 // NewRestful is to create a new restful adapter
-func NewRestful(server *httpx.Server) adapterx.Restful {
-	return &impl{server: server}
+func NewRestful(injector *Injector, server *httpx.Server) adapterx.Restful {
+	return &impl{
+		injector: injector,
+		server:   server,
+	}
 }
 
 func (i *impl) Start() error {
@@ -49,7 +59,23 @@ func (i *impl) AwaitSignal() error {
 }
 
 func (i *impl) InitRouting() error {
-	// TODO: 2024/8/30|sean|implement me
+	router := i.server.Router
+
+	gob.Register(map[string]interface{}{})
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("auth-session", store))
+
+	templates.SetHTMLTemplate(router)
+
+	// web
+	router.GET("", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "home.html", nil)
+	})
+	router.GET("/login", i.login)
+	router.GET("/callback", i.callback)
+	router.GET("/user", IsAuthenticated, i.user)
+	router.GET("/logout", i.logout)
+
 	return nil
 }
 

@@ -7,6 +7,7 @@ package user
 import (
 	"fmt"
 
+	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
@@ -33,8 +34,10 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 func New(v *viper.Viper) (adapterx.Restful, error) {
 	panic(wire.Build(
 		NewRestful,
+		wire.Struct(new(Injector), "*"),
 		httpx.NewServer,
 		initApplication,
 		configx.NewConfiguration,
+		authx.New,
 	))
 }

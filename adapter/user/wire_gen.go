@@ -8,6 +8,7 @@ package user
 
 import (
 	"fmt"
+	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
@@ -27,11 +28,20 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
+	authxAuthx, err := authx.New(application)
+	if err != nil {
+		return nil, err
+	}
+	injector := &Injector{
+		C:     configuration,
+		A:     application,
+		Authx: authxAuthx,
+	}
 	server, err := httpx.NewServer(application)
 	if err != nil {
 		return nil, err
 	}
-	restful := NewRestful(server)
+	restful := NewRestful(injector, server)
 	return restful, nil
 }
 

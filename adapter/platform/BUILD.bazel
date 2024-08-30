@@ -5,14 +5,12 @@ go_library(
     srcs = [
         "impl.go",
         "injector.go",
-        "router.go",
         "wire_gen.go",
     ],
     importpath = "github.com/blackhorseya/godine/adapter/platform",
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/platform/handlers",
-        "//adapter/platform/web/templates",
         "//app/domain/logistics/biz",
         "//app/domain/logistics/repo/delivery",
         "//app/domain/notification/biz",
@@ -42,9 +40,6 @@ go_library(
         "//entity/domain/user/biz",
         "//pkg/adapterx",
         "//pkg/contextx",
-        "//pkg/errorx",
-        "@com_github_gin_contrib_sessions//:sessions",
-        "@com_github_gin_contrib_sessions//cookie",
         "@com_github_gin_gonic_gin//:gin",
         "@com_github_rs_cors//:cors",
         "@com_github_spf13_viper//:viper",
@@ -54,7 +49,6 @@ go_library(
         "@org_golang_google_grpc//reflection",
         "@org_golang_x_net//http2",
         "@org_golang_x_net//http2/h2c",
-        "@org_golang_x_oauth2//:oauth2",
         "@org_uber_go_zap//:zap",
     ],
 )
