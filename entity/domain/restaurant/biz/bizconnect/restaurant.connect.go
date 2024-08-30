@@ -43,14 +43,18 @@ const (
 	// RestaurantServiceGetRestaurantProcedure is the fully-qualified name of the RestaurantService's
 	// GetRestaurant RPC.
 	RestaurantServiceGetRestaurantProcedure = "/restaurant.RestaurantService/GetRestaurant"
+	// RestaurantServiceListRestaurantsNonStreamProcedure is the fully-qualified name of the
+	// RestaurantService's ListRestaurantsNonStream RPC.
+	RestaurantServiceListRestaurantsNonStreamProcedure = "/restaurant.RestaurantService/ListRestaurantsNonStream"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
-	restaurantServiceServiceDescriptor                = biz.File_domain_restaurant_biz_restaurant_proto.Services().ByName("RestaurantService")
-	restaurantServiceCreateRestaurantMethodDescriptor = restaurantServiceServiceDescriptor.Methods().ByName("CreateRestaurant")
-	restaurantServiceListRestaurantsMethodDescriptor  = restaurantServiceServiceDescriptor.Methods().ByName("ListRestaurants")
-	restaurantServiceGetRestaurantMethodDescriptor    = restaurantServiceServiceDescriptor.Methods().ByName("GetRestaurant")
+	restaurantServiceServiceDescriptor                        = biz.File_domain_restaurant_biz_restaurant_proto.Services().ByName("RestaurantService")
+	restaurantServiceCreateRestaurantMethodDescriptor         = restaurantServiceServiceDescriptor.Methods().ByName("CreateRestaurant")
+	restaurantServiceListRestaurantsMethodDescriptor          = restaurantServiceServiceDescriptor.Methods().ByName("ListRestaurants")
+	restaurantServiceGetRestaurantMethodDescriptor            = restaurantServiceServiceDescriptor.Methods().ByName("GetRestaurant")
+	restaurantServiceListRestaurantsNonStreamMethodDescriptor = restaurantServiceServiceDescriptor.Methods().ByName("ListRestaurantsNonStream")
 )
 
 // RestaurantServiceClient is a client for the restaurant.RestaurantService service.
@@ -58,6 +62,7 @@ type RestaurantServiceClient interface {
 	CreateRestaurant(context.Context, *connect.Request[biz.CreateRestaurantRequest]) (*connect.Response[model.Restaurant], error)
 	ListRestaurants(context.Context, *connect.Request[biz.ListRestaurantsRequest]) (*connect.ServerStreamForClient[model.Restaurant], error)
 	GetRestaurant(context.Context, *connect.Request[biz.GetRestaurantRequest]) (*connect.Response[model.Restaurant], error)
+	ListRestaurantsNonStream(context.Context, *connect.Request[biz.ListRestaurantsRequest]) (*connect.Response[biz.ListRestaurantsResponse], error)
 }
 
 // NewRestaurantServiceClient constructs a client for the restaurant.RestaurantService service. By
@@ -88,14 +93,21 @@ func NewRestaurantServiceClient(httpClient connect.HTTPClient, baseURL string, o
 			connect.WithSchema(restaurantServiceGetRestaurantMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		listRestaurantsNonStream: connect.NewClient[biz.ListRestaurantsRequest, biz.ListRestaurantsResponse](
+			httpClient,
+			baseURL+RestaurantServiceListRestaurantsNonStreamProcedure,
+			connect.WithSchema(restaurantServiceListRestaurantsNonStreamMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // restaurantServiceClient implements RestaurantServiceClient.
 type restaurantServiceClient struct {
-	createRestaurant *connect.Client[biz.CreateRestaurantRequest, model.Restaurant]
-	listRestaurants  *connect.Client[biz.ListRestaurantsRequest, model.Restaurant]
-	getRestaurant    *connect.Client[biz.GetRestaurantRequest, model.Restaurant]
+	createRestaurant         *connect.Client[biz.CreateRestaurantRequest, model.Restaurant]
+	listRestaurants          *connect.Client[biz.ListRestaurantsRequest, model.Restaurant]
+	getRestaurant            *connect.Client[biz.GetRestaurantRequest, model.Restaurant]
+	listRestaurantsNonStream *connect.Client[biz.ListRestaurantsRequest, biz.ListRestaurantsResponse]
 }
 
 // CreateRestaurant calls restaurant.RestaurantService.CreateRestaurant.
@@ -113,11 +125,17 @@ func (c *restaurantServiceClient) GetRestaurant(ctx context.Context, req *connec
 	return c.getRestaurant.CallUnary(ctx, req)
 }
 
+// ListRestaurantsNonStream calls restaurant.RestaurantService.ListRestaurantsNonStream.
+func (c *restaurantServiceClient) ListRestaurantsNonStream(ctx context.Context, req *connect.Request[biz.ListRestaurantsRequest]) (*connect.Response[biz.ListRestaurantsResponse], error) {
+	return c.listRestaurantsNonStream.CallUnary(ctx, req)
+}
+
 // RestaurantServiceHandler is an implementation of the restaurant.RestaurantService service.
 type RestaurantServiceHandler interface {
 	CreateRestaurant(context.Context, *connect.Request[biz.CreateRestaurantRequest]) (*connect.Response[model.Restaurant], error)
 	ListRestaurants(context.Context, *connect.Request[biz.ListRestaurantsRequest], *connect.ServerStream[model.Restaurant]) error
 	GetRestaurant(context.Context, *connect.Request[biz.GetRestaurantRequest]) (*connect.Response[model.Restaurant], error)
+	ListRestaurantsNonStream(context.Context, *connect.Request[biz.ListRestaurantsRequest]) (*connect.Response[biz.ListRestaurantsResponse], error)
 }
 
 // NewRestaurantServiceHandler builds an HTTP handler from the service implementation. It returns
@@ -144,6 +162,12 @@ func NewRestaurantServiceHandler(svc RestaurantServiceHandler, opts ...connect.H
 		connect.WithSchema(restaurantServiceGetRestaurantMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	restaurantServiceListRestaurantsNonStreamHandler := connect.NewUnaryHandler(
+		RestaurantServiceListRestaurantsNonStreamProcedure,
+		svc.ListRestaurantsNonStream,
+		connect.WithSchema(restaurantServiceListRestaurantsNonStreamMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/restaurant.RestaurantService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case RestaurantServiceCreateRestaurantProcedure:
@@ -152,6 +176,8 @@ func NewRestaurantServiceHandler(svc RestaurantServiceHandler, opts ...connect.H
 			restaurantServiceListRestaurantsHandler.ServeHTTP(w, r)
 		case RestaurantServiceGetRestaurantProcedure:
 			restaurantServiceGetRestaurantHandler.ServeHTTP(w, r)
+		case RestaurantServiceListRestaurantsNonStreamProcedure:
+			restaurantServiceListRestaurantsNonStreamHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -171,4 +197,8 @@ func (UnimplementedRestaurantServiceHandler) ListRestaurants(context.Context, *c
 
 func (UnimplementedRestaurantServiceHandler) GetRestaurant(context.Context, *connect.Request[biz.GetRestaurantRequest]) (*connect.Response[model.Restaurant], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("restaurant.RestaurantService.GetRestaurant is not implemented"))
+}
+
+func (UnimplementedRestaurantServiceHandler) ListRestaurantsNonStream(context.Context, *connect.Request[biz.ListRestaurantsRequest]) (*connect.Response[biz.ListRestaurantsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("restaurant.RestaurantService.ListRestaurantsNonStream is not implemented"))
 }

@@ -21,8 +21,14 @@ message GetRestaurantRequest {
   string restaurant_id = 1;
 }
 
+message ListRestaurantsResponse {
+  repeated Restaurant restaurants = 1;
+  uint64 total = 2;
+}
+
 service RestaurantService {
   rpc CreateRestaurant(CreateRestaurantRequest) returns (Restaurant) {}
   rpc ListRestaurants(ListRestaurantsRequest) returns (stream Restaurant) {}
   rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {}
+  rpc ListRestaurantsNonStream(ListRestaurantsRequest) returns (ListRestaurantsResponse) {}
 }

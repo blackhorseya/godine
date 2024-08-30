@@ -338,6 +338,26 @@ func (mr *MockRestaurantServiceClientMockRecorder) ListRestaurants(ctx, in inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRestaurants", reflect.TypeOf((*MockRestaurantServiceClient)(nil).ListRestaurants), varargs...)
 }
 
+// ListRestaurantsNonStream mocks base method.
+func (m *MockRestaurantServiceClient) ListRestaurantsNonStream(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (*ListRestaurantsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListRestaurantsNonStream", varargs...)
+	ret0, _ := ret[0].(*ListRestaurantsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListRestaurantsNonStream indicates an expected call of ListRestaurantsNonStream.
+func (mr *MockRestaurantServiceClientMockRecorder) ListRestaurantsNonStream(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRestaurantsNonStream", reflect.TypeOf((*MockRestaurantServiceClient)(nil).ListRestaurantsNonStream), varargs...)
+}
+
 // MockRestaurantServiceServer is a mock of RestaurantServiceServer interface.
 type MockRestaurantServiceServer struct {
 	ctrl     *gomock.Controller
@@ -403,4 +423,19 @@ func (m *MockRestaurantServiceServer) ListRestaurants(blob *ListRestaurantsReque
 func (mr *MockRestaurantServiceServerMockRecorder) ListRestaurants(blob, server interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRestaurants", reflect.TypeOf((*MockRestaurantServiceServer)(nil).ListRestaurants), blob, server)
+}
+
+// ListRestaurantsNonStream mocks base method.
+func (m *MockRestaurantServiceServer) ListRestaurantsNonStream(ctx context.Context, in *ListRestaurantsRequest) (*ListRestaurantsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListRestaurantsNonStream", ctx, in)
+	ret0, _ := ret[0].(*ListRestaurantsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListRestaurantsNonStream indicates an expected call of ListRestaurantsNonStream.
+func (mr *MockRestaurantServiceServerMockRecorder) ListRestaurantsNonStream(ctx, in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRestaurantsNonStream", reflect.TypeOf((*MockRestaurantServiceServer)(nil).ListRestaurantsNonStream), ctx, in)
 }
