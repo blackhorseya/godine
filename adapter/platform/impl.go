@@ -15,7 +15,10 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/cors"
 	"go.uber.org/zap"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 type impl struct {
@@ -116,12 +119,50 @@ func (i *impl) InitRouting() error {
 
 	mux := http.NewServeMux()
 	mux.Handle("/grpc/", http.StripPrefix("/grpc", api))
-
-	i.httpserver.Handler = mux
+	i.httpserver.Handler = h2c.NewHandler(newCORS().Handler(mux), &http2.Server{})
 
 	return nil
 }
 
 func (i *impl) GetRouter() *gin.Engine {
 	return i.web.Router
+}
+
+func newCORS() *cors.Cors {
+	// To let web developers play with the demo service from browsers, we need a
+	// very permissive CORS setup.
+	return cors.New(cors.Options{
+		AllowedMethods: []string{
+			http.MethodHead,
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+		},
+		AllowOriginFunc: func(origin string) bool {
+			// Allow all origins, which effectively disables CORS.
+			return true
+		},
+		AllowedHeaders: []string{"*"},
+		ExposedHeaders: []string{
+			// Content-Type is in the default safelist.
+			"Accept",
+			"Accept-Encoding",
+			"Accept-Post",
+			"Connect-Accept-Encoding",
+			"Connect-Content-Encoding",
+			"Content-Encoding",
+			"Grpc-Accept-Encoding",
+			"Grpc-Encoding",
+			"Grpc-Message",
+			"Grpc-Status",
+			"Grpc-Status-Details-Bin",
+		},
+		// Let browsers cache CORS information for longer, which reduces the number
+		// of preflight requests. Any changes to ExposedHeaders won't take effect
+		// until the cached data expires. FF caps this value at 24h, and modern
+		// Chrome caps it at 2h.
+		MaxAge: int(2 * time.Hour / time.Second),
+	})
 }
