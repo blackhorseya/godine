@@ -4,6 +4,8 @@ go 1.22.3
 
 require (
 	connectrpc.com/connect v1.16.2
+	connectrpc.com/grpchealth v1.3.0
+	connectrpc.com/grpcreflect v1.2.0
 	github.com/auth0/go-jwt-middleware/v2 v2.2.1
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/casbin/casbin/v2 v2.98.0
