@@ -1,4 +1,4 @@
-package platform
+package user
 
 import (
 	"crypto/rand"
@@ -37,15 +37,11 @@ func (i *impl) login(c *gin.Context) {
 }
 
 func (i *impl) callback(c *gin.Context) {
-	ctx, err := contextx.FromGin(c)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
+	ctx := contextx.Background()
 
 	session := sessions.Default(c)
 	if c.Query("state") != session.Get("state") {
-		_ = c.Error(errorx.Wrap(http.StatusBadRequest, 400, err))
+		_ = c.Error(errorx.New(http.StatusBadRequest, 400, "invalid state"))
 		return
 	}
 
