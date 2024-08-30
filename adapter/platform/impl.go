@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"time"
 
+	"connectrpc.com/connect"
+	"connectrpc.com/grpchealth"
+	"connectrpc.com/grpcreflect"
 	"github.com/blackhorseya/godine/adapter/platform/web/templates"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
@@ -114,11 +117,19 @@ func (i *impl) InitRouting() error {
 	router.GET("/logout", i.logout)
 
 	// grpc
+	compress1KB := connect.WithCompressMinBytes(1024)
 	api := http.NewServeMux()
-	api.Handle(bizconnect.NewRestaurantServiceHandler(i.injector.RestaurantServiceHandler))
+	api.Handle(bizconnect.NewRestaurantServiceHandler(i.injector.RestaurantServiceHandler, compress1KB))
 
 	mux := http.NewServeMux()
 	mux.Handle("/grpc/", http.StripPrefix("/grpc", api))
+	mux.Handle(grpchealth.NewHandler(grpchealth.NewStaticChecker(bizconnect.RestaurantServiceName), compress1KB))
+	mux.Handle(grpcreflect.NewHandlerV1(grpcreflect.NewStaticReflector(bizconnect.RestaurantServiceName), compress1KB))
+	mux.Handle(grpcreflect.NewHandlerV1Alpha(
+		grpcreflect.NewStaticReflector(bizconnect.RestaurantServiceName),
+		compress1KB,
+	))
+
 	i.httpserver.Handler = h2c.NewHandler(newCORS().Handler(mux), &http2.Server{})
 
 	return nil
