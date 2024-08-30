@@ -22,7 +22,7 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
-		ctx, err := contextx.FromContext(c)
+		ctx, err := contextx.FromContextLegacy(c)
 		if err != nil {
 			return fmt.Errorf("get context error: %w", err)
 		}
@@ -60,7 +60,7 @@ func (x *Authx) StreamClientInterceptor() grpc.StreamClientInterceptor {
 		streamer grpc.Streamer,
 		opts ...grpc.CallOption,
 	) (grpc.ClientStream, error) {
-		ctx, err := contextx.FromContext(c)
+		ctx, err := contextx.FromContextLegacy(c)
 		if err != nil {
 			return nil, fmt.Errorf("get context error: %w", err)
 		}

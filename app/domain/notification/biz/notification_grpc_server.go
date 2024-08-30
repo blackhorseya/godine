@@ -30,7 +30,7 @@ func (i *notificationService) SendNotification(
 	c context.Context,
 	req *biz.SendNotificationRequest,
 ) (*model.Notification, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
@@ -59,7 +59,7 @@ func (i *notificationService) ListMyNotifications(
 	req *biz.ListMyNotificationsRequest,
 	stream biz.NotificationService_ListMyNotificationsServer,
 ) error {
-	ctx, err := contextx.FromContext(stream.Context())
+	ctx, err := contextx.FromContextLegacy(stream.Context())
 	if err != nil {
 		return fmt.Errorf("failed to get contextx: %w", err)
 	}

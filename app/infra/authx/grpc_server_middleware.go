@@ -22,7 +22,7 @@ func (x *Authx) UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		next, span := otelx.Tracer.Start(c, "authx.grpc.UnaryServerInterceptor")
 		defer span.End()
 
-		ctx, err := contextx.FromContext(c)
+		ctx, err := contextx.FromContextLegacy(c)
 		if err != nil {
 			return nil, status.Newf(codes.Internal, "failed to get contextx: %v", err).Err()
 		}
@@ -53,7 +53,7 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 		next, span := otelx.Tracer.Start(stream.Context(), "authx.grpc.StreamServerInterceptor")
 		defer span.End()
 
-		ctx, err := contextx.FromContext(stream.Context())
+		ctx, err := contextx.FromContextLegacy(stream.Context())
 		if err != nil {
 			return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 		}

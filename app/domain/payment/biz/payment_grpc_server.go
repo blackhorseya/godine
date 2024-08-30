@@ -26,7 +26,7 @@ func NewPaymentService(payments repo.IPaymentRepo) biz.PaymentServiceServer {
 }
 
 func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePaymentRequest) (*model.Payment, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
@@ -56,7 +56,7 @@ func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePayment
 }
 
 func (i *paymentService) GetPayment(c context.Context, req *biz.GetPaymentRequest) (*model.Payment, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}

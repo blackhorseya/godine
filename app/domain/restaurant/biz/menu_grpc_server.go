@@ -26,7 +26,7 @@ func NewMenuService(restaurants repo.IRestaurantRepo) biz.MenuServiceServer {
 }
 
 func (i *menuService) AddMenuItem(c context.Context, req *biz.AddMenuItemRequest) (*model.MenuItem, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
@@ -56,7 +56,7 @@ func (i *menuService) AddMenuItem(c context.Context, req *biz.AddMenuItemRequest
 }
 
 func (i *menuService) GetMenuItem(c context.Context, req *biz.GetMenuItemRequest) (*model.MenuItem, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
@@ -85,7 +85,7 @@ func (i *menuService) GetMenuItem(c context.Context, req *biz.GetMenuItemRequest
 }
 
 func (i *menuService) ListMenuItems(req *biz.ListMenuItemsRequest, stream biz.MenuService_ListMenuItemsServer) error {
-	ctx, err := contextx.FromContext(stream.Context())
+	ctx, err := contextx.FromContextLegacy(stream.Context())
 	if err != nil {
 		return status.Newf(codes.Internal, "failed to get contextx: %v", err).Err()
 	}

@@ -55,7 +55,7 @@ func NewOrderService(
 
 //nolint:funlen // it's okay
 func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderRequest) (*model.Order, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
@@ -165,7 +165,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 }
 
 func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderService_ListOrdersServer) error {
-	ctx, err := contextx.FromContext(stream.Context())
+	ctx, err := contextx.FromContextLegacy(stream.Context())
 	if err != nil {
 		return fmt.Errorf("failed to get contextx: %w", err)
 	}
