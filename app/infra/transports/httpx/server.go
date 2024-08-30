@@ -48,6 +48,9 @@ func NewServer(app *configx.Application) (*Server, error) {
 		Addr:              app.HTTP.GetAddr(),
 		Handler:           router,
 		ReadHeaderTimeout: time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		MaxHeaderBytes:    8 * 1024,
 	}
 
 	return &Server{

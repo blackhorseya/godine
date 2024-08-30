@@ -32,7 +32,7 @@ func (i *restaurantService) CreateRestaurant(
 	c context.Context,
 	req *biz.CreateRestaurantRequest,
 ) (*model.Restaurant, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
@@ -65,7 +65,7 @@ func (i *restaurantService) ListRestaurants(
 	next, span := otelx.Tracer.Start(stream.Context(), "restaurant.biz.ListRestaurants")
 	defer span.End()
 
-	ctx, err := contextx.FromContext(stream.Context())
+	ctx, err := contextx.FromContextLegacy(stream.Context())
 	if err != nil {
 		contextx.Background().Error("failed to get contextx", zap.Error(err))
 		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
@@ -101,7 +101,7 @@ func (i *restaurantService) GetRestaurant(
 	c context.Context,
 	req *biz.GetRestaurantRequest,
 ) (*model.Restaurant, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
@@ -119,10 +119,7 @@ func (i *restaurantService) ListRestaurantsNonStream(
 	next, span := otelx.Tracer.Start(c, "restaurant.biz.ListRestaurantsNonStream")
 	defer span.End()
 
-	ctx, err := contextx.FromContext(c)
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
+	ctx := contextx.Background()
 
 	items, total, err := i.restaurants.List(next, repo.ListCondition{
 		Limit:  req.PageSize,

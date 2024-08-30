@@ -8,6 +8,7 @@ package platform
 
 import (
 	"fmt"
+	"github.com/blackhorseya/godine/adapter/platform/handlers"
 	biz5 "github.com/blackhorseya/godine/app/domain/logistics/biz"
 	"github.com/blackhorseya/godine/app/domain/logistics/repo/delivery"
 	biz4 "github.com/blackhorseya/godine/app/domain/notification/biz"
@@ -66,11 +67,12 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
+	restaurantServiceHandler := handlers.NewRestaurantServiceHandler(restaurantServiceClient)
 	injector := &Injector{
-		C:                configuration,
-		A:                application,
-		Authx:            authxAuthx,
-		RestaurantClient: restaurantServiceClient,
+		C:                        configuration,
+		A:                        application,
+		Authx:                    authxAuthx,
+		RestaurantServiceHandler: restaurantServiceHandler,
 	}
 	accountServiceServer := biz2.NewAccountService()
 	mongoClient, err := mongodbx.NewClient(application)

@@ -7,6 +7,7 @@ package platform
 import (
 	"fmt"
 
+	"github.com/blackhorseya/godine/adapter/platform/handlers"
 	opsBI "github.com/blackhorseya/godine/app/domain/logistics/biz"
 	notifyBI "github.com/blackhorseya/godine/app/domain/notification/biz"
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
@@ -110,5 +111,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		postgresqlx.NewClient,
 		mongodbx.NewClient,
 		redix.NewClient,
+
+		handlers.NewRestaurantServiceHandler,
 	))
 }

@@ -47,7 +47,7 @@ func (i *mongodb) Create(c context.Context, data *model.Restaurant) (err error) 
 	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.create")
 	defer span.End()
 
-	ctx, err := contextx.FromContext(next)
+	ctx, err := contextx.FromContextLegacy(next)
 	if err != nil {
 		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 	}
@@ -74,7 +74,7 @@ func (i *mongodb) Update(c context.Context, data *model.Restaurant) (err error) 
 	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.update")
 	defer span.End()
 
-	ctx, err := contextx.FromContext(next)
+	ctx, err := contextx.FromContextLegacy(next)
 	if err != nil {
 		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 	}
@@ -109,7 +109,7 @@ func (i *mongodb) Delete(c context.Context, id string) (err error) {
 	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.delete")
 	defer span.End()
 
-	ctx, err := contextx.FromContext(next)
+	ctx, err := contextx.FromContextLegacy(next)
 	if err != nil {
 		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 	}
@@ -131,7 +131,7 @@ func (i *mongodb) GetByID(c context.Context, id string) (item *model.Restaurant,
 	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.get_by_id")
 	defer span.End()
 
-	ctx, err := contextx.FromContext(next)
+	ctx, err := contextx.FromContextLegacy(next)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 	}
@@ -186,7 +186,7 @@ func (i *mongodb) List(
 	next, span := otelx.Tracer.Start(c, "restaurant.mongodb.list")
 	defer span.End()
 
-	ctx, err := contextx.FromContext(next)
+	ctx, err := contextx.FromContextLegacy(next)
 	if err != nil {
 		return nil, 0, status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 	}

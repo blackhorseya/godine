@@ -34,7 +34,7 @@ func NewLogisticsService(
 }
 
 func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeliveryRequest) (*model.Delivery, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
@@ -61,7 +61,7 @@ func (i *logisticsService) ListDeliveries(
 	req *biz.ListDeliveriesRequest,
 	stream biz.LogisticsService_ListDeliveriesServer,
 ) error {
-	ctx, err := contextx.FromContext(stream.Context())
+	ctx, err := contextx.FromContextLegacy(stream.Context())
 	if err != nil {
 		return fmt.Errorf("failed to get contextx: %w", err)
 	}

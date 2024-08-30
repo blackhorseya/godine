@@ -21,7 +21,7 @@ func NewAccountService() biz.AccountServiceServer {
 }
 
 func (i *accountService) WhoAmI(c context.Context, empty *emptypb.Empty) (*model.Account, error) {
-	ctx, err := contextx.FromContext(c)
+	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get context: %v", err)
 	}
