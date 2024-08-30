@@ -38,7 +38,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 // wire.go:
 
 func initApplication(config *configx.Configuration) (*configx.Application, error) {
-	app, err := config.GetService("platform")
+	app, err := config.GetService("user")
 	if err != nil {
 		return nil, fmt.Errorf("failed to get service %s: %w", "platform", err)
 	}
