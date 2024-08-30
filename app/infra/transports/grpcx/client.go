@@ -23,10 +23,10 @@ func NewClient(config *configx.Configuration, authx *authx.Authx) (*Client, erro
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
 		grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(
-		// authx.UnaryClientInterceptor(),
+			authx.UnaryClientInterceptor(),
 		)),
 		grpc.WithStreamInterceptor(grpc_middleware.ChainStreamClient(
-		// authx.StreamClientInterceptor(),
+			authx.StreamClientInterceptor(),
 		)),
 	}
 

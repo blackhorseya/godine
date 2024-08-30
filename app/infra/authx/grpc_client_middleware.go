@@ -22,17 +22,16 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
-		ctx, err := contextx.FromContextLegacy(c)
-		if err != nil {
-			return fmt.Errorf("get context error: %w", err)
-		}
-
-		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryClientInterceptor")
+		next, span := otelx.Tracer.Start(c, "authx.grpc.UnaryClientInterceptor")
 		defer span.End()
 
 		if x.SkipPath(method) {
-			ctx.Debug("unary client interceptor", zap.String("method", method))
-			return invoker(ctx, method, req, reply, cc, opts...)
+			return invoker(next, method, req, reply, cc, opts...)
+		}
+
+		ctx, err := contextx.FromContext(c)
+		if err != nil {
+			return fmt.Errorf("get context error: %w", err)
 		}
 
 		handler, err := userM.FromContext(ctx)
@@ -42,7 +41,7 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 		}
 		ctx.Debug("unary client interceptor", zap.Any("handler", &handler))
 
-		c = metadata.NewOutgoingContext(c, metadata.New(map[string]string{
+		c = metadata.NewOutgoingContext(next, metadata.New(map[string]string{
 			"access_token": handler.AccessToken,
 		}))
 
