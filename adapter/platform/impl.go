@@ -18,15 +18,15 @@ import (
 type impl struct {
 	injector   *Injector
 	grpcserver *grpcx.Server
-	httpserver *httpx.Server
+	web        *httpx.Server
 }
 
 // NewServer creates and returns a new grpcserver.
-func NewServer(injector *Injector, grpcserver *grpcx.Server, httpserver *httpx.Server) adapterx.Restful {
+func NewServer(injector *Injector, grpcserver *grpcx.Server, web *httpx.Server) adapterx.Restful {
 	return &impl{
 		injector:   injector,
 		grpcserver: grpcserver,
-		httpserver: httpserver,
+		web:        web,
 	}
 }
 
@@ -44,7 +44,7 @@ func (i *impl) Start() error {
 		return err
 	}
 
-	err = i.httpserver.Start(ctx)
+	err = i.web.Start(ctx)
 	if err != nil {
 		ctx.Error("Failed to start http grpcserver", zap.Error(err))
 		return err
@@ -57,8 +57,8 @@ func (i *impl) AwaitSignal() error {
 	ctx := contextx.Background()
 	ctx.Info("receive signal to stop grpcserver")
 
-	if err := i.httpserver.Stop(ctx); err != nil {
-		ctx.Error("Failed to stop httpserver", zap.Error(err))
+	if err := i.web.Stop(ctx); err != nil {
+		ctx.Error("Failed to stop web", zap.Error(err))
 		return err
 	}
 
@@ -71,7 +71,7 @@ func (i *impl) AwaitSignal() error {
 }
 
 func (i *impl) InitRouting() error {
-	router := i.httpserver.Router
+	router := i.web.Router
 
 	gob.Register(map[string]interface{}{})
 	store := cookie.NewStore([]byte("secret"))
@@ -92,5 +92,5 @@ func (i *impl) InitRouting() error {
 }
 
 func (i *impl) GetRouter() *gin.Engine {
-	return i.httpserver.Router
+	return i.web.Router
 }
