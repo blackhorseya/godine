@@ -10,10 +10,11 @@
 package repo
 
 import (
+	context "context"
 	reflect "reflect"
 
 	model "github.com/blackhorseya/godine/entity/domain/payment/model"
-	contextx "github.com/blackhorseya/godine/pkg/contextx"
+	utils "github.com/blackhorseya/godine/pkg/utils"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,38 +42,52 @@ func (m *MockIPaymentRepo) EXPECT() *MockIPaymentRepoMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockIPaymentRepo) Create(ctx contextx.Contextx, item *model.Payment) error {
+func (m *MockIPaymentRepo) Create(c context.Context, item *model.Payment) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", ctx, item)
+	ret := m.ctrl.Call(m, "Create", c, item)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockIPaymentRepoMockRecorder) Create(ctx, item any) *gomock.Call {
+func (mr *MockIPaymentRepoMockRecorder) Create(c, item any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIPaymentRepo)(nil).Create), ctx, item)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIPaymentRepo)(nil).Create), c, item)
+}
+
+// Delete mocks base method.
+func (m *MockIPaymentRepo) Delete(c context.Context, id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", c, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockIPaymentRepoMockRecorder) Delete(c, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIPaymentRepo)(nil).Delete), c, id)
 }
 
 // GetByID mocks base method.
-func (m *MockIPaymentRepo) GetByID(ctx contextx.Contextx, id string) (*model.Payment, error) {
+func (m *MockIPaymentRepo) GetByID(c context.Context, id string) (*model.Payment, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByID", ctx, id)
+	ret := m.ctrl.Call(m, "GetByID", c, id)
 	ret0, _ := ret[0].(*model.Payment)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetByID indicates an expected call of GetByID.
-func (mr *MockIPaymentRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
+func (mr *MockIPaymentRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIPaymentRepo)(nil).GetByID), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIPaymentRepo)(nil).GetByID), c, id)
 }
 
 // List mocks base method.
-func (m *MockIPaymentRepo) List(ctx contextx.Contextx, cond ListCondition) ([]*model.Payment, int, error) {
+func (m *MockIPaymentRepo) List(c context.Context, cond utils.ListCondition) ([]*model.Payment, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", ctx, cond)
+	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Payment)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
@@ -80,21 +95,21 @@ func (m *MockIPaymentRepo) List(ctx contextx.Contextx, cond ListCondition) ([]*m
 }
 
 // List indicates an expected call of List.
-func (mr *MockIPaymentRepoMockRecorder) List(ctx, cond any) *gomock.Call {
+func (mr *MockIPaymentRepoMockRecorder) List(c, cond any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIPaymentRepo)(nil).List), ctx, cond)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIPaymentRepo)(nil).List), c, cond)
 }
 
 // Update mocks base method.
-func (m *MockIPaymentRepo) Update(ctx contextx.Contextx, item *model.Payment) error {
+func (m *MockIPaymentRepo) Update(c context.Context, item *model.Payment) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", ctx, item)
+	ret := m.ctrl.Call(m, "Update", c, item)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockIPaymentRepoMockRecorder) Update(ctx, item any) *gomock.Call {
+func (mr *MockIPaymentRepoMockRecorder) Update(c, item any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIPaymentRepo)(nil).Update), ctx, item)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIPaymentRepo)(nil).Update), c, item)
 }

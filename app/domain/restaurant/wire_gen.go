@@ -17,7 +17,7 @@ import (
 // Injectors from wire.go:
 
 func NewIntegration(rw *mongo.Client, rdb *redis.Client) (biz.RestaurantServiceServer, error) {
-	iRestaurantRepo := mongodbx.NewMongoDBRestaurantRepo(rw)
+	iRestaurantRepo := mongodbx.NewRestaurantRepo(rw)
 	restaurantServiceServer := NewRestaurantService(iRestaurantRepo)
 	return restaurantServiceServer, nil
 }
@@ -27,5 +27,5 @@ func NewIntegration(rw *mongo.Client, rdb *redis.Client) (biz.RestaurantServiceS
 // ProviderRestaurantBizSet is a provider set for restaurant biz.
 var ProviderRestaurantBizSet = wire.NewSet(
 	NewRestaurantService,
-	NewMenuService, mongodbx.NewMongoDBRestaurantRepo,
+	NewMenuService, mongodbx.NewRestaurantRepo,
 )

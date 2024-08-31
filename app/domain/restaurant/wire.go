@@ -16,7 +16,7 @@ import (
 var ProviderRestaurantBizSet = wire.NewSet(
 	NewRestaurantService,
 	NewMenuService,
-	mongodbx.NewMongoDBRestaurantRepo,
+	mongodbx.NewRestaurantRepo,
 )
 
 func NewIntegration(rw *mongo.Client, rdb *redis.Client) (biz.RestaurantServiceServer, error) {

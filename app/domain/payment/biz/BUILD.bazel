@@ -10,8 +10,8 @@ go_library(
     importpath = "github.com/blackhorseya/godine/app/domain/payment/biz",
     visibility = ["//visibility:public"],
     deps = [
-        "//app/domain/payment/repo/payment",
         "//app/infra/otelx",
+        "//app/infra/storage/mongodbx",
         "//app/infra/transports/grpcx",
         "//entity/domain/payment/biz",
         "//entity/domain/payment/model",

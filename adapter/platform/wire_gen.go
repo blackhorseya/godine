@@ -16,7 +16,6 @@ import (
 	biz5 "github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/order/repo/order"
 	biz2 "github.com/blackhorseya/godine/app/domain/payment/biz"
-	"github.com/blackhorseya/godine/app/domain/payment/repo/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
 	"github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
@@ -76,10 +75,10 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	iRestaurantRepo := mongodbx.NewMongoDBRestaurantRepo(mongoClient)
+	iRestaurantRepo := mongodbx.NewRestaurantRepo(mongoClient)
 	restaurantServiceServer := restaurant.NewRestaurantService(iRestaurantRepo)
 	menuServiceServer := restaurant.NewMenuService(iRestaurantRepo)
-	iPaymentRepo := payment.NewMongodb(mongoClient)
+	iPaymentRepo := mongodbx.NewPaymentRepo(mongoClient)
 	paymentServiceServer := biz2.NewPaymentService(iPaymentRepo)
 	iNotificationRepo := notification.NewMongodb(mongoClient)
 	notificationServiceServer := biz3.NewNotificationService(iNotificationRepo)

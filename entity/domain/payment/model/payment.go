@@ -1,19 +1,9 @@
 package model
 
 import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
-
-// NewPaymentLegacy creates a new Payment.
-// Deprecated: use NewPayment instead.
-func NewPaymentLegacy(orderID string, amount *PaymentAmount) *Payment {
-	return &Payment{
-		OrderId:   orderID,
-		Amount:    amount,
-		CreatedAt: timestamppb.Now(),
-		UpdatedAt: timestamppb.Now(),
-	}
-}
 
 // NewPayment creates a new Payment.
 func NewPayment(userID, orderID string, amount *PaymentAmount) (*Payment, error) {
@@ -30,4 +20,20 @@ func NewPayment(userID, orderID string, amount *PaymentAmount) (*Payment, error)
 // Equal checks if the payment is equal to another payment.
 func (x *Payment) Equal(v *Payment) bool {
 	return x.Id == v.Id
+}
+
+func (x *Payment) GetID() string {
+	return x.Id
+}
+
+func (x *Payment) SetID(id primitive.ObjectID) {
+	x.Id = id.Hex()
+}
+
+func (x *Payment) SetCreatedAt(t *timestamppb.Timestamp) {
+	x.CreatedAt = t
+}
+
+func (x *Payment) SetUpdatedAt(t *timestamppb.Timestamp) {
+	x.UpdatedAt = t
 }

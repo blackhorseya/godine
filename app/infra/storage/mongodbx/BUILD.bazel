@@ -4,12 +4,15 @@ go_library(
     name = "mongodbx",
     srcs = [
         "mongodbx.go",
+        "payment_repo.go",
         "restaurant_repo.go",
     ],
     importpath = "github.com/blackhorseya/godine/app/infra/storage/mongodbx",
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/configx",
+        "//entity/domain/payment/model",
+        "//entity/domain/payment/repo",
         "//entity/domain/restaurant/model",
         "//entity/domain/restaurant/repo",
         "//pkg/contextx",

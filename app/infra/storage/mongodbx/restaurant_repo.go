@@ -14,8 +14,8 @@ type mongodbRestaurantRepo struct {
 	coll *mongo.Collection
 }
 
-// NewMongoDBRestaurantRepo is to create a new mongodbRestaurantRepo.
-func NewMongoDBRestaurantRepo(rw *mongo.Client) repo.IRestaurantRepo {
+// NewRestaurantRepo is to create a new mongodbRestaurantRepo.
+func NewRestaurantRepo(rw *mongo.Client) repo.IRestaurantRepo {
 	coll := rw.Database("godine").Collection("restaurants")
 
 	return &mongodbRestaurantRepo{
