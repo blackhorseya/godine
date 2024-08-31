@@ -1,14 +1,14 @@
 load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "biz",
+    name = "logistics",
     srcs = [
         "handler.go",
         "logistics_grpc_client.go",
         "logistics_grpc_server.go",
         "wire.go",
     ],
-    importpath = "github.com/blackhorseya/godine/app/domain/logistics/biz",
+    importpath = "github.com/blackhorseya/godine/app/domain/logistics",
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/otelx",

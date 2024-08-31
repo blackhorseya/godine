@@ -8,7 +8,7 @@ import (
 	"fmt"
 
 	"github.com/blackhorseya/godine/adapter/platform/handlers"
-	opsBI "github.com/blackhorseya/godine/app/domain/logistics/biz"
+	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/payment"
@@ -101,8 +101,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		payment.ProviderPaymentBizSet,
 		payment.NewPaymentServiceClient,
 		orderBI.ProviderOrderBizSet,
-		opsBI.ProviderLogisticsBizSet,
-		opsBI.NewLogisticsServiceClient,
+		logistics.ProviderLogisticsBizSet,
+		logistics.NewLogisticsServiceClient,
 
 		snowflakex.NewNode,
 		postgresqlx.NewClient,

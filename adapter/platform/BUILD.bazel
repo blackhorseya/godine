@@ -11,7 +11,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/platform/handlers",
-        "//app/domain/logistics/biz",
+        "//app/domain/logistics",
         "//app/domain/notification",
         "//app/domain/order/biz",
         "//app/domain/order/repo/order",
