@@ -1,3 +1,28 @@
+## 0.6.2 (2024-08-31)
+
+### Feat
+
+- refactor order listing functionality (#161)
+- refactor order listing functionality
+- implement GetOrder method in OrderService
+- implement new RPC method and message type in order service
+- optimize data retrieval and improve performance
+- trace `SendNotification` function context changes
+
+### Refactor
+
+- refactor code for OpenTelemetry tracing
+- refactor legacy context handling in API functions
+- refactor context handling in gRPC server and client middleware
+- refactor context handling and tracing in client calls
+- refactor methods to utilize Pagination efficiently (#160)
+- refactor methods to utilize Pagination efficiently
+- refactor codebase to improve code readability and consistency
+- refactor user domain package and dependencies
+- refactor context handling for server interceptors (#159)
+- refactor context handling for server interceptors
+- update context extraction methods in multiple grpc server files
+
 ## 0.6.1 (2024-08-31)
 
 ### Feat
