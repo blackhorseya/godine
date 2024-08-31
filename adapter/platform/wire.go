@@ -10,7 +10,7 @@ import (
 	"github.com/blackhorseya/godine/adapter/platform/handlers"
 	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
-	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
+	orderBI "github.com/blackhorseya/godine/app/domain/order"
 	"github.com/blackhorseya/godine/app/domain/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
 	"github.com/blackhorseya/godine/app/domain/user"

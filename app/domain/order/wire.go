@@ -1,4 +1,4 @@
-package biz
+package order
 
 import (
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
