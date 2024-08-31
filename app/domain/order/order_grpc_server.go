@@ -173,7 +173,6 @@ func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderSe
 	items, total, err := i.orders.List(ctx, repo.ListCondition{
 		UserID:       "",
 		RestaurantID: "",
-		Status:       "",
 		Limit:        int(req.PageSize),
 		Offset:       int((req.Page - 1) * req.PageSize),
 	})

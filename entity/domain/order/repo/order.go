@@ -12,7 +12,6 @@ import (
 type ListCondition struct {
 	UserID       string
 	RestaurantID string
-	Status       string
 
 	Limit  int
 	Offset int

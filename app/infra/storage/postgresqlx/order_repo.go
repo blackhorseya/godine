@@ -69,6 +69,15 @@ func (i *gormOrderRepo) List(c context.Context, cond repo.ListCondition) (items 
 
 	query := i.rw.WithContext(timeout).Model(&model.Order{})
 
+	// with filter
+	if cond.RestaurantID != "" {
+		query = query.Where("restaurant_id = ?", cond.RestaurantID)
+	}
+
+	if cond.UserID != "" {
+		query = query.Where("user_id = ?", cond.UserID)
+	}
+
 	// limit and offset
 	limit, offset := defaultLimit, 0
 	if 0 < cond.Limit && cond.Limit <= defaultMaxLimit {
