@@ -52,7 +52,7 @@ func (i *gormOrderRepo) GetByID(c context.Context, id string) (item *model.Order
 
 	ctx := contextx.Background()
 
-	err = i.rw.WithContext(timeout).Where("id = ?", id).First(item).Preload("Items").Error
+	err = i.rw.WithContext(timeout).Where("id = ?", id).Preload("Items").First(&item).Error
 	if err != nil {
 		ctx.Error("get order by id from gormDB failed", zap.Error(err), zap.String("id", id))
 		return nil, err

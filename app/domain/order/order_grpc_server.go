@@ -162,15 +162,12 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 }
 
 func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderService_ListOrdersServer) error {
-	ctx, err := contextx.FromContextLegacy(stream.Context())
-	if err != nil {
-		return fmt.Errorf("failed to get contextx: %w", err)
-	}
-
-	ctx, span := otelx.Span(ctx, "order.biz.ListOrders")
+	next, span := otelx.Tracer.Start(stream.Context(), "order.biz.ListOrders")
 	defer span.End()
 
-	items, total, err := i.orders.List(ctx, repo.ListCondition{
+	ctx := contextx.Background()
+
+	items, total, err := i.orders.List(next, repo.ListCondition{
 		UserID:       "",
 		RestaurantID: "",
 		Limit:        int(req.PageSize),
@@ -198,7 +195,17 @@ func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderSe
 	return nil
 }
 
-func (i *orderService) GetOrder(ctx context.Context, request *biz.GetOrderRequest) (*model.Order, error) {
-	// TODO: 2024/8/31|sean|implement me
-	panic("implement me")
+func (i *orderService) GetOrder(c context.Context, req *biz.GetOrderRequest) (*model.Order, error) {
+	next, span := otelx.Tracer.Start(c, "order.biz.GetOrder")
+	defer span.End()
+
+	ctx := contextx.Background()
+
+	item, err := i.orders.GetByID(next, req.OrderId)
+	if err != nil {
+		ctx.Error("failed to get order", zap.Error(err))
+		return nil, err
+	}
+
+	return item, nil
 }
