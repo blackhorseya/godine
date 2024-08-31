@@ -3,8 +3,7 @@
 package repo
 
 import (
-	"context"
-
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 )
 
@@ -16,9 +15,5 @@ type ListCondition struct {
 
 // IRestaurantRepo is an interface that defines the methods that the restaurant repository should implement
 type IRestaurantRepo interface {
-	Create(c context.Context, data *model.Restaurant) (err error)
-	Update(c context.Context, data *model.Restaurant) (err error)
-	Delete(c context.Context, id string) (err error)
-	GetByID(c context.Context, id string) (item *model.Restaurant, err error)
-	List(c context.Context, condition ListCondition) (items []*model.Restaurant, total int, err error)
+	mongodbx.IRepository[model.Restaurant]
 }
