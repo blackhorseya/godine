@@ -1,9 +1,0 @@
-load("@rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "restful",
-    srcs = ["payment_restful_docs.go"],
-    importpath = "github.com/blackhorseya/godine/api/payment/restful",
-    visibility = ["//visibility:public"],
-    deps = ["@com_github_swaggo_swag//:swag"],
-)

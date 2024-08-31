@@ -1,9 +1,0 @@
-load("@rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "api",
-    srcs = ["embed.go"],
-    embedsrcs = ["gateway/apidocs.swagger.json"],
-    importpath = "github.com/blackhorseya/godine/api",
-    visibility = ["//visibility:public"],
-)
