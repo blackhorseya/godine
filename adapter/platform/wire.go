@@ -22,7 +22,6 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
-	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	opsB "github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	orderB "github.com/blackhorseya/godine/entity/domain/order/biz"
@@ -87,7 +86,6 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		NewServer,
 		wire.Struct(new(Injector), "*"),
 		grpcx.NewServer,
-		httpx.NewServer,
 		initApplication,
 		configx.NewConfiguration,
 		NewInitServersFn,

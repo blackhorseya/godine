@@ -28,7 +28,6 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
-	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	biz12 "github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	biz10 "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	biz11 "github.com/blackhorseya/godine/entity/domain/order/biz"
@@ -130,11 +129,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	httpxServer, err := httpx.NewServer(application)
-	if err != nil {
-		return nil, err
-	}
-	restful := NewServer(injector, server, httpxServer)
+	restful := NewServer(injector, server)
 	return restful, nil
 }
 

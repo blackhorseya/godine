@@ -30,7 +30,6 @@ go_library(
         "//app/infra/storage/postgresqlx",
         "//app/infra/storage/redix",
         "//app/infra/transports/grpcx",
-        "//app/infra/transports/httpx",
         "//entity/domain/logistics/biz",
         "//entity/domain/notification/biz",
         "//entity/domain/order/biz",

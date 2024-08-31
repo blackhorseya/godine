@@ -9,7 +9,6 @@ import (
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
-	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz/bizconnect"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -23,18 +22,16 @@ import (
 type impl struct {
 	injector   *Injector
 	grpcserver *grpcx.Server
-	web        *httpx.Server
 	httpserver *http.Server
 }
 
 // NewServer creates and returns a new grpcserver.
-func NewServer(injector *Injector, grpcserver *grpcx.Server, web *httpx.Server) adapterx.Restful {
+func NewServer(injector *Injector, grpcserver *grpcx.Server) adapterx.Restful {
 	return &impl{
 		injector:   injector,
 		grpcserver: grpcserver,
-		web:        web,
 		httpserver: &http.Server{
-			Addr:              ":8080",
+			Addr:              injector.A.HTTP.GetAddr(),
 			ReadHeaderTimeout: time.Second,
 			ReadTimeout:       10 * time.Second,
 			WriteTimeout:      10 * time.Second,
@@ -57,13 +54,9 @@ func (i *impl) Start() error {
 		return err
 	}
 
-	err = i.web.Start(ctx)
-	if err != nil {
-		ctx.Error("Failed to start http grpcserver", zap.Error(err))
-		return err
-	}
-
 	go func() {
+		ctx.Info("http server start", zap.String("addr", i.httpserver.Addr))
+
 		if err = i.httpserver.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			ctx.Error("Failed to start http server", zap.Error(err))
 		}
@@ -75,11 +68,6 @@ func (i *impl) Start() error {
 func (i *impl) AwaitSignal() error {
 	ctx := contextx.Background()
 	ctx.Info("receive signal to stop grpcserver")
-
-	if err := i.web.Stop(ctx); err != nil {
-		ctx.Error("Failed to stop web", zap.Error(err))
-		return err
-	}
 
 	if err := i.grpcserver.Stop(ctx); err != nil {
 		ctx.Error("Failed to stop grpcserver", zap.Error(err))
@@ -115,7 +103,7 @@ func (i *impl) InitRouting() error {
 }
 
 func (i *impl) GetRouter() *gin.Engine {
-	return i.web.Router
+	return nil
 }
 
 func newCORS() *cors.Cors {
@@ -136,7 +124,7 @@ func newCORS() *cors.Cors {
 		},
 		AllowedHeaders: []string{"*"},
 		ExposedHeaders: []string{
-			// Content-Type is in the default safelist.
+			// Content-Type is in the default safe list.
 			"Accept",
 			"Accept-Encoding",
 			"Accept-Post",
