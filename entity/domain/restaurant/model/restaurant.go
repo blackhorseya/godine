@@ -5,6 +5,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // NewRestaurant creates a new RestaurantAggregate.
@@ -70,38 +71,18 @@ func (x *Restaurant) AddMenuItem(name, description string, price float64) (*Menu
 	return menuItem, nil
 }
 
-func (x *MenuItem) UnmarshalBSON(bytes []byte) error {
-	type Alias MenuItem
-	alias := &struct {
-		ID     primitive.ObjectID `bson:"_id"`
-		*Alias `bson:",inline"`
-	}{
-		Alias: (*Alias)(x),
-	}
-
-	if err := bson.Unmarshal(bytes, alias); err != nil {
-		return err
-	}
-
-	x.Id = alias.ID.Hex()
-
-	return nil
+func (x *Restaurant) GetID() string {
+	return x.Id
 }
 
-func (x *MenuItem) MarshalBSON() ([]byte, error) {
-	type Alias MenuItem
-	alias := &struct {
-		ID     primitive.ObjectID `bson:"_id"`
-		*Alias `bson:",inline"`
-	}{
-		Alias: (*Alias)(x),
-	}
+func (x *Restaurant) SetID(id primitive.ObjectID) {
+	x.Id = id.Hex()
+}
 
-	id, err := primitive.ObjectIDFromHex(x.Id)
-	if err != nil {
-		return nil, err
-	}
-	alias.ID = id
+func (x *Restaurant) SetCreatedAt(t *timestamppb.Timestamp) {
+	x.CreatedAt = t
+}
 
-	return bson.Marshal(alias)
+func (x *Restaurant) SetUpdatedAt(t *timestamppb.Timestamp) {
+	x.UpdatedAt = t
 }

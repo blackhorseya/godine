@@ -1,4 +1,4 @@
-package mongodbx
+package utils
 
 import (
 	"context"
@@ -10,7 +10,24 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
+
+const (
+	defaultTimeout  = 5 * time.Second
+	defaultLimit    = int64(10)
+	defaultMaxLimit = int64(100)
+)
+
+// BaseModelInterface ensures that the type has an embedded BaseModel or equivalent fields.
+type BaseModelInterface interface {
+	GetID() string
+	SetID(id primitive.ObjectID)
+	GetCreatedAt() *timestamppb.Timestamp
+	SetCreatedAt(t *timestamppb.Timestamp)
+	GetUpdatedAt() *timestamppb.Timestamp
+	SetUpdatedAt(t *timestamppb.Timestamp)
+}
 
 // ListCondition is a struct that defines the condition for listing items.
 type ListCondition struct {
@@ -20,10 +37,10 @@ type ListCondition struct {
 
 // IRepository is a generic interface for repositories.
 type IRepository[T BaseModelInterface] interface {
-	Create(c context.Context, item *T) error
-	GetByID(c context.Context, id string) (item *T, err error)
-	List(c context.Context, cond ListCondition) (items []*T, total int, err error)
-	Update(c context.Context, item *T) error
+	Create(c context.Context, item T) error
+	GetByID(c context.Context, id string) (item T, err error)
+	List(c context.Context, cond ListCondition) (items []T, total int, err error)
+	Update(c context.Context, item T) error
 	Delete(c context.Context, id string) error
 }
 
@@ -36,17 +53,17 @@ func NewMongoRepository[T BaseModelInterface](coll *mongo.Collection) IRepositor
 	return &mongoRepository[T]{coll: coll}
 }
 
-func (x *mongoRepository[T]) Create(c context.Context, item *T) error {
+func (x *mongoRepository[T]) Create(c context.Context, item T) error {
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
 
 	ctx := contextx.Background()
 
-	if (*item).GetID() == primitive.NilObjectID {
-		(*item).SetID(primitive.NewObjectID())
+	if item.GetID() == "" {
+		item.SetID(primitive.NewObjectID())
 	}
-	(*item).SetCreatedAt(time.Now().UTC())
-	(*item).SetUpdatedAt(time.Now().UTC())
+	item.SetCreatedAt(timestamppb.Now())
+	item.SetUpdatedAt(timestamppb.Now())
 
 	_, err := x.coll.InsertOne(timeout, item)
 	if err != nil {
@@ -57,7 +74,7 @@ func (x *mongoRepository[T]) Create(c context.Context, item *T) error {
 	return nil
 }
 
-func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item *T, err error) {
+func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item T, err error) {
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
 
@@ -66,20 +83,20 @@ func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item *T, err
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		ctx.Error("invalid ObjectID", zap.Error(err), zap.String("id", id))
-		return nil, err
+		return item, err
 	}
 
 	var result T
 	err = x.coll.FindOne(timeout, bson.M{"_id": objectID}).Decode(&result)
 	if err != nil {
 		ctx.Error("failed to get item by ID", zap.Error(err), zap.String("id", id))
-		return nil, err
+		return item, err
 	}
 
-	return &result, nil
+	return result, nil
 }
 
-func (x *mongoRepository[T]) List(c context.Context, cond ListCondition) (items []*T, total int, err error) {
+func (x *mongoRepository[T]) List(c context.Context, cond ListCondition) (items []T, total int, err error) {
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
 
@@ -116,18 +133,23 @@ func (x *mongoRepository[T]) List(c context.Context, cond ListCondition) (items 
 	return items, int(count), nil
 }
 
-func (x *mongoRepository[T]) Update(c context.Context, item *T) error {
+func (x *mongoRepository[T]) Update(c context.Context, item T) error {
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
 
 	ctx := contextx.Background()
 
-	(*item).SetUpdatedAt(time.Now().UTC())
+	item.SetUpdatedAt(timestamppb.Now())
+	oid, err := primitive.ObjectIDFromHex(item.GetID())
+	if err != nil {
+		ctx.Error("invalid ObjectID", zap.Error(err), zap.String("id", item.GetID()))
+		return err
+	}
 
-	filter := bson.M{"_id": (*item).GetID()}
+	filter := bson.M{"_id": oid}
 	update := bson.M{"$set": item}
 
-	_, err := x.coll.UpdateOne(timeout, filter, update)
+	_, err = x.coll.UpdateOne(timeout, filter, update)
 	if err != nil {
 		ctx.Error("failed to update item", zap.Error(err))
 		return err
@@ -142,13 +164,13 @@ func (x *mongoRepository[T]) Delete(c context.Context, id string) error {
 
 	ctx := contextx.Background()
 
-	objectID, err := primitive.ObjectIDFromHex(id)
+	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		ctx.Error("invalid ObjectID", zap.Error(err), zap.String("id", id))
 		return err
 	}
 
-	_, err = x.coll.DeleteOne(timeout, bson.M{"_id": objectID})
+	_, err = x.coll.DeleteOne(timeout, bson.M{"_id": oid})
 	if err != nil {
 		ctx.Error("failed to delete item", zap.Error(err), zap.String("id", id))
 		return err

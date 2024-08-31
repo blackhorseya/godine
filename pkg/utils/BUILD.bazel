@@ -1,0 +1,17 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "utils",
+    srcs = ["repository.go"],
+    importpath = "github.com/blackhorseya/godine/pkg/utils",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/contextx",
+        "@org_golang_google_protobuf//types/known/timestamppb",
+        "@org_mongodb_go_mongo_driver//bson",
+        "@org_mongodb_go_mongo_driver//bson/primitive",
+        "@org_mongodb_go_mongo_driver//mongo",
+        "@org_mongodb_go_mongo_driver//mongo/options",
+        "@org_uber_go_zap//:zap",
+    ],
+)
