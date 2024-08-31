@@ -1,3 +1,41 @@
+## 0.6.1 (2024-08-31)
+
+### Feat
+
+- refactor payment service API and messages
+- update dependencies and refactor code for restaurant domain
+- consolidate changes related to file management
+- consolidate utils package structure into new files
+- refactor MongoDB repository for restaurant data (#152)
+- refactor MongoDB repository for restaurant data
+
+### Fix
+
+- refactor error handling for consistency across functions
+
+### Refactor
+
+- refactor project structure and file imports (#158)
+- refactor package naming conventions across the codebase
+- refactor project structure and file imports
+- consolidate logistics package structure in adapter platform (#157)
+- refactor package names for user domain
+- consolidate logistics package structure in adapter platform
+- refactor notification dependencies across files
+- refactor notification handling across files (#156)
+- refactor directory structure and import paths
+- refactor notification handling across files
+- refactor logistics repository dependencies
+- refactor package and import paths for payment module (#155)
+- refactor package and import paths for payment module
+- refactor payment repository handling across modules
+- refactor restaurant model and repository (#154)
+- refactor restaurant model and repository
+- refactor timestamp handling to UTC time
+- refactor user repository structure
+- refactor project structure and package names
+- refactor restaurant dependencies across files
+
 ## 0.6.0 (2024-08-31)
 
 ## 0.5.10 (2024-08-31)
