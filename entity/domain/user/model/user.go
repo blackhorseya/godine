@@ -1,6 +1,7 @@
 package model
 
 import (
+	"context"
 	"errors"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -24,12 +25,22 @@ func NewUser(name, email, password string, address *Address) *Account {
 	}
 }
 
-// FromContext extracts the user from the context.
-func FromContext(ctx contextx.Contextx) (*Account, error) {
+// FromContextLegacy extracts the user from the context.
+func FromContextLegacy(ctx contextx.Contextx) (*Account, error) {
 	user, ok := ctx.Value(contextx.KeyHandler{}).(*Account)
 	if !ok {
 		return nil, errors.New("no user found in context")
 	}
 
 	return user, nil
+}
+
+// FromContext extracts the user from the context.
+func FromContext(c context.Context) (*Account, error) {
+	account, ok := c.Value(Account{}).(*Account)
+	if !ok {
+		return nil, errors.New("no user found in context")
+	}
+
+	return account, nil
 }

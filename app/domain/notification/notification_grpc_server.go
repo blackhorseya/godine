@@ -39,7 +39,7 @@ func (i *notificationService) SendNotification(
 	ctx, span := otelx.Span(ctx, "notification.biz.SendNotification")
 	defer span.End()
 
-	handler, err := userM.FromContext(ctx)
+	handler, err := userM.FromContextLegacy(ctx)
 	if err != nil {
 		ctx.Error("failed to get user from context", zap.Error(err))
 		return nil, err
@@ -68,7 +68,7 @@ func (i *notificationService) ListMyNotifications(
 	ctx, span := otelx.Span(ctx, "notification.biz.ListMyNotifications")
 	defer span.End()
 
-	handler, err := userM.FromContext(ctx)
+	handler, err := userM.FromContextLegacy(ctx)
 	if err != nil {
 		ctx.Error("failed to get user from context", zap.Error(err))
 		return err
