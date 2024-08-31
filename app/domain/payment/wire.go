@@ -1,4 +1,4 @@
-package biz
+package payment
 
 import (
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"

@@ -1,4 +1,4 @@
-package biz
+package payment
 
 import (
 	"fmt"

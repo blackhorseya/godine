@@ -1,13 +1,13 @@
 load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "biz",
+    name = "payment",
     srcs = [
         "payment_grpc_client.go",
         "payment_grpc_server.go",
         "wire.go",
     ],
-    importpath = "github.com/blackhorseya/godine/app/domain/payment/biz",
+    importpath = "github.com/blackhorseya/godine/app/domain/payment",
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/otelx",

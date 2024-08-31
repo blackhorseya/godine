@@ -11,7 +11,7 @@ import (
 	opsBI "github.com/blackhorseya/godine/app/domain/logistics/biz"
 	"github.com/blackhorseya/godine/app/domain/notification"
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
-	payBI "github.com/blackhorseya/godine/app/domain/payment/biz"
+	"github.com/blackhorseya/godine/app/domain/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
 	userBI "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
@@ -96,10 +96,10 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		restaurant.ProviderRestaurantBizSet,
 		restaurant.NewRestaurantServiceClient,
 		restaurant.NewMenuServiceClient,
-		payBI.ProviderPaymentBizSet,
-		payBI.NewPaymentServiceClient,
 		notification.ProviderNotificationBizSet,
 		notification.NewNotificationServiceClient,
+		payment.ProviderPaymentBizSet,
+		payment.NewPaymentServiceClient,
 		orderBI.ProviderOrderBizSet,
 		opsBI.ProviderLogisticsBizSet,
 		opsBI.NewLogisticsServiceClient,
