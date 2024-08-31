@@ -85,7 +85,7 @@ func (mr *MockINotificationRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockINotificationRepo) List(c context.Context, cond utils.ListCondition) ([]*model.Notification, int, error) {
+func (m *MockINotificationRepo) List(c context.Context, cond utils.Pagination) ([]*model.Notification, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Notification)
@@ -98,6 +98,22 @@ func (m *MockINotificationRepo) List(c context.Context, cond utils.ListCondition
 func (mr *MockINotificationRepoMockRecorder) List(c, cond any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockINotificationRepo)(nil).List), c, cond)
+}
+
+// ListByReceiverID mocks base method.
+func (m *MockINotificationRepo) ListByReceiverID(c context.Context, receiverID string, cond utils.Pagination) ([]*model.Notification, int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListByReceiverID", c, receiverID, cond)
+	ret0, _ := ret[0].([]*model.Notification)
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ListByReceiverID indicates an expected call of ListByReceiverID.
+func (mr *MockINotificationRepoMockRecorder) ListByReceiverID(c, receiverID, cond any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListByReceiverID", reflect.TypeOf((*MockINotificationRepo)(nil).ListByReceiverID), c, receiverID, cond)
 }
 
 // Update mocks base method.

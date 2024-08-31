@@ -2,7 +2,6 @@ package notification
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -31,13 +30,7 @@ func (i *notificationService) SendNotification(
 	c context.Context,
 	req *biz.SendNotificationRequest,
 ) (*model.Notification, error) {
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
-
-	ctx, span := otelx.Span(ctx, "notification.biz.SendNotification")
-	defer span.End()
+	ctx := contextx.Background()
 
 	handler, err := userM.FromContext(c)
 	if err != nil {
@@ -45,9 +38,9 @@ func (i *notificationService) SendNotification(
 		return nil, err
 	}
 
-	notification := model.NewNotification(handler.Id, req.UserId, strconv.FormatInt(req.OrderId, 10), req.Message)
+	notification := model.NewNotification(handler.Id, req.UserId, req.OrderId, req.Message)
 
-	err = i.notifications.Create(ctx, notification)
+	err = i.notifications.Create(c, notification)
 	if err != nil {
 		ctx.Error("create notification failed", zap.Error(err), zap.Any("notification", notification))
 		return nil, err
@@ -70,20 +63,17 @@ func (i *notificationService) ListMyNotifications(
 		ctx.Error("failed to get user from context", zap.Error(err))
 		return err
 	}
-	_ = handler
 
-	items, total, err := i.notifications.List(next, utils.ListCondition{
+	items, total, err := i.notifications.ListByReceiverID(next, handler.Id, utils.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
-		// TODO: 2024/8/31|sean|fix me
-		// UserID: handler.Id,
 	})
 	if err != nil {
 		ctx.Error("list notifications failed", zap.Error(err))
 		return err
 	}
 
-	err = stream.SetHeader(metadata.New(map[string]string{"total": strconv.Itoa(total)}))
+	err = stream.SetHeader(metadata.New(map[string]string{"total": strconv.FormatInt(total, 10)}))
 	if err != nil {
 		ctx.Error("set header failed", zap.Error(err))
 		return err

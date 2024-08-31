@@ -29,8 +29,8 @@ type BaseModelInterface interface {
 	SetUpdatedAt(t *timestamppb.Timestamp)
 }
 
-// ListCondition is a struct that defines the condition for listing items.
-type ListCondition struct {
+// Pagination is a struct for pagination.
+type Pagination struct {
 	Limit  int64
 	Offset int64
 }
@@ -39,7 +39,7 @@ type ListCondition struct {
 type IRepository[T BaseModelInterface] interface {
 	Create(c context.Context, item T) error
 	GetByID(c context.Context, id string) (item T, err error)
-	List(c context.Context, cond ListCondition) (items []T, total int, err error)
+	List(c context.Context, cond Pagination) (items []T, total int, err error)
 	Update(c context.Context, item T) error
 	Delete(c context.Context, id string) error
 }
@@ -96,7 +96,7 @@ func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item T, err 
 	return result, nil
 }
 
-func (x *mongoRepository[T]) List(c context.Context, cond ListCondition) (items []T, total int, err error) {
+func (x *mongoRepository[T]) List(c context.Context, cond Pagination) (items []T, total int, err error) {
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
 

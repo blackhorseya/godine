@@ -70,7 +70,7 @@ func (i *logisticsService) ListDeliveries(
 	ctx, span := otelx.Span(ctx, "biz.logistics.ListDeliveries")
 	defer span.End()
 
-	items, total, err := i.deliveries.List(ctx, utils.ListCondition{
+	items, total, err := i.deliveries.List(ctx, utils.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})

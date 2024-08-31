@@ -85,7 +85,7 @@ func (mr *MockIRestaurantRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockIRestaurantRepo) List(c context.Context, cond utils.ListCondition) ([]*model.Restaurant, int, error) {
+func (m *MockIRestaurantRepo) List(c context.Context, cond utils.Pagination) ([]*model.Restaurant, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Restaurant)

@@ -85,7 +85,7 @@ func (mr *MockIDeliveryRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockIDeliveryRepo) List(c context.Context, cond utils.ListCondition) ([]*model.Delivery, int, error) {
+func (m *MockIDeliveryRepo) List(c context.Context, cond utils.Pagination) ([]*model.Delivery, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Delivery)

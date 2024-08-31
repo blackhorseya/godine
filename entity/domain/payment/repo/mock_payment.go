@@ -85,7 +85,7 @@ func (mr *MockIPaymentRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockIPaymentRepo) List(c context.Context, cond utils.ListCondition) ([]*model.Payment, int, error) {
+func (m *MockIPaymentRepo) List(c context.Context, cond utils.Pagination) ([]*model.Payment, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Payment)

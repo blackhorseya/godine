@@ -21,7 +21,7 @@ message Notification {
 
   // OrderID is the identifier of the order associated with the notification.
   // @gotags: bson:"order_id"
-  string order_id = 4;
+  int64 order_id = 4;
 
   // Type represents the type of notification (e.g., order_status, delivery_status).
   // @gotags: bson:"type"
