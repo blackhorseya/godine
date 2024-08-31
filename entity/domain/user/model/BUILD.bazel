@@ -9,7 +9,6 @@ go_library(
     importpath = "github.com/blackhorseya/godine/entity/domain/user/model",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/contextx",
         "@org_golang_google_protobuf//reflect/protoreflect",
         "@org_golang_google_protobuf//runtime/protoimpl",
         "@org_golang_google_protobuf//types/known/timestamppb",

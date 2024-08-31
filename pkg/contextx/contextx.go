@@ -122,10 +122,5 @@ func FromContext(c context.Context) (Contextx, error) {
 
 // FromContextLegacy returns a Contextx from context.Context.
 func FromContextLegacy(c context.Context) (Contextx, error) {
-	ctx, ok := c.Value(KeyContextx).(Contextx)
-	if !ok {
-		return Contextx{}, errors.New("contextx not found in context.Context")
-	}
-
-	return ctx, nil
+	return Background(), nil
 }

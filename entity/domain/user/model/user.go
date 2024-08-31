@@ -4,27 +4,11 @@ import (
 	"context"
 	"errors"
 
-	"github.com/blackhorseya/godine/pkg/contextx"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type keyHandler struct{}
-
-// SetInContext sets the user in the context.
-func (x *Account) SetInContext(c context.Context) context.Context {
-	return context.WithValue(c, keyHandler{}, x)
-}
-
-// FromContextLegacy extracts the user from the context.
-func FromContextLegacy(ctx contextx.Contextx) (*Account, error) {
-	user, ok := ctx.Value(contextx.KeyHandler{}).(*Account)
-	if !ok {
-		return nil, errors.New("no user found in context")
-	}
-
-	return user, nil
-}
 
 // FromContext extracts the user from the context.
 func FromContext(c context.Context) (*Account, error) {
@@ -34,6 +18,11 @@ func FromContext(c context.Context) (*Account, error) {
 	}
 
 	return account, nil
+}
+
+// SetInContext sets the user in the context.
+func (x *Account) SetInContext(c context.Context) context.Context {
+	return context.WithValue(c, keyHandler{}, x)
 }
 
 func (x *Account) GetID() string {

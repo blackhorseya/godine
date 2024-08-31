@@ -64,7 +64,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	defer span.End()
 
 	// check if the user is logged in
-	handler, err := userM.FromContextLegacy(ctx)
+	handler, err := userM.FromContext(c)
 	if err != nil {
 		ctx.Error("failed to get user from context", zap.Error(err))
 		return nil, err

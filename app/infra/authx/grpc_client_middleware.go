@@ -34,7 +34,7 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 			return fmt.Errorf("get context error: %w", err)
 		}
 
-		handler, err := userM.FromContextLegacy(ctx)
+		handler, err := userM.FromContext(c)
 		if err != nil {
 			ctx.Error("get user model from context error", zap.Error(err))
 			return err
@@ -72,7 +72,7 @@ func (x *Authx) StreamClientInterceptor() grpc.StreamClientInterceptor {
 			return streamer(ctx, desc, cc, method, opts...)
 		}
 
-		handler, err := userM.FromContextLegacy(ctx)
+		handler, err := userM.FromContext(c)
 		if err != nil {
 			ctx.Error("get user model from context error", zap.Error(err))
 			return nil, err
