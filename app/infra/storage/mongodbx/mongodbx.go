@@ -11,6 +11,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const (
+	defaultTimeout  = 5 * time.Second
+	defaultLimit    = int64(10)
+	defaultMaxLimit = int64(100)
+)
+
 // NewClientWithDSN returns a new mongo client with dsn.
 func NewClientWithDSN(dsn string) (*mongo.Client, error) {
 	opts := options.Client().ApplyURI(dsn).
