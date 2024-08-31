@@ -9,7 +9,7 @@ import (
 
 	"github.com/blackhorseya/godine/adapter/platform/handlers"
 	opsBI "github.com/blackhorseya/godine/app/domain/logistics/biz"
-	notifyBI "github.com/blackhorseya/godine/app/domain/notification/biz"
+	"github.com/blackhorseya/godine/app/domain/notification"
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
@@ -96,10 +96,10 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		restaurant.ProviderRestaurantBizSet,
 		restaurant.NewRestaurantServiceClient,
 		restaurant.NewMenuServiceClient,
+		notification.ProviderNotificationBizSet,
+		notification.NewNotificationServiceClient,
 		payment.ProviderPaymentBizSet,
 		payment.NewPaymentServiceClient,
-		notifyBI.ProviderNotificationBizSet,
-		notifyBI.NewNotificationServiceClient,
 		orderBI.ProviderOrderBizSet,
 		opsBI.ProviderLogisticsBizSet,
 		opsBI.NewLogisticsServiceClient,

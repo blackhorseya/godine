@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "delivery_repo.go",
         "mongodbx.go",
+        "notification_repo.go",
         "payment_repo.go",
         "restaurant_repo.go",
     ],
@@ -14,6 +15,8 @@ go_library(
         "//app/infra/configx",
         "//entity/domain/logistics/model",
         "//entity/domain/logistics/repo",
+        "//entity/domain/notification/model",
+        "//entity/domain/notification/repo",
         "//entity/domain/payment/model",
         "//entity/domain/payment/repo",
         "//entity/domain/restaurant/model",

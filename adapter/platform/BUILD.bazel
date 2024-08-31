@@ -12,8 +12,7 @@ go_library(
     deps = [
         "//adapter/platform/handlers",
         "//app/domain/logistics/biz",
-        "//app/domain/notification/biz",
-        "//app/domain/notification/repo/notification",
+        "//app/domain/notification",
         "//app/domain/order/biz",
         "//app/domain/order/repo/order",
         "//app/domain/payment",
