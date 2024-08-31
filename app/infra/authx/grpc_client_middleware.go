@@ -2,7 +2,6 @@ package authx
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
@@ -25,13 +24,11 @@ func (x *Authx) UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 		next, span := otelx.Tracer.Start(c, "authx.grpc.UnaryClientInterceptor")
 		defer span.End()
 
-		if x.SkipPath(method) {
-			return invoker(next, method, req, reply, cc, opts...)
-		}
+		ctx := contextx.Background()
 
-		ctx, err := contextx.FromContext(c)
-		if err != nil {
-			return fmt.Errorf("get context error: %w", err)
+		if x.SkipPath(method) {
+			ctx.Debug("unary client interceptor", zap.String("method", method))
+			return invoker(next, method, req, reply, cc, opts...)
 		}
 
 		handler, err := userM.FromContext(c)
@@ -59,17 +56,14 @@ func (x *Authx) StreamClientInterceptor() grpc.StreamClientInterceptor {
 		streamer grpc.Streamer,
 		opts ...grpc.CallOption,
 	) (grpc.ClientStream, error) {
-		ctx, err := contextx.FromContextLegacy(c)
-		if err != nil {
-			return nil, fmt.Errorf("get context error: %w", err)
-		}
-
-		ctx, span := otelx.Span(ctx, "authx.grpc.UnaryClientInterceptor")
+		next, span := otelx.Tracer.Start(c, "authx.grpc.StreamClientInterceptor")
 		defer span.End()
+
+		ctx := contextx.Background()
 
 		if x.SkipPath(method) {
 			ctx.Debug("unary client interceptor", zap.String("method", method))
-			return streamer(ctx, desc, cc, method, opts...)
+			return streamer(next, desc, cc, method, opts...)
 		}
 
 		handler, err := userM.FromContext(c)
@@ -79,10 +73,10 @@ func (x *Authx) StreamClientInterceptor() grpc.StreamClientInterceptor {
 		}
 		ctx.Debug("unary client interceptor", zap.Any("handler", &handler))
 
-		c = metadata.NewOutgoingContext(c, metadata.New(map[string]string{
+		next = metadata.NewOutgoingContext(next, metadata.New(map[string]string{
 			"access_token": handler.AccessToken,
 		}))
 
-		return streamer(c, desc, cc, method, opts...)
+		return streamer(next, desc, cc, method, opts...)
 	}
 }

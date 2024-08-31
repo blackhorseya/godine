@@ -56,15 +56,12 @@ func (i *menuService) AddMenuItem(c context.Context, req *biz.AddMenuItemRequest
 }
 
 func (i *menuService) GetMenuItem(c context.Context, req *biz.GetMenuItemRequest) (*model.MenuItem, error) {
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
-
-	ctx, span := otelx.Span(ctx, "menu.biz.GetMenuItem")
+	next, span := otelx.Tracer.Start(c, "menu.biz.GetMenuItem")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, req.RestaurantId)
+	ctx := contextx.Background()
+
+	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {
 		ctx.Error("get restaurant by id failed", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
 		return nil, err
