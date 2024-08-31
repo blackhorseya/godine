@@ -30,6 +30,9 @@ func (i *notificationService) SendNotification(
 	c context.Context,
 	req *biz.SendNotificationRequest,
 ) (*model.Notification, error) {
+	next, span := otelx.Tracer.Start(c, "notification.biz.SendNotification")
+	defer span.End()
+
 	ctx := contextx.Background()
 
 	handler, err := userM.FromContext(c)
@@ -40,7 +43,7 @@ func (i *notificationService) SendNotification(
 
 	notification := model.NewNotification(handler.Id, req.UserId, req.OrderId, req.Message)
 
-	err = i.notifications.Create(c, notification)
+	err = i.notifications.Create(next, notification)
 	if err != nil {
 		ctx.Error("create notification failed", zap.Error(err), zap.Any("notification", notification))
 		return nil, err
