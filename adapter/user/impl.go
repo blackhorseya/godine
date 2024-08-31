@@ -55,7 +55,6 @@ func (i *impl) AwaitSignal() error {
 	}
 
 	return nil
-
 }
 
 func (i *impl) InitRouting() error {
