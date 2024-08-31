@@ -10,38 +10,38 @@
 package repo
 
 import (
-	"reflect"
+	reflect "reflect"
 
-	"github.com/blackhorseya/godine/entity/domain/user/model"
-	"github.com/blackhorseya/godine/pkg/contextx"
-	"go.uber.org/mock/gomock"
+	model "github.com/blackhorseya/godine/entity/domain/user/model"
+	contextx "github.com/blackhorseya/godine/pkg/contextx"
+	gomock "go.uber.org/mock/gomock"
 )
 
-// MockIUserRepo is a mock of IUserRepo interface.
-type MockIUserRepo struct {
+// MockIUserRepoLegacy is a mock of IUserRepoLegacy interface.
+type MockIUserRepoLegacy struct {
 	ctrl     *gomock.Controller
-	recorder *MockIUserRepoMockRecorder
+	recorder *MockIUserRepoLegacyMockRecorder
 }
 
-// MockIUserRepoMockRecorder is the mock recorder for MockIUserRepo.
-type MockIUserRepoMockRecorder struct {
-	mock *MockIUserRepo
+// MockIUserRepoLegacyMockRecorder is the mock recorder for MockIUserRepoLegacy.
+type MockIUserRepoLegacyMockRecorder struct {
+	mock *MockIUserRepoLegacy
 }
 
-// NewMockIUserRepo creates a new mock instance.
-func NewMockIUserRepo(ctrl *gomock.Controller) *MockIUserRepo {
-	mock := &MockIUserRepo{ctrl: ctrl}
-	mock.recorder = &MockIUserRepoMockRecorder{mock}
+// NewMockIUserRepoLegacy creates a new mock instance.
+func NewMockIUserRepoLegacy(ctrl *gomock.Controller) *MockIUserRepoLegacy {
+	mock := &MockIUserRepoLegacy{ctrl: ctrl}
+	mock.recorder = &MockIUserRepoLegacyMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockIUserRepo) EXPECT() *MockIUserRepoMockRecorder {
+func (m *MockIUserRepoLegacy) EXPECT() *MockIUserRepoLegacyMockRecorder {
 	return m.recorder
 }
 
 // Create mocks base method.
-func (m *MockIUserRepo) Create(ctx contextx.Contextx, user *model.Account) error {
+func (m *MockIUserRepoLegacy) Create(ctx contextx.Contextx, user *model.Account) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", ctx, user)
 	ret0, _ := ret[0].(error)
@@ -49,13 +49,13 @@ func (m *MockIUserRepo) Create(ctx contextx.Contextx, user *model.Account) error
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockIUserRepoMockRecorder) Create(ctx, user any) *gomock.Call {
+func (mr *MockIUserRepoLegacyMockRecorder) Create(ctx, user any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIUserRepo)(nil).Create), ctx, user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIUserRepoLegacy)(nil).Create), ctx, user)
 }
 
 // Delete mocks base method.
-func (m *MockIUserRepo) Delete(ctx contextx.Contextx, id string) error {
+func (m *MockIUserRepoLegacy) Delete(ctx contextx.Contextx, id string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", ctx, id)
 	ret0, _ := ret[0].(error)
@@ -63,13 +63,13 @@ func (m *MockIUserRepo) Delete(ctx contextx.Contextx, id string) error {
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockIUserRepoMockRecorder) Delete(ctx, id any) *gomock.Call {
+func (mr *MockIUserRepoLegacyMockRecorder) Delete(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIUserRepo)(nil).Delete), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIUserRepoLegacy)(nil).Delete), ctx, id)
 }
 
 // GetByID mocks base method.
-func (m *MockIUserRepo) GetByID(ctx contextx.Contextx, id string) (*model.Account, error) {
+func (m *MockIUserRepoLegacy) GetByID(ctx contextx.Contextx, id string) (*model.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetByID", ctx, id)
 	ret0, _ := ret[0].(*model.Account)
@@ -78,13 +78,13 @@ func (m *MockIUserRepo) GetByID(ctx contextx.Contextx, id string) (*model.Accoun
 }
 
 // GetByID indicates an expected call of GetByID.
-func (mr *MockIUserRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
+func (mr *MockIUserRepoLegacyMockRecorder) GetByID(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIUserRepo)(nil).GetByID), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIUserRepoLegacy)(nil).GetByID), ctx, id)
 }
 
 // List mocks base method.
-func (m *MockIUserRepo) List(ctx contextx.Contextx, condition ListCondition) ([]*model.Account, int, error) {
+func (m *MockIUserRepoLegacy) List(ctx contextx.Contextx, condition ListCondition) ([]*model.Account, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, condition)
 	ret0, _ := ret[0].([]*model.Account)
@@ -94,13 +94,13 @@ func (m *MockIUserRepo) List(ctx contextx.Contextx, condition ListCondition) ([]
 }
 
 // List indicates an expected call of List.
-func (mr *MockIUserRepoMockRecorder) List(ctx, condition any) *gomock.Call {
+func (mr *MockIUserRepoLegacyMockRecorder) List(ctx, condition any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIUserRepo)(nil).List), ctx, condition)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIUserRepoLegacy)(nil).List), ctx, condition)
 }
 
 // Update mocks base method.
-func (m *MockIUserRepo) Update(ctx contextx.Contextx, user *model.Account) error {
+func (m *MockIUserRepoLegacy) Update(ctx contextx.Contextx, user *model.Account) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, user)
 	ret0, _ := ret[0].(error)
@@ -108,7 +108,7 @@ func (m *MockIUserRepo) Update(ctx contextx.Contextx, user *model.Account) error
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockIUserRepoMockRecorder) Update(ctx, user any) *gomock.Call {
+func (mr *MockIUserRepoLegacyMockRecorder) Update(ctx, user any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIUserRepo)(nil).Update), ctx, user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIUserRepoLegacy)(nil).Update), ctx, user)
 }

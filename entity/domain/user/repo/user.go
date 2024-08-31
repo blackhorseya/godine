@@ -8,12 +8,12 @@ import (
 )
 
 type ListCondition struct {
-	Limit  int
-	Offset int
+	Limit  int64
+	Offset int64
 }
 
-// IUserRepo is an interface for user repository.
-type IUserRepo interface {
+// IUserRepoLegacy is an interface for user repository.
+type IUserRepoLegacy interface {
 	Create(ctx contextx.Contextx, user *model.Account) error
 	GetByID(ctx contextx.Contextx, id string) (item *model.Account, err error)
 	List(ctx contextx.Contextx, condition ListCondition) (items []*model.Account, total int, err error)
