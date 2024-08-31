@@ -18,7 +18,6 @@ import (
 	biz3 "github.com/blackhorseya/godine/app/domain/payment/biz"
 	"github.com/blackhorseya/godine/app/domain/payment/repo/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant/biz"
-	"github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant"
 	biz2 "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
@@ -26,7 +25,6 @@ import (
 	"github.com/blackhorseya/godine/app/infra/snowflakex"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
-	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	biz12 "github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	biz10 "github.com/blackhorseya/godine/entity/domain/notification/biz"
@@ -78,11 +76,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	redisClient, err := redix.NewClient(application)
-	if err != nil {
-		return nil, err
-	}
-	iRestaurantRepo := restaurant.NewMongodb(mongoClient, redisClient)
+	iRestaurantRepo := mongodbx.NewMongoDBRestaurantRepo(mongoClient)
 	restaurantServiceServer := biz.NewRestaurantService(iRestaurantRepo)
 	menuServiceServer := biz.NewMenuService(iRestaurantRepo)
 	iPaymentRepo := payment.NewMongodb(mongoClient)

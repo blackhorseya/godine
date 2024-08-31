@@ -5,7 +5,7 @@
 package biz
 
 import (
-	"github.com/blackhorseya/godine/app/domain/restaurant/repo/restaurant"
+	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/google/wire"
 	"github.com/redis/go-redis/v9"
@@ -16,7 +16,7 @@ import (
 var ProviderRestaurantBizSet = wire.NewSet(
 	NewRestaurantService,
 	NewMenuService,
-	restaurant.NewMongodb,
+	mongodbx.NewMongoDBRestaurantRepo,
 )
 
 func NewIntegration(rw *mongo.Client, rdb *redis.Client) (biz.RestaurantServiceServer, error) {

@@ -20,7 +20,6 @@ import (
 	"github.com/blackhorseya/godine/app/infra/snowflakex"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
-	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	opsB "github.com/blackhorseya/godine/entity/domain/logistics/biz"
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
@@ -108,7 +107,6 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		snowflakex.NewNode,
 		postgresqlx.NewClient,
 		mongodbx.NewClient,
-		redix.NewClient,
 
 		handlers.NewRestaurantServiceHandler,
 	))
