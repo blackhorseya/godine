@@ -10,7 +10,7 @@ import (
 	"github.com/blackhorseya/godine/adapter/platform/handlers"
 	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
-	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
+	"github.com/blackhorseya/godine/app/domain/order"
 	"github.com/blackhorseya/godine/app/domain/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
 	"github.com/blackhorseya/godine/app/domain/user"
@@ -91,16 +91,21 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		authx.New,
 		grpcx.NewClient,
 
-		user.NewAccountService,
+		user.ProviderUserBizSet,
 		user.NewAccountServiceClient,
+
 		restaurant.ProviderRestaurantBizSet,
 		restaurant.NewRestaurantServiceClient,
 		restaurant.NewMenuServiceClient,
+
 		notification.ProviderNotificationBizSet,
 		notification.NewNotificationServiceClient,
+
 		payment.ProviderPaymentBizSet,
 		payment.NewPaymentServiceClient,
-		orderBI.ProviderOrderBizSet,
+
+		order.ProviderOrderBizSet,
+
 		logistics.ProviderLogisticsBizSet,
 		logistics.NewLogisticsServiceClient,
 

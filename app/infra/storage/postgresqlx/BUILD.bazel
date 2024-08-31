@@ -2,12 +2,23 @@ load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "postgresqlx",
-    srcs = ["client.go"],
+    srcs = [
+        "client.go",
+        "order_repo.go",
+        "serializer.go",
+    ],
     importpath = "github.com/blackhorseya/godine/app/infra/storage/postgresqlx",
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/configx",
+        "//entity/domain/order/model",
+        "//entity/domain/order/repo",
+        "//pkg/contextx",
+        "@com_github_bwmarrin_snowflake//:snowflake",
         "@io_gorm_driver_postgres//:postgres",
         "@io_gorm_gorm//:gorm",
+        "@io_gorm_gorm//schema",
+        "@org_golang_google_protobuf//types/known/timestamppb",
+        "@org_uber_go_zap//:zap",
     ],
 )
