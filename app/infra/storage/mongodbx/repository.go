@@ -45,8 +45,8 @@ func (x *mongoRepository[T]) Create(c context.Context, item *T) error {
 	if (*item).GetID() == primitive.NilObjectID {
 		(*item).SetID(primitive.NewObjectID())
 	}
-	(*item).SetCreatedAt(time.Now())
-	(*item).SetUpdatedAt(time.Now())
+	(*item).SetCreatedAt(time.Now().UTC())
+	(*item).SetUpdatedAt(time.Now().UTC())
 
 	_, err := x.coll.InsertOne(timeout, item)
 	if err != nil {
@@ -122,7 +122,7 @@ func (x *mongoRepository[T]) Update(c context.Context, item *T) error {
 
 	ctx := contextx.Background()
 
-	(*item).SetUpdatedAt(time.Now()) // Update the UpdatedAt field
+	(*item).SetUpdatedAt(time.Now().UTC())
 
 	filter := bson.M{"_id": (*item).GetID()}
 	update := bson.M{"$set": item}
