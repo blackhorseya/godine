@@ -60,22 +60,19 @@ func (i *notificationService) ListMyNotifications(
 	req *biz.ListMyNotificationsRequest,
 	stream biz.NotificationService_ListMyNotificationsServer,
 ) error {
-	ctx, err := contextx.FromContextLegacy(stream.Context())
-	if err != nil {
-		return fmt.Errorf("failed to get contextx: %w", err)
-	}
-
-	ctx, span := otelx.Span(ctx, "notification.biz.ListMyNotifications")
+	next, span := otelx.Tracer.Start(stream.Context(), "notification.biz.ListMyNotifications")
 	defer span.End()
 
-	handler, err := userM.FromContextLegacy(ctx)
+	ctx := contextx.Background()
+
+	handler, err := userM.FromContext(stream.Context())
 	if err != nil {
 		ctx.Error("failed to get user from context", zap.Error(err))
 		return err
 	}
 	_ = handler
 
-	items, total, err := i.notifications.List(ctx, utils.ListCondition{
+	items, total, err := i.notifications.List(next, utils.ListCondition{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 		// TODO: 2024/8/31|sean|fix me
