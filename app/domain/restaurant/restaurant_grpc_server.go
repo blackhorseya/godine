@@ -72,7 +72,7 @@ func (i *restaurantService) ListRestaurants(
 		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
 	}
 
-	items, total, err := i.restaurants.List(next, utils.ListCondition{
+	items, total, err := i.restaurants.List(next, utils.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})
@@ -122,7 +122,7 @@ func (i *restaurantService) ListRestaurantsNonStream(
 
 	ctx := contextx.Background()
 
-	items, total, err := i.restaurants.List(next, utils.ListCondition{
+	items, total, err := i.restaurants.List(next, utils.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})

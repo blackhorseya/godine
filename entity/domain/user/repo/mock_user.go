@@ -85,7 +85,7 @@ func (mr *MockIUserRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockIUserRepo) List(c context.Context, cond utils.ListCondition) ([]*model.Account, int, error) {
+func (m *MockIUserRepo) List(c context.Context, cond utils.Pagination) ([]*model.Account, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Account)
