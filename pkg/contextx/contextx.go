@@ -121,6 +121,8 @@ func FromContext(c context.Context) (Contextx, error) {
 }
 
 // FromContextLegacy returns a Contextx from context.Context.
+// Deprecated: Use FromContext instead.
+// TODO: 2024/8/31|sean|remove this method
 func FromContextLegacy(c context.Context) (Contextx, error) {
 	return Background(), nil
 }
