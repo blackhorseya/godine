@@ -1,4 +1,4 @@
-package biz
+package notification
 
 import (
 	"context"
@@ -11,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/notification/repo"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/utils"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 )
@@ -72,11 +73,13 @@ func (i *notificationService) ListMyNotifications(
 		ctx.Error("failed to get user from context", zap.Error(err))
 		return err
 	}
+	_ = handler
 
-	items, total, err := i.notifications.List(ctx, repo.ListCondition{
+	items, total, err := i.notifications.List(ctx, utils.ListCondition{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
-		UserID: handler.Id,
+		// TODO: 2024/8/31|sean|fix me
+		// UserID: handler.Id,
 	})
 	if err != nil {
 		ctx.Error("list notifications failed", zap.Error(err))

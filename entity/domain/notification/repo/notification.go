@@ -4,21 +4,10 @@ package repo
 
 import (
 	"github.com/blackhorseya/godine/entity/domain/notification/model"
-	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/utils"
 )
-
-// ListCondition defines the conditions for listing notifications.
-type ListCondition struct {
-	Limit  int64
-	Offset int64
-
-	UserID string
-}
 
 // INotificationRepo defines the interface for notification repository operations.
 type INotificationRepo interface {
-	Create(ctx contextx.Contextx, notify *model.Notification) error
-	GetByID(ctx contextx.Contextx, id string) (item *model.Notification, err error)
-	List(ctx contextx.Contextx, cond ListCondition) (items []*model.Notification, total int, err error)
-	UpdateStatus(ctx contextx.Contextx, id, status string) error
+	utils.IRepository[*model.Notification]
 }

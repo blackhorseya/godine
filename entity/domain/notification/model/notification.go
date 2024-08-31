@@ -56,3 +56,19 @@ func (x *Notification) MarshalBSON() ([]byte, error) {
 
 	return bson.Marshal(alias)
 }
+
+func (x *Notification) GetID() string {
+	return x.Id
+}
+
+func (x *Notification) SetID(id primitive.ObjectID) {
+	x.Id = id.Hex()
+}
+
+func (x *Notification) SetCreatedAt(t *timestamppb.Timestamp) {
+	x.CreatedAt = t
+}
+
+func (x *Notification) SetUpdatedAt(t *timestamppb.Timestamp) {
+	x.UpdatedAt = t
+}
