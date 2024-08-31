@@ -5,24 +5,13 @@ import (
 	"errors"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// NewUser creates and returns a new user.
-func NewUser(name, email, password string, address *Address) *Account {
-	return &Account{
-		Id:          "",
-		Username:    "",
-		Email:       email,
-		Password:    password,
-		Address:     address,
-		IsActive:    true,
-		Level:       0,
-		Roles:       nil,
-		SocialIDMap: nil,
-		CreatedAt:   timestamppb.Now(),
-		UpdatedAt:   timestamppb.Now(),
-	}
+type keyHandler struct{}
+
+// SetInContext sets the user in the context.
+func (x *Account) SetInContext(c context.Context) context.Context {
+	return context.WithValue(c, keyHandler{}, x)
 }
 
 // FromContextLegacy extracts the user from the context.
@@ -37,7 +26,7 @@ func FromContextLegacy(ctx contextx.Contextx) (*Account, error) {
 
 // FromContext extracts the user from the context.
 func FromContext(c context.Context) (*Account, error) {
-	account, ok := c.Value(Account{}).(*Account)
+	account, ok := c.Value(keyHandler{}).(*Account)
 	if !ok {
 		return nil, errors.New("no user found in context")
 	}

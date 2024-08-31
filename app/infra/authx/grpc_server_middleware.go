@@ -22,13 +22,8 @@ func (x *Authx) UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		next, span := otelx.Tracer.Start(c, "authx.grpc.UnaryServerInterceptor")
 		defer span.End()
 
-		ctx, err := contextx.FromContextLegacy(c)
-		if err != nil {
-			return nil, status.Newf(codes.Internal, "failed to get contextx: %v", err).Err()
-		}
-
 		if x.SkipPath(info.FullMethod) {
-			ctx.Debug(
+			contextx.Background().Debug(
 				"skip authx middleware",
 				zap.Strings("skip_paths", x.SkipPaths),
 				zap.String("full_method", info.FullMethod),
@@ -38,10 +33,10 @@ func (x *Authx) UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 		account, err := extractAccount(c, x)
 		if err != nil {
-			ctx.Error("failed to extract account", zap.Error(err))
+			contextx.Background().Error("failed to extract account", zap.Error(err))
 			return nil, err
 		}
-		next = context.WithValue(next, contextx.KeyHandler{}, account)
+		next = account.SetInContext(next)
 
 		return handler(next, req)
 	}
@@ -53,13 +48,8 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 		next, span := otelx.Tracer.Start(stream.Context(), "authx.grpc.StreamServerInterceptor")
 		defer span.End()
 
-		ctx, err := contextx.FromContextLegacy(stream.Context())
-		if err != nil {
-			return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
-		}
-
 		if x.SkipPath(info.FullMethod) {
-			ctx.Debug(
+			contextx.Background().Debug(
 				"skip authx middleware",
 				zap.Strings("skip_paths", x.SkipPaths),
 				zap.String("full_method", info.FullMethod),
@@ -69,10 +59,10 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 
 		account, err := extractAccount(stream.Context(), x)
 		if err != nil {
-			ctx.Error("failed to extract account", zap.Error(err))
+			contextx.Background().Error("failed to extract account", zap.Error(err))
 			return err
 		}
-		next = context.WithValue(next, contextx.KeyHandler{}, account)
+		next = account.SetInContext(next)
 
 		wrappedStream := grpc_middleware.WrapServerStream(stream)
 		wrappedStream.WrappedContext = next

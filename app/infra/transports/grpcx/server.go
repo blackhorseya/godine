@@ -33,14 +33,12 @@ func NewServer(app *configx.Application, init InitServers, authx *authx.Authx) (
 			grpc_ctxtags.UnaryServerInterceptor(),
 			grpc_zap.UnaryServerInterceptor(logger),
 			grpc_recovery.UnaryServerInterceptor(),
-			contextx.UnaryServerInterceptor(),
 			authx.UnaryServerInterceptor(),
 		)),
 		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
 			grpc_ctxtags.StreamServerInterceptor(),
 			grpc_zap.StreamServerInterceptor(logger),
 			grpc_recovery.StreamServerInterceptor(),
-			contextx.StreamServerInterceptor(),
 			authx.StreamServerInterceptor(),
 		)),
 	)
