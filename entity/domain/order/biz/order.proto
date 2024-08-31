@@ -24,7 +24,12 @@ message ListOrdersRequest {
   int64 page_size = 2;
 }
 
+message GetOrderRequest {
+  string order_id = 1;
+}
+
 service OrderService {
   rpc SubmitOrder(SubmitOrderRequest) returns (Order) {}
   rpc ListOrders(ListOrdersRequest) returns (stream Order) {}
+  rpc GetOrder(GetOrderRequest) returns (Order) {}
 }
