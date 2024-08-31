@@ -39,6 +39,8 @@ const (
 	OrderServiceSubmitOrderProcedure = "/order.OrderService/SubmitOrder"
 	// OrderServiceListOrdersProcedure is the fully-qualified name of the OrderService's ListOrders RPC.
 	OrderServiceListOrdersProcedure = "/order.OrderService/ListOrders"
+	// OrderServiceGetOrderProcedure is the fully-qualified name of the OrderService's GetOrder RPC.
+	OrderServiceGetOrderProcedure = "/order.OrderService/GetOrder"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
@@ -46,12 +48,14 @@ var (
 	orderServiceServiceDescriptor           = biz.File_domain_order_biz_order_proto.Services().ByName("OrderService")
 	orderServiceSubmitOrderMethodDescriptor = orderServiceServiceDescriptor.Methods().ByName("SubmitOrder")
 	orderServiceListOrdersMethodDescriptor  = orderServiceServiceDescriptor.Methods().ByName("ListOrders")
+	orderServiceGetOrderMethodDescriptor    = orderServiceServiceDescriptor.Methods().ByName("GetOrder")
 )
 
 // OrderServiceClient is a client for the order.OrderService service.
 type OrderServiceClient interface {
 	SubmitOrder(context.Context, *connect.Request[biz.SubmitOrderRequest]) (*connect.Response[model.Order], error)
 	ListOrders(context.Context, *connect.Request[biz.ListOrdersRequest]) (*connect.ServerStreamForClient[model.Order], error)
+	GetOrder(context.Context, *connect.Request[biz.GetOrderRequest]) (*connect.Response[model.Order], error)
 }
 
 // NewOrderServiceClient constructs a client for the order.OrderService service. By default, it uses
@@ -76,6 +80,12 @@ func NewOrderServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 			connect.WithSchema(orderServiceListOrdersMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		getOrder: connect.NewClient[biz.GetOrderRequest, model.Order](
+			httpClient,
+			baseURL+OrderServiceGetOrderProcedure,
+			connect.WithSchema(orderServiceGetOrderMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -83,6 +93,7 @@ func NewOrderServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 type orderServiceClient struct {
 	submitOrder *connect.Client[biz.SubmitOrderRequest, model.Order]
 	listOrders  *connect.Client[biz.ListOrdersRequest, model.Order]
+	getOrder    *connect.Client[biz.GetOrderRequest, model.Order]
 }
 
 // SubmitOrder calls order.OrderService.SubmitOrder.
@@ -95,10 +106,16 @@ func (c *orderServiceClient) ListOrders(ctx context.Context, req *connect.Reques
 	return c.listOrders.CallServerStream(ctx, req)
 }
 
+// GetOrder calls order.OrderService.GetOrder.
+func (c *orderServiceClient) GetOrder(ctx context.Context, req *connect.Request[biz.GetOrderRequest]) (*connect.Response[model.Order], error) {
+	return c.getOrder.CallUnary(ctx, req)
+}
+
 // OrderServiceHandler is an implementation of the order.OrderService service.
 type OrderServiceHandler interface {
 	SubmitOrder(context.Context, *connect.Request[biz.SubmitOrderRequest]) (*connect.Response[model.Order], error)
 	ListOrders(context.Context, *connect.Request[biz.ListOrdersRequest], *connect.ServerStream[model.Order]) error
+	GetOrder(context.Context, *connect.Request[biz.GetOrderRequest]) (*connect.Response[model.Order], error)
 }
 
 // NewOrderServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -119,12 +136,20 @@ func NewOrderServiceHandler(svc OrderServiceHandler, opts ...connect.HandlerOpti
 		connect.WithSchema(orderServiceListOrdersMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	orderServiceGetOrderHandler := connect.NewUnaryHandler(
+		OrderServiceGetOrderProcedure,
+		svc.GetOrder,
+		connect.WithSchema(orderServiceGetOrderMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/order.OrderService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case OrderServiceSubmitOrderProcedure:
 			orderServiceSubmitOrderHandler.ServeHTTP(w, r)
 		case OrderServiceListOrdersProcedure:
 			orderServiceListOrdersHandler.ServeHTTP(w, r)
+		case OrderServiceGetOrderProcedure:
+			orderServiceGetOrderHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -140,4 +165,8 @@ func (UnimplementedOrderServiceHandler) SubmitOrder(context.Context, *connect.Re
 
 func (UnimplementedOrderServiceHandler) ListOrders(context.Context, *connect.Request[biz.ListOrdersRequest], *connect.ServerStream[model.Order]) error {
 	return connect.NewError(connect.CodeUnimplemented, errors.New("order.OrderService.ListOrders is not implemented"))
+}
+
+func (UnimplementedOrderServiceHandler) GetOrder(context.Context, *connect.Request[biz.GetOrderRequest]) (*connect.Response[model.Order], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("order.OrderService.GetOrder is not implemented"))
 }

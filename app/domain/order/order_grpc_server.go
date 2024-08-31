@@ -198,3 +198,8 @@ func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderSe
 
 	return nil
 }
+
+func (i *orderService) GetOrder(ctx context.Context, request *biz.GetOrderRequest) (*model.Order, error) {
+	// TODO: 2024/8/31|sean|implement me
+	panic("implement me")
+}

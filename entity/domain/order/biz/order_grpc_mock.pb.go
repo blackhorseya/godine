@@ -278,6 +278,26 @@ func (m *MockOrderServiceClient) EXPECT() *MockOrderServiceClientMockRecorder {
 	return m.recorder
 }
 
+// GetOrder mocks base method.
+func (m *MockOrderServiceClient) GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*model.Order, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetOrder", varargs...)
+	ret0, _ := ret[0].(*model.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrder indicates an expected call of GetOrder.
+func (mr *MockOrderServiceClientMockRecorder) GetOrder(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockOrderServiceClient)(nil).GetOrder), varargs...)
+}
+
 // ListOrders mocks base method.
 func (m *MockOrderServiceClient) ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (OrderService_ListOrdersClient, error) {
 	m.ctrl.T.Helper()
@@ -339,6 +359,21 @@ func NewMockOrderServiceServer(ctrl *gomock.Controller) *MockOrderServiceServer 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOrderServiceServer) EXPECT() *MockOrderServiceServerMockRecorder {
 	return m.recorder
+}
+
+// GetOrder mocks base method.
+func (m *MockOrderServiceServer) GetOrder(ctx context.Context, in *GetOrderRequest) (*model.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrder", ctx, in)
+	ret0, _ := ret[0].(*model.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrder indicates an expected call of GetOrder.
+func (mr *MockOrderServiceServerMockRecorder) GetOrder(ctx, in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrder", reflect.TypeOf((*MockOrderServiceServer)(nil).GetOrder), ctx, in)
 }
 
 // ListOrders mocks base method.
