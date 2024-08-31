@@ -1,7 +1,7 @@
 load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
-    name = "biz",
+    name = "restaurant",
     srcs = [
         "menu_grpc_client.go",
         "menu_grpc_server.go",
@@ -9,7 +9,7 @@ go_library(
         "restaurant_grpc_server.go",
         "wire_gen.go",
     ],
-    importpath = "github.com/blackhorseya/godine/app/domain/restaurant/biz",
+    importpath = "github.com/blackhorseya/godine/app/domain/restaurant",
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/otelx",
@@ -31,10 +31,9 @@ go_library(
 )
 
 go_test(
-    name = "biz_test",
+    name = "restaurant_test",
     srcs = ["restaurant_grpc_server_integration_test.go"],
-    embed = [":biz"],
-    tags = ["integration"],
+    embed = [":restaurant"],
     deps = [
         "//app/infra/storage/mongodbx",
         "//app/infra/storage/redix",

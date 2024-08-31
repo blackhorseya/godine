@@ -4,7 +4,7 @@
 //go:build !wireinject
 // +build !wireinject
 
-package biz
+package restaurant
 
 import (
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"

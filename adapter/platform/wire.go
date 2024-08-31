@@ -12,7 +12,7 @@ import (
 	notifyBI "github.com/blackhorseya/godine/app/domain/notification/biz"
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
 	payBI "github.com/blackhorseya/godine/app/domain/payment/biz"
-	restBI "github.com/blackhorseya/godine/app/domain/restaurant/biz"
+	"github.com/blackhorseya/godine/app/domain/restaurant"
 	userBI "github.com/blackhorseya/godine/app/domain/user/biz"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
@@ -93,9 +93,9 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 
 		userBI.NewAccountService,
 		userBI.NewAccountServiceClient,
-		restBI.ProviderRestaurantBizSet,
-		restBI.NewRestaurantServiceClient,
-		restBI.NewMenuServiceClient,
+		restaurant.ProviderRestaurantBizSet,
+		restaurant.NewRestaurantServiceClient,
+		restaurant.NewMenuServiceClient,
 		payBI.ProviderPaymentBizSet,
 		payBI.NewPaymentServiceClient,
 		notifyBI.ProviderNotificationBizSet,

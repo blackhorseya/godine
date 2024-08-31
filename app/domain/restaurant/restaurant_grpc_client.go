@@ -1,4 +1,4 @@
-package biz
+package restaurant
 
 import (
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
