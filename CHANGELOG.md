@@ -1,3 +1,34 @@
+## 0.5.10 (2024-08-31)
+
+### Feat
+
+- implement user adapter functionality and styling (#150)
+- refactor project structure and dependencies
+- refactor logging and dependencies in implementation files
+- implement user adapter functionality and styling
+- refactor restaurant service handling in platform adapter
+- introduce new message and RPC method in RestaurantService (#147)
+- refactor error handling and pagination logic in restaurant service
+- refactor code structure and improve error handling
+- introduce new message and RPC method in RestaurantService
+- enhance plugin functionality and options
+
+### Fix
+
+- adjust server configuration settings for improved performance
+
+### Refactor
+
+- refactor HTTP transport references in platform adapter
+- consolidate code formatting across files
+- refactor service initialization and client creation (#148)
+- refactor code for improved tracing functionality
+- refactor gRPC client initialization code
+- update `contextx.FromContext` calls to `contextx.FromContextLegacy` in various files
+- refactor service initialization and client creation
+- refactor imports and dependencies across files
+- simplify proto files and remove unnecessary code
+
 ## 0.5.9 (2024-08-28)
 
 ### Feat
