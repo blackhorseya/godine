@@ -3,6 +3,7 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "mongodbx",
     srcs = [
+        "base_model.go",
         "mongodbx.go",
         "repository.go",
         "restaurant_repo.go",
