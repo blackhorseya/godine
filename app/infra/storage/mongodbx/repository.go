@@ -2,7 +2,6 @@ package mongodbx
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -73,11 +72,6 @@ func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item *T, err
 	var result T
 	err = x.coll.FindOne(timeout, bson.M{"_id": objectID}).Decode(&result)
 	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			ctx.Warn("item not found", zap.String("id", id))
-			return nil, nil
-		}
-
 		ctx.Error("failed to get item by ID", zap.Error(err), zap.String("id", id))
 		return nil, err
 	}
