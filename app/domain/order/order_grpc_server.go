@@ -162,15 +162,12 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 }
 
 func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderService_ListOrdersServer) error {
-	ctx, err := contextx.FromContextLegacy(stream.Context())
-	if err != nil {
-		return fmt.Errorf("failed to get contextx: %w", err)
-	}
-
-	ctx, span := otelx.Span(ctx, "order.biz.ListOrders")
+	next, span := otelx.Tracer.Start(stream.Context(), "order.biz.ListOrders")
 	defer span.End()
 
-	items, total, err := i.orders.List(ctx, repo.ListCondition{
+	ctx := contextx.Background()
+
+	items, total, err := i.orders.List(next, repo.ListCondition{
 		UserID:       "",
 		RestaurantID: "",
 		Limit:        int(req.PageSize),
