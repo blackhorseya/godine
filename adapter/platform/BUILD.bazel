@@ -17,7 +17,7 @@ go_library(
         "//app/domain/order/repo/order",
         "//app/domain/payment",
         "//app/domain/restaurant",
-        "//app/domain/user/biz",
+        "//app/domain/user",
         "//app/infra/authx",
         "//app/infra/configx",
         "//app/infra/otelx",

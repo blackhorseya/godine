@@ -13,7 +13,7 @@ import (
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
-	userBI "github.com/blackhorseya/godine/app/domain/user/biz"
+	"github.com/blackhorseya/godine/app/domain/user"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -91,8 +91,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		authx.New,
 		grpcx.NewClient,
 
-		userBI.NewAccountService,
-		userBI.NewAccountServiceClient,
+		user.NewAccountService,
+		user.NewAccountServiceClient,
 		restaurant.ProviderRestaurantBizSet,
 		restaurant.NewRestaurantServiceClient,
 		restaurant.NewMenuServiceClient,
