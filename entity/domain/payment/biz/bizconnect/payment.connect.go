@@ -40,6 +40,9 @@ const (
 	// PaymentServiceGetPaymentProcedure is the fully-qualified name of the PaymentService's GetPayment
 	// RPC.
 	PaymentServiceGetPaymentProcedure = "/payment.PaymentService/GetPayment"
+	// PaymentServiceListPaymentsProcedure is the fully-qualified name of the PaymentService's
+	// ListPayments RPC.
+	PaymentServiceListPaymentsProcedure = "/payment.PaymentService/ListPayments"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
@@ -47,12 +50,14 @@ var (
 	paymentServiceServiceDescriptor             = biz.File_domain_payment_biz_payment_proto.Services().ByName("PaymentService")
 	paymentServiceCreatePaymentMethodDescriptor = paymentServiceServiceDescriptor.Methods().ByName("CreatePayment")
 	paymentServiceGetPaymentMethodDescriptor    = paymentServiceServiceDescriptor.Methods().ByName("GetPayment")
+	paymentServiceListPaymentsMethodDescriptor  = paymentServiceServiceDescriptor.Methods().ByName("ListPayments")
 )
 
 // PaymentServiceClient is a client for the payment.PaymentService service.
 type PaymentServiceClient interface {
 	CreatePayment(context.Context, *connect.Request[biz.CreatePaymentRequest]) (*connect.Response[model.Payment], error)
 	GetPayment(context.Context, *connect.Request[biz.GetPaymentRequest]) (*connect.Response[model.Payment], error)
+	ListPayments(context.Context, *connect.Request[biz.ListPaymentsRequest]) (*connect.Response[biz.ListPaymentsResponse], error)
 }
 
 // NewPaymentServiceClient constructs a client for the payment.PaymentService service. By default,
@@ -77,6 +82,12 @@ func NewPaymentServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			connect.WithSchema(paymentServiceGetPaymentMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		listPayments: connect.NewClient[biz.ListPaymentsRequest, biz.ListPaymentsResponse](
+			httpClient,
+			baseURL+PaymentServiceListPaymentsProcedure,
+			connect.WithSchema(paymentServiceListPaymentsMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -84,6 +95,7 @@ func NewPaymentServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 type paymentServiceClient struct {
 	createPayment *connect.Client[biz.CreatePaymentRequest, model.Payment]
 	getPayment    *connect.Client[biz.GetPaymentRequest, model.Payment]
+	listPayments  *connect.Client[biz.ListPaymentsRequest, biz.ListPaymentsResponse]
 }
 
 // CreatePayment calls payment.PaymentService.CreatePayment.
@@ -96,10 +108,16 @@ func (c *paymentServiceClient) GetPayment(ctx context.Context, req *connect.Requ
 	return c.getPayment.CallUnary(ctx, req)
 }
 
+// ListPayments calls payment.PaymentService.ListPayments.
+func (c *paymentServiceClient) ListPayments(ctx context.Context, req *connect.Request[biz.ListPaymentsRequest]) (*connect.Response[biz.ListPaymentsResponse], error) {
+	return c.listPayments.CallUnary(ctx, req)
+}
+
 // PaymentServiceHandler is an implementation of the payment.PaymentService service.
 type PaymentServiceHandler interface {
 	CreatePayment(context.Context, *connect.Request[biz.CreatePaymentRequest]) (*connect.Response[model.Payment], error)
 	GetPayment(context.Context, *connect.Request[biz.GetPaymentRequest]) (*connect.Response[model.Payment], error)
+	ListPayments(context.Context, *connect.Request[biz.ListPaymentsRequest]) (*connect.Response[biz.ListPaymentsResponse], error)
 }
 
 // NewPaymentServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -120,12 +138,20 @@ func NewPaymentServiceHandler(svc PaymentServiceHandler, opts ...connect.Handler
 		connect.WithSchema(paymentServiceGetPaymentMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	paymentServiceListPaymentsHandler := connect.NewUnaryHandler(
+		PaymentServiceListPaymentsProcedure,
+		svc.ListPayments,
+		connect.WithSchema(paymentServiceListPaymentsMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/payment.PaymentService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case PaymentServiceCreatePaymentProcedure:
 			paymentServiceCreatePaymentHandler.ServeHTTP(w, r)
 		case PaymentServiceGetPaymentProcedure:
 			paymentServiceGetPaymentHandler.ServeHTTP(w, r)
+		case PaymentServiceListPaymentsProcedure:
+			paymentServiceListPaymentsHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -141,4 +167,8 @@ func (UnimplementedPaymentServiceHandler) CreatePayment(context.Context, *connec
 
 func (UnimplementedPaymentServiceHandler) GetPayment(context.Context, *connect.Request[biz.GetPaymentRequest]) (*connect.Response[model.Payment], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("payment.PaymentService.GetPayment is not implemented"))
+}
+
+func (UnimplementedPaymentServiceHandler) ListPayments(context.Context, *connect.Request[biz.ListPaymentsRequest]) (*connect.Response[biz.ListPaymentsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("payment.PaymentService.ListPayments is not implemented"))
 }

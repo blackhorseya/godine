@@ -72,3 +72,11 @@ func (i *paymentService) GetPayment(c context.Context, req *biz.GetPaymentReques
 
 	return payment, nil
 }
+
+func (i *paymentService) ListPayments(
+	c context.Context,
+	req *biz.ListPaymentsRequest,
+) (*biz.ListPaymentsResponse, error) {
+	// TODO: 2024/8/31|sean|implement me
+	panic("implement me")
+}

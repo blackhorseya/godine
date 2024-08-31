@@ -15,7 +15,18 @@ message GetPaymentRequest {
   string payment_id = 1;
 }
 
+message ListPaymentsRequest {
+  int64 page = 1;
+  int64 page_size = 2;
+}
+
+message ListPaymentsResponse {
+  repeated Payment payments = 1;
+  int64 total = 2;
+}
+
 service PaymentService {
   rpc CreatePayment(CreatePaymentRequest) returns (Payment);
   rpc GetPayment(GetPaymentRequest) returns (Payment);
+  rpc ListPayments(ListPaymentsRequest) returns (ListPaymentsResponse);
 }

@@ -75,6 +75,26 @@ func (mr *MockPaymentServiceClientMockRecorder) GetPayment(ctx, in interface{}, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPayment", reflect.TypeOf((*MockPaymentServiceClient)(nil).GetPayment), varargs...)
 }
 
+// ListPayments mocks base method.
+func (m *MockPaymentServiceClient) ListPayments(ctx context.Context, in *ListPaymentsRequest, opts ...grpc.CallOption) (*ListPaymentsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListPayments", varargs...)
+	ret0, _ := ret[0].(*ListPaymentsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPayments indicates an expected call of ListPayments.
+func (mr *MockPaymentServiceClientMockRecorder) ListPayments(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPayments", reflect.TypeOf((*MockPaymentServiceClient)(nil).ListPayments), varargs...)
+}
+
 // MockPaymentServiceServer is a mock of PaymentServiceServer interface.
 type MockPaymentServiceServer struct {
 	ctrl     *gomock.Controller
@@ -126,4 +146,19 @@ func (m *MockPaymentServiceServer) GetPayment(ctx context.Context, in *GetPaymen
 func (mr *MockPaymentServiceServerMockRecorder) GetPayment(ctx, in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPayment", reflect.TypeOf((*MockPaymentServiceServer)(nil).GetPayment), ctx, in)
+}
+
+// ListPayments mocks base method.
+func (m *MockPaymentServiceServer) ListPayments(ctx context.Context, in *ListPaymentsRequest) (*ListPaymentsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListPayments", ctx, in)
+	ret0, _ := ret[0].(*ListPaymentsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListPayments indicates an expected call of ListPayments.
+func (mr *MockPaymentServiceServerMockRecorder) ListPayments(ctx, in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPayments", reflect.TypeOf((*MockPaymentServiceServer)(nil).ListPayments), ctx, in)
 }
