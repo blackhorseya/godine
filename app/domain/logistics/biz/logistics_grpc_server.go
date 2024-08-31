@@ -11,6 +11,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/logistics/repo"
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/utils"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 )
@@ -69,10 +70,9 @@ func (i *logisticsService) ListDeliveries(
 	ctx, span := otelx.Span(ctx, "biz.logistics.ListDeliveries")
 	defer span.End()
 
-	items, total, err := i.deliveries.List(ctx, repo.ListCondition{
-		Limit:    int(req.PageSize),
-		Offset:   int((req.Page - 1) * req.PageSize),
-		DriverID: "",
+	items, total, err := i.deliveries.List(ctx, utils.ListCondition{
+		Limit:  req.PageSize,
+		Offset: (req.Page - 1) * req.PageSize,
 	})
 	if err != nil {
 		ctx.Error("failed to list deliveries", zap.Error(err))
