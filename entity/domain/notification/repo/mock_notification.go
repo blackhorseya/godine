@@ -10,11 +10,12 @@
 package repo
 
 import (
-	"reflect"
+	context "context"
+	reflect "reflect"
 
-	"github.com/blackhorseya/godine/entity/domain/notification/model"
-	"github.com/blackhorseya/godine/pkg/contextx"
-	"go.uber.org/mock/gomock"
+	model "github.com/blackhorseya/godine/entity/domain/notification/model"
+	utils "github.com/blackhorseya/godine/pkg/utils"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockINotificationRepo is a mock of INotificationRepo interface.
@@ -41,38 +42,52 @@ func (m *MockINotificationRepo) EXPECT() *MockINotificationRepoMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockINotificationRepo) Create(ctx contextx.Contextx, notify *model.Notification) error {
+func (m *MockINotificationRepo) Create(c context.Context, item *model.Notification) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", ctx, notify)
+	ret := m.ctrl.Call(m, "Create", c, item)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockINotificationRepoMockRecorder) Create(ctx, notify any) *gomock.Call {
+func (mr *MockINotificationRepoMockRecorder) Create(c, item any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockINotificationRepo)(nil).Create), ctx, notify)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockINotificationRepo)(nil).Create), c, item)
+}
+
+// Delete mocks base method.
+func (m *MockINotificationRepo) Delete(c context.Context, id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", c, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockINotificationRepoMockRecorder) Delete(c, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockINotificationRepo)(nil).Delete), c, id)
 }
 
 // GetByID mocks base method.
-func (m *MockINotificationRepo) GetByID(ctx contextx.Contextx, id string) (*model.Notification, error) {
+func (m *MockINotificationRepo) GetByID(c context.Context, id string) (*model.Notification, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByID", ctx, id)
+	ret := m.ctrl.Call(m, "GetByID", c, id)
 	ret0, _ := ret[0].(*model.Notification)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetByID indicates an expected call of GetByID.
-func (mr *MockINotificationRepoMockRecorder) GetByID(ctx, id any) *gomock.Call {
+func (mr *MockINotificationRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockINotificationRepo)(nil).GetByID), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockINotificationRepo)(nil).GetByID), c, id)
 }
 
 // List mocks base method.
-func (m *MockINotificationRepo) List(ctx contextx.Contextx, cond ListCondition) ([]*model.Notification, int, error) {
+func (m *MockINotificationRepo) List(c context.Context, cond utils.ListCondition) ([]*model.Notification, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", ctx, cond)
+	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Notification)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
@@ -80,21 +95,21 @@ func (m *MockINotificationRepo) List(ctx contextx.Contextx, cond ListCondition) 
 }
 
 // List indicates an expected call of List.
-func (mr *MockINotificationRepoMockRecorder) List(ctx, cond any) *gomock.Call {
+func (mr *MockINotificationRepoMockRecorder) List(c, cond any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockINotificationRepo)(nil).List), ctx, cond)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockINotificationRepo)(nil).List), c, cond)
 }
 
-// UpdateStatus mocks base method.
-func (m *MockINotificationRepo) UpdateStatus(ctx contextx.Contextx, id, status string) error {
+// Update mocks base method.
+func (m *MockINotificationRepo) Update(c context.Context, item *model.Notification) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateStatus", ctx, id, status)
+	ret := m.ctrl.Call(m, "Update", c, item)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// UpdateStatus indicates an expected call of UpdateStatus.
-func (mr *MockINotificationRepoMockRecorder) UpdateStatus(ctx, id, status any) *gomock.Call {
+// Update indicates an expected call of Update.
+func (mr *MockINotificationRepoMockRecorder) Update(c, item any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockINotificationRepo)(nil).UpdateStatus), ctx, id, status)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockINotificationRepo)(nil).Update), c, item)
 }

@@ -1,4 +1,4 @@
-package biz
+package notification
 
 import (
 	"fmt"
