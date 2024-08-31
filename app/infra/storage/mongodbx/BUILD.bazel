@@ -3,9 +3,7 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "mongodbx",
     srcs = [
-        "base_model.go",
         "mongodbx.go",
-        "repository.go",
         "restaurant_repo.go",
     ],
     importpath = "github.com/blackhorseya/godine/app/infra/storage/mongodbx",
@@ -15,11 +13,9 @@ go_library(
         "//entity/domain/restaurant/model",
         "//entity/domain/restaurant/repo",
         "//pkg/contextx",
+        "//pkg/utils",
         "@com_github_testcontainers_testcontainers_go_modules_mongodb//:mongodb",
-        "@org_mongodb_go_mongo_driver//bson",
-        "@org_mongodb_go_mongo_driver//bson/primitive",
         "@org_mongodb_go_mongo_driver//mongo",
         "@org_mongodb_go_mongo_driver//mongo/options",
-        "@org_uber_go_zap//:zap",
     ],
 )

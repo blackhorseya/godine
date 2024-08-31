@@ -20,6 +20,7 @@ go_library(
         "//entity/domain/restaurant/repo",
         "//entity/domain/user/model",
         "//pkg/contextx",
+        "//pkg/utils",
         "@com_github_google_wire//:wire",
         "@com_github_redis_go_redis_v9//:go-redis",
         "@org_golang_google_grpc//codes",

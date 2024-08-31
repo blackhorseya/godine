@@ -5,6 +5,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // NewRestaurant creates a new RestaurantAggregate.
@@ -68,4 +69,20 @@ func (x *Restaurant) AddMenuItem(name, description string, price float64) (*Menu
 	x.Menu = append(x.Menu, menuItem)
 
 	return menuItem, nil
+}
+
+func (x *Restaurant) GetID() string {
+	return x.Id
+}
+
+func (x *Restaurant) SetID(id primitive.ObjectID) {
+	x.Id = id.Hex()
+}
+
+func (x *Restaurant) SetCreatedAt(t *timestamppb.Timestamp) {
+	x.CreatedAt = t
+}
+
+func (x *Restaurant) SetUpdatedAt(t *timestamppb.Timestamp) {
+	x.UpdatedAt = t
 }
