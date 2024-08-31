@@ -195,7 +195,17 @@ func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderSe
 	return nil
 }
 
-func (i *orderService) GetOrder(ctx context.Context, request *biz.GetOrderRequest) (*model.Order, error) {
-	// TODO: 2024/8/31|sean|implement me
-	panic("implement me")
+func (i *orderService) GetOrder(c context.Context, req *biz.GetOrderRequest) (*model.Order, error) {
+	next, span := otelx.Tracer.Start(c, "order.biz.GetOrder")
+	defer span.End()
+
+	ctx := contextx.Background()
+
+	item, err := i.orders.GetByID(next, req.OrderId)
+	if err != nil {
+		ctx.Error("failed to get order", zap.Error(err))
+		return nil, err
+	}
+
+	return item, nil
 }
