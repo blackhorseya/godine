@@ -3,17 +3,14 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "biz",
     srcs = [
-        "mock_notification_service.go",
         "notification.pb.go",
         "notification_grpc.pb.go",
         "notification_grpc_mock.pb.go",
-        "notification_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/notification/biz",
     visibility = ["//visibility:public"],
     deps = [
         "//entity/domain/notification/model",
-        "//pkg/contextx",
         "@org_golang_google_grpc//:grpc",
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//metadata",

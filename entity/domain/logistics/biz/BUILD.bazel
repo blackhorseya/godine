@@ -7,8 +7,6 @@ go_library(
         "logistics_grpc.pb.go",
         "logistics_grpc_mock.pb.go",
         "logistics_handler.go",
-        "logistics_service.go",
-        "mock_logistics_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/logistics/biz",
     visibility = ["//visibility:public"],

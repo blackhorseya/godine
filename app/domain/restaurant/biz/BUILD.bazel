@@ -3,10 +3,8 @@ load("@rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "biz",
     srcs = [
-        "menu.go",
         "menu_grpc_client.go",
         "menu_grpc_server.go",
-        "restaurant.go",
         "restaurant_grpc_client.go",
         "restaurant_grpc_server.go",
         "wire_gen.go",
@@ -22,7 +20,6 @@ go_library(
         "//entity/domain/restaurant/repo",
         "//entity/domain/user/model",
         "//pkg/contextx",
-        "//pkg/errorx",
         "@com_github_google_wire//:wire",
         "@com_github_redis_go_redis_v9//:go-redis",
         "@org_golang_google_grpc//codes",

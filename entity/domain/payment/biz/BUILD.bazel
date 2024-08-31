@@ -3,17 +3,14 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "biz",
     srcs = [
-        "mock_payment_service.go",
         "payment.pb.go",
         "payment_grpc.pb.go",
         "payment_grpc_mock.pb.go",
-        "payment_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/payment/biz",
     visibility = ["//visibility:public"],
     deps = [
         "//entity/domain/payment/model",
-        "//pkg/contextx",
         "@org_golang_google_grpc//:grpc",
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//status",
