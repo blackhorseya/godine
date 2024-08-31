@@ -1,12 +1,12 @@
 load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "biz",
+    name = "user",
     srcs = [
         "account_grpc_client.go",
         "account_grpc_server.go",
     ],
-    importpath = "github.com/blackhorseya/godine/app/domain/user/biz",
+    importpath = "github.com/blackhorseya/godine/app/domain/user",
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/transports/grpcx",

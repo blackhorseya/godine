@@ -94,3 +94,19 @@ func (x *Delivery) Next(ctx contextx.Contextx) (event *DeliveryEvent, err error)
 	// TODO: 2024/8/20|sean|implement the delivery state transition
 	return nil, errors.New("not implemented")
 }
+
+func (x *Delivery) GetID() string {
+	return x.Id
+}
+
+func (x *Delivery) SetID(id primitive.ObjectID) {
+	x.Id = id.Hex()
+}
+
+func (x *Delivery) SetCreatedAt(t *timestamppb.Timestamp) {
+	x.CreatedAt = t
+}
+
+func (x *Delivery) SetUpdatedAt(t *timestamppb.Timestamp) {
+	x.UpdatedAt = t
+}

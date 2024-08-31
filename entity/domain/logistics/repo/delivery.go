@@ -4,22 +4,10 @@ package repo
 
 import (
 	"github.com/blackhorseya/godine/entity/domain/logistics/model"
-	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/utils"
 )
-
-// ListCondition represents a condition for listing deliveries.
-type ListCondition struct {
-	Limit  int
-	Offset int
-
-	DriverID string
-}
 
 // IDeliveryRepo represents a repository interface for managing delivery entities.
 type IDeliveryRepo interface {
-	Create(ctx contextx.Contextx, item *model.Delivery) error
-	GetByID(ctx contextx.Contextx, id string) (item *model.Delivery, err error)
-	List(ctx contextx.Contextx, condition ListCondition) (items []*model.Delivery, total int, err error)
-	Update(ctx contextx.Contextx, item *model.Delivery) error
-	Delete(ctx contextx.Contextx, id string) error
+	utils.IRepository[*model.Delivery]
 }

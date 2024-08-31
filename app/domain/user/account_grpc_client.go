@@ -1,4 +1,4 @@
-package biz
+package user
 
 import (
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"

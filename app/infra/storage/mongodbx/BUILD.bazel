@@ -3,6 +3,7 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "mongodbx",
     srcs = [
+        "delivery_repo.go",
         "mongodbx.go",
         "notification_repo.go",
         "payment_repo.go",
@@ -12,6 +13,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/configx",
+        "//entity/domain/logistics/model",
+        "//entity/domain/logistics/repo",
         "//entity/domain/notification/model",
         "//entity/domain/notification/repo",
         "//entity/domain/payment/model",

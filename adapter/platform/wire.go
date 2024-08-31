@@ -8,12 +8,12 @@ import (
 	"fmt"
 
 	"github.com/blackhorseya/godine/adapter/platform/handlers"
-	opsBI "github.com/blackhorseya/godine/app/domain/logistics/biz"
+	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
 	orderBI "github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
-	userBI "github.com/blackhorseya/godine/app/domain/user/biz"
+	"github.com/blackhorseya/godine/app/domain/user"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -91,8 +91,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		authx.New,
 		grpcx.NewClient,
 
-		userBI.NewAccountService,
-		userBI.NewAccountServiceClient,
+		user.NewAccountService,
+		user.NewAccountServiceClient,
 		restaurant.ProviderRestaurantBizSet,
 		restaurant.NewRestaurantServiceClient,
 		restaurant.NewMenuServiceClient,
@@ -101,8 +101,8 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		payment.ProviderPaymentBizSet,
 		payment.NewPaymentServiceClient,
 		orderBI.ProviderOrderBizSet,
-		opsBI.ProviderLogisticsBizSet,
-		opsBI.NewLogisticsServiceClient,
+		logistics.ProviderLogisticsBizSet,
+		logistics.NewLogisticsServiceClient,
 
 		snowflakex.NewNode,
 		postgresqlx.NewClient,

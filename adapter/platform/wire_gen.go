@@ -9,14 +9,13 @@ package platform
 import (
 	"fmt"
 	"github.com/blackhorseya/godine/adapter/platform/handlers"
-	biz2 "github.com/blackhorseya/godine/app/domain/logistics/biz"
-	"github.com/blackhorseya/godine/app/domain/logistics/repo/delivery"
+	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
-	biz3 "github.com/blackhorseya/godine/app/domain/order/biz"
+	"github.com/blackhorseya/godine/app/domain/order/biz"
 	"github.com/blackhorseya/godine/app/domain/order/repo/order"
 	"github.com/blackhorseya/godine/app/domain/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
-	"github.com/blackhorseya/godine/app/domain/user/biz"
+	"github.com/blackhorseya/godine/app/domain/user"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -24,12 +23,12 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
-	biz9 "github.com/blackhorseya/godine/entity/domain/logistics/biz"
-	biz7 "github.com/blackhorseya/godine/entity/domain/notification/biz"
-	biz8 "github.com/blackhorseya/godine/entity/domain/order/biz"
-	biz6 "github.com/blackhorseya/godine/entity/domain/payment/biz"
-	biz5 "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
-	biz4 "github.com/blackhorseya/godine/entity/domain/user/biz"
+	biz7 "github.com/blackhorseya/godine/entity/domain/logistics/biz"
+	biz5 "github.com/blackhorseya/godine/entity/domain/notification/biz"
+	biz6 "github.com/blackhorseya/godine/entity/domain/order/biz"
+	biz4 "github.com/blackhorseya/godine/entity/domain/payment/biz"
+	biz3 "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	biz2 "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/spf13/viper"
@@ -69,7 +68,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		Authx:                    authxAuthx,
 		RestaurantServiceHandler: restaurantServiceHandler,
 	}
-	accountServiceServer := biz.NewAccountService()
+	accountServiceServer := user.NewAccountService()
 	mongoClient, err := mongodbx.NewClient(application)
 	if err != nil {
 		return nil, err
@@ -97,7 +96,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	accountServiceClient, err := biz.NewAccountServiceClient(client)
+	accountServiceClient, err := user.NewAccountServiceClient(client)
 	if err != nil {
 		return nil, err
 	}
@@ -109,13 +108,13 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	logisticsServiceClient, err := biz2.NewLogisticsServiceClient(client)
+	logisticsServiceClient, err := logistics.NewLogisticsServiceClient(client)
 	if err != nil {
 		return nil, err
 	}
-	orderServiceServer := biz3.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient, logisticsServiceClient)
-	iDeliveryRepo := delivery.NewMongodb(mongoClient)
-	logisticsServiceServer := biz2.NewLogisticsService(iDeliveryRepo, notificationServiceClient)
+	orderServiceServer := biz.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient, logisticsServiceClient)
+	iDeliveryRepo := mongodbx.NewDeliveryRepo(mongoClient)
+	logisticsServiceServer := logistics.NewLogisticsService(iDeliveryRepo, notificationServiceClient)
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer, logisticsServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {
@@ -131,25 +130,25 @@ const serverName = "platform"
 
 // NewInitServersFn creates and returns a new InitServers function.
 func NewInitServersFn(
-	accountServer biz4.AccountServiceServer,
-	restaurantServer biz5.RestaurantServiceServer,
-	menuServer biz5.MenuServiceServer,
-	paymentServer biz6.PaymentServiceServer,
-	notifyServer biz7.NotificationServiceServer,
-	orderServer biz8.OrderServiceServer,
-	logisticsServer biz9.LogisticsServiceServer,
+	accountServer biz2.AccountServiceServer,
+	restaurantServer biz3.RestaurantServiceServer,
+	menuServer biz3.MenuServiceServer,
+	paymentServer biz4.PaymentServiceServer,
+	notifyServer biz5.NotificationServiceServer,
+	orderServer biz6.OrderServiceServer,
+	logisticsServer biz7.LogisticsServiceServer,
 ) grpcx.InitServers {
 	return func(s *grpc.Server) {
 		healthServer := health.NewServer()
 		grpc_health_v1.RegisterHealthServer(s, healthServer)
 		healthServer.SetServingStatus(serverName, grpc_health_v1.HealthCheckResponse_SERVING)
-		biz4.RegisterAccountServiceServer(s, accountServer)
-		biz5.RegisterRestaurantServiceServer(s, restaurantServer)
-		biz5.RegisterMenuServiceServer(s, menuServer)
-		biz6.RegisterPaymentServiceServer(s, paymentServer)
-		biz7.RegisterNotificationServiceServer(s, notifyServer)
-		biz8.RegisterOrderServiceServer(s, orderServer)
-		biz9.RegisterLogisticsServiceServer(s, logisticsServer)
+		biz2.RegisterAccountServiceServer(s, accountServer)
+		biz3.RegisterRestaurantServiceServer(s, restaurantServer)
+		biz3.RegisterMenuServiceServer(s, menuServer)
+		biz4.RegisterPaymentServiceServer(s, paymentServer)
+		biz5.RegisterNotificationServiceServer(s, notifyServer)
+		biz6.RegisterOrderServiceServer(s, orderServer)
+		biz7.RegisterLogisticsServiceServer(s, logisticsServer)
 		reflection.Register(s)
 	}
 }
