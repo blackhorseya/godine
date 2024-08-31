@@ -3,18 +3,15 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "biz",
     srcs = [
-        "mock_order_service.go",
         "order.pb.go",
         "order_grpc.pb.go",
         "order_grpc_mock.pb.go",
-        "order_service.go",
     ],
     importpath = "github.com/blackhorseya/godine/entity/domain/order/biz",
     visibility = ["//visibility:public"],
     deps = [
         "//entity/domain/logistics/model",
         "//entity/domain/order/model",
-        "//pkg/contextx",
         "@org_golang_google_grpc//:grpc",
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//metadata",
