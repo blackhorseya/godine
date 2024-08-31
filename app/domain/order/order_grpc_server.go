@@ -55,13 +55,10 @@ func NewOrderService(
 
 //nolint:funlen // it's okay
 func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderRequest) (*model.Order, error) {
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
-
-	ctx, span := otelx.Span(ctx, "order.biz.SubmitOrder")
+	next, span := otelx.Tracer.Start(c, "order.biz.SubmitOrder")
 	defer span.End()
+
+	ctx := contextx.Background()
 
 	// check if the user is logged in
 	handler, err := userM.FromContext(c)
@@ -71,7 +68,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	}
 
 	// check restaurant is open
-	restaurant, err := i.restaurantClient.GetRestaurant(ctx, &restB.GetRestaurantRequest{RestaurantId: req.RestaurantId})
+	restaurant, err := i.restaurantClient.GetRestaurant(next, &restB.GetRestaurantRequest{RestaurantId: req.RestaurantId})
 	if err != nil {
 		ctx.Error("failed to get restaurant", zap.Error(err))
 		return nil, err
@@ -83,7 +80,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	// check menu is available and collect order items
 	var orderItems []*model.OrderItem
 	for _, item := range req.Items {
-		menuItem, err2 := i.menuClient.GetMenuItem(ctx, &restB.GetMenuItemRequest{
+		menuItem, err2 := i.menuClient.GetMenuItem(next, &restB.GetMenuItemRequest{
 			RestaurantId: restaurant.Id,
 			MenuItemId:   item.MenuItemId,
 		})
@@ -104,13 +101,13 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	order := model.NewOrder(handler.Id, restaurant.Id, orderItems)
 
 	// store the order
-	err = i.orders.Create(ctx, order)
+	err = i.orders.Create(next, order)
 	if err != nil {
 		ctx.Error("failed to create order", zap.Error(err))
 		return nil, err
 	}
 
-	payment, err := i.paymentClient.CreatePayment(ctx, &payB.CreatePaymentRequest{
+	payment, err := i.paymentClient.CreatePayment(next, &payB.CreatePaymentRequest{
 		OrderId: order.Id,
 		Amount: &payM.PaymentAmount{
 			Value:    order.TotalAmount,
@@ -123,14 +120,14 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	}
 	order.PaymentId = payment.Id
 
-	err = i.orders.Update(ctx, order)
+	err = i.orders.Update(next, order)
 	if err != nil {
 		ctx.Error("failed to update order", zap.Error(err))
 		return nil, err
 	}
 
 	// book the delivery
-	delivery, err := i.logisticsClient.CreateDelivery(ctx, &opsB.CreateDeliveryRequest{
+	delivery, err := i.logisticsClient.CreateDelivery(next, &opsB.CreateDeliveryRequest{
 		OrderId: order.Id,
 		UserId:  handler.Id,
 		Address: req.Address,
@@ -143,14 +140,14 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	}
 	order.DeliveryId = delivery.Id
 
-	err = i.orders.Update(ctx, order)
+	err = i.orders.Update(next, order)
 	if err != nil {
 		ctx.Error("failed to update order", zap.Error(err))
 		return nil, err
 	}
 
 	// send notification
-	_, err = i.notifyClient.SendNotification(ctx, &notifyB.SendNotificationRequest{
+	_, err = i.notifyClient.SendNotification(next, &notifyB.SendNotificationRequest{
 		UserId:  handler.Id,
 		OrderId: order.Id,
 		Type:    "",
