@@ -10,83 +10,84 @@
 package repo
 
 import (
+	context "context"
 	reflect "reflect"
 
 	model "github.com/blackhorseya/godine/entity/domain/user/model"
-	contextx "github.com/blackhorseya/godine/pkg/contextx"
+	utils "github.com/blackhorseya/godine/pkg/utils"
 	gomock "go.uber.org/mock/gomock"
 )
 
-// MockIUserRepoLegacy is a mock of IUserRepoLegacy interface.
-type MockIUserRepoLegacy struct {
+// MockIUserRepo is a mock of IUserRepo interface.
+type MockIUserRepo struct {
 	ctrl     *gomock.Controller
-	recorder *MockIUserRepoLegacyMockRecorder
+	recorder *MockIUserRepoMockRecorder
 }
 
-// MockIUserRepoLegacyMockRecorder is the mock recorder for MockIUserRepoLegacy.
-type MockIUserRepoLegacyMockRecorder struct {
-	mock *MockIUserRepoLegacy
+// MockIUserRepoMockRecorder is the mock recorder for MockIUserRepo.
+type MockIUserRepoMockRecorder struct {
+	mock *MockIUserRepo
 }
 
-// NewMockIUserRepoLegacy creates a new mock instance.
-func NewMockIUserRepoLegacy(ctrl *gomock.Controller) *MockIUserRepoLegacy {
-	mock := &MockIUserRepoLegacy{ctrl: ctrl}
-	mock.recorder = &MockIUserRepoLegacyMockRecorder{mock}
+// NewMockIUserRepo creates a new mock instance.
+func NewMockIUserRepo(ctrl *gomock.Controller) *MockIUserRepo {
+	mock := &MockIUserRepo{ctrl: ctrl}
+	mock.recorder = &MockIUserRepoMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockIUserRepoLegacy) EXPECT() *MockIUserRepoLegacyMockRecorder {
+func (m *MockIUserRepo) EXPECT() *MockIUserRepoMockRecorder {
 	return m.recorder
 }
 
 // Create mocks base method.
-func (m *MockIUserRepoLegacy) Create(ctx contextx.Contextx, user *model.Account) error {
+func (m *MockIUserRepo) Create(c context.Context, item *model.Account) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", ctx, user)
+	ret := m.ctrl.Call(m, "Create", c, item)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockIUserRepoLegacyMockRecorder) Create(ctx, user any) *gomock.Call {
+func (mr *MockIUserRepoMockRecorder) Create(c, item any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIUserRepoLegacy)(nil).Create), ctx, user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIUserRepo)(nil).Create), c, item)
 }
 
 // Delete mocks base method.
-func (m *MockIUserRepoLegacy) Delete(ctx contextx.Contextx, id string) error {
+func (m *MockIUserRepo) Delete(c context.Context, id string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", ctx, id)
+	ret := m.ctrl.Call(m, "Delete", c, id)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockIUserRepoLegacyMockRecorder) Delete(ctx, id any) *gomock.Call {
+func (mr *MockIUserRepoMockRecorder) Delete(c, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIUserRepoLegacy)(nil).Delete), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIUserRepo)(nil).Delete), c, id)
 }
 
 // GetByID mocks base method.
-func (m *MockIUserRepoLegacy) GetByID(ctx contextx.Contextx, id string) (*model.Account, error) {
+func (m *MockIUserRepo) GetByID(c context.Context, id string) (*model.Account, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByID", ctx, id)
+	ret := m.ctrl.Call(m, "GetByID", c, id)
 	ret0, _ := ret[0].(*model.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetByID indicates an expected call of GetByID.
-func (mr *MockIUserRepoLegacyMockRecorder) GetByID(ctx, id any) *gomock.Call {
+func (mr *MockIUserRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIUserRepoLegacy)(nil).GetByID), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIUserRepo)(nil).GetByID), c, id)
 }
 
 // List mocks base method.
-func (m *MockIUserRepoLegacy) List(ctx contextx.Contextx, condition ListCondition) ([]*model.Account, int, error) {
+func (m *MockIUserRepo) List(c context.Context, cond utils.ListCondition) ([]*model.Account, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", ctx, condition)
+	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Account)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
@@ -94,21 +95,21 @@ func (m *MockIUserRepoLegacy) List(ctx contextx.Contextx, condition ListConditio
 }
 
 // List indicates an expected call of List.
-func (mr *MockIUserRepoLegacyMockRecorder) List(ctx, condition any) *gomock.Call {
+func (mr *MockIUserRepoMockRecorder) List(c, cond any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIUserRepoLegacy)(nil).List), ctx, condition)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIUserRepo)(nil).List), c, cond)
 }
 
 // Update mocks base method.
-func (m *MockIUserRepoLegacy) Update(ctx contextx.Contextx, user *model.Account) error {
+func (m *MockIUserRepo) Update(c context.Context, item *model.Account) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", ctx, user)
+	ret := m.ctrl.Call(m, "Update", c, item)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockIUserRepoLegacyMockRecorder) Update(ctx, user any) *gomock.Call {
+func (mr *MockIUserRepoMockRecorder) Update(c, item any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIUserRepoLegacy)(nil).Update), ctx, user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIUserRepo)(nil).Update), c, item)
 }

@@ -9,22 +9,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// NewDeliveryLegacy creates a new delivery entity.
-// Deprecated: use NewDelivery instead.
-func NewDeliveryLegacy(orderID string, userID string) *Delivery {
-	return &Delivery{
-		Id:         "",
-		OrderId:    orderID,
-		UserId:     userID,
-		DriverId:   userID,
-		Status:     DeliveryStatus_DELIVERY_STATUS_PENDING,
-		PickupAt:   nil,
-		DeliveryAt: nil,
-		CreatedAt:  timestamppb.Now(),
-		UpdatedAt:  timestamppb.Now(),
-	}
-}
-
 // NewDelivery creates a new delivery entity.
 func NewDelivery(orderID string, userID string, address *Address) (*Delivery, error) {
 	if orderID == "" {
