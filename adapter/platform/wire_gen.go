@@ -12,7 +12,6 @@ import (
 	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
 	"github.com/blackhorseya/godine/app/domain/order/biz"
-	"github.com/blackhorseya/godine/app/domain/order/repo/order"
 	"github.com/blackhorseya/godine/app/domain/payment"
 	"github.com/blackhorseya/godine/app/domain/restaurant"
 	"github.com/blackhorseya/godine/app/domain/user"
@@ -88,10 +87,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	iOrderRepo, err := order.NewGORM(db, node)
-	if err != nil {
-		return nil, err
-	}
+	iOrderRepo := postgresqlx.NewOrderRepo(db, node)
 	menuServiceClient, err := restaurant.NewMenuServiceClient(client)
 	if err != nil {
 		return nil, err
