@@ -120,6 +120,88 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	return restful, nil
 }
 
+func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
+	configuration, err := configx.NewConfiguration(v)
+	if err != nil {
+		return nil, nil, err
+	}
+	application, err := initApplication(configuration)
+	if err != nil {
+		return nil, nil, err
+	}
+	authxAuthx, err := authx.New(application)
+	if err != nil {
+		return nil, nil, err
+	}
+	client, err := grpcx.NewClient(configuration, authxAuthx)
+	if err != nil {
+		return nil, nil, err
+	}
+	restaurantServiceClient, err := restaurant.NewRestaurantServiceClient(client)
+	if err != nil {
+		return nil, nil, err
+	}
+	restaurantServiceHandler := handlers.NewRestaurantServiceHandler(restaurantServiceClient)
+	injector := &Injector{
+		C:                        configuration,
+		A:                        application,
+		Authx:                    authxAuthx,
+		RestaurantServiceHandler: restaurantServiceHandler,
+	}
+	accountServiceServer := user.NewAccountService()
+	mongoClient, err := mongodbx.NewClient(application)
+	if err != nil {
+		return nil, nil, err
+	}
+	iRestaurantRepo := mongodbx.NewRestaurantRepo(mongoClient)
+	restaurantServiceServer := restaurant.NewRestaurantService(iRestaurantRepo)
+	menuServiceServer := restaurant.NewMenuService(iRestaurantRepo)
+	iPaymentRepo := mongodbx.NewPaymentRepo(mongoClient)
+	paymentServiceServer := payment.NewPaymentService(iPaymentRepo)
+	iNotificationRepo := mongodbx.NewNotificationRepo(mongoClient)
+	notificationServiceServer := notification.NewNotificationService(iNotificationRepo)
+	db, err := postgresqlx.NewClient(application)
+	if err != nil {
+		return nil, nil, err
+	}
+	node, err := snowflakex.NewNode()
+	if err != nil {
+		return nil, nil, err
+	}
+	iOrderRepo := postgresqlx.NewOrderRepo(db, node)
+	menuServiceClient, err := restaurant.NewMenuServiceClient(client)
+	if err != nil {
+		return nil, nil, err
+	}
+	accountServiceClient, err := user.NewAccountServiceClient(client)
+	if err != nil {
+		return nil, nil, err
+	}
+	notificationServiceClient, err := notification.NewNotificationServiceClient(client)
+	if err != nil {
+		return nil, nil, err
+	}
+	paymentServiceClient, err := payment.NewPaymentServiceClient(client)
+	if err != nil {
+		return nil, nil, err
+	}
+	logisticsServiceClient, err := logistics.NewLogisticsServiceClient(client)
+	if err != nil {
+		return nil, nil, err
+	}
+	orderServiceServer := order.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient, logisticsServiceClient)
+	iDeliveryRepo := mongodbx.NewDeliveryRepo(mongoClient)
+	logisticsServiceServer := logistics.NewLogisticsService(iDeliveryRepo, notificationServiceClient)
+	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer, logisticsServiceServer)
+	server, err := grpcx.NewServer(application, initServers, authxAuthx)
+	if err != nil {
+		return nil, nil, err
+	}
+	restful := NewServer(injector, server)
+	return restful, func() {
+	}, nil
+}
+
 // wire.go:
 
 const serverName = "platform"
