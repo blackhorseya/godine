@@ -149,7 +149,7 @@ func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
 		RestaurantServiceHandler: restaurantServiceHandler,
 	}
 	accountServiceServer := user.NewAccountService()
-	mongoClient, err := mongodbx.NewClient(application)
+	mongoClient, cleanup, err := mongodbx.NewClientWithClean(application)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -162,31 +162,38 @@ func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
 	notificationServiceServer := notification.NewNotificationService(iNotificationRepo)
 	db, err := postgresqlx.NewClient(application)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	node, err := snowflakex.NewNode()
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	iOrderRepo := postgresqlx.NewOrderRepo(db, node)
 	menuServiceClient, err := restaurant.NewMenuServiceClient(client)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	accountServiceClient, err := user.NewAccountServiceClient(client)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	notificationServiceClient, err := notification.NewNotificationServiceClient(client)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	paymentServiceClient, err := payment.NewPaymentServiceClient(client)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	logisticsServiceClient, err := logistics.NewLogisticsServiceClient(client)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	orderServiceServer := order.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient, logisticsServiceClient)
@@ -195,10 +202,12 @@ func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer, logisticsServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	restful := NewServer(injector, server)
 	return restful, func() {
+		cleanup()
 	}, nil
 }
 

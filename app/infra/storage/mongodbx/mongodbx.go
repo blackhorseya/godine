@@ -9,6 +9,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/modules/mongodb"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 )
 
 const (
@@ -38,6 +39,25 @@ func NewClientWithDSN(dsn string) (*mongo.Client, error) {
 // NewClient returns a new mongo client.
 func NewClient(app *configx.Application) (*mongo.Client, error) {
 	return NewClientWithDSN(app.Storage.Mongodb.DSN)
+}
+
+// NewClientWithClean returns a new mongo client with clean.
+func NewClientWithClean(app *configx.Application) (*mongo.Client, func(), error) {
+	client, err := NewClient(app)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	clean := func() {
+		ctx := contextx.Background()
+		ctx.Info("disconnecting mongodb client")
+		err = client.Disconnect(ctx)
+		if err != nil {
+			ctx.Error("disconnect mongodb client failed", zap.Error(err))
+		}
+	}
+
+	return client, clean, nil
 }
 
 // Container is used to represent a mongodb container.

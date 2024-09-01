@@ -148,7 +148,7 @@ func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
 
 		snowflakex.NewNode,
 		postgresqlx.NewClient,
-		mongodbx.NewClient,
+		mongodbx.NewClientWithClean,
 
 		handlers.NewRestaurantServiceHandler,
 	))
