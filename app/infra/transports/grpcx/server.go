@@ -26,7 +26,7 @@ type Server struct {
 
 // NewServer creates a new grpc server.
 func NewServer(app *configx.Application, init InitServers, authx *authx.Authx) (*Server, error) {
-	logger := contextx.Background().Logger
+	logger := zap.L()
 	server := grpc.NewServer(
 		grpc.StatsHandler(otelgrpc.NewServerHandler()),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
