@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -54,10 +54,11 @@ func NewMongoRepository[T BaseModelInterface](coll *mongo.Collection) IRepositor
 }
 
 func (x *mongoRepository[T]) Create(c context.Context, item T) error {
+	logger := ctxzap.Extract(c)
+	logger.Debug("create item", zap.Any("item", &item))
+
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
-
-	ctx := contextx.Background()
 
 	if item.GetID() == "" {
 		item.SetID(primitive.NewObjectID())
@@ -67,7 +68,7 @@ func (x *mongoRepository[T]) Create(c context.Context, item T) error {
 
 	_, err := x.coll.InsertOne(timeout, item)
 	if err != nil {
-		ctx.Error("failed to insert item", zap.Error(err))
+		logger.Error("failed to insert item", zap.Error(err))
 		return err
 	}
 
@@ -75,21 +76,22 @@ func (x *mongoRepository[T]) Create(c context.Context, item T) error {
 }
 
 func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item T, err error) {
+	logger := ctxzap.Extract(c)
+	logger.Debug("get item by ID", zap.String("id", id))
+
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
 
-	ctx := contextx.Background()
-
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		ctx.Error("invalid ObjectID", zap.Error(err), zap.String("id", id))
+		logger.Error("invalid ObjectID", zap.Error(err), zap.String("id", id))
 		return item, err
 	}
 
 	var result T
 	err = x.coll.FindOne(timeout, bson.M{"_id": objectID}).Decode(&result)
 	if err != nil {
-		ctx.Error("failed to get item by ID", zap.Error(err), zap.String("id", id))
+		logger.Error("failed to get item by ID", zap.Error(err), zap.String("id", id))
 		return item, err
 	}
 
@@ -97,10 +99,11 @@ func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item T, err 
 }
 
 func (x *mongoRepository[T]) List(c context.Context, cond Pagination) (items []T, total int, err error) {
+	logger := ctxzap.Extract(c)
+	logger.Debug("list items", zap.Any("condition", cond))
+
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
-
-	ctx := contextx.Background()
 
 	limit, skip := defaultLimit, int64(0)
 	if 0 < cond.Limit && cond.Limit <= defaultMaxLimit {
@@ -113,20 +116,20 @@ func (x *mongoRepository[T]) List(c context.Context, cond Pagination) (items []T
 	opts := options.Find().SetLimit(limit).SetSkip(skip).SetSort(bson.M{"_id": -1})
 	cursor, err := x.coll.Find(timeout, bson.M{}, opts)
 	if err != nil {
-		ctx.Error("failed to list items", zap.Error(err))
+		logger.Error("failed to list items", zap.Error(err))
 		return nil, 0, err
 	}
 	defer cursor.Close(timeout)
 
 	err = cursor.All(timeout, &items)
 	if err != nil {
-		ctx.Error("failed to decode items", zap.Error(err))
+		logger.Error("failed to decode items", zap.Error(err))
 		return nil, 0, err
 	}
 
 	count, err := x.coll.CountDocuments(timeout, bson.M{})
 	if err != nil {
-		ctx.Error("failed to count items", zap.Error(err))
+		logger.Error("failed to count items", zap.Error(err))
 		return nil, 0, err
 	}
 
@@ -134,15 +137,16 @@ func (x *mongoRepository[T]) List(c context.Context, cond Pagination) (items []T
 }
 
 func (x *mongoRepository[T]) Update(c context.Context, item T) error {
+	logger := ctxzap.Extract(c)
+	logger.Debug("update item", zap.Any("item", &item))
+
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
-
-	ctx := contextx.Background()
 
 	item.SetUpdatedAt(timestamppb.Now())
 	oid, err := primitive.ObjectIDFromHex(item.GetID())
 	if err != nil {
-		ctx.Error("invalid ObjectID", zap.Error(err), zap.String("id", item.GetID()))
+		logger.Error("invalid ObjectID", zap.Error(err), zap.String("id", item.GetID()))
 		return err
 	}
 
@@ -151,7 +155,7 @@ func (x *mongoRepository[T]) Update(c context.Context, item T) error {
 
 	_, err = x.coll.UpdateOne(timeout, filter, update)
 	if err != nil {
-		ctx.Error("failed to update item", zap.Error(err))
+		logger.Error("failed to update item", zap.Error(err))
 		return err
 	}
 
@@ -159,20 +163,21 @@ func (x *mongoRepository[T]) Update(c context.Context, item T) error {
 }
 
 func (x *mongoRepository[T]) Delete(c context.Context, id string) error {
+	logger := ctxzap.Extract(c)
+	logger.Debug("delete item", zap.String("id", id))
+
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
 
-	ctx := contextx.Background()
-
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		ctx.Error("invalid ObjectID", zap.Error(err), zap.String("id", id))
+		logger.Error("invalid ObjectID", zap.Error(err), zap.String("id", id))
 		return err
 	}
 
 	_, err = x.coll.DeleteOne(timeout, bson.M{"_id": oid})
 	if err != nil {
-		ctx.Error("failed to delete item", zap.Error(err), zap.String("id", id))
+		logger.Error("failed to delete item", zap.Error(err), zap.String("id", id))
 		return err
 	}
 
