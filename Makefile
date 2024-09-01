@@ -46,7 +46,8 @@ test: test-unit
 
 .PHONY: test-unit
 test-unit: ## Run unit tests
-	bazel test --verbose_failures //... --test_tag_filters=-integration,-external
+	@#bazel test --verbose_failures //... --test_tag_filters=-integration,-external
+	go test -v --tags=!integration,!external ./...
 
 .PHONY: test-integration
 test-integration: ## Run integration tests
