@@ -31,9 +31,9 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 	return app, nil
 }
 
-func New(v *viper.Viper) (adapterx.Restful, error) {
+func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	panic(wire.Build(
-		NewRestful,
+		NewServer,
 		wire.Struct(new(Injector), "*"),
 		httpx.NewServer,
 		initApplication,

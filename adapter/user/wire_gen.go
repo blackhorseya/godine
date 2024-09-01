@@ -19,18 +19,18 @@ import (
 
 // Injectors from wire.go:
 
-func New(v *viper.Viper) (adapterx.Restful, error) {
+func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	configuration, err := configx.NewConfiguration(v)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	application, err := initApplication(configuration)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	authxAuthx, err := authx.New(application)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	injector := &Injector{
 		C:     configuration,
@@ -39,10 +39,11 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	}
 	server, err := httpx.NewServer(application)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	restful := NewRestful(injector, server)
-	return restful, nil
+	adapterxServer := NewServer(injector, server)
+	return adapterxServer, func() {
+	}, nil
 }
 
 // wire.go:

@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"time"
@@ -26,7 +27,7 @@ type impl struct {
 }
 
 // NewServer creates and returns a new grpcserver.
-func NewServer(injector *Injector, grpcserver *grpcx.Server) adapterx.Restful {
+func NewServer(injector *Injector, grpcserver *grpcx.Server) adapterx.Server {
 	return &impl{
 		injector:   injector,
 		grpcserver: grpcserver,
@@ -40,7 +41,7 @@ func NewServer(injector *Injector, grpcserver *grpcx.Server) adapterx.Restful {
 	}
 }
 
-func (i *impl) Start() error {
+func (i *impl) Start(c context.Context) error {
 	ctx := contextx.Background()
 	err := i.grpcserver.Start(ctx)
 	if err != nil {
@@ -65,7 +66,7 @@ func (i *impl) Start() error {
 	return nil
 }
 
-func (i *impl) AwaitSignal() error {
+func (i *impl) Shutdown(c context.Context) error {
 	ctx := contextx.Background()
 	ctx.Info("receive signal to stop grpcserver")
 

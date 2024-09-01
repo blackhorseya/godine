@@ -1,24 +1,26 @@
 package adapterx
 
 import (
+	"context"
+
 	"github.com/gin-gonic/gin"
 )
 
-// Service is the interface that wraps the basic Serve method.
-type Service interface {
-	// Start a service asynchronously.
-	Start() error
+// Server is the interface that wraps the Serve method.
+type Server interface {
+	// Start the server.
+	Start(c context.Context) error
 
-	// AwaitSignal waits for a signal to shut down the service.
-	AwaitSignal() error
+	// Shutdown the server.
+	Shutdown(c context.Context) error
 }
 
 // Restful is the interface that wraps the restful api method.
 type Restful interface {
-	Service
+	Server
 
 	// InitRouting init the routing of restful api.
-	InitRouting() error
+	InitRouting(c context.Context) error
 
 	// GetRouter returns the router of restful api.
 	GetRouter() *gin.Engine

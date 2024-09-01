@@ -8,16 +8,19 @@ import (
 	"syscall"
 	"testing"
 
+	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/spf13/viper"
 )
 
 func TestRun(t *testing.T) {
-	service, err := New(viper.New())
+	service, clean, err := New(viper.New())
 	if err != nil {
 		t.Fatalf("New() error = %v", err)
 	}
+	defer clean()
 
-	err = service.Start()
+	ctx := contextx.Background()
+	err = service.Start(ctx)
 	if err != nil {
 		t.Fatalf("Start() error = %v", err)
 	}
@@ -27,7 +30,7 @@ func TestRun(t *testing.T) {
 
 	<-signalChan
 
-	err = service.AwaitSignal()
+	err = service.Shutdown(ctx)
 	if err != nil {
 		t.Fatalf("AwaitSignal() error = %v", err)
 	}
