@@ -24,33 +24,23 @@ import (
 
 var (
 	// Tracer is the global tracer.
-	// Deprecated: use OTelx.Tracer instead.
-	Tracer = otel.Tracer("")
+	Tracer trace.Tracer
+
+	// Meter is the global meter.
+	Meter metric.Meter
 )
 
-// OTelx is the OpenTelemetry SDK.
-type OTelx struct {
-	Tracer trace.Tracer
-	Meter  metric.Meter
-
+// SDK is the OpenTelemetry SDK.
+type SDK struct {
 	target      string
 	serviceName string
 }
 
-// New creates a new OpenTelemetry SDK.
-func New(app *configx.Application) (*OTelx, func(), error) {
+// NewSDK creates a new OpenTelemetry SDK.
+func NewSDK(app *configx.Application) (*SDK, func(), error) {
 	ctx := contextx.Background()
-	if app.OTel.Target == "" {
-		ctx.Warn("OpenTelemetry is disabled")
-		return &OTelx{
-			Tracer:      otel.Tracer(app.Name),
-			Meter:       otel.Meter(app.Name),
-			target:      "",
-			serviceName: app.Name,
-		}, nil, nil
-	}
 
-	instance := &OTelx{
+	instance := &SDK{
 		target:      app.OTel.Target,
 		serviceName: app.Name,
 	}
@@ -60,10 +50,19 @@ func New(app *configx.Application) (*OTelx, func(), error) {
 		return nil, nil, fmt.Errorf("failed to setup OpenTelemetry SDK: %w", err)
 	}
 
+	// Set global tracer and meter.
+	Tracer = otel.Tracer(app.Name)
+	Meter = otel.Meter(app.Name)
+
 	return instance, clean, nil
 }
 
-func (x *OTelx) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
+func (x *SDK) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
+	if x.target == "" {
+		ctx.Warn("OpenTelemetry is disabled")
+		return nil, nil //nolint:nilnil // Return nil to indicate that OpenTelemetry is disabled.
+	}
+
 	ctx.Info(
 		"setting up OpenTelemetry SDK",
 		zap.String("service_name", x.serviceName),
@@ -90,7 +89,6 @@ func (x *OTelx) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
 		return nil, err
 	}
 	shutdownFuncs = append(shutdownFuncs, tracerProvider.Shutdown)
-	x.Tracer = otel.Tracer(x.serviceName)
 
 	meterProvider, err := newMeter(ctx, res, conn)
 	if err != nil {
@@ -98,7 +96,6 @@ func (x *OTelx) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
 		return nil, err
 	}
 	shutdownFuncs = append(shutdownFuncs, meterProvider.Shutdown)
-	x.Meter = otel.Meter(x.serviceName)
 
 	return func() {
 		ctx.Info("shutting down OpenTelemetry SDK")

@@ -33,6 +33,6 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 		initApplication,
 		configx.NewConfiguration,
 		authx.New,
-		otelx.New,
+		otelx.NewSDK,
 	))
 }

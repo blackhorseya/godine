@@ -11,7 +11,7 @@ import (
 type Injector struct {
 	C     *configx.Configuration
 	A     *configx.Application
-	OTelx *otelx.OTelx
+	OTelx *otelx.SDK
 
 	Authx *authx.Authx
 

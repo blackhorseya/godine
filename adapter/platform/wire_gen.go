@@ -47,7 +47,7 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	oTelx, cleanup, err := otelx.New(application)
+	sdk, cleanup, err := otelx.NewSDK(application)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -70,7 +70,7 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	injector := &Injector{
 		C:                        configuration,
 		A:                        application,
-		OTelx:                    oTelx,
+		OTelx:                    sdk,
 		Authx:                    authxAuthx,
 		RestaurantServiceHandler: restaurantServiceHandler,
 	}

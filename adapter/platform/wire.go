@@ -84,7 +84,7 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 		NewInitServersFn,
 		authx.New,
 		grpcx.NewClient,
-		otelx.New,
+		otelx.NewSDK,
 
 		user.ProviderUserBizSet,
 		user.NewAccountServiceClient,
