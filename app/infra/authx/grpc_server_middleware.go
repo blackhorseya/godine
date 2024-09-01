@@ -66,6 +66,7 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 			return err
 		}
 		next = account.SetInContext(next)
+		wrappedStream.WrappedContext = next
 
 		return handler(srv, stream)
 	}
