@@ -14,7 +14,6 @@ go_library(
         "//app/infra/authz",
         "//app/infra/configx",
         "//pkg/cmdx",
-        "//pkg/logging",
         "@com_github_spf13_cobra//:cobra",
         "@com_github_spf13_viper//:viper",
     ],

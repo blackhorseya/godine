@@ -5,7 +5,6 @@ import (
 
 	"github.com/blackhorseya/godine/app/infra/authz"
 	"github.com/blackhorseya/godine/app/infra/configx"
-	"github.com/blackhorseya/godine/pkg/logging"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -24,9 +23,6 @@ var initCmd = &cobra.Command{
 		cobra.CheckErr(err)
 
 		app, err := configx.NewApplication(viper.GetViper(), "userRestful")
-		cobra.CheckErr(err)
-
-		err = logging.Init(app.Log)
 		cobra.CheckErr(err)
 
 		authz, err := authz.New(app)
