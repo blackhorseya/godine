@@ -31,10 +31,10 @@ func (i *menuService) AddMenuItem(c context.Context, req *biz.AddMenuItemRequest
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
 
-	ctx, span := otelx.Span(ctx, "menu.biz.AddMenuItem")
+	next, span := otelx.Tracer.Start(c, "menu.biz.AddMenuItem")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, req.RestaurantId)
+	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {
 		ctx.Error("get restaurant by id failed", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
 		return nil, err
@@ -46,7 +46,7 @@ func (i *menuService) AddMenuItem(c context.Context, req *biz.AddMenuItemRequest
 		return nil, err
 	}
 
-	err = i.restaurants.Update(ctx, restaurant)
+	err = i.restaurants.Update(next, restaurant)
 	if err != nil {
 		ctx.Error("update restaurant failed", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
 		return nil, err
@@ -87,10 +87,10 @@ func (i *menuService) ListMenuItems(req *biz.ListMenuItemsRequest, stream biz.Me
 		return status.Newf(codes.Internal, "failed to get contextx: %v", err).Err()
 	}
 
-	ctx, span := otelx.Span(ctx, "menu.biz.ListMenuItems")
+	next, span := otelx.Tracer.Start(stream.Context(), "menu.biz.ListMenuItems")
 	defer span.End()
 
-	restaurant, err := i.restaurants.GetByID(ctx, req.RestaurantId)
+	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {
 		ctx.Error("get restaurant by id failed", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
 		return err

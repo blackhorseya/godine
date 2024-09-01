@@ -40,7 +40,7 @@ func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeli
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
 
-	ctx, span := otelx.Span(ctx, "biz.logistics.CreateDelivery")
+	next, span := otelx.Tracer.Start(c, "biz.logistics.CreateDelivery")
 	defer span.End()
 
 	delivery, err := model.NewDelivery(strconv.FormatInt(req.OrderId, 10), req.UserId, req.Address)
@@ -49,7 +49,7 @@ func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeli
 		return nil, err
 	}
 
-	err = i.deliveries.Create(ctx, delivery)
+	err = i.deliveries.Create(next, delivery)
 	if err != nil {
 		ctx.Error("failed to create delivery", zap.Error(err))
 		return nil, err
@@ -67,10 +67,10 @@ func (i *logisticsService) ListDeliveries(
 		return fmt.Errorf("failed to get contextx: %w", err)
 	}
 
-	ctx, span := otelx.Span(ctx, "biz.logistics.ListDeliveries")
+	next, span := otelx.Tracer.Start(stream.Context(), "biz.logistics.ListDeliveries")
 	defer span.End()
 
-	items, total, err := i.deliveries.List(ctx, utils.Pagination{
+	items, total, err := i.deliveries.List(next, utils.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})

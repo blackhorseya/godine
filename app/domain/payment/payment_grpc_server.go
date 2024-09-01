@@ -31,7 +31,7 @@ func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePayment
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
 
-	ctx, span := otelx.Span(ctx, "payment.biz.CreatePayment")
+	next, span := otelx.Tracer.Start(c, "payment.biz.CreatePayment")
 	defer span.End()
 
 	handler, err := userM.FromContext(c)
@@ -46,7 +46,7 @@ func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePayment
 		return nil, err
 	}
 
-	err = i.payments.Create(ctx, payment)
+	err = i.payments.Create(next, payment)
 	if err != nil {
 		ctx.Error("failed to create payment", zap.Error(err))
 		return nil, err
@@ -61,10 +61,10 @@ func (i *paymentService) GetPayment(c context.Context, req *biz.GetPaymentReques
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
 
-	ctx, span := otelx.Span(ctx, "payment.biz.GetPayment")
+	next, span := otelx.Tracer.Start(c, "payment.biz.GetPayment")
 	defer span.End()
 
-	payment, err := i.payments.GetByID(ctx, req.PaymentId)
+	payment, err := i.payments.GetByID(next, req.PaymentId)
 	if err != nil {
 		ctx.Error("failed to get payment", zap.Error(err))
 		return nil, err

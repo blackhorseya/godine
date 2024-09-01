@@ -16,7 +16,6 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -141,10 +140,4 @@ func newMeter(
 	Meter = provider.Meter(app.Name)
 
 	return provider, nil
-}
-
-// Span is used to start a span.
-func Span(parent contextx.Contextx, name string) (ctx contextx.Contextx, span trace.Span) {
-	next, span := Tracer.Start(parent, name)
-	return contextx.WithContextLegacy(next), span
 }

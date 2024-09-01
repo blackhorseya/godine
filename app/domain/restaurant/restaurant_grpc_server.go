@@ -33,13 +33,13 @@ func (i *restaurantService) CreateRestaurant(
 	c context.Context,
 	req *biz.CreateRestaurantRequest,
 ) (*model.Restaurant, error) {
+	next, span := otelx.Tracer.Start(c, "restaurant.biz.CreateRestaurant")
+	defer span.End()
+
 	ctx, err := contextx.FromContextLegacy(c)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get contextx: %w", err)
 	}
-
-	ctx, span := otelx.Span(ctx, "restaurant.biz.CreateRestaurant")
-	defer span.End()
 
 	handler, err := userM.FromContext(c)
 	if err != nil {
@@ -50,7 +50,7 @@ func (i *restaurantService) CreateRestaurant(
 	restaurant := model.NewRestaurant(req.Name, req.Address)
 	restaurant.CreatedBy = handler.Id
 
-	err = i.restaurants.Create(ctx, restaurant)
+	err = i.restaurants.Create(next, restaurant)
 	if err != nil {
 		ctx.Error("failed to create restaurant", zap.Error(err))
 		return nil, status.Error(codes.Internal, err.Error())
@@ -102,15 +102,10 @@ func (i *restaurantService) GetRestaurant(
 	c context.Context,
 	req *biz.GetRestaurantRequest,
 ) (*model.Restaurant, error) {
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
-
-	ctx, span := otelx.Span(ctx, "restaurant.biz.GetRestaurant")
+	next, span := otelx.Tracer.Start(c, "restaurant.biz.GetRestaurant")
 	defer span.End()
 
-	return i.restaurants.GetByID(ctx, req.RestaurantId)
+	return i.restaurants.GetByID(next, req.RestaurantId)
 }
 
 func (i *restaurantService) ListRestaurantsNonStream(
