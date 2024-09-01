@@ -31,7 +31,7 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 	return app, nil
 }
 
-func New(v *viper.Viper) (adapterx.Restful, error) {
+func New(v *viper.Viper) (adapterx.RestfulLegacy, error) {
 	panic(wire.Build(
 		NewRestful,
 		wire.Struct(new(Injector), "*"),

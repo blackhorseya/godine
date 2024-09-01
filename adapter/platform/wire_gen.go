@@ -39,7 +39,7 @@ import (
 
 // Injectors from wire.go:
 
-func New(v *viper.Viper) (adapterx.Restful, error) {
+func New(v *viper.Viper) (adapterx.RestfulLegacy, error) {
 	configuration, err := configx.NewConfiguration(v)
 	if err != nil {
 		return nil, err
@@ -116,11 +116,11 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	if err != nil {
 		return nil, err
 	}
-	restful := NewServer(injector, server)
-	return restful, nil
+	restfulLegacy := NewServer(injector, server)
+	return restfulLegacy, nil
 }
 
-func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
+func NewV2(v *viper.Viper) (adapterx.RestfulLegacy, func(), error) {
 	configuration, err := configx.NewConfiguration(v)
 	if err != nil {
 		return nil, nil, err
@@ -205,8 +205,8 @@ func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	restful := NewServer(injector, server)
-	return restful, func() {
+	restfulLegacy := NewServer(injector, server)
+	return restfulLegacy, func() {
 		cleanup()
 	}, nil
 }

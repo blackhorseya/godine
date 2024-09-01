@@ -26,7 +26,7 @@ type impl struct {
 }
 
 // NewServer creates and returns a new grpcserver.
-func NewServer(injector *Injector, grpcserver *grpcx.Server) adapterx.Restful {
+func NewServer(injector *Injector, grpcserver *grpcx.Server) adapterx.RestfulLegacy {
 	return &impl{
 		injector:   injector,
 		grpcserver: grpcserver,

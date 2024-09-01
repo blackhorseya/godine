@@ -80,7 +80,7 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 	return app, nil
 }
 
-func New(v *viper.Viper) (adapterx.Restful, error) {
+func New(v *viper.Viper) (adapterx.RestfulLegacy, error) {
 	panic(wire.Build(
 		NewServer,
 		wire.Struct(new(Injector), "*"),
@@ -117,7 +117,7 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 	))
 }
 
-func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
+func NewV2(v *viper.Viper) (adapterx.RestfulLegacy, func(), error) {
 	panic(wire.Build(
 		NewServer,
 		wire.Struct(new(Injector), "*"),

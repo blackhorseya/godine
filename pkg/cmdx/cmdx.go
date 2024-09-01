@@ -14,11 +14,11 @@ import (
 type ServiceCmd struct {
 	Use        string
 	Short      string
-	GetService func(v *viper.Viper) (adapterx.Restful, error)
+	GetService func(v *viper.Viper) (adapterx.RestfulLegacy, error)
 }
 
 // NewServiceCmd creates a new service command.
-func NewServiceCmd(use string, short string, svc func(v *viper.Viper) (adapterx.Restful, error)) *cobra.Command {
+func NewServiceCmd(use string, short string, svc func(v *viper.Viper) (adapterx.RestfulLegacy, error)) *cobra.Command {
 	return (&ServiceCmd{Use: use, Short: short, GetService: svc}).NewCmd()
 }
 

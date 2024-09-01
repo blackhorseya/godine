@@ -20,7 +20,7 @@ type impl struct {
 }
 
 // NewRestful is to create a new restful adapter
-func NewRestful(injector *Injector, server *httpx.Server) adapterx.Restful {
+func NewRestful(injector *Injector, server *httpx.Server) adapterx.RestfulLegacy {
 	return &impl{
 		injector: injector,
 		server:   server,
