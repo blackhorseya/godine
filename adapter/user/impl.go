@@ -1,6 +1,7 @@
 package user
 
 import (
+	"context"
 	"encoding/gob"
 	"net/http"
 
@@ -19,15 +20,15 @@ type impl struct {
 	server   *httpx.Server
 }
 
-// NewRestful is to create a new restful adapter
-func NewRestful(injector *Injector, server *httpx.Server) adapterx.RestfulLegacy {
+// NewServer is to create a new restful adapter
+func NewServer(injector *Injector, server *httpx.Server) adapterx.Server {
 	return &impl{
 		injector: injector,
 		server:   server,
 	}
 }
 
-func (i *impl) Start() error {
+func (i *impl) Start(c context.Context) error {
 	ctx := contextx.Background()
 
 	err := i.InitRouting()
@@ -45,7 +46,7 @@ func (i *impl) Start() error {
 	return nil
 }
 
-func (i *impl) AwaitSignal() error {
+func (i *impl) Shutdown(c context.Context) error {
 	ctx := contextx.Background()
 	ctx.Info("receive signal to stop grpcserver")
 
