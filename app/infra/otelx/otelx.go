@@ -28,6 +28,8 @@ var (
 	Tracer = otel.Tracer("")
 )
 
+type keyOTelx struct{}
+
 // OTelx is the OpenTelemetry SDK.
 type OTelx struct {
 	Tracer trace.Tracer
@@ -55,7 +57,7 @@ func New(app *configx.Application) (*OTelx, func(), error) {
 		serviceName: app.Name,
 	}
 
-	clean, err := instance.SetupOTelSDK(ctx)
+	clean, err := instance.setupOTelSDK(ctx)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to setup OpenTelemetry SDK: %w", err)
 	}
@@ -63,8 +65,21 @@ func New(app *configx.Application) (*OTelx, func(), error) {
 	return instance, clean, nil
 }
 
-// SetupOTelSDK sets up the OpenTelemetry SDK.
-func (x *OTelx) SetupOTelSDK(ctx contextx.Contextx) (func(), error) {
+// FromContext returns the OpenTelemetry SDK from the context.
+func FromContext(c context.Context) (*OTelx, error) {
+	x, ok := c.Value(keyOTelx{}).(*OTelx)
+	if !ok || x == nil {
+		return nil, fmt.Errorf("failed to get OTelx from context")
+	}
+
+	return x, nil
+}
+
+func (x *OTelx) SetInContext(c context.Context) context.Context {
+	return context.WithValue(c, keyOTelx{}, x)
+}
+
+func (x *OTelx) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
 	ctx.Info(
 		"setting up OpenTelemetry SDK",
 		zap.String("service_name", x.serviceName),
