@@ -116,3 +116,40 @@ func New(v *viper.Viper) (adapterx.Restful, error) {
 		handlers.NewRestaurantServiceHandler,
 	))
 }
+
+func NewV2(v *viper.Viper) (adapterx.Restful, func(), error) {
+	panic(wire.Build(
+		NewServer,
+		wire.Struct(new(Injector), "*"),
+		grpcx.NewServer,
+		initApplication,
+		configx.NewConfiguration,
+		NewInitServersFn,
+		authx.New,
+		grpcx.NewClient,
+
+		user.ProviderUserBizSet,
+		user.NewAccountServiceClient,
+
+		restaurant.ProviderRestaurantBizSet,
+		restaurant.NewRestaurantServiceClient,
+		restaurant.NewMenuServiceClient,
+
+		notification.ProviderNotificationBizSet,
+		notification.NewNotificationServiceClient,
+
+		payment.ProviderPaymentBizSet,
+		payment.NewPaymentServiceClient,
+
+		order.ProviderOrderBizSet,
+
+		logistics.ProviderLogisticsBizSet,
+		logistics.NewLogisticsServiceClient,
+
+		snowflakex.NewNode,
+		postgresqlx.NewClient,
+		mongodbx.NewClientWithClean,
+
+		handlers.NewRestaurantServiceHandler,
+	))
+}

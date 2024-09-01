@@ -12,10 +12,11 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	service, err := New(viper.New())
+	service, clean, err := NewV2(viper.GetViper())
 	if err != nil {
 		t.Fatalf("New() error = %v", err)
 	}
+	defer clean()
 
 	err = service.Start()
 	if err != nil {
