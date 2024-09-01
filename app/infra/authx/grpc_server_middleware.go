@@ -28,7 +28,7 @@ func (x *Authx) UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 				zap.Strings("skip_paths", x.SkipPaths),
 				zap.String("full_method", info.FullMethod),
 			)
-			return handler(c, req)
+			return handler(next, req)
 		}
 
 		account, err := extractAccount(c, x)
@@ -48,6 +48,9 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 		next, span := otelx.Tracer.Start(stream.Context(), "authx.grpc.StreamServerInterceptor")
 		defer span.End()
 
+		wrappedStream := grpc_middleware.WrapServerStream(stream)
+		wrappedStream.WrappedContext = next
+
 		if x.SkipPath(info.FullMethod) {
 			contextx.Background().Debug(
 				"skip authx middleware",
@@ -63,9 +66,6 @@ func (x *Authx) StreamServerInterceptor() grpc.StreamServerInterceptor {
 			return err
 		}
 		next = account.SetInContext(next)
-
-		wrappedStream := grpc_middleware.WrapServerStream(stream)
-		wrappedStream.WrappedContext = next
 
 		return handler(srv, stream)
 	}
