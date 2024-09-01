@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -54,6 +55,9 @@ func NewMongoRepository[T BaseModelInterface](coll *mongo.Collection) IRepositor
 }
 
 func (x *mongoRepository[T]) Create(c context.Context, item T) error {
+	_, span := otelx.Tracer.Start(c, "Create")
+	defer span.End()
+
 	logger := ctxzap.Extract(c)
 	logger.Debug("create item", zap.Any("item", &item))
 
@@ -76,6 +80,9 @@ func (x *mongoRepository[T]) Create(c context.Context, item T) error {
 }
 
 func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item T, err error) {
+	_, span := otelx.Tracer.Start(c, "GetByID")
+	defer span.End()
+
 	logger := ctxzap.Extract(c)
 	logger.Debug("get item by ID", zap.String("id", id))
 
@@ -99,6 +106,9 @@ func (x *mongoRepository[T]) GetByID(c context.Context, id string) (item T, err 
 }
 
 func (x *mongoRepository[T]) List(c context.Context, cond Pagination) (items []T, total int, err error) {
+	_, span := otelx.Tracer.Start(c, "List")
+	defer span.End()
+
 	logger := ctxzap.Extract(c)
 	logger.Debug("list items", zap.Any("condition", cond))
 
@@ -137,6 +147,9 @@ func (x *mongoRepository[T]) List(c context.Context, cond Pagination) (items []T
 }
 
 func (x *mongoRepository[T]) Update(c context.Context, item T) error {
+	_, span := otelx.Tracer.Start(c, "Update")
+	defer span.End()
+
 	logger := ctxzap.Extract(c)
 	logger.Debug("update item", zap.Any("item", &item))
 
@@ -163,6 +176,9 @@ func (x *mongoRepository[T]) Update(c context.Context, item T) error {
 }
 
 func (x *mongoRepository[T]) Delete(c context.Context, id string) error {
+	_, span := otelx.Tracer.Start(c, "Delete")
+	defer span.End()
+
 	logger := ctxzap.Extract(c)
 	logger.Debug("delete item", zap.String("id", id))
 
