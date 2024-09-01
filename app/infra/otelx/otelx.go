@@ -11,11 +11,13 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -28,6 +30,25 @@ var (
 	// Meter is the global meter.
 	Meter = otel.Meter("")
 )
+
+// OTelx is the OpenTelemetry SDK.
+type OTelx struct {
+	Tracer trace.Tracer
+	Meter  metric.Meter
+
+	target      string
+	serviceName string
+}
+
+// New creates a new OpenTelemetry SDK.
+func New(app *configx.Application) (*OTelx, func(), error) {
+	return &OTelx{
+			target:      app.OTel.Target,
+			serviceName: app.Name,
+		}, func() {
+			// Shutdown
+		}, nil
+}
 
 // Shutdown is the function to shutdown the OpenTelemetry SDK.
 var Shutdown = func(context.Context) error {
