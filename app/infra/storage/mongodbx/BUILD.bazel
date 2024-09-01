@@ -13,6 +13,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/configx",
+        "//app/infra/otelx",
         "//entity/domain/logistics/model",
         "//entity/domain/logistics/repo",
         "//entity/domain/notification/model",
@@ -23,6 +24,7 @@ go_library(
         "//entity/domain/restaurant/repo",
         "//pkg/contextx",
         "//pkg/utils",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//logging/zap/ctxzap",
         "@com_github_testcontainers_testcontainers_go_modules_mongodb//:mongodb",
         "@org_mongodb_go_mongo_driver//bson",
         "@org_mongodb_go_mongo_driver//mongo",

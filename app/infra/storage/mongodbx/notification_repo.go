@@ -3,10 +3,11 @@ package mongodbx
 import (
 	"context"
 
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/notification/model"
 	"github.com/blackhorseya/godine/entity/domain/notification/repo"
-	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -36,16 +37,19 @@ func (i *mongodbNotificationRepo) ListByReceiverID(
 	receiverID string,
 	cond utils.Pagination,
 ) (items []*model.Notification, total int64, err error) {
+	_, span := otelx.Tracer.Start(c, "mongodbNotificationRepo.ListByReceiverID")
+	defer span.End()
+
+	logger := ctxzap.Extract(c)
+
 	timeout, cancelFunc := context.WithTimeout(c, defaultTimeout)
 	defer cancelFunc()
-
-	ctx := contextx.Background()
 
 	filter := bson.M{"user_id": receiverID}
 
 	total, err = i.coll.CountDocuments(timeout, filter)
 	if err != nil {
-		ctx.Error("count documents failed", zap.Error(err))
+		logger.Error("count documents failed", zap.Error(err))
 		return nil, 0, err
 	}
 
@@ -60,14 +64,14 @@ func (i *mongodbNotificationRepo) ListByReceiverID(
 
 	cur, err := i.coll.Find(timeout, filter, opts)
 	if err != nil {
-		ctx.Error("find documents failed", zap.Error(err))
+		logger.Error("find documents failed", zap.Error(err))
 		return nil, 0, err
 	}
 	defer cur.Close(timeout)
 
 	err = cur.All(timeout, &items)
 	if err != nil {
-		ctx.Error("decode documents failed", zap.Error(err))
+		logger.Error("decode documents failed", zap.Error(err))
 		return nil, 0, err
 	}
 
