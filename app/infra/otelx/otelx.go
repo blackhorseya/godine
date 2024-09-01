@@ -28,8 +28,6 @@ var (
 	Tracer = otel.Tracer("")
 )
 
-type keyOTelx struct{}
-
 // OTelx is the OpenTelemetry SDK.
 type OTelx struct {
 	Tracer trace.Tracer
@@ -63,20 +61,6 @@ func New(app *configx.Application) (*OTelx, func(), error) {
 	}
 
 	return instance, clean, nil
-}
-
-// FromContext returns the OpenTelemetry SDK from the context.
-func FromContext(c context.Context) (*OTelx, error) {
-	x, ok := c.Value(keyOTelx{}).(*OTelx)
-	if !ok || x == nil {
-		return nil, fmt.Errorf("failed to get OTelx from context")
-	}
-
-	return x, nil
-}
-
-func (x *OTelx) SetInContext(c context.Context) context.Context {
-	return context.WithValue(c, keyOTelx{}, x)
 }
 
 func (x *OTelx) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
