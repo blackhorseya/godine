@@ -13,7 +13,6 @@ import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
-	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/spf13/viper"
 )
 
@@ -28,21 +27,29 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	oTelx, cleanup, err := otelx.New(application)
+	if err != nil {
+		return nil, nil, err
+	}
 	authxAuthx, err := authx.New(application)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	injector := &Injector{
 		C:     configuration,
 		A:     application,
+		OTelx: oTelx,
 		Authx: authxAuthx,
 	}
 	server, err := httpx.NewServer(application)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	adapterxServer := NewServer(injector, server)
 	return adapterxServer, func() {
+		cleanup()
 	}, nil
 }
 
@@ -52,11 +59,6 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 	app, err := config.GetService("user")
 	if err != nil {
 		return nil, fmt.Errorf("failed to get service %s: %w", "platform", err)
-	}
-
-	err = otelx.SetupOTelSDK(contextx.Background(), app)
-	if err != nil {
-		return nil, fmt.Errorf("failed to setup otel sdk: %w", err)
 	}
 
 	return app, nil
