@@ -15,10 +15,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/blackhorseya/godine/pkg/errorx"
-	"github.com/blackhorseya/godine/pkg/responsex"
 	"github.com/coreos/go-oidc/v3/oidc"
-	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 )
@@ -110,50 +107,6 @@ type CustomClaims struct {
 
 func (c *CustomClaims) Validate(_ context.Context) error {
 	return nil
-}
-
-// ParseJWT is used to parse the jwt.
-func (x *Authx) ParseJWT() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		encounteredError := true
-		var handler http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
-			encounteredError = false
-			c.Request = r
-
-			ctx, err := contextx.FromGin(c)
-			if err != nil {
-				_ = c.Error(err)
-				return
-			}
-
-			claims, ok := c.Request.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
-			if !ok {
-				ctx.Error("claims is not valid")
-				responsex.Err(c, errorx.Wrap(http.StatusUnauthorized, 401, errors.New("claims is not valid")))
-				return
-			}
-
-			by := &model.Account{
-				Id:       claims.RegisteredClaims.Subject,
-				Password: "",
-				Address:  nil,
-				IsActive: false,
-				Level:    0,
-			}
-			c.Set(contextx.KeyCtx, contextx.WithValue(ctx, contextx.KeyHandler{}, by))
-
-			// continue to the next middleware
-			c.Next()
-		}
-
-		x.middleware.CheckJWT(handler).ServeHTTP(c.Writer, c.Request)
-
-		if encounteredError {
-			responsex.Err(c, errorx.Wrap(http.StatusUnauthorized, 401, errors.New("unauthorized")))
-			c.Abort()
-			return
-		}
-	}
 }
 
 // ExtractAccountFromToken is used to decode the access token.

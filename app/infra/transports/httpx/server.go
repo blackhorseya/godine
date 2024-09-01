@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -76,7 +77,7 @@ func (s *Server) Start(ctx contextx.Contextx) error {
 
 // Stop is used to stop the server.
 func (s *Server) Stop(ctx contextx.Contextx) error {
-	timeout, cancelFunc := contextx.WithTimeout(ctx, 5*time.Second)
+	timeout, cancelFunc := context.WithTimeout(ctx, 5*time.Second)
 	defer cancelFunc()
 
 	err := s.httpserver.Shutdown(timeout)
