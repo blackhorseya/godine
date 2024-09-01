@@ -2,7 +2,6 @@ package restaurant
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -12,6 +11,7 @@ import (
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -36,10 +36,7 @@ func (i *restaurantService) CreateRestaurant(
 	next, span := otelx.Tracer.Start(c, "restaurant.biz.CreateRestaurant")
 	defer span.End()
 
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	handler, err := userM.FromContext(c)
 	if err != nil {
@@ -63,14 +60,11 @@ func (i *restaurantService) ListRestaurants(
 	req *biz.ListRestaurantsRequest,
 	stream biz.RestaurantService_ListRestaurantsServer,
 ) error {
-	next, span := otelx.Tracer.Start(stream.Context(), "restaurant.biz.ListRestaurants")
+	c := stream.Context()
+	next, span := otelx.Tracer.Start(c, "restaurant.biz.ListRestaurants")
 	defer span.End()
 
-	ctx, err := contextx.FromContextLegacy(stream.Context())
-	if err != nil {
-		contextx.Background().Error("failed to get contextx", zap.Error(err))
-		return status.Errorf(codes.Internal, "failed to get contextx: %v", err)
-	}
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	items, total, err := i.restaurants.List(next, utils.Pagination{
 		Limit:  req.PageSize,
@@ -115,7 +109,7 @@ func (i *restaurantService) ListRestaurantsNonStream(
 	next, span := otelx.Tracer.Start(c, "restaurant.biz.ListRestaurantsNonStream")
 	defer span.End()
 
-	ctx := contextx.Background()
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	items, total, err := i.restaurants.List(next, utils.Pagination{
 		Limit:  req.PageSize,

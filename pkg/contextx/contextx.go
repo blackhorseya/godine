@@ -24,6 +24,14 @@ type Contextx struct {
 	*zap.Logger
 }
 
+// WithLogger returns a copy of parent in which the logger is set to logger.
+func WithLogger(c context.Context, logger *zap.Logger) Contextx {
+	return Contextx{
+		Context: c,
+		Logger:  logger,
+	}
+}
+
 // WithContextLegacy returns a copy of parent in which the context is set to ctx.
 // Deprecated: Use WithContextx instead.
 func WithContextLegacy(ctx context.Context) Contextx {
@@ -39,11 +47,4 @@ func Background() Contextx {
 		Context: context.Background(),
 		Logger:  zap.L(),
 	}
-}
-
-// FromContextLegacy returns a Contextx from context.Context.
-// Deprecated: Use FromContext instead.
-// TODO: 2024/8/31|sean|remove this method
-func FromContextLegacy(c context.Context) (Contextx, error) {
-	return Background(), nil
 }

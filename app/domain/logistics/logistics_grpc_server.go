@@ -12,6 +12,7 @@ import (
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 )
@@ -35,13 +36,10 @@ func NewLogisticsService(
 }
 
 func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeliveryRequest) (*model.Delivery, error) {
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
-
 	next, span := otelx.Tracer.Start(c, "biz.logistics.CreateDelivery")
 	defer span.End()
+
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	delivery, err := model.NewDelivery(strconv.FormatInt(req.OrderId, 10), req.UserId, req.Address)
 	if err != nil {
@@ -62,13 +60,10 @@ func (i *logisticsService) ListDeliveries(
 	req *biz.ListDeliveriesRequest,
 	stream biz.LogisticsService_ListDeliveriesServer,
 ) error {
-	ctx, err := contextx.FromContextLegacy(stream.Context())
-	if err != nil {
-		return fmt.Errorf("failed to get contextx: %w", err)
-	}
-
 	next, span := otelx.Tracer.Start(stream.Context(), "biz.logistics.ListDeliveries")
 	defer span.End()
+
+	ctx := contextx.WithLogger(stream.Context(), ctxzap.Extract(stream.Context()))
 
 	items, total, err := i.deliveries.List(next, utils.Pagination{
 		Limit:  req.PageSize,

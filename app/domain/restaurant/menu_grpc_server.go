@@ -2,13 +2,13 @@ package restaurant
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -26,13 +26,10 @@ func NewMenuService(restaurants repo.IRestaurantRepo) biz.MenuServiceServer {
 }
 
 func (i *menuService) AddMenuItem(c context.Context, req *biz.AddMenuItemRequest) (*model.MenuItem, error) {
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
-
 	next, span := otelx.Tracer.Start(c, "menu.biz.AddMenuItem")
 	defer span.End()
+
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {
@@ -59,7 +56,7 @@ func (i *menuService) GetMenuItem(c context.Context, req *biz.GetMenuItemRequest
 	next, span := otelx.Tracer.Start(c, "menu.biz.GetMenuItem")
 	defer span.End()
 
-	ctx := contextx.Background()
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {
@@ -82,13 +79,11 @@ func (i *menuService) GetMenuItem(c context.Context, req *biz.GetMenuItemRequest
 }
 
 func (i *menuService) ListMenuItems(req *biz.ListMenuItemsRequest, stream biz.MenuService_ListMenuItemsServer) error {
-	ctx, err := contextx.FromContextLegacy(stream.Context())
-	if err != nil {
-		return status.Newf(codes.Internal, "failed to get contextx: %v", err).Err()
-	}
-
-	next, span := otelx.Tracer.Start(stream.Context(), "menu.biz.ListMenuItems")
+	c := stream.Context()
+	next, span := otelx.Tracer.Start(c, "menu.biz.ListMenuItems")
 	defer span.End()
+
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {

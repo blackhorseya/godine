@@ -2,7 +2,6 @@ package payment
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -11,6 +10,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/payment/repo"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 )
 
@@ -26,13 +26,10 @@ func NewPaymentService(payments repo.IPaymentRepo) biz.PaymentServiceServer {
 }
 
 func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePaymentRequest) (*model.Payment, error) {
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
-
 	next, span := otelx.Tracer.Start(c, "payment.biz.CreatePayment")
 	defer span.End()
+
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	handler, err := userM.FromContext(c)
 	if err != nil {
@@ -56,13 +53,10 @@ func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePayment
 }
 
 func (i *paymentService) GetPayment(c context.Context, req *biz.GetPaymentRequest) (*model.Payment, error) {
-	ctx, err := contextx.FromContextLegacy(c)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get contextx: %w", err)
-	}
-
 	next, span := otelx.Tracer.Start(c, "payment.biz.GetPayment")
 	defer span.End()
+
+	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
 	payment, err := i.payments.GetByID(next, req.PaymentId)
 	if err != nil {
