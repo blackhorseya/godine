@@ -106,6 +106,7 @@ func (x *OTelx) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
 		return nil, err
 	}
 	shutdownFuncs = append(shutdownFuncs, tracerProvider.Shutdown)
+	x.Tracer = otel.Tracer(x.serviceName)
 
 	meterProvider, err := newMeter(ctx, res, conn)
 	if err != nil {
@@ -113,6 +114,7 @@ func (x *OTelx) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
 		return nil, err
 	}
 	shutdownFuncs = append(shutdownFuncs, meterProvider.Shutdown)
+	x.Meter = otel.Meter(x.serviceName)
 
 	return func() {
 		ctx.Info("shutting down OpenTelemetry SDK")
