@@ -2,7 +2,6 @@ package otelx
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -25,10 +24,8 @@ import (
 
 var (
 	// Tracer is the global tracer.
+	// Deprecated: use OTelx.Tracer instead.
 	Tracer = otel.Tracer("")
-
-	// Meter is the global meter.
-	Meter = otel.Meter("")
 )
 
 // OTelx is the OpenTelemetry SDK.
@@ -53,67 +50,65 @@ func New(app *configx.Application) (*OTelx, func(), error) {
 		}, nil, nil
 	}
 
-	return &OTelx{
+	instance := &OTelx{
 		target:      app.OTel.Target,
 		serviceName: app.Name,
-	}, func() {}, nil
-}
-
-// Shutdown is the function to shutdown the OpenTelemetry SDK.
-var Shutdown = func(context.Context) error {
-	return nil
-}
-
-// SetupOTelSDK sets up the OpenTelemetry SDK with the Jaeger exporter.
-func SetupOTelSDK(ctx contextx.Contextx, app *configx.Application) (err error) {
-	if app.OTel.Target == "" {
-		ctx.Warn("OpenTelemetry is disabled")
-		return nil
 	}
 
+	clean, err := instance.SetupOTelSDK(ctx)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to setup OpenTelemetry SDK: %w", err)
+	}
+
+	return instance, clean, nil
+}
+
+// SetupOTelSDK sets up the OpenTelemetry SDK.
+func (x *OTelx) SetupOTelSDK(ctx contextx.Contextx) (func(), error) {
 	ctx.Info(
 		"setting up OpenTelemetry SDK",
-		zap.String("service_name", app.Name),
-		zap.String("otlp", app.OTel.Target),
+		zap.String("service_name", x.serviceName),
+		zap.String("otlp", x.target),
 	)
 
 	var shutdownFuncs []func(context.Context) error
 
-	Shutdown = func(ctx context.Context) error {
-		for _, fn := range shutdownFuncs {
-			err = errors.Join(err, fn(ctx))
-		}
-		shutdownFuncs = nil
-		return err
+	res, err := resource.New(ctx, resource.WithAttributes(semconv.ServiceNameKey.String(x.serviceName)))
+	if err != nil {
+		ctx.Error("failed to create resource", zap.Error(err))
+		return nil, err
 	}
 
-	res, err := resource.New(ctx, resource.WithAttributes(semconv.ServiceNameKey.String(app.Name)))
+	conn, err := initConn(x.target)
 	if err != nil {
-		return fmt.Errorf("failed to create resource: %w", err)
+		ctx.Error("failed to create gRPC client", zap.Error(err))
+		return nil, err
 	}
 
-	conn, err := initConn(app)
+	tracerProvider, err := newTracer(ctx, res, conn)
 	if err != nil {
-		return err
-	}
-
-	tracerProvider, err := newTracer(ctx, res, conn, app)
-	if err != nil {
-		return err
+		ctx.Error("failed to create the Jaeger exporter", zap.Error(err))
+		return nil, err
 	}
 	shutdownFuncs = append(shutdownFuncs, tracerProvider.Shutdown)
 
-	meterProvider, err := newMeter(ctx, res, conn, app)
+	meterProvider, err := newMeter(ctx, res, conn)
 	if err != nil {
-		return err
+		ctx.Error("failed to create the OTLP exporter", zap.Error(err))
+		return nil, err
 	}
 	shutdownFuncs = append(shutdownFuncs, meterProvider.Shutdown)
 
-	return nil
+	return func() {
+		ctx.Info("shutting down OpenTelemetry SDK")
+		for _, fn := range shutdownFuncs {
+			_ = fn(ctx)
+		}
+	}, nil
 }
 
-func initConn(app *configx.Application) (*grpc.ClientConn, error) {
-	conn, err := grpc.NewClient(app.OTel.Target, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func initConn(target string) (*grpc.ClientConn, error) {
+	conn, err := grpc.NewClient(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC client: %w", err)
 	}
@@ -125,7 +120,6 @@ func newTracer(
 	ctx context.Context,
 	res *resource.Resource,
 	conn *grpc.ClientConn,
-	app *configx.Application,
 ) (*sdktrace.TracerProvider, error) {
 	exporter, err := otlptracegrpc.New(ctx, otlptracegrpc.WithGRPCConn(conn))
 	if err != nil {
@@ -145,8 +139,6 @@ func newTracer(
 		propagation.Baggage{},
 	))
 
-	Tracer = provider.Tracer(app.Name)
-
 	return provider, nil
 }
 
@@ -154,7 +146,6 @@ func newMeter(
 	ctx context.Context,
 	res *resource.Resource,
 	conn *grpc.ClientConn,
-	app *configx.Application,
 ) (p *sdkmetric.MeterProvider, err error) {
 	exporter, err := otlpmetricgrpc.New(ctx, otlpmetricgrpc.WithGRPCConn(conn))
 	if err != nil {
@@ -166,8 +157,6 @@ func newMeter(
 		sdkmetric.WithResource(res),
 	)
 	otel.SetMeterProvider(provider)
-
-	Meter = provider.Meter(app.Name)
 
 	return provider, nil
 }

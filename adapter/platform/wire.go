@@ -28,7 +28,6 @@ import (
 	restB "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
 	userB "github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
-	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
@@ -70,11 +69,6 @@ func initApplication(config *configx.Configuration) (*configx.Application, error
 	app, err := config.GetService(serverName)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get service %s: %w", serverName, err)
-	}
-
-	err = otelx.SetupOTelSDK(contextx.Background(), app)
-	if err != nil {
-		return nil, fmt.Errorf("failed to setup otel sdk: %w", err)
 	}
 
 	return app, nil
