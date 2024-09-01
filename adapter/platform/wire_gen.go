@@ -48,28 +48,37 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	oTelx, cleanup, err := otelx.New(application)
+	if err != nil {
+		return nil, nil, err
+	}
 	authxAuthx, err := authx.New(application)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	client, err := grpcx.NewClient(configuration, authxAuthx)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	restaurantServiceClient, err := restaurant.NewRestaurantServiceClient(client)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	restaurantServiceHandler := handlers.NewRestaurantServiceHandler(restaurantServiceClient)
 	injector := &Injector{
 		C:                        configuration,
 		A:                        application,
+		OTelx:                    oTelx,
 		Authx:                    authxAuthx,
 		RestaurantServiceHandler: restaurantServiceHandler,
 	}
 	accountServiceServer := user.NewAccountService()
-	mongoClient, cleanup, err := mongodbx.NewClientWithClean(application)
+	mongoClient, cleanup2, err := mongodbx.NewClientWithClean(application)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	iRestaurantRepo := mongodbx.NewRestaurantRepo(mongoClient)
@@ -81,37 +90,44 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	notificationServiceServer := notification.NewNotificationService(iNotificationRepo)
 	db, err := postgresqlx.NewClient(application)
 	if err != nil {
+		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	node, err := snowflakex.NewNode()
 	if err != nil {
+		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	iOrderRepo := postgresqlx.NewOrderRepo(db, node)
 	menuServiceClient, err := restaurant.NewMenuServiceClient(client)
 	if err != nil {
+		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	accountServiceClient, err := user.NewAccountServiceClient(client)
 	if err != nil {
+		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	notificationServiceClient, err := notification.NewNotificationServiceClient(client)
 	if err != nil {
+		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	paymentServiceClient, err := payment.NewPaymentServiceClient(client)
 	if err != nil {
+		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	logisticsServiceClient, err := logistics.NewLogisticsServiceClient(client)
 	if err != nil {
+		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
@@ -121,11 +137,13 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer, logisticsServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
 	if err != nil {
+		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	adapterxServer := NewServer(injector, server)
 	return adapterxServer, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }

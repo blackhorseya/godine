@@ -42,12 +42,21 @@ type OTelx struct {
 
 // New creates a new OpenTelemetry SDK.
 func New(app *configx.Application) (*OTelx, func(), error) {
-	return &OTelx{
-			target:      app.OTel.Target,
+	ctx := contextx.Background()
+	if app.OTel.Target == "" {
+		ctx.Warn("OpenTelemetry is disabled")
+		return &OTelx{
+			Tracer:      otel.Tracer(app.Name),
+			Meter:       otel.Meter(app.Name),
+			target:      "",
 			serviceName: app.Name,
-		}, func() {
-			// Shutdown
-		}, nil
+		}, nil, nil
+	}
+
+	return &OTelx{
+		target:      app.OTel.Target,
+		serviceName: app.Name,
+	}, func() {}, nil
 }
 
 // Shutdown is the function to shutdown the OpenTelemetry SDK.
