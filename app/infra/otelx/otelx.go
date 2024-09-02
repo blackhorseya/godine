@@ -60,7 +60,9 @@ func NewSDK(app *configx.Application) (*SDK, func(), error) {
 func (x *SDK) setupOTelSDK(ctx contextx.Contextx) (func(), error) {
 	if x.target == "" {
 		ctx.Warn("OpenTelemetry is disabled")
-		return nil, nil //nolint:nilnil // Return nil to indicate that OpenTelemetry is disabled.
+		return func() {
+			ctx.Debug("noop")
+		}, nil
 	}
 
 	ctx.Info(

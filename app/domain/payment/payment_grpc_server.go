@@ -10,6 +10,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/payment/repo"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
+	"github.com/blackhorseya/godine/pkg/utils"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 )
@@ -56,7 +57,7 @@ func (i *paymentService) GetPayment(c context.Context, req *biz.GetPaymentReques
 	next, span := otelx.Tracer.Start(c, "payment.biz.GetPayment")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	payment, err := i.payments.GetByID(next, req.PaymentId)
 	if err != nil {
@@ -71,6 +72,22 @@ func (i *paymentService) ListPayments(
 	c context.Context,
 	req *biz.ListPaymentsRequest,
 ) (*biz.ListPaymentsResponse, error) {
-	// TODO: 2024/8/31|sean|implement me
-	panic("implement me")
+	next, span := otelx.Tracer.Start(c, "payment.biz.ListPayments")
+	defer span.End()
+
+	ctx := contextx.WithContextx(c)
+
+	payments, total, err := i.payments.List(next, utils.Pagination{
+		Limit:  req.PageSize,
+		Offset: (req.Page - 1) * req.PageSize,
+	})
+	if err != nil {
+		ctx.Error("failed to list payments", zap.Error(err))
+		return nil, err
+	}
+
+	return &biz.ListPaymentsResponse{
+		Payments: payments,
+		Total:    int64(total),
+	}, nil
 }

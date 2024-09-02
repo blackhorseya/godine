@@ -3,6 +3,7 @@ package contextx
 import (
 	"context"
 
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 )
 
@@ -29,6 +30,14 @@ func WithLogger(c context.Context, logger *zap.Logger) Contextx {
 	return Contextx{
 		Context: c,
 		Logger:  logger,
+	}
+}
+
+// WithContextx returns a copy of parent in which the context is set to c.
+func WithContextx(c context.Context) Contextx {
+	return Contextx{
+		Context: c,
+		Logger:  ctxzap.Extract(c),
 	}
 }
 
