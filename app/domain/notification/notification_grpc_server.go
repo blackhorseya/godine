@@ -10,7 +10,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/notification/repo"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/blackhorseya/godine/pkg/persistence"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 )
@@ -67,7 +67,7 @@ func (i *notificationService) ListMyNotifications(
 		return err
 	}
 
-	items, total, err := i.notifications.ListByReceiverID(next, handler.Id, utils.Pagination{
+	items, total, err := i.notifications.ListByReceiverID(next, handler.Id, persistence.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})

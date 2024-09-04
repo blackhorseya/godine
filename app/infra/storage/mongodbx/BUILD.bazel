@@ -23,7 +23,7 @@ go_library(
         "//entity/domain/restaurant/model",
         "//entity/domain/restaurant/repo",
         "//pkg/contextx",
-        "//pkg/utils",
+        "//pkg/persistence",
         "@com_github_grpc_ecosystem_go_grpc_middleware//logging/zap/ctxzap",
         "@com_github_testcontainers_testcontainers_go_modules_mongodb//:mongodb",
         "@org_mongodb_go_mongo_driver//bson",

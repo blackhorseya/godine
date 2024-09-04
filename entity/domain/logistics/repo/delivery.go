@@ -4,10 +4,10 @@ package repo
 
 import (
 	"github.com/blackhorseya/godine/entity/domain/logistics/model"
-	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/blackhorseya/godine/pkg/persistence"
 )
 
 // IDeliveryRepo represents a repository interface for managing delivery entities.
 type IDeliveryRepo interface {
-	utils.IRepository[*model.Delivery]
+	persistence.IRepository[*model.Delivery]
 }

@@ -6,16 +6,16 @@ import (
 	"context"
 
 	"github.com/blackhorseya/godine/entity/domain/notification/model"
-	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/blackhorseya/godine/pkg/persistence"
 )
 
 // INotificationRepo defines the interface for notification repository operations.
 type INotificationRepo interface {
-	utils.IRepository[*model.Notification]
+	persistence.IRepository[*model.Notification]
 
 	ListByReceiverID(
 		c context.Context,
 		receiverID string,
-		cond utils.Pagination,
+		cond persistence.Pagination,
 	) (items []*model.Notification, total int64, err error)
 }

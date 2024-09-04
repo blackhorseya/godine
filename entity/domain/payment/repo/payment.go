@@ -4,10 +4,10 @@ package repo
 
 import (
 	"github.com/blackhorseya/godine/entity/domain/payment/model"
-	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/blackhorseya/godine/pkg/persistence"
 )
 
 // IPaymentRepo is an interface for payment repository
 type IPaymentRepo interface {
-	utils.IRepository[*model.Payment]
+	persistence.IRepository[*model.Payment]
 }

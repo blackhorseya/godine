@@ -14,7 +14,7 @@ import (
 	reflect "reflect"
 
 	model "github.com/blackhorseya/godine/entity/domain/notification/model"
-	utils "github.com/blackhorseya/godine/pkg/utils"
+	utils "github.com/blackhorseya/godine/pkg/persistence"
 	gomock "go.uber.org/mock/gomock"
 )
 

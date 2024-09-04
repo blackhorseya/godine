@@ -10,7 +10,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/payment/repo"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/blackhorseya/godine/pkg/persistence"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 )
@@ -77,7 +77,7 @@ func (i *paymentService) ListPayments(
 
 	ctx := contextx.WithContextx(c)
 
-	payments, total, err := i.payments.List(next, utils.Pagination{
+	payments, total, err := i.payments.List(next, persistence.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})

@@ -6,7 +6,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/notification/model"
 	"github.com/blackhorseya/godine/entity/domain/notification/repo"
-	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/blackhorseya/godine/pkg/persistence"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,7 +15,7 @@ import (
 )
 
 type mongodbNotificationRepo struct {
-	utils.IRepository[*model.Notification]
+	persistence.IRepository[*model.Notification]
 
 	rw   *mongo.Client
 	coll *mongo.Collection
@@ -26,7 +26,7 @@ func NewNotificationRepo(rw *mongo.Client) repo.INotificationRepo {
 	coll := rw.Database("godine").Collection("notifications")
 
 	return &mongodbNotificationRepo{
-		IRepository: utils.NewMongoRepository[*model.Notification](coll),
+		IRepository: persistence.NewMongoRepository[*model.Notification](coll),
 		rw:          rw,
 		coll:        coll,
 	}
@@ -35,7 +35,7 @@ func NewNotificationRepo(rw *mongo.Client) repo.INotificationRepo {
 func (i *mongodbNotificationRepo) ListByReceiverID(
 	c context.Context,
 	receiverID string,
-	cond utils.Pagination,
+	cond persistence.Pagination,
 ) (items []*model.Notification, total int64, err error) {
 	_, span := otelx.Tracer.Start(c, "mongodbNotificationRepo.ListByReceiverID")
 	defer span.End()

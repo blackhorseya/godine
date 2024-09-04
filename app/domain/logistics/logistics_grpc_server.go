@@ -11,7 +11,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/logistics/repo"
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/blackhorseya/godine/pkg/persistence"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
@@ -65,7 +65,7 @@ func (i *logisticsService) ListDeliveries(
 
 	ctx := contextx.WithLogger(stream.Context(), ctxzap.Extract(stream.Context()))
 
-	items, total, err := i.deliveries.List(next, utils.Pagination{
+	items, total, err := i.deliveries.List(next, persistence.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})

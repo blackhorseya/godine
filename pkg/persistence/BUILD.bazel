@@ -1,9 +1,9 @@
 load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "utils",
+    name = "persistence",
     srcs = ["repository.go"],
-    importpath = "github.com/blackhorseya/godine/pkg/utils",
+    importpath = "github.com/blackhorseya/godine/pkg/persistence",
     visibility = ["//visibility:public"],
     deps = [
         "//app/infra/otelx",

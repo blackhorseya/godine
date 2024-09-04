@@ -10,7 +10,7 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/blackhorseya/godine/pkg/utils"
+	"github.com/blackhorseya/godine/pkg/persistence"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -66,7 +66,7 @@ func (i *restaurantService) ListRestaurants(
 
 	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
-	items, total, err := i.restaurants.List(next, utils.Pagination{
+	items, total, err := i.restaurants.List(next, persistence.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})
@@ -111,7 +111,7 @@ func (i *restaurantService) ListRestaurantsNonStream(
 
 	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
 
-	items, total, err := i.restaurants.List(next, utils.Pagination{
+	items, total, err := i.restaurants.List(next, persistence.Pagination{
 		Limit:  req.PageSize,
 		Offset: (req.Page - 1) * req.PageSize,
 	})
