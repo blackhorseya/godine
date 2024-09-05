@@ -11,7 +11,6 @@ import (
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/persistence"
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 )
 
@@ -30,7 +29,7 @@ func (i *paymentService) CreatePayment(c context.Context, req *biz.CreatePayment
 	next, span := otelx.Tracer.Start(c, "payment.biz.CreatePayment")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	handler, err := userM.FromContext(c)
 	if err != nil {

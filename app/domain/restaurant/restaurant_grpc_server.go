@@ -11,7 +11,6 @@ import (
 	userM "github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/persistence"
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -36,7 +35,7 @@ func (i *restaurantService) CreateRestaurant(
 	next, span := otelx.Tracer.Start(c, "restaurant.biz.CreateRestaurant")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	handler, err := userM.FromContext(c)
 	if err != nil {
@@ -64,7 +63,7 @@ func (i *restaurantService) ListRestaurants(
 	next, span := otelx.Tracer.Start(c, "restaurant.biz.ListRestaurants")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	items, total, err := i.restaurants.List(next, persistence.Pagination{
 		Limit:  req.PageSize,
@@ -109,7 +108,7 @@ func (i *restaurantService) ListRestaurantsNonStream(
 	next, span := otelx.Tracer.Start(c, "restaurant.biz.ListRestaurantsNonStream")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	items, total, err := i.restaurants.List(next, persistence.Pagination{
 		Limit:  req.PageSize,

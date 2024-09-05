@@ -20,7 +20,6 @@ go_library(
         "//pkg/contextx",
         "//pkg/persistence",
         "@com_github_google_wire//:wire",
-        "@com_github_grpc_ecosystem_go_grpc_middleware//logging/zap/ctxzap",
         "@org_uber_go_zap//:zap",
     ],
 )

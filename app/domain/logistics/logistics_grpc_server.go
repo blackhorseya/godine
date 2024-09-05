@@ -12,7 +12,6 @@ import (
 	notifyB "github.com/blackhorseya/godine/entity/domain/notification/biz"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/persistence"
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/metadata"
 )
@@ -39,7 +38,7 @@ func (i *logisticsService) CreateDelivery(c context.Context, req *biz.CreateDeli
 	next, span := otelx.Tracer.Start(c, "biz.logistics.CreateDelivery")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	delivery, err := model.NewDelivery(strconv.FormatInt(req.OrderId, 10), req.UserId, req.Address)
 	if err != nil {
@@ -60,10 +59,11 @@ func (i *logisticsService) ListDeliveries(
 	req *biz.ListDeliveriesRequest,
 	stream biz.LogisticsService_ListDeliveriesServer,
 ) error {
-	next, span := otelx.Tracer.Start(stream.Context(), "biz.logistics.ListDeliveries")
+	c := stream.Context()
+	next, span := otelx.Tracer.Start(c, "biz.logistics.ListDeliveries")
 	defer span.End()
 
-	ctx := contextx.WithLogger(stream.Context(), ctxzap.Extract(stream.Context()))
+	ctx := contextx.WithContextx(c)
 
 	items, total, err := i.deliveries.List(next, persistence.Pagination{
 		Limit:  req.PageSize,

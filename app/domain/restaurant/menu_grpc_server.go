@@ -8,7 +8,6 @@ import (
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -29,7 +28,7 @@ func (i *menuService) AddMenuItem(c context.Context, req *biz.AddMenuItemRequest
 	next, span := otelx.Tracer.Start(c, "menu.biz.AddMenuItem")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {
@@ -56,7 +55,7 @@ func (i *menuService) GetMenuItem(c context.Context, req *biz.GetMenuItemRequest
 	next, span := otelx.Tracer.Start(c, "menu.biz.GetMenuItem")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {
@@ -83,7 +82,7 @@ func (i *menuService) ListMenuItems(req *biz.ListMenuItemsRequest, stream biz.Me
 	next, span := otelx.Tracer.Start(c, "menu.biz.ListMenuItems")
 	defer span.End()
 
-	ctx := contextx.WithLogger(c, ctxzap.Extract(c))
+	ctx := contextx.WithContextx(c)
 
 	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
 	if err != nil {

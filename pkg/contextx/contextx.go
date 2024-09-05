@@ -25,14 +25,6 @@ type Contextx struct {
 	*zap.Logger
 }
 
-// WithLogger returns a copy of parent in which the logger is set to logger.
-func WithLogger(c context.Context, logger *zap.Logger) Contextx {
-	return Contextx{
-		Context: c,
-		Logger:  logger,
-	}
-}
-
 // WithContextx returns a copy of parent in which the context is set to c.
 func WithContextx(c context.Context) Contextx {
 	return Contextx{
