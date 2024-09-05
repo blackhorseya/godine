@@ -43,6 +43,7 @@ func WithContextLegacy(ctx context.Context) Contextx {
 }
 
 // Background returns a non-nil, empty Contextx. It is never canceled, has no values, and has no deadline.
+// Deprecated: Use WithContextx instead.
 func Background() Contextx {
 	return Contextx{
 		Context: context.Background(),
