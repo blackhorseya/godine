@@ -51,7 +51,7 @@ func (i *restaurantHandler) ListRestaurantsNonStream(
 	c context.Context,
 	req *connect.Request[biz.ListRestaurantsRequest],
 ) (*connect.Response[biz.ListRestaurantsResponse], error) {
-	ctx := contextx.Background()
+	ctx := contextx.WithContextx(c)
 
 	resp, err := i.restaurantClient.ListRestaurantsNonStream(c, req.Msg)
 	if err != nil {

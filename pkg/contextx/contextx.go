@@ -16,6 +16,7 @@ type ContextKey string
 
 const (
 	// KeyContextx is the key of contextx.
+	// Deprecated:
 	KeyContextx ContextKey = "contextx"
 )
 
