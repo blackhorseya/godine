@@ -3,7 +3,6 @@ package contextx
 import (
 	"context"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 )
 
@@ -21,7 +20,7 @@ type Contextx struct {
 func WithContextx(c context.Context) Contextx {
 	return Contextx{
 		Context: c,
-		Logger:  ctxzap.Extract(c),
+		Logger:  zap.L(),
 	}
 }
 
