@@ -19,10 +19,10 @@ var initCmd = &cobra.Command{
 			cobra.CheckErr(errors.New("user id is required"))
 		}
 
-		_, err := configx.NewConfiguration(viper.GetViper())
+		config, err := configx.NewConfiguration(viper.GetViper())
 		cobra.CheckErr(err)
 
-		app, err := configx.NewApplication(viper.GetViper(), "userRestful")
+		app, err := config.GetService("platform")
 		cobra.CheckErr(err)
 
 		authz, err := authz.New(app)
