@@ -34,17 +34,7 @@ func WithContextx(c context.Context) Contextx {
 	}
 }
 
-// WithContextLegacy returns a copy of parent in which the context is set to ctx.
-// Deprecated: Use WithContextx instead.
-func WithContextLegacy(ctx context.Context) Contextx {
-	return Contextx{
-		Context: ctx,
-		Logger:  zap.L(),
-	}
-}
-
 // Background returns a non-nil, empty Contextx. It is never canceled, has no values, and has no deadline.
-// Deprecated: Use WithContextx instead.
 func Background() Contextx {
 	return Contextx{
 		Context: context.Background(),

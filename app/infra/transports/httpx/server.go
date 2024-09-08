@@ -38,7 +38,6 @@ func NewServer(app *configx.Application) (*Server, error) {
 		Context:    nil,
 	}))
 	router.Use(otelgin.Middleware(app.Name))
-	router.Use(contextx.AddContextxMiddleware())
 	router.Use(responsex.AddErrorHandlingMiddleware())
 	router.Use(ginzap.CustomRecoveryWithZap(ctx.Logger, true, func(c *gin.Context, err any) {
 		responsex.Err(c, fmt.Errorf("%v", err))
