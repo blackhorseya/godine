@@ -58,7 +58,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	next, span := otelx.Tracer.Start(c, "order.biz.SubmitOrder")
 	defer span.End()
 
-	ctx := contextx.Background()
+	ctx := contextx.WithContextx(c)
 
 	// check if the user is logged in
 	handler, err := userM.FromContext(c)
@@ -70,10 +70,11 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	// check restaurant is open
 	restaurant, err := i.restaurantClient.GetRestaurant(next, &restB.GetRestaurantRequest{RestaurantId: req.RestaurantId})
 	if err != nil {
-		ctx.Error("failed to get restaurant", zap.Error(err))
+		ctx.Error("failed to get restaurant", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
 		return nil, err
 	}
 	if !restaurant.IsOpen {
+		ctx.Error("restaurant is not open", zap.String("restaurant_id", restaurant.Id))
 		return nil, fmt.Errorf("restaurant %s is not open", req.RestaurantId)
 	}
 
@@ -162,10 +163,11 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 }
 
 func (i *orderService) ListOrders(req *biz.ListOrdersRequest, stream biz.OrderService_ListOrdersServer) error {
-	next, span := otelx.Tracer.Start(stream.Context(), "order.biz.ListOrders")
+	c := stream.Context()
+	next, span := otelx.Tracer.Start(c, "order.biz.ListOrders")
 	defer span.End()
 
-	ctx := contextx.Background()
+	ctx := contextx.WithContextx(c)
 
 	items, total, err := i.orders.List(next, repo.ListCondition{
 		UserID:       "",
@@ -199,7 +201,7 @@ func (i *orderService) GetOrder(c context.Context, req *biz.GetOrderRequest) (*m
 	next, span := otelx.Tracer.Start(c, "order.biz.GetOrder")
 	defer span.End()
 
-	ctx := contextx.Background()
+	ctx := contextx.WithContextx(c)
 
 	item, err := i.orders.GetByID(next, req.OrderId)
 	if err != nil {
