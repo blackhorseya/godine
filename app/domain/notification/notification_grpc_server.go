@@ -33,7 +33,7 @@ func (i *notificationService) SendNotification(
 	next, span := otelx.Tracer.Start(c, "notification.biz.SendNotification")
 	defer span.End()
 
-	ctx := contextx.Background()
+	ctx := contextx.WithContextx(c)
 
 	handler, err := userM.FromContext(c)
 	if err != nil {
@@ -56,10 +56,11 @@ func (i *notificationService) ListMyNotifications(
 	req *biz.ListMyNotificationsRequest,
 	stream biz.NotificationService_ListMyNotificationsServer,
 ) error {
-	next, span := otelx.Tracer.Start(stream.Context(), "notification.biz.ListMyNotifications")
+	c := stream.Context()
+	next, span := otelx.Tracer.Start(c, "notification.biz.ListMyNotifications")
 	defer span.End()
 
-	ctx := contextx.Background()
+	ctx := contextx.WithContextx(c)
 
 	handler, err := userM.FromContext(stream.Context())
 	if err != nil {

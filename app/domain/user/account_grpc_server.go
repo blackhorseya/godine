@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 
+	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/entity/domain/user/model"
 	"github.com/blackhorseya/godine/pkg/contextx"
@@ -21,7 +22,10 @@ func NewAccountService() biz.AccountServiceServer {
 }
 
 func (i *accountService) WhoAmI(c context.Context, empty *emptypb.Empty) (*model.Account, error) {
-	ctx := contextx.Background()
+	_, span := otelx.Tracer.Start(c, "user.biz.WhoAmI")
+	defer span.End()
+
+	ctx := contextx.WithContextx(c)
 
 	handler, err := model.FromContext(c)
 	if err != nil {
