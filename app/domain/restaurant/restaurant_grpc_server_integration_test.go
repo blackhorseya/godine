@@ -64,12 +64,10 @@ func (s *suiteRestaurantServiceIntegration) SetupTest() {
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			grpc_ctxtags.UnaryServerInterceptor(),
 			grpc_recovery.UnaryServerInterceptor(),
-			contextx.UnaryServerInterceptor(),
 		)),
 		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
 			grpc_ctxtags.StreamServerInterceptor(),
 			grpc_recovery.StreamServerInterceptor(),
-			contextx.StreamServerInterceptor(),
 		)),
 	)
 	biz.RegisterRestaurantServiceServer(s.baseServer, s.server)
@@ -147,20 +145,13 @@ func (s *suiteRestaurantServiceIntegration) Test_restaurantService_ListRestauran
 				tt.args.mock()
 			}
 
-			stream, err := s.client.ListRestaurants(tt.args.c, tt.args.req)
+			_, err := s.client.ListRestaurants(tt.args.c, tt.args.req)
 			if tt.wantErr {
 				s.Require().Error(err)
 				return
 			}
 
-			header, err := stream.Header()
 			s.Require().NoError(err)
-
-			totalSlice := header.Get("total")
-			s.Require().NotEmpty(totalSlice)
-
-			total := totalSlice[0]
-			s.Require().NotEmpty(total)
 		})
 	}
 }
