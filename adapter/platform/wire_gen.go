@@ -22,18 +22,8 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
-	biz6 "github.com/blackhorseya/godine/entity/domain/logistics/biz"
-	biz4 "github.com/blackhorseya/godine/entity/domain/notification/biz"
-	biz5 "github.com/blackhorseya/godine/entity/domain/order/biz"
-	biz3 "github.com/blackhorseya/godine/entity/domain/payment/biz"
-	biz2 "github.com/blackhorseya/godine/entity/domain/restaurant/biz"
-	"github.com/blackhorseya/godine/entity/domain/user/biz"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/spf13/viper"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/health"
-	"google.golang.org/grpc/health/grpc_health_v1"
-	"google.golang.org/grpc/reflection"
 )
 
 // Injectors from wire.go:
@@ -43,7 +33,7 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	application, err := initApplication(configuration)
+	application, err := InitApplication(configuration)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -149,37 +139,13 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 
 // wire.go:
 
-const serverName = "platform"
+const serviceName = "platform"
 
-// NewInitServersFn creates and returns a new InitServers function.
-func NewInitServersFn(
-	accountServer biz.AccountServiceServer,
-	restaurantServer biz2.RestaurantServiceServer,
-	menuServer biz2.MenuServiceServer,
-	paymentServer biz3.PaymentServiceServer,
-	notifyServer biz4.NotificationServiceServer,
-	orderServer biz5.OrderServiceServer,
-	logisticsServer biz6.LogisticsServiceServer,
-) grpcx.InitServers {
-	return func(s *grpc.Server) {
-		healthServer := health.NewServer()
-		grpc_health_v1.RegisterHealthServer(s, healthServer)
-		healthServer.SetServingStatus(serverName, grpc_health_v1.HealthCheckResponse_SERVING)
-		biz.RegisterAccountServiceServer(s, accountServer)
-		biz2.RegisterRestaurantServiceServer(s, restaurantServer)
-		biz2.RegisterMenuServiceServer(s, menuServer)
-		biz3.RegisterPaymentServiceServer(s, paymentServer)
-		biz4.RegisterNotificationServiceServer(s, notifyServer)
-		biz5.RegisterOrderServiceServer(s, orderServer)
-		biz6.RegisterLogisticsServiceServer(s, logisticsServer)
-		reflection.Register(s)
-	}
-}
-
-func initApplication(config *configx.Configuration) (*configx.Application, error) {
-	app, err := config.GetService(serverName)
+// InitApplication is used to initialize the application.
+func InitApplication(config *configx.Configuration) (*configx.Application, error) {
+	app, err := config.GetService(serviceName)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get service %s: %w", serverName, err)
+		return nil, fmt.Errorf("failed to get service %s: %w", serviceName, err)
 	}
 
 	return app, nil
