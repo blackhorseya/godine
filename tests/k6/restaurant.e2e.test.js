@@ -1,6 +1,5 @@
-import http from 'k6/http';
-import {check, group} from 'k6';
-import errorHandler from './errorHandler.js';
+import grpc from 'k6/net/grpc';
+import {check} from 'k6';
 
 const scenarios = {
   average_load: {
@@ -43,7 +42,8 @@ export const options = {
   } : scenarios,
 };
 
-const BASE_URL = __ENV || 'localhost:50051';
+const BASE_URL = __ENV.BASE_URL || 'localhost:50051';
+const client = new grpc.Client();
 
 // Sleep duration between successive requests.
 // You might want to edit the value of this variable or remove calls to the sleep function on the script.
@@ -51,34 +51,73 @@ const SLEEP_DURATION = 0.1;
 // Global variables should be initialized.
 
 export default function() {
-  // group('/v1/orders', () => {
-  //   {
-  //     let url = BASE_URL + `/v1/orders`;
-  //     let body = {
-  //       'items': [
-  //         {
-  //           'menu_item_id': '6685d61813c4956eac2592d0',
-  //           'quantity': 5,
-  //         },
-  //         {
-  //           'menu_item_id': '6685d61d13c4956eac2592d1',
-  //           'quantity': 3,
-  //         },
-  //       ],
-  //       'restaurant_id': '6685d60013c4956eac2592cf',
-  //       'user_id': '6685d5d9a1fddcdd0872b0ed',
-  //     };
-  //     let params = {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Accept': 'application/json',
-  //       },
-  //     };
-  //     let request = http.post(url, JSON.stringify(body), params);
-  //
-  //     errorHandler.logError(!check(request, {
-  //       'create an order is ok': (r) => r.status === 200,
-  //     }), request);
-  //   }
-  // });
+  client.connect(BASE_URL, {reflect: true, plaintext: true});
+
+  // 测试 CreateRestaurant 方法
+  let createResponse = client.invoke(
+      'restaurant.RestaurantService/CreateRestaurant', {
+        name: '测试餐厅',
+        address: {
+          street: '测试街道',
+          city: '测试城市',
+          state: '测试省份',
+          zip: '123456',
+        },
+      });
+
+  check(createResponse, {
+    'CreateRestaurant 成功': (r) => r && r.status === grpc.StatusOK,
+    'CreateRestaurant 返回有效的餐厅 ID': (r) => r && r.message &&
+        r.message.id !== undefined,
+  });
+
+  let restaurantId = createResponse.message.id;
+
+  // 测试 GetRestaurant 方法
+  let getResponse = client.invoke('restaurant.RestaurantService/GetRestaurant',
+      {
+        restaurant_id: restaurantId,
+      });
+
+  check(getResponse, {
+    'GetRestaurant 成功': (r) => r && r.status === grpc.StatusOK,
+    'GetRestaurant 返回正确的餐厅 ID': (r) => r && r.message && r.message.id ===
+        restaurantId,
+  });
+
+  // 测试 ListRestaurantsNonStream 方法
+  let listResponse = client.invoke(
+      'restaurant.RestaurantService/ListRestaurantsNonStream', {
+        page: 1,
+        page_size: 10,
+      });
+
+  check(listResponse, {
+    'ListRestaurantsNonStream 成功': (r) => r && r.status === grpc.StatusOK,
+    'ListRestaurantsNonStream 返回餐厅列表': (r) => r && r.message &&
+        r.message.restaurants && r.message.restaurants.length > 0,
+  });
+
+  // 测试 ListRestaurants 方法（流式响应）
+  let stream = client.invoke('restaurant.RestaurantService/ListRestaurants', {
+    page: 1,
+    page_size: 10,
+  });
+
+  stream.on('data', (message) => {
+    console.log('接收到餐厅信息:', message);
+  });
+
+  stream.on('error', (error) => {
+    console.error('流错误:', error);
+  });
+
+  stream.on('end', () => {
+    console.log('流结束');
+  });
+
+  // 等待流式响应完成
+  sleep(1);
+
+  client.close();
 }
