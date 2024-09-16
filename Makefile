@@ -83,6 +83,10 @@ gen-swagger: ## generate swagger
 #  -o ./api/notify/restful --instanceName notify_restful --parseDependency
 
 ### testing
+.PHONY: test-e2e-restaurant
+test-e2e-restaurant: ## test api
+	@k6 run --vus=1 --iterations=1 ./tests/k6/restaurant.e2e.test.js
+
 .PHONY: test-api-order
 test-api-order: ## test api
 	@k6 run --vus=1 --iterations=1 ./tests/k6/order.api.test.js
