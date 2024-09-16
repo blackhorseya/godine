@@ -21,9 +21,10 @@ import (
 )
 
 var defaultSkipPaths = []string{
-	"/grpc.health.v1.Health",
-	"/grpc.reflection.v1alpha.ServerReflection",
-	"/restaurant.RestaurantService",
+	"grpc.health.v1.Health",
+	"grpc.reflection.v1.ServerReflection",
+	"grpc.reflection.v1alpha.ServerReflection",
+	"restaurant.RestaurantService",
 }
 
 // Authx is a struct that represents the authx.

@@ -1,5 +1,5 @@
 import grpc from 'k6/net/grpc';
-import {check} from 'k6';
+import {check, sleep} from 'k6';
 
 const scenarios = {
   average_load: {
@@ -61,14 +61,15 @@ export default function() {
           street: '测试街道',
           city: '测试城市',
           state: '测试省份',
-          zip: '123456',
+          zip_code: '123456',
         },
       });
 
   check(createResponse, {
     'CreateRestaurant 成功': (r) => r && r.status === grpc.StatusOK,
     'CreateRestaurant 返回有效的餐厅 ID': (r) => r && r.message &&
-        r.message.id !== undefined,
+        r.message.id !== undefined && r.message.id !== null && r.message.id !==
+        '',
   });
 
   let restaurantId = createResponse.message.id;
@@ -99,25 +100,25 @@ export default function() {
   });
 
   // 测试 ListRestaurants 方法（流式响应）
-  let stream = client.invoke('restaurant.RestaurantService/ListRestaurants', {
+  client.invoke('restaurant.RestaurantService/ListRestaurants', {
     page: 1,
     page_size: 10,
-  });
+  }, (stream) => {
+    stream.on('data', (message) => {
+      console.log('接收到餐厅信息:', message);
+    });
 
-  stream.on('data', (message) => {
-    console.log('接收到餐厅信息:', message);
-  });
+    stream.on('error', (error) => {
+      console.error('流错误:', error);
+    });
 
-  stream.on('error', (error) => {
-    console.error('流错误:', error);
-  });
-
-  stream.on('end', () => {
-    console.log('流结束');
+    stream.on('end', () => {
+      console.log('流结束');
+    });
   });
 
   // 等待流式响应完成
-  sleep(1);
+  sleep(SLEEP_DURATION);
 
   client.close();
 }
