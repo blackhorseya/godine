@@ -61,3 +61,20 @@ func (i *restaurantHandler) ListRestaurantsNonStream(
 
 	return connect.NewResponse(resp), nil
 }
+
+func (i *restaurantHandler) PlaceOrder(
+	ctx context.Context,
+	c *connect.Request[biz.PlaceOrderRequest],
+) (*connect.Response[biz.PlaceOrderResponse], error) {
+	// TODO: 2024/10/2|sean|implement me
+	panic("implement me")
+}
+
+func (i *restaurantHandler) ListOrders(
+	ctx context.Context,
+	c *connect.Request[biz.ListOrdersRequest],
+	c2 *connect.ServerStream[model.Order],
+) error {
+	// TODO: 2024/10/2|sean|implement me
+	panic("implement me")
+}

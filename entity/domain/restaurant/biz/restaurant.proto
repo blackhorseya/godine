@@ -3,6 +3,7 @@ syntax = "proto3";
 package restaurant;
 
 import "domain/restaurant/model/restaurant.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/blackhorseya/godine/entity/domain/restaurant/biz";
 
@@ -26,9 +27,45 @@ message ListRestaurantsResponse {
   uint64 total = 2;
 }
 
+message PlaceOrderRequest {
+  // 餐廳ID
+  string restaurant_id = 1;
+
+  // 客戶ID
+  string customer_id = 2;
+
+  // 訂單內容
+  repeated restaurant.Dish dishes = 3;
+
+  // 訂單備註
+  string notes = 4;
+}
+
+message PlaceOrderResponse {
+  // 訂單ID
+  string order_id = 1;
+
+  // 訂單狀態
+  string status = 2;
+
+  // 預計完成時間
+  google.protobuf.Timestamp estimated_at = 3;
+}
+
+message ListOrdersRequest {
+  // 餐廳ID
+  string restaurant_id = 1;
+
+  // 客戶ID
+  string customer_id = 2;
+}
+
 service RestaurantService {
   rpc CreateRestaurant(CreateRestaurantRequest) returns (Restaurant) {}
   rpc ListRestaurants(ListRestaurantsRequest) returns (stream Restaurant) {}
   rpc GetRestaurant(GetRestaurantRequest) returns (Restaurant) {}
   rpc ListRestaurantsNonStream(ListRestaurantsRequest) returns (ListRestaurantsResponse) {}
+
+  rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse) {}
+  rpc ListOrders(ListOrdersRequest) returns (stream restaurant.Order) {}
 }

@@ -255,6 +255,248 @@ func (mr *MockRestaurantService_ListRestaurantsServerMockRecorder) SetTrailer(ar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTrailer", reflect.TypeOf((*MockRestaurantService_ListRestaurantsServer)(nil).SetTrailer), arg0)
 }
 
+// MockRestaurantService_ListOrdersClient is a mock of RestaurantService_ListOrdersClient interface.
+type MockRestaurantService_ListOrdersClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockRestaurantService_ListOrdersClientMockRecorder
+}
+
+// MockRestaurantService_ListOrdersClientMockRecorder is the mock recorder for MockRestaurantService_ListOrdersClient.
+type MockRestaurantService_ListOrdersClientMockRecorder struct {
+	mock *MockRestaurantService_ListOrdersClient
+}
+
+// NewMockRestaurantService_ListOrdersClient creates a new mock instance.
+func NewMockRestaurantService_ListOrdersClient(ctrl *gomock.Controller) *MockRestaurantService_ListOrdersClient {
+	mock := &MockRestaurantService_ListOrdersClient{ctrl: ctrl}
+	mock.recorder = &MockRestaurantService_ListOrdersClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRestaurantService_ListOrdersClient) EXPECT() *MockRestaurantService_ListOrdersClientMockRecorder {
+	return m.recorder
+}
+
+// CloseSend mocks base method.
+func (m *MockRestaurantService_ListOrdersClient) CloseSend() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CloseSend")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CloseSend indicates an expected call of CloseSend.
+func (mr *MockRestaurantService_ListOrdersClientMockRecorder) CloseSend() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloseSend", reflect.TypeOf((*MockRestaurantService_ListOrdersClient)(nil).CloseSend))
+}
+
+// Context mocks base method.
+func (m *MockRestaurantService_ListOrdersClient) Context() context.Context {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Context")
+	ret0, _ := ret[0].(context.Context)
+	return ret0
+}
+
+// Context indicates an expected call of Context.
+func (mr *MockRestaurantService_ListOrdersClientMockRecorder) Context() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Context", reflect.TypeOf((*MockRestaurantService_ListOrdersClient)(nil).Context))
+}
+
+// Header mocks base method.
+func (m *MockRestaurantService_ListOrdersClient) Header() (metadata.MD, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Header")
+	ret0, _ := ret[0].(metadata.MD)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Header indicates an expected call of Header.
+func (mr *MockRestaurantService_ListOrdersClientMockRecorder) Header() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Header", reflect.TypeOf((*MockRestaurantService_ListOrdersClient)(nil).Header))
+}
+
+// Recv mocks base method.
+func (m *MockRestaurantService_ListOrdersClient) Recv() (*model.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Recv")
+	ret0, _ := ret[0].(*model.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Recv indicates an expected call of Recv.
+func (mr *MockRestaurantService_ListOrdersClientMockRecorder) Recv() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Recv", reflect.TypeOf((*MockRestaurantService_ListOrdersClient)(nil).Recv))
+}
+
+// RecvMsg mocks base method.
+func (m *MockRestaurantService_ListOrdersClient) RecvMsg(arg0 interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RecvMsg", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RecvMsg indicates an expected call of RecvMsg.
+func (mr *MockRestaurantService_ListOrdersClientMockRecorder) RecvMsg(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RecvMsg", reflect.TypeOf((*MockRestaurantService_ListOrdersClient)(nil).RecvMsg), arg0)
+}
+
+// SendMsg mocks base method.
+func (m *MockRestaurantService_ListOrdersClient) SendMsg(arg0 interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendMsg", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendMsg indicates an expected call of SendMsg.
+func (mr *MockRestaurantService_ListOrdersClientMockRecorder) SendMsg(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMsg", reflect.TypeOf((*MockRestaurantService_ListOrdersClient)(nil).SendMsg), arg0)
+}
+
+// Trailer mocks base method.
+func (m *MockRestaurantService_ListOrdersClient) Trailer() metadata.MD {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Trailer")
+	ret0, _ := ret[0].(metadata.MD)
+	return ret0
+}
+
+// Trailer indicates an expected call of Trailer.
+func (mr *MockRestaurantService_ListOrdersClientMockRecorder) Trailer() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Trailer", reflect.TypeOf((*MockRestaurantService_ListOrdersClient)(nil).Trailer))
+}
+
+// MockRestaurantService_ListOrdersServer is a mock of RestaurantService_ListOrdersServer interface.
+type MockRestaurantService_ListOrdersServer struct {
+	ctrl     *gomock.Controller
+	recorder *MockRestaurantService_ListOrdersServerMockRecorder
+}
+
+// MockRestaurantService_ListOrdersServerMockRecorder is the mock recorder for MockRestaurantService_ListOrdersServer.
+type MockRestaurantService_ListOrdersServerMockRecorder struct {
+	mock *MockRestaurantService_ListOrdersServer
+}
+
+// NewMockRestaurantService_ListOrdersServer creates a new mock instance.
+func NewMockRestaurantService_ListOrdersServer(ctrl *gomock.Controller) *MockRestaurantService_ListOrdersServer {
+	mock := &MockRestaurantService_ListOrdersServer{ctrl: ctrl}
+	mock.recorder = &MockRestaurantService_ListOrdersServerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRestaurantService_ListOrdersServer) EXPECT() *MockRestaurantService_ListOrdersServerMockRecorder {
+	return m.recorder
+}
+
+// Context mocks base method.
+func (m *MockRestaurantService_ListOrdersServer) Context() context.Context {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Context")
+	ret0, _ := ret[0].(context.Context)
+	return ret0
+}
+
+// Context indicates an expected call of Context.
+func (mr *MockRestaurantService_ListOrdersServerMockRecorder) Context() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Context", reflect.TypeOf((*MockRestaurantService_ListOrdersServer)(nil).Context))
+}
+
+// RecvMsg mocks base method.
+func (m *MockRestaurantService_ListOrdersServer) RecvMsg(arg0 interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RecvMsg", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RecvMsg indicates an expected call of RecvMsg.
+func (mr *MockRestaurantService_ListOrdersServerMockRecorder) RecvMsg(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RecvMsg", reflect.TypeOf((*MockRestaurantService_ListOrdersServer)(nil).RecvMsg), arg0)
+}
+
+// Send mocks base method.
+func (m *MockRestaurantService_ListOrdersServer) Send(arg0 *model.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Send", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Send indicates an expected call of Send.
+func (mr *MockRestaurantService_ListOrdersServerMockRecorder) Send(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Send", reflect.TypeOf((*MockRestaurantService_ListOrdersServer)(nil).Send), arg0)
+}
+
+// SendHeader mocks base method.
+func (m *MockRestaurantService_ListOrdersServer) SendHeader(arg0 metadata.MD) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendHeader", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendHeader indicates an expected call of SendHeader.
+func (mr *MockRestaurantService_ListOrdersServerMockRecorder) SendHeader(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendHeader", reflect.TypeOf((*MockRestaurantService_ListOrdersServer)(nil).SendHeader), arg0)
+}
+
+// SendMsg mocks base method.
+func (m *MockRestaurantService_ListOrdersServer) SendMsg(arg0 interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendMsg", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendMsg indicates an expected call of SendMsg.
+func (mr *MockRestaurantService_ListOrdersServerMockRecorder) SendMsg(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMsg", reflect.TypeOf((*MockRestaurantService_ListOrdersServer)(nil).SendMsg), arg0)
+}
+
+// SetHeader mocks base method.
+func (m *MockRestaurantService_ListOrdersServer) SetHeader(arg0 metadata.MD) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetHeader", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetHeader indicates an expected call of SetHeader.
+func (mr *MockRestaurantService_ListOrdersServerMockRecorder) SetHeader(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetHeader", reflect.TypeOf((*MockRestaurantService_ListOrdersServer)(nil).SetHeader), arg0)
+}
+
+// SetTrailer mocks base method.
+func (m *MockRestaurantService_ListOrdersServer) SetTrailer(arg0 metadata.MD) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetTrailer", arg0)
+}
+
+// SetTrailer indicates an expected call of SetTrailer.
+func (mr *MockRestaurantService_ListOrdersServerMockRecorder) SetTrailer(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTrailer", reflect.TypeOf((*MockRestaurantService_ListOrdersServer)(nil).SetTrailer), arg0)
+}
+
 // MockRestaurantServiceClient is a mock of RestaurantServiceClient interface.
 type MockRestaurantServiceClient struct {
 	ctrl     *gomock.Controller
@@ -318,6 +560,26 @@ func (mr *MockRestaurantServiceClientMockRecorder) GetRestaurant(ctx, in interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRestaurant", reflect.TypeOf((*MockRestaurantServiceClient)(nil).GetRestaurant), varargs...)
 }
 
+// ListOrders mocks base method.
+func (m *MockRestaurantServiceClient) ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (RestaurantService_ListOrdersClient, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOrders", varargs...)
+	ret0, _ := ret[0].(RestaurantService_ListOrdersClient)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrders indicates an expected call of ListOrders.
+func (mr *MockRestaurantServiceClientMockRecorder) ListOrders(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrders", reflect.TypeOf((*MockRestaurantServiceClient)(nil).ListOrders), varargs...)
+}
+
 // ListRestaurants mocks base method.
 func (m *MockRestaurantServiceClient) ListRestaurants(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (RestaurantService_ListRestaurantsClient, error) {
 	m.ctrl.T.Helper()
@@ -356,6 +618,26 @@ func (mr *MockRestaurantServiceClientMockRecorder) ListRestaurantsNonStream(ctx,
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, in}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRestaurantsNonStream", reflect.TypeOf((*MockRestaurantServiceClient)(nil).ListRestaurantsNonStream), varargs...)
+}
+
+// PlaceOrder mocks base method.
+func (m *MockRestaurantServiceClient) PlaceOrder(ctx context.Context, in *PlaceOrderRequest, opts ...grpc.CallOption) (*PlaceOrderResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "PlaceOrder", varargs...)
+	ret0, _ := ret[0].(*PlaceOrderResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PlaceOrder indicates an expected call of PlaceOrder.
+func (mr *MockRestaurantServiceClientMockRecorder) PlaceOrder(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PlaceOrder", reflect.TypeOf((*MockRestaurantServiceClient)(nil).PlaceOrder), varargs...)
 }
 
 // MockRestaurantServiceServer is a mock of RestaurantServiceServer interface.
@@ -411,6 +693,20 @@ func (mr *MockRestaurantServiceServerMockRecorder) GetRestaurant(ctx, in interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRestaurant", reflect.TypeOf((*MockRestaurantServiceServer)(nil).GetRestaurant), ctx, in)
 }
 
+// ListOrders mocks base method.
+func (m *MockRestaurantServiceServer) ListOrders(blob *ListOrdersRequest, server RestaurantService_ListOrdersServer) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOrders", blob, server)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListOrders indicates an expected call of ListOrders.
+func (mr *MockRestaurantServiceServerMockRecorder) ListOrders(blob, server interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrders", reflect.TypeOf((*MockRestaurantServiceServer)(nil).ListOrders), blob, server)
+}
+
 // ListRestaurants mocks base method.
 func (m *MockRestaurantServiceServer) ListRestaurants(blob *ListRestaurantsRequest, server RestaurantService_ListRestaurantsServer) error {
 	m.ctrl.T.Helper()
@@ -438,4 +734,19 @@ func (m *MockRestaurantServiceServer) ListRestaurantsNonStream(ctx context.Conte
 func (mr *MockRestaurantServiceServerMockRecorder) ListRestaurantsNonStream(ctx, in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRestaurantsNonStream", reflect.TypeOf((*MockRestaurantServiceServer)(nil).ListRestaurantsNonStream), ctx, in)
+}
+
+// PlaceOrder mocks base method.
+func (m *MockRestaurantServiceServer) PlaceOrder(ctx context.Context, in *PlaceOrderRequest) (*PlaceOrderResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PlaceOrder", ctx, in)
+	ret0, _ := ret[0].(*PlaceOrderResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PlaceOrder indicates an expected call of PlaceOrder.
+func (mr *MockRestaurantServiceServerMockRecorder) PlaceOrder(ctx, in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PlaceOrder", reflect.TypeOf((*MockRestaurantServiceServer)(nil).PlaceOrder), ctx, in)
 }
