@@ -84,3 +84,55 @@ message MenuItem {
   // @gotags: bson:"quantity"
   uint32 quantity = 6;
 }
+
+message Order {
+  // ID is the unique identifier of the order.
+  // @gotags: bson:"_id"
+  string id = 1;
+
+  // RestaurantID is the unique identifier of the restaurant.
+  // @gotags: bson:"restaurant_id"
+  string restaurant_id = 2;
+
+  // CustomerID is the unique identifier of the customer.
+  // @gotags: bson:"customer_id"
+  string customer_id = 3;
+
+  // Dishes is the list of dishes in the order.
+  // @gotags: bson:"dishes"
+  repeated Dish dishes = 4;
+
+  // Notes is the notes for the order.
+  // @gotags: bson:"notes"
+  string notes = 5;
+
+  // Status is the status of the order.
+  // @gotags: bson:"status"
+  string status = 6;
+
+  // EstimatedAt is the estimated completion time of the order.
+  // @gotags: bson:"estimated_at"
+  google.protobuf.Timestamp estimated_at = 7;
+
+  // CreatedAt is the timestamp when the order was created.
+  // @gotags: bson:"created_at"
+  google.protobuf.Timestamp created_at = 8;
+
+  // UpdatedAt is the timestamp when the order was last updated.
+  // @gotags: bson:"updated_at"
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message Dish {
+  // MenuItemID is the unique identifier of the menu item.
+  // @gotags: bson:"menu_item_id"
+  string menu_item_id = 1;
+
+  // Quantity is the quantity of the dish.
+  // @gotags: bson:"quantity"
+  uint32 quantity = 2;
+
+  // Notes is the notes for the dish.
+  // @gotags: bson:"notes"
+  string notes = 3;
+}

@@ -24,6 +24,8 @@ const (
 	RestaurantService_ListRestaurants_FullMethodName          = "/restaurant.RestaurantService/ListRestaurants"
 	RestaurantService_GetRestaurant_FullMethodName            = "/restaurant.RestaurantService/GetRestaurant"
 	RestaurantService_ListRestaurantsNonStream_FullMethodName = "/restaurant.RestaurantService/ListRestaurantsNonStream"
+	RestaurantService_PlaceOrder_FullMethodName               = "/restaurant.RestaurantService/PlaceOrder"
+	RestaurantService_ListOrders_FullMethodName               = "/restaurant.RestaurantService/ListOrders"
 )
 
 // RestaurantServiceClient is the client API for RestaurantService service.
@@ -34,6 +36,8 @@ type RestaurantServiceClient interface {
 	ListRestaurants(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[model.Restaurant], error)
 	GetRestaurant(ctx context.Context, in *GetRestaurantRequest, opts ...grpc.CallOption) (*model.Restaurant, error)
 	ListRestaurantsNonStream(ctx context.Context, in *ListRestaurantsRequest, opts ...grpc.CallOption) (*ListRestaurantsResponse, error)
+	PlaceOrder(ctx context.Context, in *PlaceOrderRequest, opts ...grpc.CallOption) (*PlaceOrderResponse, error)
+	ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[model.Order], error)
 }
 
 type restaurantServiceClient struct {
@@ -93,6 +97,35 @@ func (c *restaurantServiceClient) ListRestaurantsNonStream(ctx context.Context, 
 	return out, nil
 }
 
+func (c *restaurantServiceClient) PlaceOrder(ctx context.Context, in *PlaceOrderRequest, opts ...grpc.CallOption) (*PlaceOrderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PlaceOrderResponse)
+	err := c.cc.Invoke(ctx, RestaurantService_PlaceOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *restaurantServiceClient) ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[model.Order], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &RestaurantService_ServiceDesc.Streams[1], RestaurantService_ListOrders_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ListOrdersRequest, model.Order]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type RestaurantService_ListOrdersClient = grpc.ServerStreamingClient[model.Order]
+
 // RestaurantServiceServer is the server API for RestaurantService service.
 // All implementations should embed UnimplementedRestaurantServiceServer
 // for forward compatibility.
@@ -101,6 +134,8 @@ type RestaurantServiceServer interface {
 	ListRestaurants(*ListRestaurantsRequest, grpc.ServerStreamingServer[model.Restaurant]) error
 	GetRestaurant(context.Context, *GetRestaurantRequest) (*model.Restaurant, error)
 	ListRestaurantsNonStream(context.Context, *ListRestaurantsRequest) (*ListRestaurantsResponse, error)
+	PlaceOrder(context.Context, *PlaceOrderRequest) (*PlaceOrderResponse, error)
+	ListOrders(*ListOrdersRequest, grpc.ServerStreamingServer[model.Order]) error
 }
 
 // UnimplementedRestaurantServiceServer should be embedded to have
@@ -121,6 +156,12 @@ func (UnimplementedRestaurantServiceServer) GetRestaurant(context.Context, *GetR
 }
 func (UnimplementedRestaurantServiceServer) ListRestaurantsNonStream(context.Context, *ListRestaurantsRequest) (*ListRestaurantsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRestaurantsNonStream not implemented")
+}
+func (UnimplementedRestaurantServiceServer) PlaceOrder(context.Context, *PlaceOrderRequest) (*PlaceOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PlaceOrder not implemented")
+}
+func (UnimplementedRestaurantServiceServer) ListOrders(*ListOrdersRequest, grpc.ServerStreamingServer[model.Order]) error {
+	return status.Errorf(codes.Unimplemented, "method ListOrders not implemented")
 }
 func (UnimplementedRestaurantServiceServer) testEmbeddedByValue() {}
 
@@ -207,6 +248,35 @@ func _RestaurantService_ListRestaurantsNonStream_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RestaurantService_PlaceOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PlaceOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RestaurantServiceServer).PlaceOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RestaurantService_PlaceOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RestaurantServiceServer).PlaceOrder(ctx, req.(*PlaceOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RestaurantService_ListOrders_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ListOrdersRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(RestaurantServiceServer).ListOrders(m, &grpc.GenericServerStream[ListOrdersRequest, model.Order]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type RestaurantService_ListOrdersServer = grpc.ServerStreamingServer[model.Order]
+
 // RestaurantService_ServiceDesc is the grpc.ServiceDesc for RestaurantService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -226,11 +296,20 @@ var RestaurantService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ListRestaurantsNonStream",
 			Handler:    _RestaurantService_ListRestaurantsNonStream_Handler,
 		},
+		{
+			MethodName: "PlaceOrder",
+			Handler:    _RestaurantService_PlaceOrder_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "ListRestaurants",
 			Handler:       _RestaurantService_ListRestaurants_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "ListOrders",
+			Handler:       _RestaurantService_ListOrders_Handler,
 			ServerStreams: true,
 		},
 	},

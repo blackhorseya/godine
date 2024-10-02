@@ -12,6 +12,7 @@ import (
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/blackhorseya/godine/pkg/persistence"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -123,4 +124,17 @@ func (i *restaurantService) ListRestaurantsNonStream(
 		Restaurants: items,
 		Total:       uint64(total),
 	}, nil
+}
+
+func (i *restaurantService) PlaceOrder(c context.Context, req *biz.PlaceOrderRequest) (*biz.PlaceOrderResponse, error) {
+	// TODO: 2024/10/2|sean|implement me
+	panic("implement me")
+}
+
+func (i *restaurantService) ListOrders(
+	req *biz.ListOrdersRequest,
+	stream grpc.ServerStreamingServer[model.Order],
+) error {
+	// TODO: 2024/10/2|sean|implement me
+	panic("implement me")
 }

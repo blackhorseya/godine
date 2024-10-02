@@ -23,6 +23,7 @@ go_library(
         "//pkg/persistence",
         "@com_github_google_wire//:wire",
         "@com_github_redis_go_redis_v9//:go-redis",
+        "@org_golang_google_grpc//:grpc",
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//metadata",
         "@org_golang_google_grpc//status",
