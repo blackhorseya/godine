@@ -1,4 +1,4 @@
-package logistics
+package event
 
 import (
 	"github.com/blackhorseya/godine/entity/domain/logistics/biz"

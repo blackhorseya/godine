@@ -1,0 +1,13 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "event",
+    srcs = ["delivery_event.go"],
+    importpath = "github.com/blackhorseya/godine/app/usecase/event",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//entity/domain/logistics/biz",
+        "//entity/domain/logistics/model",
+        "//pkg/contextx",
+    ],
+)

@@ -3,7 +3,6 @@ load("@rules_go//go:def.bzl", "go_library")
 go_library(
     name = "logistics",
     srcs = [
-        "handler.go",
         "logistics_grpc_client.go",
         "logistics_grpc_server.go",
         "wire.go",
