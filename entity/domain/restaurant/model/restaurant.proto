@@ -79,4 +79,8 @@ message MenuItem {
   // IsAvailable is the availability of the menu item.
   // @gotags: bson:"is_available"
   bool is_available = 5;
+
+  // Quantity is the stock quantity of the menu item.
+  // @gotags: bson:"quantity"
+  uint32 quantity = 6;
 }
