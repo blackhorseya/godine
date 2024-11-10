@@ -7,7 +7,6 @@ package platform
 import (
 	"fmt"
 
-	"github.com/blackhorseya/godine/adapter/platform/handlers"
 	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
 	"github.com/blackhorseya/godine/app/domain/order"
@@ -64,6 +63,5 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 		snowflakex.NewNode,
 		postgresqlx.NewClient,
 		mongodbx.NewClientWithClean,
-		handlers.NewRestaurantServiceHandler,
 	))
 }

@@ -6,18 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"connectrpc.com/connect"
-	"connectrpc.com/grpchealth"
-	"connectrpc.com/grpcreflect"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
-	"github.com/blackhorseya/godine/entity/domain/restaurant/biz/bizconnect"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/cors"
 	"go.uber.org/zap"
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
 )
 
 type impl struct {
@@ -85,20 +79,20 @@ func (i *impl) Shutdown(c context.Context) error {
 
 func (i *impl) InitRouting() error {
 	// grpc
-	compress1KB := connect.WithCompressMinBytes(1024)
-	api := http.NewServeMux()
-	api.Handle(bizconnect.NewRestaurantServiceHandler(i.injector.RestaurantServiceHandler, compress1KB))
-
-	mux := http.NewServeMux()
-	mux.Handle("/grpc/", http.StripPrefix("/grpc", api))
-	mux.Handle(grpchealth.NewHandler(grpchealth.NewStaticChecker(bizconnect.RestaurantServiceName), compress1KB))
-	mux.Handle(grpcreflect.NewHandlerV1(grpcreflect.NewStaticReflector(bizconnect.RestaurantServiceName), compress1KB))
-	mux.Handle(grpcreflect.NewHandlerV1Alpha(
-		grpcreflect.NewStaticReflector(bizconnect.RestaurantServiceName),
-		compress1KB,
-	))
-
-	i.httpserver.Handler = h2c.NewHandler(newCORS().Handler(mux), &http2.Server{})
+	// compress1KB := connect.WithCompressMinBytes(1024)
+	// api := http.NewServeMux()
+	// api.Handle(bizconnect.NewRestaurantServiceHandler(i.injector.RestaurantServiceHandler, compress1KB))
+	//
+	// mux := http.NewServeMux()
+	// mux.Handle("/grpc/", http.StripPrefix("/grpc", api))
+	// mux.Handle(grpchealth.NewHandler(grpchealth.NewStaticChecker(bizconnect.RestaurantServiceName), compress1KB))
+	// mux.Handle(grpcreflect.NewHandlerV1(grpcreflect.NewStaticReflector(bizconnect.RestaurantServiceName), compress1KB))
+	// mux.Handle(grpcreflect.NewHandlerV1Alpha(
+	// 	grpcreflect.NewStaticReflector(bizconnect.RestaurantServiceName),
+	// 	compress1KB,
+	// ))
+	//
+	// i.httpserver.Handler = h2c.NewHandler(newCORS().Handler(mux), &http2.Server{})
 
 	return nil
 }

@@ -8,7 +8,6 @@ package platform
 
 import (
 	"fmt"
-	"github.com/blackhorseya/godine/adapter/platform/handlers"
 	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
 	"github.com/blackhorseya/godine/app/domain/order"
@@ -46,36 +45,24 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	client, err := grpcx.NewClient(configuration, authxAuthx)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	restaurantServiceClient, err := restaurant.NewRestaurantServiceClient(client)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	restaurantServiceHandler := handlers.NewRestaurantServiceHandler(restaurantServiceClient)
 	injector := &Injector{
-		C:                        configuration,
-		A:                        application,
-		OTelx:                    sdk,
-		Authx:                    authxAuthx,
-		RestaurantServiceHandler: restaurantServiceHandler,
+		C:     configuration,
+		A:     application,
+		OTelx: sdk,
+		Authx: authxAuthx,
 	}
 	accountServiceServer := user.NewAccountService()
-	mongoClient, cleanup2, err := mongodbx.NewClientWithClean(application)
+	client, cleanup2, err := mongodbx.NewClientWithClean(application)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	iRestaurantRepo := mongodbx.NewRestaurantRepo(mongoClient)
+	iRestaurantRepo := mongodbx.NewRestaurantRepo(client)
 	restaurantServiceServer := restaurant.NewRestaurantService(iRestaurantRepo)
 	menuServiceServer := restaurant.NewMenuService(iRestaurantRepo)
-	iPaymentRepo := mongodbx.NewPaymentRepo(mongoClient)
+	iPaymentRepo := mongodbx.NewPaymentRepo(client)
 	paymentServiceServer := payment.NewPaymentService(iPaymentRepo)
-	iNotificationRepo := mongodbx.NewNotificationRepo(mongoClient)
+	iNotificationRepo := mongodbx.NewNotificationRepo(client)
 	notificationServiceServer := notification.NewNotificationService(iNotificationRepo)
 	db, err := postgresqlx.NewClient(application)
 	if err != nil {
@@ -90,38 +77,50 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 		return nil, nil, err
 	}
 	iOrderRepo := postgresqlx.NewOrderRepo(db, node)
-	menuServiceClient, err := restaurant.NewMenuServiceClient(client)
+	grpcxClient, err := grpcx.NewClient(configuration, authxAuthx)
 	if err != nil {
 		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
-	accountServiceClient, err := user.NewAccountServiceClient(client)
+	restaurantServiceClient, err := restaurant.NewRestaurantServiceClient(grpcxClient)
 	if err != nil {
 		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
-	notificationServiceClient, err := notification.NewNotificationServiceClient(client)
+	menuServiceClient, err := restaurant.NewMenuServiceClient(grpcxClient)
 	if err != nil {
 		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
-	paymentServiceClient, err := payment.NewPaymentServiceClient(client)
+	accountServiceClient, err := user.NewAccountServiceClient(grpcxClient)
 	if err != nil {
 		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
-	logisticsServiceClient, err := logistics.NewLogisticsServiceClient(client)
+	notificationServiceClient, err := notification.NewNotificationServiceClient(grpcxClient)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	paymentServiceClient, err := payment.NewPaymentServiceClient(grpcxClient)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	logisticsServiceClient, err := logistics.NewLogisticsServiceClient(grpcxClient)
 	if err != nil {
 		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	orderServiceServer := order.NewOrderService(iOrderRepo, restaurantServiceClient, menuServiceClient, accountServiceClient, notificationServiceClient, paymentServiceClient, logisticsServiceClient)
-	iDeliveryRepo := mongodbx.NewDeliveryRepo(mongoClient)
+	iDeliveryRepo := mongodbx.NewDeliveryRepo(client)
 	logisticsServiceServer := logistics.NewLogisticsService(iDeliveryRepo, notificationServiceClient)
 	initServers := NewInitServersFn(accountServiceServer, restaurantServiceServer, menuServiceServer, paymentServiceServer, notificationServiceServer, orderServiceServer, logisticsServiceServer)
 	server, err := grpcx.NewServer(application, initServers, authxAuthx)
