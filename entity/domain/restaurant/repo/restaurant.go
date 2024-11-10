@@ -13,5 +13,5 @@ import (
 type IRestaurantRepo interface {
 	persistence.IRepository[*model.Restaurant]
 
-	CreateReservation(c context.Context, reservation *model.Order) error
+	CreateReservation(c context.Context, restaurant *model.Restaurant, reservation *model.Order) error
 }

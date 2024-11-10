@@ -27,7 +27,11 @@ func NewRestaurantRepo(rw *mongo.Client) repo.IRestaurantRepo {
 	}
 }
 
-func (x *mongodbRestaurantRepo) CreateReservation(c context.Context, reservation *model.Order) error {
-	// TODO: 2024/11/10|sean|implement me
-	panic("implement me")
+func (x *mongodbRestaurantRepo) CreateReservation(
+	c context.Context,
+	restaurant *model.Restaurant,
+	reservation *model.Order,
+) error {
+	// TODO: 2024/11/10|sean|implement CreateReservation
+	return nil
 }

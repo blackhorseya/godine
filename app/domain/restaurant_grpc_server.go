@@ -157,7 +157,7 @@ func (i *restaurantService) PlaceOrder(c context.Context, req *biz.PlaceOrderReq
 		CreatedAt:    nil,
 		UpdatedAt:    nil,
 	}
-	err = i.restaurants.CreateReservation(next, order)
+	err = i.restaurants.CreateReservation(next, restaurant, order)
 	if err != nil {
 		ctx.Error("failed to create order", zap.Error(err))
 		return nil, err

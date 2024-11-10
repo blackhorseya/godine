@@ -61,7 +61,7 @@ func (s *suiteRestaurantServiceTester) Test_restaurantService_PlaceOrder() {
 			name: "reservation failed",
 			args: args{req: &biz.PlaceOrderRequest{RestaurantId: "found"}, mock: func() {
 				s.repo.EXPECT().GetByID(gomock.Any(), "found").Return(&model.Restaurant{Id: "found"}, nil).Times(1)
-				s.repo.EXPECT().CreateReservation(gomock.Any(), gomock.Any()).
+				s.repo.EXPECT().CreateReservation(gomock.Any(), gomock.Any(), gomock.Any()).
 					Return(errors.New("create reservation failed")).
 					Times(1)
 			}},
@@ -72,7 +72,7 @@ func (s *suiteRestaurantServiceTester) Test_restaurantService_PlaceOrder() {
 			name: "reservation success",
 			args: args{req: &biz.PlaceOrderRequest{RestaurantId: "found"}, mock: func() {
 				s.repo.EXPECT().GetByID(gomock.Any(), "found").Return(&model.Restaurant{Id: "found"}, nil).Times(1)
-				s.repo.EXPECT().CreateReservation(gomock.Any(), gomock.Any()).Return(nil).Times(1)
+				s.repo.EXPECT().CreateReservation(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).Times(1)
 			}},
 			want:    &biz.PlaceOrderResponse{OrderId: "", Status: "reserved"},
 			wantErr: false,

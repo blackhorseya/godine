@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/stretchr/testify/suite"
@@ -44,4 +45,40 @@ func (s *suiteRestaurantRepoTester) TearDownTest() {
 
 func TestAllRestaurantRepoTester(t *testing.T) {
 	suite.Run(t, new(suiteRestaurantRepoTester))
+}
+
+func (s *suiteRestaurantRepoTester) Test_mongodbRestaurantRepo_CreateReservation() {
+	type args struct {
+		c           context.Context
+		restaurant  *model.Restaurant
+		reservation *model.Order
+		mock        func()
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    "create reservation success",
+			args:    args{},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		s.T().Run(tt.name, func(t *testing.T) {
+			tt.args.c = context.Background()
+			if tt.args.mock != nil {
+				tt.args.mock()
+			}
+
+			if err := s.repo.CreateReservation(
+				tt.args.c,
+				tt.args.restaurant,
+				tt.args.reservation,
+			); (err != nil) != tt.wantErr {
+				t.Errorf("CreateReservation() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
 }

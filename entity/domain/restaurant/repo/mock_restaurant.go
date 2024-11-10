@@ -56,17 +56,17 @@ func (mr *MockIRestaurantRepoMockRecorder) Create(c, item any) *gomock.Call {
 }
 
 // CreateReservation mocks base method.
-func (m *MockIRestaurantRepo) CreateReservation(c context.Context, reservation *model.Order) error {
+func (m *MockIRestaurantRepo) CreateReservation(c context.Context, restaurant *model.Restaurant, reservation *model.Order) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateReservation", c, reservation)
+	ret := m.ctrl.Call(m, "CreateReservation", c, restaurant, reservation)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateReservation indicates an expected call of CreateReservation.
-func (mr *MockIRestaurantRepoMockRecorder) CreateReservation(c, reservation any) *gomock.Call {
+func (mr *MockIRestaurantRepoMockRecorder) CreateReservation(c, restaurant, reservation any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateReservation", reflect.TypeOf((*MockIRestaurantRepo)(nil).CreateReservation), c, reservation)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateReservation", reflect.TypeOf((*MockIRestaurantRepo)(nil).CreateReservation), c, restaurant, reservation)
 }
 
 // Delete mocks base method.
