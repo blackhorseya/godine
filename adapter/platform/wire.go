@@ -7,6 +7,7 @@ package platform
 import (
 	"fmt"
 
+	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
 	"github.com/blackhorseya/godine/app/domain/order"
@@ -41,7 +42,7 @@ func InitApplication(config *configx.Configuration) (*configx.Application, error
 func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	panic(wire.Build(
 		NewServer,
-		wire.Struct(new(Injector), "*"),
+		wire.Struct(new(wirex.Injector), "*"),
 		grpcx.NewServer,
 		httpx.NewServer,
 		InitApplication,

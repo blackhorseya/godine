@@ -5,13 +5,13 @@ go_library(
     srcs = [
         "grpc_server.go",
         "impl.go",
-        "injector.go",
         "wire_gen.go",
     ],
     importpath = "github.com/blackhorseya/godine/adapter/platform",
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/platform/v1:platform",
+        "//adapter/platform/wirex",
         "//app/domain/logistics",
         "//app/domain/notification",
         "//app/domain/order",

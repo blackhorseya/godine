@@ -7,6 +7,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//adapter/platform/v1/orders",
+        "//adapter/platform/wirex",
         "@com_github_gin_gonic_gin//:gin",
     ],
 )

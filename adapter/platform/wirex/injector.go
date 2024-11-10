@@ -1,4 +1,4 @@
-package platform
+package wirex
 
 import (
 	"github.com/blackhorseya/godine/app/infra/authx"

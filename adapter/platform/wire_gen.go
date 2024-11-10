@@ -8,6 +8,7 @@ package platform
 
 import (
 	"fmt"
+	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	"github.com/blackhorseya/godine/app/domain/logistics"
 	"github.com/blackhorseya/godine/app/domain/notification"
 	"github.com/blackhorseya/godine/app/domain/order"
@@ -46,7 +47,7 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	injector := &Injector{
+	injector := &wirex.Injector{
 		C:     configuration,
 		A:     application,
 		OTelx: sdk,

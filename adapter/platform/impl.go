@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	v1 "github.com/blackhorseya/godine/adapter/platform/v1"
+	"github.com/blackhorseya/godine/adapter/platform/wirex"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -15,13 +16,13 @@ import (
 )
 
 type impl struct {
-	injector   *Injector
+	injector   *wirex.Injector
 	grpcserver *grpcx.Server
 	httpserver *httpx.Server
 }
 
 // NewServer creates and returns a new grpcserver.
-func NewServer(injector *Injector, grpcserver *grpcx.Server, httpserver *httpx.Server) adapterx.Server {
+func NewServer(injector *wirex.Injector, grpcserver *grpcx.Server, httpserver *httpx.Server) adapterx.Server {
 	return &impl{
 		injector:   injector,
 		grpcserver: grpcserver,
@@ -73,7 +74,7 @@ func (i *impl) InitRouting() error {
 	router := i.httpserver.Router
 
 	api := router.Group("api")
-	v1.Handler(api)
+	v1.Handler(api, i.injector)
 
 	return nil
 }
