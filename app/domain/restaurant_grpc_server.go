@@ -135,9 +135,9 @@ func (i *restaurantService) PlaceOrder(c context.Context, req *biz.PlaceOrderReq
 	ctx := contextx.WithContextx(c)
 
 	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
-	if err != nil {
-		ctx.Error("get restaurant by id failed", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
-		return nil, err
+	if restaurant == nil {
+		ctx.Error("restaurant not found", zap.Error(err))
+		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
 	reserved, err := i.reserveInventory(next, restaurant.Id, req.Dishes)
