@@ -14,7 +14,7 @@ import (
 	reflect "reflect"
 
 	model "github.com/blackhorseya/godine/entity/domain/restaurant/model"
-	utils "github.com/blackhorseya/godine/pkg/persistence"
+	persistence "github.com/blackhorseya/godine/pkg/persistence"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -55,6 +55,20 @@ func (mr *MockIRestaurantRepoMockRecorder) Create(c, item any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIRestaurantRepo)(nil).Create), c, item)
 }
 
+// CreateReservation mocks base method.
+func (m *MockIRestaurantRepo) CreateReservation(c context.Context, reservation *model.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateReservation", c, reservation)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateReservation indicates an expected call of CreateReservation.
+func (mr *MockIRestaurantRepoMockRecorder) CreateReservation(c, reservation any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateReservation", reflect.TypeOf((*MockIRestaurantRepo)(nil).CreateReservation), c, reservation)
+}
+
 // Delete mocks base method.
 func (m *MockIRestaurantRepo) Delete(c context.Context, id string) error {
 	m.ctrl.T.Helper()
@@ -85,7 +99,7 @@ func (mr *MockIRestaurantRepoMockRecorder) GetByID(c, id any) *gomock.Call {
 }
 
 // List mocks base method.
-func (m *MockIRestaurantRepo) List(c context.Context, cond utils.Pagination) ([]*model.Restaurant, int, error) {
+func (m *MockIRestaurantRepo) List(c context.Context, cond persistence.Pagination) ([]*model.Restaurant, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", c, cond)
 	ret0, _ := ret[0].([]*model.Restaurant)
