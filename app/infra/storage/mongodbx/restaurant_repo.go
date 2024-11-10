@@ -1,6 +1,8 @@
 package mongodbx
 
 import (
+	"context"
+
 	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/persistence"
@@ -23,4 +25,9 @@ func NewRestaurantRepo(rw *mongo.Client) repo.IRestaurantRepo {
 		rw:          rw,
 		coll:        coll,
 	}
+}
+
+func (x *mongodbRestaurantRepo) CreateReservation(c context.Context, reservation *model.Order) error {
+	// TODO: 2024/11/10|sean|implement me
+	panic("implement me")
 }
