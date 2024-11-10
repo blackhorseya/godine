@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"strconv"
+	"time"
 
 	"github.com/blackhorseya/godine/app/infra/otelx"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
@@ -16,6 +17,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type restaurantService struct {
@@ -127,8 +129,46 @@ func (i *restaurantService) ListRestaurantsNonStream(
 }
 
 func (i *restaurantService) PlaceOrder(c context.Context, req *biz.PlaceOrderRequest) (*biz.PlaceOrderResponse, error) {
-	// TODO: 2024/10/2|sean|implement me
-	panic("implement me")
+	next, span := otelx.Tracer.Start(c, "restaurant.biz.PlaceOrder")
+	defer span.End()
+
+	ctx := contextx.WithContextx(c)
+
+	restaurant, err := i.restaurants.GetByID(next, req.RestaurantId)
+	if err != nil {
+		ctx.Error("get restaurant by id failed", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
+		return nil, err
+	}
+
+	reserved, err := i.reserveInventory(next, restaurant.Id, req.Dishes)
+	if !reserved {
+		ctx.Error("failed to reserve inventory", zap.Error(err))
+		return nil, err
+	}
+
+	order := &model.Order{
+		Id:           "",
+		RestaurantId: restaurant.Id,
+		CustomerId:   req.CustomerId,
+		Dishes:       req.Dishes,
+		Notes:        req.Notes,
+		Status:       "reserved",
+		EstimatedAt:  timestamppb.New(time.Now().Add(30 * time.Minute)),
+		CreatedAt:    nil,
+		UpdatedAt:    nil,
+	}
+	err = i.restaurants.CreateReservation(next, order)
+	if err != nil {
+		ctx.Error("failed to create order", zap.Error(err))
+		return nil, err
+	}
+	ctx.Debug("order created", zap.Any("order", &order))
+
+	return &biz.PlaceOrderResponse{
+		OrderId:     order.Id,
+		Status:      order.Status,
+		EstimatedAt: order.EstimatedAt,
+	}, nil
 }
 
 func (i *restaurantService) ListOrders(
@@ -136,5 +176,14 @@ func (i *restaurantService) ListOrders(
 	stream grpc.ServerStreamingServer[model.Order],
 ) error {
 	// TODO: 2024/10/2|sean|implement me
+	panic("implement me")
+}
+
+func (i *restaurantService) reserveInventory(
+	c context.Context,
+	restaurantID string,
+	dishes []*model.Dish,
+) (bool, error) {
+	// TODO: 2024/11/10|sean|implement me
 	panic("implement me")
 }

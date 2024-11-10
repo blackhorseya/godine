@@ -7,7 +7,6 @@ import (
 	"net"
 	"testing"
 
-	"github.com/blackhorseya/godine/app/domain/restaurant"
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/redix"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
@@ -55,9 +54,9 @@ func (s *suiteRestaurantServiceIntegration) SetupTest() {
 	s.Require().NoError(err)
 	s.rdb = rdb
 
-	server, err := restaurant.NewIntegration(s.rw, s.rdb)
-	s.Require().NoError(err)
-	s.server = server
+	// server, err := restaurant.NewIntegration(s.rw, s.rdb)
+	// s.Require().NoError(err)
+	// s.server = server
 
 	buffer := 10 * 1024 * 1024
 	listen := bufconn.Listen(buffer)
