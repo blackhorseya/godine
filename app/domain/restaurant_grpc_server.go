@@ -140,7 +140,7 @@ func (i *restaurantService) PlaceOrder(c context.Context, req *biz.PlaceOrderReq
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	reserved, err := i.reserveInventory(next, restaurant.Id, req.Dishes)
+	reserved, err := i.reserveInventory(next, restaurant, req.Dishes)
 	if !reserved {
 		ctx.Error("failed to reserve inventory", zap.Error(err))
 		return nil, err
@@ -181,9 +181,25 @@ func (i *restaurantService) ListOrders(
 
 func (i *restaurantService) reserveInventory(
 	c context.Context,
-	restaurantID string,
+	restaurant *model.Restaurant,
 	dishes []*model.Dish,
 ) (bool, error) {
-	// TODO: 2024/11/10|sean|implement me
-	panic("implement me")
+	_, span := otelx.Tracer.Start(c, "restaurant.biz.reserveInventory")
+	defer span.End()
+
+	ctx := contextx.WithContextx(c)
+
+	for _, menu := range restaurant.Menu {
+		for _, dish := range dishes {
+			if menu.Id == dish.MenuItemId {
+				if menu.Quantity < dish.Quantity {
+					ctx.Error("inventory not enough", zap.Any("menu", &menu), zap.Any("dish", &dish))
+					return false, status.Error(codes.FailedPrecondition, "inventory not enough")
+				}
+				menu.Quantity -= dish.Quantity
+			}
+		}
+	}
+
+	return true, nil
 }

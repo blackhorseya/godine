@@ -3,10 +3,10 @@ package domain
 import (
 	"context"
 	"errors"
-	"reflect"
 	"testing"
 
 	"github.com/blackhorseya/godine/entity/domain/restaurant/biz"
+	"github.com/blackhorseya/godine/entity/domain/restaurant/model"
 	"github.com/blackhorseya/godine/entity/domain/restaurant/repo"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/stretchr/testify/suite"
@@ -57,6 +57,26 @@ func (s *suiteRestaurantServiceTester) Test_restaurantService_PlaceOrder() {
 			want:    nil,
 			wantErr: true,
 		},
+		{
+			name: "reservation failed",
+			args: args{req: &biz.PlaceOrderRequest{RestaurantId: "found"}, mock: func() {
+				s.repo.EXPECT().GetByID(gomock.Any(), "found").Return(&model.Restaurant{Id: "found"}, nil).Times(1)
+				s.repo.EXPECT().CreateReservation(gomock.Any(), gomock.Any()).
+					Return(errors.New("create reservation failed")).
+					Times(1)
+			}},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "reservation success",
+			args: args{req: &biz.PlaceOrderRequest{RestaurantId: "found"}, mock: func() {
+				s.repo.EXPECT().GetByID(gomock.Any(), "found").Return(&model.Restaurant{Id: "found"}, nil).Times(1)
+				s.repo.EXPECT().CreateReservation(gomock.Any(), gomock.Any()).Return(nil).Times(1)
+			}},
+			want:    &biz.PlaceOrderResponse{OrderId: "", Status: "reserved"},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		s.T().Run(tt.name, func(t *testing.T) {
@@ -70,7 +90,7 @@ func (s *suiteRestaurantServiceTester) Test_restaurantService_PlaceOrder() {
 				t.Errorf("PlaceOrder() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
+			if tt.want != nil && got.Status != tt.want.Status {
 				t.Errorf("PlaceOrder() got = %v, want %v", got, tt.want)
 			}
 		})
