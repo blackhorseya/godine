@@ -4,34 +4,27 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
+	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/blackhorseya/godine/pkg/contextx"
 	"github.com/gin-gonic/gin"
-	"github.com/rs/cors"
 	"go.uber.org/zap"
 )
 
 type impl struct {
 	injector   *Injector
 	grpcserver *grpcx.Server
-	httpserver *http.Server
+	httpserver *httpx.Server
 }
 
 // NewServer creates and returns a new grpcserver.
-func NewServer(injector *Injector, grpcserver *grpcx.Server) adapterx.Server {
+func NewServer(injector *Injector, grpcserver *grpcx.Server, httpserver *httpx.Server) adapterx.Server {
 	return &impl{
 		injector:   injector,
 		grpcserver: grpcserver,
-		httpserver: &http.Server{
-			Addr:              injector.A.HTTP.GetAddr(),
-			ReadHeaderTimeout: time.Second,
-			ReadTimeout:       10 * time.Second,
-			WriteTimeout:      10 * time.Second,
-			MaxHeaderBytes:    8 * 1024,
-		},
+		httpserver: httpserver,
 	}
 }
 
@@ -50,9 +43,7 @@ func (i *impl) Start(c context.Context) error {
 	}
 
 	go func() {
-		ctx.Info("http server start", zap.String("addr", i.httpserver.Addr))
-
-		if err = i.httpserver.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err = i.httpserver.Start(ctx); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			ctx.Error("Failed to start http server", zap.Error(err))
 		}
 	}()
@@ -69,7 +60,7 @@ func (i *impl) Shutdown(c context.Context) error {
 		return err
 	}
 
-	if err := i.httpserver.Close(); err != nil {
+	if err := i.httpserver.Stop(ctx); err != nil {
 		ctx.Error("Failed to close http server", zap.Error(err))
 		return err
 	}
@@ -78,64 +69,10 @@ func (i *impl) Shutdown(c context.Context) error {
 }
 
 func (i *impl) InitRouting() error {
-	// grpc
-	// compress1KB := connect.WithCompressMinBytes(1024)
-	// api := http.NewServeMux()
-	// api.Handle(bizconnect.NewRestaurantServiceHandler(i.injector.RestaurantServiceHandler, compress1KB))
-	//
-	// mux := http.NewServeMux()
-	// mux.Handle("/grpc/", http.StripPrefix("/grpc", api))
-	// mux.Handle(grpchealth.NewHandler(grpchealth.NewStaticChecker(bizconnect.RestaurantServiceName), compress1KB))
-	// mux.Handle(grpcreflect.NewHandlerV1(grpcreflect.NewStaticReflector(bizconnect.RestaurantServiceName), compress1KB))
-	// mux.Handle(grpcreflect.NewHandlerV1Alpha(
-	// 	grpcreflect.NewStaticReflector(bizconnect.RestaurantServiceName),
-	// 	compress1KB,
-	// ))
-	//
-	// i.httpserver.Handler = h2c.NewHandler(newCORS().Handler(mux), &http2.Server{})
-
+	// TODO: 2024/11/10|sean|init routing
 	return nil
 }
 
 func (i *impl) GetRouter() *gin.Engine {
-	return nil
-}
-
-func newCORS() *cors.Cors {
-	// To let web developers play with the demo service from browsers, we need a
-	// very permissive CORS setup.
-	return cors.New(cors.Options{
-		AllowedMethods: []string{
-			http.MethodHead,
-			http.MethodGet,
-			http.MethodPost,
-			http.MethodPut,
-			http.MethodPatch,
-			http.MethodDelete,
-		},
-		AllowOriginFunc: func(origin string) bool {
-			// Allow all origins, which effectively disables CORS.
-			return true
-		},
-		AllowedHeaders: []string{"*"},
-		ExposedHeaders: []string{
-			// Content-Type is in the default safe list.
-			"Accept",
-			"Accept-Encoding",
-			"Accept-Post",
-			"Connect-Accept-Encoding",
-			"Connect-Content-Encoding",
-			"Content-Encoding",
-			"Grpc-Accept-Encoding",
-			"Grpc-Encoding",
-			"Grpc-Message",
-			"Grpc-Status",
-			"Grpc-Status-Details-Bin",
-		},
-		// Let browsers cache CORS information for longer, which reduces the number
-		// of preflight requests. Any changes to ExposedHeaders won't take effect
-		// until the cached data expires. FF caps this value at 24h, and modern
-		// Chrome caps it at 2h.
-		MaxAge: int(2 * time.Hour / time.Second),
-	})
+	return i.httpserver.Router
 }

@@ -20,6 +20,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
+	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
@@ -42,6 +43,7 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 		NewServer,
 		wire.Struct(new(Injector), "*"),
 		grpcx.NewServer,
+		httpx.NewServer,
 		InitApplication,
 		configx.NewConfiguration,
 		NewInitServersFn,

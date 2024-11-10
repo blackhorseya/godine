@@ -21,6 +21,7 @@ import (
 	"github.com/blackhorseya/godine/app/infra/storage/mongodbx"
 	"github.com/blackhorseya/godine/app/infra/storage/postgresqlx"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
+	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
 	"github.com/spf13/viper"
 )
@@ -129,7 +130,13 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	adapterxServer := NewServer(injector, server)
+	httpxServer, err := httpx.NewServer(application)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	adapterxServer := NewServer(injector, server, httpxServer)
 	return adapterxServer, func() {
 		cleanup2()
 		cleanup()

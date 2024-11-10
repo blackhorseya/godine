@@ -1,0 +1,9 @@
+load("@rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "platform",
+    srcs = ["api.go"],
+    importpath = "github.com/blackhorseya/godine/adapter/platform/v1",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_gin_gonic_gin//:gin"],
+)
