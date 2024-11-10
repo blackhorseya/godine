@@ -1,4 +1,4 @@
-package restaurant
+package domain
 
 import (
 	"context"

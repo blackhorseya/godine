@@ -8,12 +8,7 @@ import (
 	"fmt"
 
 	"github.com/blackhorseya/godine/adapter/platform/wirex"
-	"github.com/blackhorseya/godine/app/domain/logistics"
-	"github.com/blackhorseya/godine/app/domain/notification"
-	"github.com/blackhorseya/godine/app/domain/order"
-	"github.com/blackhorseya/godine/app/domain/payment"
-	"github.com/blackhorseya/godine/app/domain/restaurant"
-	"github.com/blackhorseya/godine/app/domain/user"
+	"github.com/blackhorseya/godine/app/domain"
 	"github.com/blackhorseya/godine/app/infra/authx"
 	"github.com/blackhorseya/godine/app/infra/configx"
 	"github.com/blackhorseya/godine/app/infra/otelx"
@@ -43,26 +38,33 @@ func New(v *viper.Viper) (adapterx.Server, func(), error) {
 	panic(wire.Build(
 		NewServer,
 		wire.Struct(new(wirex.Injector), "*"),
-		grpcx.NewServer,
-		httpx.NewServer,
 		InitApplication,
 		configx.NewConfiguration,
+
+		// adapter layer
+		grpcx.NewServer,
 		NewInitServersFn,
-		authx.New,
+		httpx.NewServer,
+
+		// biz layer
+		domain.ProviderAccountServiceSet,
+		domain.ProviderOrderServiceSet,
+		domain.ProviderNotificationServiceSet,
+		domain.ProviderPaymentServiceSet,
+		domain.ProviderLogisticsServiceSet,
+		domain.ProviderRestaurantServiceSet,
+
+		// repo layer
+		postgresqlx.NewOrderRepo,
+		mongodbx.NewRestaurantRepo,
+		mongodbx.NewPaymentRepo,
+		mongodbx.NewNotificationRepo,
+		mongodbx.NewDeliveryRepo,
+
+		// infra layer
 		grpcx.NewClient,
+		authx.New,
 		otelx.NewSDK,
-		user.ProviderUserBizSet,
-		user.NewAccountServiceClient,
-		restaurant.ProviderRestaurantBizSet,
-		restaurant.NewRestaurantServiceClient,
-		restaurant.NewMenuServiceClient,
-		notification.ProviderNotificationBizSet,
-		notification.NewNotificationServiceClient,
-		payment.ProviderPaymentBizSet,
-		payment.NewPaymentServiceClient,
-		order.ProviderOrderBizSet,
-		logistics.ProviderLogisticsBizSet,
-		logistics.NewLogisticsServiceClient,
 		snowflakex.NewNode,
 		postgresqlx.NewClient,
 		mongodbx.NewClientWithClean,

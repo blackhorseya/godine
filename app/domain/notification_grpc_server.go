@@ -1,4 +1,4 @@
-package notification
+package domain
 
 import (
 	"context"

@@ -12,12 +12,7 @@ go_library(
     deps = [
         "//adapter/platform/v1:platform",
         "//adapter/platform/wirex",
-        "//app/domain/logistics",
-        "//app/domain/notification",
-        "//app/domain/order",
-        "//app/domain/payment",
-        "//app/domain/restaurant",
-        "//app/domain/user",
+        "//app/domain",
         "//app/infra/authx",
         "//app/infra/configx",
         "//app/infra/otelx",

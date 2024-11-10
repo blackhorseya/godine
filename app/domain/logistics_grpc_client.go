@@ -1,4 +1,4 @@
-package logistics
+package domain
 
 import (
 	"fmt"

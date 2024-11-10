@@ -1,4 +1,4 @@
-package restaurant
+package domain
 
 import (
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
