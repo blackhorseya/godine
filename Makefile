@@ -104,9 +104,16 @@ test-load: ## test stress
 	@k6 run --env SCENARIO=average_load ./tests/k6/order.api.test.js --out=cloud
 
 ## docker
+.PHONY: docker-push-bazel
+docker-push-bazel: ## push docker image
+	@bazel run //:push --platforms=@rules_go//go/toolchain:linux_amd64 -- --tag=$(VERSION)
+
 .PHONY: docker-push
 docker-push: ## push docker image
-	@bazel run //:push --platforms=@rules_go//go/toolchain:linux_amd64 -- --tag=$(VERSION)
+	@echo "Pushing Docker image to $(IMAGE_NAME):$(VERSION)"
+	docker buildx build --push \
+  --tag $(IMAGE_NAME):latest \
+  --tag $(IMAGE_NAME):$(VERSION) .
 
 ## deployments
 DEPLOY_TO := prod
