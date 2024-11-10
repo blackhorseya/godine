@@ -24,32 +24,32 @@ type orderService struct {
 	orders repo.IOrderRepo
 
 	// clients
-	restaurantClient restB.RestaurantServiceClient
-	menuClient       restB.MenuServiceClient
-	accountClient    userB.AccountServiceClient
-	notifyClient     notifyB.NotificationServiceClient
-	paymentClient    payB.PaymentServiceClient
-	logisticsClient  opsB.LogisticsServiceClient
+	restaurantService restB.RestaurantServiceClient
+	menuService       restB.MenuServiceClient
+	accountService    userB.AccountServiceClient
+	notifyService     notifyB.NotificationServiceClient
+	paymentService    payB.PaymentServiceClient
+	logisticsService  opsB.LogisticsServiceClient
 }
 
 // NewOrderService returns the order service instance.
 func NewOrderService(
 	orders repo.IOrderRepo,
-	restaurantClient restB.RestaurantServiceClient,
-	menuClient restB.MenuServiceClient,
-	accountClient userB.AccountServiceClient,
-	notifyClient notifyB.NotificationServiceClient,
-	paymentClient payB.PaymentServiceClient,
-	logisticsClient opsB.LogisticsServiceClient,
+	restaurantService restB.RestaurantServiceClient,
+	menuService restB.MenuServiceClient,
+	accountService userB.AccountServiceClient,
+	notifyService notifyB.NotificationServiceClient,
+	paymentService payB.PaymentServiceClient,
+	logisticsService opsB.LogisticsServiceClient,
 ) biz.OrderServiceServer {
 	return &orderService{
-		orders:           orders,
-		restaurantClient: restaurantClient,
-		menuClient:       menuClient,
-		accountClient:    accountClient,
-		notifyClient:     notifyClient,
-		paymentClient:    paymentClient,
-		logisticsClient:  logisticsClient,
+		orders:            orders,
+		restaurantService: restaurantService,
+		menuService:       menuService,
+		accountService:    accountService,
+		notifyService:     notifyService,
+		paymentService:    paymentService,
+		logisticsService:  logisticsService,
 	}
 }
 
@@ -68,7 +68,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	}
 
 	// check restaurant is open
-	restaurant, err := i.restaurantClient.GetRestaurant(next, &restB.GetRestaurantRequest{RestaurantId: req.RestaurantId})
+	restaurant, err := i.restaurantService.GetRestaurant(next, &restB.GetRestaurantRequest{RestaurantId: req.RestaurantId})
 	if err != nil {
 		ctx.Error("failed to get restaurant", zap.Error(err), zap.String("restaurant_id", req.RestaurantId))
 		return nil, err
@@ -81,7 +81,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	// check menu is available and collect order items
 	var orderItems []*model.OrderItem
 	for _, item := range req.Items {
-		menuItem, err2 := i.menuClient.GetMenuItem(next, &restB.GetMenuItemRequest{
+		menuItem, err2 := i.menuService.GetMenuItem(next, &restB.GetMenuItemRequest{
 			RestaurantId: restaurant.Id,
 			MenuItemId:   item.MenuItemId,
 		})
@@ -108,7 +108,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 		return nil, err
 	}
 
-	payment, err := i.paymentClient.CreatePayment(next, &payB.CreatePaymentRequest{
+	payment, err := i.paymentService.CreatePayment(next, &payB.CreatePaymentRequest{
 		OrderId: order.Id,
 		Amount: &payM.PaymentAmount{
 			Value:    order.TotalAmount,
@@ -128,7 +128,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	}
 
 	// book the delivery
-	delivery, err := i.logisticsClient.CreateDelivery(next, &opsB.CreateDeliveryRequest{
+	delivery, err := i.logisticsService.CreateDelivery(next, &opsB.CreateDeliveryRequest{
 		OrderId: order.Id,
 		UserId:  handler.Id,
 		Address: req.Address,
@@ -148,7 +148,7 @@ func (i *orderService) SubmitOrder(c context.Context, req *biz.SubmitOrderReques
 	}
 
 	// send notification
-	_, err = i.notifyClient.SendNotification(next, &notifyB.SendNotificationRequest{
+	_, err = i.notifyService.SendNotification(next, &notifyB.SendNotificationRequest{
 		UserId:  handler.Id,
 		OrderId: order.Id,
 		Type:    "",
