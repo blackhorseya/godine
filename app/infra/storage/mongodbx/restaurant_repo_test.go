@@ -60,8 +60,11 @@ func (s *suiteRestaurantRepoTester) Test_mongodbRestaurantRepo_CreateReservation
 		wantErr bool
 	}{
 		{
-			name:    "create reservation success",
-			args:    args{},
+			name: "create reservation success",
+			args: args{
+				restaurant:  &model.Restaurant{Id: "restaurant_id"},
+				reservation: &model.Order{Id: "order_id"},
+			},
 			wantErr: false,
 		},
 	}

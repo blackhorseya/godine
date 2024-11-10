@@ -57,6 +57,10 @@ message Restaurant {
   // UpdatedAt is the timestamp when the restaurant was last updated.
   // @gotags: bson:"updated_at"
   google.protobuf.Timestamp updated_at = 8;
+
+  // Orders is the list of orders for the restaurant.
+  // @gotags: bson:"orders"
+  repeated Order orders = 9;
 }
 
 message MenuItem {
