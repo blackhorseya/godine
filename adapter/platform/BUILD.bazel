@@ -11,6 +11,7 @@ go_library(
     importpath = "github.com/blackhorseya/godine/adapter/platform",
     visibility = ["//visibility:public"],
     deps = [
+        "//adapter/platform/v1:platform",
         "//app/domain/logistics",
         "//app/domain/notification",
         "//app/domain/order",

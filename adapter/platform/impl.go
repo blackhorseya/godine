@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 
+	v1 "github.com/blackhorseya/godine/adapter/platform/v1"
 	"github.com/blackhorseya/godine/app/infra/transports/grpcx"
 	"github.com/blackhorseya/godine/app/infra/transports/httpx"
 	"github.com/blackhorseya/godine/pkg/adapterx"
@@ -69,7 +70,11 @@ func (i *impl) Shutdown(c context.Context) error {
 }
 
 func (i *impl) InitRouting() error {
-	// TODO: 2024/11/10|sean|init routing
+	router := i.httpserver.Router
+
+	api := router.Group("api")
+	v1.Handler(api)
+
 	return nil
 }
 

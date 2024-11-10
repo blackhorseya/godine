@@ -5,5 +5,8 @@ go_library(
     srcs = ["api.go"],
     importpath = "github.com/blackhorseya/godine/adapter/platform/v1",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_gin_gonic_gin//:gin"],
+    deps = [
+        "//adapter/platform/v1/orders",
+        "@com_github_gin_gonic_gin//:gin",
+    ],
 )
