@@ -24,7 +24,7 @@ message GetRestaurantRequest {
 
 message ListRestaurantsResponse {
   repeated Restaurant restaurants = 1;
-  uint64 total = 2;
+  int64 total = 2;
 }
 
 message PlaceOrderRequest {

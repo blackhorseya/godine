@@ -122,7 +122,7 @@ func (i *restaurantService) ListRestaurantsNonStream(
 
 	return &biz.ListRestaurantsResponse{
 		Restaurants: items,
-		Total:       uint64(total),
+		Total:       int64(total),
 	}, nil
 }
 
